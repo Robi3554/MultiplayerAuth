@@ -1,5 +1,6 @@
 using UnityEngine;
 using FishNet.Object;
+using FishNet.Component.Animating;
 using FishNet.Object.Prediction;
 using FishNet.Transporting;
 using FishNet.Utility.Template;
@@ -25,7 +26,9 @@ public class PredictionMoving : TickNetworkBehaviour
     private Transform groundCheck;
     [SerializeField] 
     private float groundCheckRadius = 0.2f;
-
+    [SerializeField] private Animator animator;
+    [SerializeField] private NetworkAnimator netAnimator;
+    Camera _camera;
     private PredictionRigidbody _predictionRb = new();
     private uint _lastReplicateTick;
     private bool _isGrounded;
@@ -75,7 +78,18 @@ public class PredictionMoving : TickNetworkBehaviour
             _serverJumpForce = jumpForce;
         }
     }
-
+    public override void OnStartClient()
+    {
+        base.OnStartClient();
+        if (base.IsOwner) {
+            _camera = Camera.main;
+            if (_camera != null) {
+                _camera.transform.SetParent(transform);
+                _camera.transform.localPosition = new Vector3(0, 2, -5);
+                _camera.transform.localRotation = Quaternion.Euler(10, 0, 0);
+            }
+        }
+    }
     protected override void TimeManager_OnTick()
     {
         if (IsOwner)
@@ -89,7 +103,10 @@ public class PredictionMoving : TickNetworkBehaviour
         if (IsOwner)
         {
             if (Input.GetButtonDown("Jump"))
+            {
                 _jumpPressed = true;
+                netAnimator.SetTrigger("Jumping");
+            }
         }
 
 
@@ -161,6 +178,7 @@ public class PredictionMoving : TickNetworkBehaviour
         Vector3 direction = new Vector3(data.Horizontal, 0f, data.Vertical).normalized;
         Vector3 velocity = direction * move;
         velocity.y = _predictionRb.Rigidbody.linearVelocity.y;
+        animator.SetFloat("Velocity", velocity.magnitude / move);
 
         _isGrounded = Physics.CheckSphere(groundCheck.position, groundCheckRadius, groundLayer, QueryTriggerInteraction.Ignore);
 
