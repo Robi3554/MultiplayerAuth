@@ -11,13 +11,16 @@ public class PredictionMoving : TickNetworkBehaviour
     [Header("Server Side")]
     private float _serverMoveRate;
     private float _serverJumpForce;
+    private float _serverRotateRate;
 
-    [Header("Non Onwer Reconciliation")]
+    [Header("Non Owner Reconciliation")]
     private readonly Queue<InterpolationData> _interpolationBuffer = new();
     private const float InterpolationDelay = 0.1f;
 
     [SerializeField] 
     private float moveRate = 5f;
+    [SerializeField]
+    private float rotateRate = 5f;
     [SerializeField] 
     private float jumpForce = 7f;
     [SerializeField] 
@@ -39,6 +42,7 @@ public class PredictionMoving : TickNetworkBehaviour
         public float Horizontal;
         public float Vertical;
         public bool Jump;
+        public float Yaw; //used for rotation
         private uint _tick;
 
         public void Dispose() { }
@@ -49,6 +53,7 @@ public class PredictionMoving : TickNetworkBehaviour
     private struct ReconcileData : IReconcileData
     {
         public PredictionRigidbody Rigidbody;
+        public Quaternion Rotation;
         private uint _tick;
 
         public void Dispose() { }
@@ -72,10 +77,11 @@ public class PredictionMoving : TickNetworkBehaviour
     {
         SetTickCallbacks(TickCallback.Tick | TickCallback.PostTick);
 
-        if(IsServerInitialized)
+        if (IsServerInitialized)
         {
             _serverMoveRate = moveRate;
             _serverJumpForce = jumpForce;
+            _serverRotateRate = rotateRate;
         }
     }
     public override void OnStartClient()
@@ -83,11 +89,6 @@ public class PredictionMoving : TickNetworkBehaviour
         base.OnStartClient();
         if (base.IsOwner) {
             _camera = Camera.main;
-            if (_camera != null) {
-                _camera.transform.SetParent(transform);
-                _camera.transform.localPosition = new Vector3(0, 2, -5);
-                _camera.transform.localRotation = Quaternion.Euler(10, 0, 0);
-            }
         }
     }
     protected override void TimeManager_OnTick()
@@ -100,16 +101,12 @@ public class PredictionMoving : TickNetworkBehaviour
 
     private void Update()
     {
-        if (IsOwner)
+        if (IsOwner && Input.GetButtonDown("Jump"))
         {
-            if (Input.GetButtonDown("Jump"))
-            {
-                _jumpPressed = true;
-                netAnimator.SetTrigger("Jumping");
-            }
+            _jumpPressed = true;
+            netAnimator.SetTrigger("Jumping");
         }
-
-
+       
         if (IsOwner && _interpolationBuffer.Count < 2)
             return;
 
@@ -136,6 +133,7 @@ public class PredictionMoving : TickNetworkBehaviour
         if (found)
         {
             float t = Mathf.InverseLerp(from.Time, to.Time, renderTime);
+
             transform.position = Vector3.Lerp(from.Position, to.Position, t);
             transform.rotation = Quaternion.Slerp(from.Rotation, to.Rotation, t);
         }
@@ -143,6 +141,13 @@ public class PredictionMoving : TickNetworkBehaviour
 
     private void LateUpdate()
     {
+        if (IsOwner && _camera != null)
+    {
+        // Keep camera at a fixed offset from the character
+        Vector3 offset = new Vector3(0, 5, -5);
+        _camera.transform.position = transform.position + offset;
+        _camera.transform.rotation = Quaternion.Euler(45, 0, 0); // Fixed angle
+    }
     }
 
     private MoveData BuildMoveData()
@@ -151,18 +156,44 @@ public class PredictionMoving : TickNetworkBehaviour
         {
             Horizontal = Input.GetAxisRaw("Horizontal"),
             Vertical = Input.GetAxisRaw("Vertical"),
-            Jump = _jumpPressed
+            Jump = _jumpPressed,
+            Yaw = GetYawFromMouse()
+
         };
 
         _jumpPressed = false;
         return data;
     }
 
+    private float GetYawFromMouse()
+    {
+
+        if (_camera == null)
+        {
+            return transform.eulerAngles.y;
+        }
+
+        Ray ray = _camera.ScreenPointToRay(Input.mousePosition);
+        Plane groundPlane = new Plane(Vector3.up, Vector3.zero);
+        if (groundPlane.Raycast(ray, out float enter))
+        {
+            Vector3 hitPoint = ray.GetPoint(enter);
+            Vector3 direction = (hitPoint - transform.position).normalized;
+            direction.y = 0f;
+            if (direction.sqrMagnitude > 0.01f)
+            {
+                return Quaternion.LookRotation(direction).eulerAngles.y;
+            }
+        }
+        return transform.eulerAngles.y;
+    }
+
     public override void CreateReconcile()
     {
         ReconcileData rd = new ReconcileData
         {
-            Rigidbody = _predictionRb
+            Rigidbody = _predictionRb,
+            Rotation = transform.rotation
         };
         PerformReconcile(rd);
     }
@@ -174,17 +205,22 @@ public class PredictionMoving : TickNetworkBehaviour
 
         float move = IsServerInitialized ? _serverMoveRate : moveRate;
         float jump = IsServerInitialized ? _serverJumpForce : jumpForce;
-
+        float rotate = IsServerInitialized ? _serverRotateRate : rotateRate;
         Vector3 direction = new Vector3(data.Horizontal, 0f, data.Vertical).normalized;
         Vector3 velocity = direction * move;
         velocity.y = _predictionRb.Rigidbody.linearVelocity.y;
-        animator.SetFloat("Velocity", velocity.magnitude / move);
+       
+            animator.SetFloat("Velocity", velocity.magnitude / move);
 
-        _isGrounded = Physics.CheckSphere(groundCheck.position, groundCheckRadius, groundLayer, QueryTriggerInteraction.Ignore);
+            _isGrounded = Physics.CheckSphere(groundCheck.position, groundCheckRadius, groundLayer, QueryTriggerInteraction.Ignore);
 
-        if (data.Jump && _isGrounded)
-            velocity.y = jump;
-
+            if (data.Jump && _isGrounded)
+                velocity.y = jump;
+        if (IsOwner)
+        {
+            Quaternion targetRotation = Quaternion.Euler(0f, data.Yaw, 0f);
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotate * Time.fixedDeltaTime);
+        }
         _predictionRb.Rigidbody.linearVelocity = velocity;
         _predictionRb.Simulate();
     }
@@ -193,7 +229,7 @@ public class PredictionMoving : TickNetworkBehaviour
     private void PerformReconcile(ReconcileData data, Channel channel = Channel.Unreliable)
     {
         _predictionRb.Reconcile(data.Rigidbody);
-
+        transform.rotation = data.Rotation;
         if (!IsOwner)
         {
             _interpolationBuffer.Enqueue(new InterpolationData
