@@ -81,6 +81,12 @@ public class PredictionMoving : TickNetworkBehaviour
     public override void OnStartClient()
     {
         base.OnStartClient();
+        if(base.IsServerStarted)
+        {
+            int id = base.NetworkObject.ObjectId;
+            PlayerManager.Instance.players[id] = new PlayerManager.Player() { health = 100 };
+        }
+
         if (base.IsOwner) {
             _camera = Camera.main;
             if (_camera != null) {
@@ -178,7 +184,7 @@ public class PredictionMoving : TickNetworkBehaviour
         Vector3 direction = new Vector3(data.Horizontal, 0f, data.Vertical).normalized;
         Vector3 velocity = direction * move;
         velocity.y = _predictionRb.Rigidbody.linearVelocity.y;
-        animator.SetFloat("Velocity", velocity.magnitude / move);
+        //animator.SetFloat("Velocity", velocity.magnitude / move);
 
         _isGrounded = Physics.CheckSphere(groundCheck.position, groundCheckRadius, groundLayer, QueryTriggerInteraction.Ignore);
 
