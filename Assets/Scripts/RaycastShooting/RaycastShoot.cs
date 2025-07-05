@@ -3,22 +3,22 @@ using UnityEngine;
 using FishNet.Object;
 using System;
 
-public class RaycastShoot : NetworkBehaviour
+public abstract class RaycastShoot : NetworkBehaviour
 {
     [SerializeField] 
-    private int damage;
-    [SerializeField] 
-    private float fireRate;
-    [SerializeField] 
-    private KeyCode shootKey = KeyCode.Mouse0;
-    [SerializeField] 
-    private LayerMask playerLayer;
-    [SerializeField] 
-    private Transform firePoint;
+    protected int damage;
     [SerializeField]
-    private LineRenderer lineRenderer;
+    protected float fireRate;
+    [SerializeField]
+    protected KeyCode shootKey = KeyCode.Mouse0;
+    [SerializeField]
+    protected LayerMask playerLayer;
+    [SerializeField]
+    protected Transform firePoint;
+    [SerializeField]
+    protected LineRenderer lineRenderer;
 
-    bool canShoot = true;
+    protected bool canShoot = true;
 
     public override void OnStartClient()
     {
@@ -28,16 +28,15 @@ public class RaycastShoot : NetworkBehaviour
             return;
     }
 
-    private void Update()
+    protected void Update()
     {
         if (!base.IsOwner)
             return;
 
-        if (Input.GetKey(shootKey) && canShoot)
-            Shoot();
+        HandleShootInput();
     }
 
-    void Shoot()
+    protected void Shoot()
     {
         Vector3 origin = firePoint.position;
         Vector3 direction = firePoint.right;
@@ -56,7 +55,7 @@ public class RaycastShoot : NetworkBehaviour
     }
 
     [ServerRpc(RequireOwnership = false)]
-    void HitPlayer(NetworkObject playerHit)
+    protected void HitPlayer(NetworkObject playerHit)
     {
         NetworkObject attackerNetObj = GetComponentInParent<NetworkObject>();
 
@@ -75,17 +74,16 @@ public class RaycastShoot : NetworkBehaviour
         PlayerManager.Instance.DamagePlayer(targetId, damage, attackerId);
     }
 
-    IEnumerator CanShootUpdater()
+    protected IEnumerator CanShootUpdater()
     {
         canShoot = false;
 
-        float waitTime = 1f / Mathf.Max(fireRate, 0.0001f);
-        yield return new WaitForSeconds(waitTime);
+        yield return new WaitForSeconds(fireRate);
 
         canShoot = true;
     }
 
-    IEnumerator ShowShotLine(Vector3 start, Vector3 end)
+    protected IEnumerator ShowShotLine(Vector3 start, Vector3 end)
     {
         if (lineRenderer == null)
             yield break;
@@ -97,4 +95,6 @@ public class RaycastShoot : NetworkBehaviour
         yield return new WaitForSeconds(0.05f);
         lineRenderer.enabled = false;
     }
+
+    protected abstract void HandleShootInput();
 }

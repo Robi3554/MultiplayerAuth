@@ -34,6 +34,8 @@ public class PredictionMoving : TickNetworkBehaviour
     private bool _isGrounded;
     private bool _jumpPressed;
 
+    internal bool canMove = true;
+
     private struct MoveData : IReplicateData
     {
         public float Horizontal;
@@ -177,6 +179,12 @@ public class PredictionMoving : TickNetworkBehaviour
     private void PerformReplicate(MoveData data, ReplicateState state = ReplicateState.Invalid, Channel channel = Channel.Unreliable)
     {
         _lastReplicateTick = data.GetTick();
+
+        if (!canMove)
+        {
+            _predictionRb.Simulate();
+            return;
+        }
 
         float move = IsServerInitialized ? _serverMoveRate : moveRate;
         float jump = IsServerInitialized ? _serverJumpForce : jumpForce;
