@@ -1,14 +1,9 @@
 using System.Collections;
 using UnityEngine;
 using FishNet.Object;
-using System;
 
 public abstract class RaycastShoot : NetworkBehaviour
 {
-    [SerializeField] 
-    protected int damage;
-    [SerializeField]
-    protected float fireRate;
     [SerializeField]
     protected KeyCode shootKey = KeyCode.Mouse0;
     [SerializeField]
@@ -17,6 +12,13 @@ public abstract class RaycastShoot : NetworkBehaviour
     protected Transform firePoint;
     [SerializeField]
     protected LineRenderer lineRenderer;
+
+    [SerializeField]
+    protected float maxDistance = 100f;
+    [SerializeField]
+    protected float fireRate;
+    [SerializeField]
+    protected int damage;
 
     protected bool canShoot = true;
 
@@ -36,15 +38,14 @@ public abstract class RaycastShoot : NetworkBehaviour
         HandleShootInput();
     }
 
-    protected void Shoot()
+    protected virtual void Shoot()
     {
         Vector3 origin = firePoint.position;
         Vector3 direction = firePoint.right;
-        float maxDistance = 100f;
 
         Vector3 hitPosition = origin + direction * maxDistance;
 
-        if (Physics.Raycast(firePoint.transform.position, firePoint.transform.right, out RaycastHit hit, Mathf.Infinity, playerLayer))
+        if (Physics.Raycast(origin, direction, out RaycastHit hit, Mathf.Infinity, playerLayer))
         {
             HitPlayer(hit.transform.GetComponent<NetworkObject>());
         }
@@ -88,12 +89,14 @@ public abstract class RaycastShoot : NetworkBehaviour
         if (lineRenderer == null)
             yield break;
 
-        lineRenderer.enabled = true;
-        lineRenderer.SetPosition(0, start);
-        lineRenderer.SetPosition(1, end);
+        LineRenderer tempLine = Instantiate(lineRenderer, lineRenderer.transform.parent);
+        tempLine.enabled = true;
+        tempLine.SetPosition(0, start);
+        tempLine.SetPosition(1, end);
 
         yield return new WaitForSeconds(0.05f);
-        lineRenderer.enabled = false;
+
+        Destroy(tempLine.gameObject);
     }
 
     protected abstract void HandleShootInput();
