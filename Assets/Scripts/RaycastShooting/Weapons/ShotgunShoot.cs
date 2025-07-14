@@ -1,7 +1,7 @@
 using FishNet.Object;
 using UnityEngine;
 
-public class ShotgunShoot : PistolShoot
+public class ShotgunShoot : SingleShot
 {
     [SerializeField]
     private int pelletCount;
@@ -24,11 +24,7 @@ public class ShotgunShoot : PistolShoot
             {
                 StartCoroutine(ShowShotLine(origin, origin + dir * maxDistance));
             }
-
-            Debug.Log("Shoot");
         }
-
-        StartCoroutine(CanShootUpdater());
     }
     private Vector3 GetSpreadDirection(Vector3 forward, float angle)
     {

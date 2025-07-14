@@ -11,7 +11,7 @@ public abstract class RaycastShoot : NetworkBehaviour
     [SerializeField]
     protected Transform firePoint;
     [SerializeField]
-    protected LineRenderer lineRenderer;
+    protected GameObject shotLinePrefab;
 
     [SerializeField]
     protected float maxDistance = 100f;
@@ -21,6 +21,8 @@ public abstract class RaycastShoot : NetworkBehaviour
     protected int damage;
 
     protected bool canShoot = true;
+
+    protected float nextShootTime = 0f;
 
     public override void OnStartClient()
     {
@@ -47,12 +49,16 @@ public abstract class RaycastShoot : NetworkBehaviour
 
         if (Physics.Raycast(origin, direction, out RaycastHit hit, Mathf.Infinity, playerLayer))
         {
+            hitPosition = hit.point;
+            Debug.Log("Raycast hit at position: " + hitPosition);
             HitPlayer(hit.transform.GetComponent<NetworkObject>());
+        }
+        else
+        {
+            Debug.Log("Raycast did not hit anything. Drawing to max distance.");
         }
 
         StartCoroutine(ShowShotLine(origin, hitPosition));
-
-        StartCoroutine(CanShootUpdater());
     }
 
     [ServerRpc(RequireOwnership = false)]
@@ -72,24 +78,28 @@ public abstract class RaycastShoot : NetworkBehaviour
         int targetId = playerHit.ObjectId;
         int attackerId = attackerNetObj.ObjectId;
 
+        Debug.Log($"Player {attackerId} hit Player {targetId} for {damage} damage.");
         PlayerManager.Instance.DamagePlayer(targetId, damage, attackerId);
-    }
-
-    protected IEnumerator CanShootUpdater()
-    {
-        canShoot = false;
-
-        yield return new WaitForSeconds(fireRate);
-
-        canShoot = true;
     }
 
     protected IEnumerator ShowShotLine(Vector3 start, Vector3 end)
     {
-        if (lineRenderer == null)
+        if (shotLinePrefab == null)
+        {
             yield break;
+        }
 
-        LineRenderer tempLine = Instantiate(lineRenderer, lineRenderer.transform.parent);
+        GameObject tempGO = Instantiate(shotLinePrefab, firePoint.position, Quaternion.identity, firePoint.parent);
+
+        LineRenderer tempLine = tempGO.GetComponent<LineRenderer>();
+
+        if (tempLine == null)
+        {
+            Debug.LogWarning("Shot Line Prefab has no LineRenderer component!");
+            Destroy(tempGO);
+            yield break;
+        }
+
         tempLine.enabled = true;
         tempLine.SetPosition(0, start);
         tempLine.SetPosition(1, end);
