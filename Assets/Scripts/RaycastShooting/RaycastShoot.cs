@@ -1,9 +1,12 @@
 using System.Collections;
 using UnityEngine;
 using FishNet.Object;
+using TMPro;
 
 public abstract class RaycastShoot : NetworkBehaviour
 {
+    private TMP_Text ammoText;
+
     [SerializeField]
     protected KeyCode shootKey = KeyCode.Mouse0;
     [SerializeField]
@@ -19,8 +22,14 @@ public abstract class RaycastShoot : NetworkBehaviour
     protected float fireRate;
     [SerializeField]
     protected int damage;
+    [SerializeField]
+    protected int maxAmmo;
+    [SerializeField]
+    protected int currentAmmo;
+    [SerializeField]
+    protected float reloadTime;
 
-    protected bool canShoot = true;
+    private bool isReloading = false;
 
     protected float nextShootTime = 0f;
 
@@ -32,12 +41,27 @@ public abstract class RaycastShoot : NetworkBehaviour
             return;
     }
 
+    protected void Start()
+    {
+        currentAmmo = maxAmmo;
+
+        ammoText = GameObject.Find("PlayerHUD").transform.Find("Ammo Counter").GetComponent<TMP_Text>();
+    }
+
     protected void Update()
     {
         if (!base.IsOwner)
             return;
 
-        HandleShootInput();
+        ammoText.text = currentAmmo.ToString() + '/' + maxAmmo.ToString();
+
+        if (isReloading)
+            return;
+
+        if (currentAmmo <= 0f || Input.GetKeyDown(KeyCode.R))
+            StartCoroutine(Reload());
+        else if(currentAmmo > 0)
+            HandleShootInput();
     }
 
     protected virtual void Shoot()
@@ -58,6 +82,7 @@ public abstract class RaycastShoot : NetworkBehaviour
             Debug.Log("Raycast did not hit anything. Drawing to max distance.");
         }
 
+        currentAmmo--;
         StartCoroutine(ShowShotLine(origin, hitPosition));
     }
 
@@ -109,5 +134,15 @@ public abstract class RaycastShoot : NetworkBehaviour
         Destroy(tempLine.gameObject);
     }
 
+    protected IEnumerator Reload()
+    {
+        isReloading = true;
+
+        yield return new WaitForSeconds(reloadTime);
+
+        currentAmmo = maxAmmo;
+
+        isReloading = false;
+    }
     protected abstract void HandleShootInput();
 }

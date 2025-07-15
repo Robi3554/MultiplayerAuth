@@ -221,7 +221,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _componentIndexCache: 0
   _addedNetworkObject: {fileID: 7218028557937402863}
-  _networkObjectCache: {fileID: 0}
+  _networkObjectCache: {fileID: 7218028557937402863}
   shootKey: 323
   playerLayer:
     serializedVersion: 2
@@ -230,7 +230,10 @@ MonoBehaviour:
   shotLinePrefab: {fileID: 7133602437278059814, guid: 0e3e214fbff67c642a1f4f61c1361237, type: 3}
   maxDistance: 100
   fireRate: 1
-  damage: 20
+  damage: 15
+  maxAmmo: 12
+  currentAmmo: 0
+  reloadTime: 0.75
 --- !u!114 &7218028557937402863
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -249,7 +252,8 @@ MonoBehaviour:
   <ComponentIndex>k__BackingField: 0
   <PredictedSpawn>k__BackingField: {fileID: 0}
   <PredictedOwner>k__BackingField: {fileID: 0}
-  NetworkBehaviours: []
+  NetworkBehaviours:
+  - {fileID: 7167104765082704579}
   InitializedParentNetworkBehaviour: {fileID: 0}
   InitializedNestedNetworkObjects: []
   RuntimeParentNetworkBehaviour: {fileID: 0}
@@ -274,12 +278,12 @@ MonoBehaviour:
   _spectatorInterpolation: 2
   _enableTeleport: 0
   _teleportThreshold: 1
-  <PrefabId>k__BackingField: 65535
+  <PrefabId>k__BackingField: 15
   <SpawnableCollectionId>k__BackingField: 0
   <AssetPathHash>k__BackingField: 13760818728653759631
   <SceneId>k__BackingField: 0
   SerializedTransformProperties:
-    Position: {x: 0, y: 0, z: 0}
-    Rotation: {x: 0, y: 0, z: 0, w: 0}
-    Scale: {x: 0, y: 0, z: 0}
-    IsValid: 0
+    Position: {x: 0.535, y: 0.029999971, z: -0.087}
+    Rotation: {x: 0, y: -0.7071068, z: 0, w: 0.7071068}
+    Scale: {x: 0.25, y: 0.5, z: 0.25}
+    IsValid: 1

@@ -199,6 +199,9 @@ MonoBehaviour:
   maxDistance: 100
   fireRate: 1
   damage: 5
+  maxAmmo: 12
+  currentAmmo: 0
+  reloadTime: 1.25
   pelletCount: 8
   spreadAngle: 10
 --- !u!1 &8550947162267859294

@@ -144,7 +144,10 @@ MonoBehaviour:
   shotLinePrefab: {fileID: 7133602437278059814, guid: 0e3e214fbff67c642a1f4f61c1361237, type: 3}
   maxDistance: 100
   fireRate: 0.25
-  damage: 1
+  damage: 3
+  maxAmmo: 30
+  currentAmmo: 0
+  reloadTime: 1
 --- !u!114 &1730125441025775743
 MonoBehaviour:
   m_ObjectHideFlags: 0

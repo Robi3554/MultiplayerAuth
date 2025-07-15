@@ -113,6 +113,9 @@ MonoBehaviour:
   maxDistance: 100
   fireRate: 1
   damage: 7
+  maxAmmo: 24
+  currentAmmo: 0
+  reloadTime: 1
   timeBetweenShots: 0.15
   burstCount: 3
 --- !u!1 &645928686248586991

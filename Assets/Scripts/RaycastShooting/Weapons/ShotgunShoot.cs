@@ -25,6 +25,8 @@ public class ShotgunShoot : SingleShot
                 StartCoroutine(ShowShotLine(origin, origin + dir * maxDistance));
             }
         }
+
+        currentAmmo--;
     }
     private Vector3 GetSpreadDirection(Vector3 forward, float angle)
     {

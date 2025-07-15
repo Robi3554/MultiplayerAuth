@@ -4,7 +4,7 @@ public class PistolShoot : RaycastShoot
 {
     protected override void HandleShootInput()
     {
-        if (Input.GetKeyDown(shootKey) && canShoot)
+        if (Input.GetKeyDown(shootKey))
         {
             Shoot();
         }
