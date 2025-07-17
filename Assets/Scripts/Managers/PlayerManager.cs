@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using FishNet.Object;
@@ -7,43 +6,75 @@ using FishNet.Connection;
 public class PlayerManager : NetworkBehaviour
 {
     public static PlayerManager Instance;
+
     private void Awake()
     {
         Instance = this;
     }
 
     public Dictionary<int, Player> players = new Dictionary<int, Player>();
+
     [SerializeField] List<Transform> spawnPoints = new List<Transform>();
 
-    public void DamagePlayer(int playerID, int damage, int attackerID)
+    public void DamagePlayer(int victimClientId, int damage, int attackerClientId)
     {
         if (!base.IsServerInitialized)
             return;
 
-        players[playerID].health -= damage;
-        print("Player " + playerID.ToString() + " health is " + players[playerID].health);
-
-        if (players[playerID].health <= 0)
+        if (!players.ContainsKey(victimClientId))
         {
-            PlayerKilled(playerID, attackerID);
+            Debug.LogError($"[DamagePlayer] Victim ClientId {victimClientId} not found in players dictionary. Keys: {string.Join(", ", players.Keys)}");
+            return;
+        }
+
+        players[victimClientId].health -= damage;
+        Debug.Log($"Player {victimClientId} took {damage} damage. Health now: {players[victimClientId].health}");
+
+        if (players[victimClientId].health <= 0)
+        {
+            PlayerKilled(victimClientId, attackerClientId);
         }
     }
 
-    void PlayerKilled(int playerID, int attackerID)
+    void PlayerKilled(int victimClientId, int attackerClientId)
     {
-        print("Player " + playerID.ToString() + " was killed by " + attackerID.ToString());
+        Debug.Log($"Player {victimClientId} was killed by {attackerClientId}");
 
-        players[playerID].deaths++;
-        players[playerID].health = 100;
-        players[attackerID].kills++;
+        if (!players.ContainsKey(victimClientId))
+        {
+            Debug.LogError($"[PlayerKilled] Victim ClientId {victimClientId} not found.");
+            return;
+        }
 
-        RespawnPlayer(players[playerID].connection, players[playerID].playerObject, Random.Range(0, spawnPoints.Count));
+        players[victimClientId].deaths++;
+        players[victimClientId].health = 100;
+
+        if (players.ContainsKey(attackerClientId))
+        {
+            players[attackerClientId].kills++;
+        }
+        else
+        {
+            Debug.LogWarning($"[PlayerKilled] Attacker ClientId {attackerClientId} not found. Kill not credited.");
+        }
+
+        Debug.Log($"Player {victimClientId} deaths: {players[victimClientId].deaths} | Player {attackerClientId} kills: {(players.ContainsKey(attackerClientId) ? players[attackerClientId].kills : 0)}");
+
+        int spawnIndex = Random.Range(0, spawnPoints.Count);
+        RespawnPlayer(players[victimClientId].connection, players[victimClientId].playerObject, spawnIndex);
     }
 
     [TargetRpc]
     void RespawnPlayer(NetworkConnection conn, GameObject player, int spawn)
     {
-        player.transform.position = spawnPoints[spawn].position;
+        if (spawn >= 0 && spawn < spawnPoints.Count)
+        {
+            player.transform.position = spawnPoints[spawn].position;
+        }
+        else
+        {
+            Debug.LogWarning("[RespawnPlayer] Invalid spawn index.");
+        }
     }
 
     public class Player

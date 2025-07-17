@@ -100,8 +100,8 @@ public abstract class RaycastShoot : NetworkBehaviour
             return;
         }
 
-        int targetId = playerHit.ObjectId;
-        int attackerId = attackerNetObj.ObjectId;
+        int targetId = playerHit.Owner.ClientId;
+        int attackerId = attackerNetObj.Owner.ClientId;
 
         Debug.Log($"Player {attackerId} hit Player {targetId} for {damage} damage.");
         PlayerManager.Instance.DamagePlayer(targetId, damage, attackerId);
