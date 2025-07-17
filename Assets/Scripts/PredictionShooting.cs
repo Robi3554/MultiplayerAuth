@@ -1,24 +1,22 @@
 using FishNet.Object;
-using UnityEngine;
-using FishNet.Connection;
-using System.Collections.Generic;
 using FishNet.Object.Prediction;
 using FishNet.Transporting;
-using FishNet.Utility.Template;
+using UnityEngine;
 
-public class PredictionShooting : TickNetworkBehaviour
+public class PredictionShooting : NetworkBehaviour
 {
     [SerializeField] private GameObject projectilePrefab;
     [SerializeField] private Transform firePoint;
     [SerializeField] private float projectileSpeed = 10f;
 
     private bool _firePressed;
+    private bool _processedFire;
 
     private struct ShootData : IReplicateData
     {
+        public bool Fire;
         public Vector3 Direction;
         private uint _tick;
-
         public void Dispose() { }
         public uint GetTick() => _tick;
         public void SetTick(uint value) => _tick = value;
@@ -34,64 +32,97 @@ public class PredictionShooting : TickNetworkBehaviour
 
     public override void OnStartNetwork()
     {
-        SetTickCallbacks(TickCallback.Tick);
+        base.OnStartNetwork();
+        if (base.Owner.IsLocalClient)
+        {
+            base.TimeManager.OnTick += OnTick;
+        }
     }
 
     private void Update()
     {
-        if (IsOwner && Input.GetMouseButtonDown(0))
-            _firePressed = true;
+        if (IsOwner)
+        {
+            if (Input.GetMouseButton(0) && !_processedFire)
+            {
+                Debug.Log("[Shooting] Fire button pressed");
+                _firePressed = true;
+                _processedFire = true;
+            }
+            else if (!Input.GetMouseButton(0))
+            {
+                _processedFire = false;
+            }
+        }
     }
 
-    protected override void TimeManager_OnTick()
+    private void OnTick()
     {
-        if (!IsOwner || !_firePressed)
-            return;
-
-        _firePressed = false;
-
-        ShootData data = new ShootData
+        if (IsOwner && _firePressed)
         {
-            Direction = firePoint.forward
-        };
+            Debug.Log("[Shooting] Processing fire input");
 
-        PerformReplicate(data);
+            ShootData shootData = new ShootData
+            {
+                Fire = true,
+                Direction = firePoint.forward
+            };
+
+            PerformReplicate(shootData);
+            _firePressed = false;
+        }
+
+        CreateReconcile();
     }
 
     [Replicate]
     private void PerformReplicate(ShootData data, ReplicateState state = ReplicateState.Invalid, Channel channel = Channel.Unreliable)
     {
-        Debug.Log($"[Shoot] Replicating. IsServer: {IsServerStarted}, IsOwner: {IsOwner}");
+        Debug.Log($"[Shooting] Replicate Received - Fire:{data.Fire} IsServer:{IsServerInitialized} State:{state}");
 
-        // Instantiate locally
-        GameObject go = Instantiate(projectilePrefab, firePoint.position, Quaternion.LookRotation(data.Direction));
-
-        ProjectileScript proj = go.GetComponent<ProjectileScript>();
-        proj.SetInitialVelocity(data.Direction * projectileSpeed);
-
-        // Server spawns the authoritative copy
-        if (IsServerStarted)
+        if (data.Fire && IsServerInitialized)
         {
-            Spawn(go);
-            Debug.Log("[Shoot] Spawned on server");
-        }
-        else
-        {
-            Debug.Log("[Shoot] Predicted projectile instantiated on client");
-            // Do NOT call Spawn() on client
+            Debug.Log($"[Shooting] Server spawning projectile at {firePoint.position}");
+
+            GameObject projectile = Instantiate(projectilePrefab, firePoint.position, Quaternion.LookRotation(data.Direction));
+            NetworkObject netObject = projectile.GetComponent<NetworkObject>();
+
+            if (netObject == null)
+            {
+                Debug.LogError("[Shooting] Missing NetworkObject on projectile!");
+                return;
+            }
+
+            Spawn(netObject);
+
+            ProjectileScript proj = projectile.GetComponent<ProjectileScript>();
+            if (proj == null)
+            {
+                Debug.LogError("[Shooting] Missing ProjectileScript on projectile!");
+                return;
+            }
+
+            proj.Initialize(data.Direction * projectileSpeed);
         }
     }
-
 
     [Reconcile]
     private void PerformReconcile(ReconcileData data, Channel channel = Channel.Unreliable)
     {
-        
+        Debug.Log("[Shooting] Reconciliation");
     }
 
     public override void CreateReconcile()
     {
-        ReconcileData data = new ReconcileData();
-        PerformReconcile(data);
+        ReconcileData rd = new ReconcileData();
+        PerformReconcile(rd);
+    }
+
+    public override void OnStopNetwork()
+    {
+        if (base.TimeManager != null)
+        {
+            base.TimeManager.OnTick -= OnTick;
+        }
     }
 }

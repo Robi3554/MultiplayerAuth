@@ -1,10 +1,11 @@
-using UnityEngine;
-using FishNet.Object;
+using System.Collections.Generic;
 using FishNet.Component.Animating;
+using FishNet.Connection;
+using FishNet.Object;
 using FishNet.Object.Prediction;
 using FishNet.Transporting;
 using FishNet.Utility.Template;
-using System.Collections.Generic;
+using UnityEngine;
 
 public class PredictionMoving : TickNetworkBehaviour
 {
@@ -36,6 +37,8 @@ public class PredictionMoving : TickNetworkBehaviour
     private uint _lastReplicateTick;
     private bool _isGrounded;
     private bool _jumpPressed;
+
+    internal bool canMove = true;
 
     private struct MoveData : IReplicateData
     {
@@ -84,9 +87,27 @@ public class PredictionMoving : TickNetworkBehaviour
             _serverRotateRate = rotateRate;
         }
     }
+    public override void OnStartServer()
+    {
+        base.OnStartServer();
+
+        int clientId = base.Owner.ClientId;
+
+        Debug.Log($"[OnStartServer] Registering player with ClientId: {clientId}");
+
+        PlayerManager.Instance.players[clientId] = new PlayerManager.Player
+        {
+            health = 100,
+            playerObject = this.gameObject,
+            connection = base.Owner,
+            kills = 0,
+            deaths = 0
+        };
+    }
     public override void OnStartClient()
     {
         base.OnStartClient();
+
         if (base.IsOwner) {
             _camera = Camera.main;
         }
@@ -202,6 +223,12 @@ public class PredictionMoving : TickNetworkBehaviour
     private void PerformReplicate(MoveData data, ReplicateState state = ReplicateState.Invalid, Channel channel = Channel.Unreliable)
     {
         _lastReplicateTick = data.GetTick();
+
+        if (!canMove)
+        {
+            _predictionRb.Simulate();
+            return;
+        }
 
         float move = IsServerInitialized ? _serverMoveRate : moveRate;
         float jump = IsServerInitialized ? _serverJumpForce : jumpForce;
