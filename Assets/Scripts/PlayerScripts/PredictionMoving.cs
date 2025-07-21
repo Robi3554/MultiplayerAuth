@@ -90,19 +90,6 @@ public class PredictionMoving : TickNetworkBehaviour
     public override void OnStartServer()
     {
         base.OnStartServer();
-
-        int clientId = base.Owner.ClientId;
-
-        Debug.Log($"[OnStartServer] Registering player with ClientId: {clientId}");
-
-        PlayerManager.Instance.players[clientId] = new PlayerManager.Player
-        {
-            health = 100,
-            playerObject = this.gameObject,
-            connection = base.Owner,
-            kills = 0,
-            deaths = 0
-        };
     }
     public override void OnStartClient()
     {

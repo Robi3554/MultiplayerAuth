@@ -1,15 +1,30 @@
 using System.Collections.Generic;
-using UnityEngine;
-using FishNet.Object;
 using FishNet.Connection;
+using FishNet.Object;
+using TMPro;
+using UnityEngine;
 
 public class PlayerManager : NetworkBehaviour
 {
     public static PlayerManager Instance;
 
+    private TMP_Text healthText;
+    private TMP_Text killText;
+    private TMP_Text deathText;
+
     private void Awake()
     {
         Instance = this;
+    }
+
+    private void Start()
+    {
+        InstantiateTexts();
+    }
+
+    private void Update()
+    {
+
     }
 
     public Dictionary<int, Player> players = new Dictionary<int, Player>();
@@ -18,19 +33,23 @@ public class PlayerManager : NetworkBehaviour
 
     public void DamagePlayer(int victimClientId, int damage, int attackerClientId)
     {
-        if (!base.IsServerInitialized)
+        if (!IsServerInitialized)
             return;
 
         if (!players.ContainsKey(victimClientId))
         {
-            Debug.LogError($"[DamagePlayer] Victim ClientId {victimClientId} not found in players dictionary. Keys: {string.Join(", ", players.Keys)}");
+            Debug.LogError($"[DamagePlayer] Victim {victimClientId} not found.");
             return;
         }
 
-        players[victimClientId].health -= damage;
-        Debug.Log($"Player {victimClientId} took {damage} damage. Health now: {players[victimClientId].health}");
+        var victim = players[victimClientId];
+        var victimStats = victim.stats;
+        if (victimStats == null) return;
 
-        if (players[victimClientId].health <= 0)
+        victimStats.TakeDamage(damage);
+        Debug.Log($"[DamagePlayer] Player {victimClientId} took {damage} damage. Health: {victimStats.health}");
+
+        if (victimStats.health.Value <= 0)
         {
             PlayerKilled(victimClientId, attackerClientId);
         }
@@ -38,30 +57,25 @@ public class PlayerManager : NetworkBehaviour
 
     void PlayerKilled(int victimClientId, int attackerClientId)
     {
-        Debug.Log($"Player {victimClientId} was killed by {attackerClientId}");
+        Debug.Log($"[PlayerKilled] Player {victimClientId} was killed by {attackerClientId}");
 
-        if (!players.ContainsKey(victimClientId))
+        if (!players.ContainsKey(victimClientId)) return;
+        var victim = players[victimClientId];
+        var victimStats = victim.stats;
+        if (victimStats != null)
         {
-            Debug.LogError($"[PlayerKilled] Victim ClientId {victimClientId} not found.");
-            return;
+            victimStats.AddDeath();
+            victimStats.ResetHealth();
         }
-
-        players[victimClientId].deaths++;
-        players[victimClientId].health = 100;
 
         if (players.ContainsKey(attackerClientId))
         {
-            players[attackerClientId].kills++;
+            var attackerStats = players[attackerClientId].stats;
+            attackerStats?.AddKill();
         }
-        else
-        {
-            Debug.LogWarning($"[PlayerKilled] Attacker ClientId {attackerClientId} not found. Kill not credited.");
-        }
-
-        Debug.Log($"Player {victimClientId} deaths: {players[victimClientId].deaths} | Player {attackerClientId} kills: {(players.ContainsKey(attackerClientId) ? players[attackerClientId].kills : 0)}");
 
         int spawnIndex = Random.Range(0, spawnPoints.Count);
-        RespawnPlayer(players[victimClientId].connection, players[victimClientId].playerObject, spawnIndex);
+        RespawnPlayer(victim.connection, victim.playerObject, spawnIndex);
     }
 
     [TargetRpc]
@@ -77,12 +91,17 @@ public class PlayerManager : NetworkBehaviour
         }
     }
 
+    private void InstantiateTexts()
+    {
+        healthText = GameObject.Find("PlayerHUD").transform.Find("Health Text").GetComponent<TMP_Text>();
+        killText = GameObject.Find("PlayerHUD").transform.Find("Kill Text").GetComponent<TMP_Text>();
+        deathText = GameObject.Find("PlayerHUD").transform.Find("Death Text").GetComponent<TMP_Text>();
+    }
+
     public class Player
     {
-        public int health = 100;
         public GameObject playerObject;
         public NetworkConnection connection;
-        public int kills = 0;
-        public int deaths = 0;
+        public PlayerStats stats;
     }
 }

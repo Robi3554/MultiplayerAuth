@@ -45,7 +45,7 @@ public abstract class RaycastShoot : NetworkBehaviour
     {
         currentAmmo = maxAmmo;
 
-        ammoText = GameObject.Find("PlayerHUD").transform.Find("Ammo Counter").GetComponent<TMP_Text>();
+        ammoText = GameObject.Find("PlayerHUD").transform.Find("Ammo Text").GetComponent<TMP_Text>();
     }
 
     protected void Update()
