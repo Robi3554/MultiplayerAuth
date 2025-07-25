@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using FishNet.Connection;
 using FishNet.Object;
@@ -22,11 +23,6 @@ public class PlayerManager : NetworkBehaviour
         InstantiateTexts();
     }
 
-    private void Update()
-    {
-
-    }
-
     public Dictionary<int, Player> players = new Dictionary<int, Player>();
 
     [SerializeField] List<Transform> spawnPoints = new List<Transform>();
@@ -38,7 +34,6 @@ public class PlayerManager : NetworkBehaviour
 
         if (!players.ContainsKey(victimClientId))
         {
-            Debug.LogError($"[DamagePlayer] Victim {victimClientId} not found.");
             return;
         }
 
@@ -47,7 +42,6 @@ public class PlayerManager : NetworkBehaviour
         if (victimStats == null) return;
 
         victimStats.TakeDamage(damage);
-        Debug.Log($"[DamagePlayer] Player {victimClientId} took {damage} damage. Health: {victimStats.health}");
 
         if (victimStats.health.Value <= 0)
         {
@@ -57,38 +51,29 @@ public class PlayerManager : NetworkBehaviour
 
     void PlayerKilled(int victimClientId, int attackerClientId)
     {
-        Debug.Log($"[PlayerKilled] Player {victimClientId} was killed by {attackerClientId}");
-
-        if (!players.ContainsKey(victimClientId)) return;
         var victim = players[victimClientId];
         var victimStats = victim.stats;
-        if (victimStats != null)
-        {
-            victimStats.AddDeath();
-            victimStats.ResetHealth();
-        }
+
+        victimStats.AddDeath();
+
+        victimStats.isRespawning = true;
+        victimStats.ResetHealth();
 
         if (players.ContainsKey(attackerClientId))
         {
-            var attackerStats = players[attackerClientId].stats;
-            attackerStats?.AddKill();
+            players[attackerClientId].stats?.AddKill();
         }
 
         int spawnIndex = Random.Range(0, spawnPoints.Count);
         RespawnPlayer(victim.connection, victim.playerObject, spawnIndex);
+
+        StartCoroutine(ClearRespawningFlag(victimStats));
     }
 
     [TargetRpc]
     void RespawnPlayer(NetworkConnection conn, GameObject player, int spawn)
     {
-        if (spawn >= 0 && spawn < spawnPoints.Count)
-        {
-            player.transform.position = spawnPoints[spawn].position;
-        }
-        else
-        {
-            Debug.LogWarning("[RespawnPlayer] Invalid spawn index.");
-        }
+        player.transform.position = spawnPoints[spawn].position;
     }
 
     private void InstantiateTexts()
@@ -96,6 +81,12 @@ public class PlayerManager : NetworkBehaviour
         healthText = GameObject.Find("PlayerHUD").transform.Find("Health Text").GetComponent<TMP_Text>();
         killText = GameObject.Find("PlayerHUD").transform.Find("Kill Text").GetComponent<TMP_Text>();
         deathText = GameObject.Find("PlayerHUD").transform.Find("Death Text").GetComponent<TMP_Text>();
+    }
+
+    IEnumerator ClearRespawningFlag(PlayerStats stats)
+    {
+        yield return new WaitForSeconds(1f);
+        stats.isRespawning = false;
     }
 
     public class Player

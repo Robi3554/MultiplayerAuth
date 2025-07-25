@@ -13,6 +13,8 @@ public class PlayerStats : NetworkBehaviour
     private TMP_Text killText;
     private TMP_Text deathText;
 
+    public bool isRespawning = false;
+
     public override void OnStartClient()
     {
         base.OnStartClient();
@@ -20,6 +22,9 @@ public class PlayerStats : NetworkBehaviour
         if (IsOwner)
         {
             InitTexts();
+            if (healthText != null)
+                healthText.text = health.Value.ToString();
+            health.OnChange += OnHealthChanged;
         }
     }
 
@@ -28,26 +33,18 @@ public class PlayerStats : NetworkBehaviour
         if (!IsOwner)
             return;
 
-        if(healthText != null)
-        {
-            healthText.text = health.Value.ToString();
-        }
-
-        if(killText != null)
-        {
+        if (killText != null)
             killText.text = "K:" + kills.Value.ToString();
-        }
 
-        if(deathText != null)
-        {
+        if (deathText != null)
             deathText.text = "D:" + deaths.Value.ToString();
-        }
     }
 
     [Server]
     public void TakeDamage(int damage)
     {
-        health.Value = Mathf.Clamp(health.Value -  damage, 0, 100);
+        if (isRespawning) return;
+        health.Value = Mathf.Clamp(health.Value - damage, 0, 100);
     }
 
     [Server]
@@ -73,5 +70,19 @@ public class PlayerStats : NetworkBehaviour
         healthText = GameObject.Find("PlayerHUD").transform.Find("Health Text").GetComponent<TMP_Text>();
         killText = GameObject.Find("PlayerHUD").transform.Find("Kill Text").GetComponent<TMP_Text>();
         deathText = GameObject.Find("PlayerHUD").transform.Find("Death Text").GetComponent<TMP_Text>();
+    }
+
+    private void OnHealthChanged(int previous, int current, bool asServer)
+    {
+        if (healthText != null)
+            healthText.text = current.ToString();
+    }
+
+    public override void OnStopClient()
+    {
+        base.OnStopClient();
+
+        if (IsOwner)
+            health.OnChange -= OnHealthChanged;
     }
 }
