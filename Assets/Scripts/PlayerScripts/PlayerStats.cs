@@ -64,7 +64,20 @@ public class PlayerStats : NetworkBehaviour
     {
         deaths.Value++;
     }
-
+    [Server]
+    public void HealPlayer(int healAmount)
+    {
+        if ((health.Value + healAmount) >= 100)
+        {
+            Debug.Log("Player healed to 100Hp");
+            health.Value = 100;
+        }
+        else
+        {
+            health.Value += healAmount;
+            Debug.Log($"Player healed to {health.Value}");
+        }
+    }
     private void InitTexts()
     {
         healthText = GameObject.Find("PlayerHUD").transform.Find("Health Text").GetComponent<TMP_Text>();

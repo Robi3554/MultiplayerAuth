@@ -155,10 +155,11 @@ MonoBehaviour:
   WasActiveDuringEdit: 0
   WasActiveDuringEdit_Set1: 1
   <ComponentIndex>k__BackingField: 0
-  <PredictedSpawn>k__BackingField: {fileID: 0}
+  <PredictedSpawn>k__BackingField: {fileID: 8683163403162104127}
   <PredictedOwner>k__BackingField: {fileID: 0}
   NetworkBehaviours:
-  - {fileID: 0}
+  - {fileID: 3617275574552121232}
+  - {fileID: 8683163403162104127}
   InitializedParentNetworkBehaviour: {fileID: 0}
   InitializedNestedNetworkObjects: []
   RuntimeParentNetworkBehaviour: {fileID: 0}
@@ -183,7 +184,7 @@ MonoBehaviour:
   _spectatorInterpolation: 2
   _enableTeleport: 0
   _teleportThreshold: 1
-  <PrefabId>k__BackingField: 3
+  <PrefabId>k__BackingField: 6
   <SpawnableCollectionId>k__BackingField: 0
   <AssetPathHash>k__BackingField: 6849529654753075593
   <SceneId>k__BackingField: 0
@@ -204,10 +205,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bb8c3ed2b71323b4fb4a5fa37a374ecd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _componentIndexCache: 255
+  _componentIndexCache: 0
   _addedNetworkObject: {fileID: -5672458697497958701}
-  _networkObjectCache: {fileID: 0}
-  _tickCallbacks: 6
+  _networkObjectCache: {fileID: -5672458697497958701}
+  _lifetime: 3
 --- !u!114 &8683163403162104127
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -220,8 +221,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e2b597e1828355a4d994a69cbb11ef85, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _componentIndexCache: 255
+  _componentIndexCache: 1
   _addedNetworkObject: {fileID: -5672458697497958701}
-  _networkObjectCache: {fileID: 0}
+  _networkObjectCache: {fileID: -5672458697497958701}
   _allowSpawning: 1
   _allowDespawning: 1
