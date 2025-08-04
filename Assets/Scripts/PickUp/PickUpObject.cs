@@ -10,7 +10,7 @@ public class PickUpObject : NetworkBehaviour
     [SerializeField] private float minHeight = 0.5f;
     [SerializeField] private float maxHeight = 1.5f;
     [SerializeField] private float rotateSpeed= 100f;
-
+    private bool itemPickedUp = false; 
     public override void OnStartClient()
     {
         base.OnStartClient();
@@ -20,14 +20,18 @@ public class PickUpObject : NetworkBehaviour
         }
     }
 
-    private void OnCollisionEnter(Collision other) {
-        Debug.Log("item collided with");
-        if (other.gameObject.layer == LayerMask.NameToLayer("Player"))
-        {
-            ItemPickUp(other);
+     private void OnTriggerEnter(Collider other){
+        if (!itemPickedUp)
+        { 
+            Debug.Log("item collided with");
+            if (other.gameObject.layer == LayerMask.NameToLayer("Player"))
+            {
+                itemPickedUp = true;
+                ItemPickUp(other);
+            }   
         }
     }
-    virtual protected void ItemPickUp(Collision other)
+    virtual protected void ItemPickUp(Collider other)
     {
         Debug.Log("Default item pickup does nothing");
     }
