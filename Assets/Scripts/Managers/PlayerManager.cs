@@ -27,6 +27,24 @@ public class PlayerManager : NetworkBehaviour
 
     [SerializeField] List<Transform> spawnPoints = new List<Transform>();
 
+    public void HealPlayer(int playerId, int healAmount)
+    {
+        if (!IsServerInitialized)
+        {
+            return;
+        }
+        if (!players.ContainsKey(playerId))
+        {
+            return;
+        }
+        var player = players[playerId];
+        var playerStats = player.stats;
+        if (playerStats == null) return;
+
+        playerStats.HealPlayer(healAmount);
+
+    }
+
     public void DamagePlayer(int victimClientId, int damage, int attackerClientId)
     {
         if (!IsServerInitialized)
