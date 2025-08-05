@@ -10,7 +10,7 @@ public class PickUpObject : NetworkBehaviour
     [SerializeField] private float minHeight = 0.5f;
     [SerializeField] private float maxHeight = 1.5f;
     [SerializeField] private float rotateSpeed= 100f;
-    private bool itemPickedUp = false; 
+    protected bool itemPickedUp = false; 
     public override void OnStartClient()
     {
         base.OnStartClient();
