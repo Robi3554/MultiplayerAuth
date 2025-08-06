@@ -1,18 +1,26 @@
 using UnityEngine;
 using FishNet.Object;
 using FishNet.Object.Synchronizing;
+using FishNet.CodeGenerating;
 
 public class HealthPickUp : PickUpObject
 {
     [SerializeField] private int healAmount = 50;
-    private Vector3 originalPosition;
-    private Quaternion originalRotation;
+    
+    [AllowMutableSyncType]
+    private SyncVar<Vector3> originalPosition;
+    [AllowMutableSyncType]
+    private SyncVar<Quaternion> originalRotation;
 
+
+    private void Awake()
+    {
+        originalPosition.Value = transform.position;
+        originalRotation.Value = transform.rotation;
+    }    
     public override void OnStartServer()
     {
         base.OnStartServer();
-        originalPosition = transform.position;
-        originalRotation = transform.rotation;
     }
 
     override protected void ItemPickUp(Collider other)
@@ -34,7 +42,7 @@ public class HealthPickUp : PickUpObject
         if (parentRespawn != null)
         {
             Debug.Log("Calling StartRespawnTimer on parent");
-            parentRespawn.StartRespawnTimer(NetworkObject, originalPosition, originalRotation); // call the StartRespawnTimer method on the parent
+            parentRespawn.StartRespawnTimer(NetworkObject, originalPosition.Value, originalRotation.Value); // call the StartRespawnTimer method on the parent
         }
         else
         {
