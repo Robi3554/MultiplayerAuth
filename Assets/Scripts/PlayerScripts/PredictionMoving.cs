@@ -150,12 +150,12 @@ public class PredictionMoving : TickNetworkBehaviour
     private void LateUpdate()
     {
         if (IsOwner && _camera != null)
-    {
-        // Keep camera at a fixed offset from the character
-        Vector3 offset = new Vector3(0, 5, -5);
-        _camera.transform.position = transform.position + offset;
-        _camera.transform.rotation = Quaternion.Euler(45, 0, 0); // Fixed angle
-    }
+        {
+            // Keep camera at a fixed offset from the character
+            Vector3 offset = new Vector3(0, 7, -5);
+            _camera.transform.position = transform.position + offset;
+            _camera.transform.rotation = Quaternion.Euler(45, 0, 0); // Fixed angle
+        }
     }
 
     private MoveData BuildMoveData()
@@ -166,7 +166,6 @@ public class PredictionMoving : TickNetworkBehaviour
             Vertical = Input.GetAxisRaw("Vertical"),
             Jump = _jumpPressed,
             Yaw = GetYawFromMouse()
-
         };
 
         _jumpPressed = false;
@@ -224,17 +223,19 @@ public class PredictionMoving : TickNetworkBehaviour
         Vector3 velocity = direction * move;
         velocity.y = _predictionRb.Rigidbody.linearVelocity.y;
        
-            animator.SetFloat("Velocity", velocity.magnitude / move);
+        animator.SetFloat("Velocity", velocity.magnitude / move);
 
-            _isGrounded = Physics.CheckSphere(groundCheck.position, groundCheckRadius, groundLayer, QueryTriggerInteraction.Ignore);
+        _isGrounded = Physics.CheckSphere(groundCheck.position, groundCheckRadius, groundLayer, QueryTriggerInteraction.Ignore);
 
-            if (data.Jump && _isGrounded)
-                velocity.y = jump;
+        if (data.Jump && _isGrounded)
+            velocity.y = jump;
+            
         if (IsOwner)
         {
             Quaternion targetRotation = Quaternion.Euler(0f, data.Yaw, 0f);
-            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotate * Time.fixedDeltaTime);
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotate * Time.fixedDeltaTime * 5f);
         }
+        
         _predictionRb.Rigidbody.linearVelocity = velocity;
         _predictionRb.Simulate();
     }
