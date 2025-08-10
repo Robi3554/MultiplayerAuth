@@ -147,14 +147,14 @@ public class PredictionMoving : TickNetworkBehaviour
         }
     }
 
-    public float followSpeed = 3f;
-    public float deadZoneRadius = 0.75f; // how far player can move before camera follows
+    public float followSpeed = 1f;
+    public float deadZoneRadius = 0.25f; // how far player can move before camera follows
 
     private void LateUpdate()
     {
         if (IsOwner && _camera != null)
         {
-            Vector3 targetPos = transform.position + new Vector3(0, 7, -5);
+            Vector3 targetPos = transform.position + new Vector3(0, 9, -7);
             float distance = Vector3.Distance(_camera.transform.position, targetPos);
 
             if (distance > deadZoneRadius)
@@ -178,35 +178,23 @@ public class PredictionMoving : TickNetworkBehaviour
             Horizontal = Input.GetAxisRaw("Horizontal"),
             Vertical = Input.GetAxisRaw("Vertical"),
             Jump = _jumpPressed,
-            Yaw = GetYawFromMouse()
+            Yaw = GetYawFromMovement(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"))
         };
 
         _jumpPressed = false;
         return data;
     }
 
-    private float GetYawFromMouse()
+    private float GetYawFromMovement(float horizontal, float vertical)
     {
-
-        if (_camera == null)
+        Vector3 direction = new Vector3(horizontal, 0f, vertical);
+        if (direction.sqrMagnitude > 0.001f)
         {
-            return transform.eulerAngles.y;
+            return Quaternion.LookRotation(direction).eulerAngles.y;
         }
-
-        Ray ray = _camera.ScreenPointToRay(Input.mousePosition);
-        Plane groundPlane = new Plane(Vector3.up, Vector3.zero);
-        if (groundPlane.Raycast(ray, out float enter))
-        {
-            Vector3 hitPoint = ray.GetPoint(enter);
-            Vector3 direction = (hitPoint - transform.position).normalized;
-            direction.y = 0f;
-            if (direction.sqrMagnitude > 0.01f)
-            {
-                return Quaternion.LookRotation(direction).eulerAngles.y;
-            }
-        }
-        return transform.eulerAngles.y;
+        return transform.eulerAngles.y; // Keep current rotation if no input
     }
+
 
     public override void CreateReconcile()
     {
