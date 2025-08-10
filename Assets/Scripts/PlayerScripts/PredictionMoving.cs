@@ -6,6 +6,7 @@ using FishNet.Object.Prediction;
 using FishNet.Transporting;
 using FishNet.Utility.Template;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class PredictionMoving : TickNetworkBehaviour
 {
@@ -32,12 +33,20 @@ public class PredictionMoving : TickNetworkBehaviour
     private float groundCheckRadius = 0.2f;
     [SerializeField] private Animator animator;
     [SerializeField] private NetworkAnimator netAnimator;
-    Camera _camera;
+    
+    private Camera _camera;
     private PredictionRigidbody _predictionRb = new();
     private uint _lastReplicateTick;
     private bool _isGrounded;
     private bool _jumpPressed;
 
+    // New Input System
+    private Vector2 _moveInput;
+    private Vector2 _mouseLook, _joystickLook;
+    private CharacterController _controller;
+
+    [SerializeField]
+    private bool isJoystick;
     internal bool canMove = true;
 
     private struct MoveData : IReplicateData
@@ -45,7 +54,7 @@ public class PredictionMoving : TickNetworkBehaviour
         public float Horizontal;
         public float Vertical;
         public bool Jump;
-        public float Yaw; //used for rotation
+        public float Yaw;
         private uint _tick;
 
         public void Dispose() { }
@@ -87,18 +96,47 @@ public class PredictionMoving : TickNetworkBehaviour
             _serverRotateRate = rotateRate;
         }
     }
+    
     public override void OnStartServer()
     {
         base.OnStartServer();
     }
+    
     public override void OnStartClient()
     {
         base.OnStartClient();
+        _controller = GetComponent<CharacterController>();
 
-        if (base.IsOwner) {
+        if (IsOwner) {
             _camera = Camera.main;
         }
     }
+    
+    public void OnMove(InputAction.CallbackContext context)
+    {
+        _moveInput = context.ReadValue<Vector2>();
+    }
+    
+    public void OnMouseLook(InputAction.CallbackContext context)
+    {
+        _mouseLook = context.ReadValue<Vector2>();
+    }
+    
+    public void OnJoystickLook(InputAction.CallbackContext context)
+    {
+        _joystickLook = context.ReadValue<Vector2>();
+    }
+
+    public void OnJump(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            _jumpPressed = true;
+            if (netAnimator)
+                netAnimator.SetTrigger("Jumping");
+        }
+    }
+
     protected override void TimeManager_OnTick()
     {
         if (IsOwner)
@@ -109,19 +147,13 @@ public class PredictionMoving : TickNetworkBehaviour
 
     private void Update()
     {
-        if (IsOwner && Input.GetButtonDown("Jump"))
-        {
-            _jumpPressed = true;
-            netAnimator.SetTrigger("Jumping");
-        }
-       
+        // Only interpolation for non-owners
         if (IsOwner && _interpolationBuffer.Count < 2)
             return;
 
         float renderTime = Time.time - InterpolationDelay;
 
         InterpolationData from = default, to = default;
-
         bool found = false;
 
         foreach (var pair in _interpolationBuffer)
@@ -141,31 +173,17 @@ public class PredictionMoving : TickNetworkBehaviour
         if (found)
         {
             float t = Mathf.InverseLerp(from.Time, to.Time, renderTime);
-
             transform.position = Vector3.Lerp(from.Position, to.Position, t);
             transform.rotation = Quaternion.Slerp(from.Rotation, to.Rotation, t);
         }
     }
 
-    public float followSpeed = 1f;
-    public float deadZoneRadius = 0.25f; // how far player can move before camera follows
-
     private void LateUpdate()
     {
         if (IsOwner && _camera != null)
         {
-            Vector3 targetPos = transform.position + new Vector3(0, 9, -7);
-            float distance = Vector3.Distance(_camera.transform.position, targetPos);
-
-            if (distance > deadZoneRadius)
-            {
-                _camera.transform.position = Vector3.Lerp(
-                    _camera.transform.position,
-                    targetPos,
-                    followSpeed * Time.deltaTime
-                );
-            }
-
+            Vector3 targetPos = transform.position + new Vector3(0, 9, -6);
+            _camera.transform.position = targetPos;
             _camera.transform.rotation = Quaternion.Euler(45, 0, 0);
         }
     }
@@ -175,16 +193,40 @@ public class PredictionMoving : TickNetworkBehaviour
     {
         MoveData data = new MoveData
         {
-            Horizontal = Input.GetAxisRaw("Horizontal"),
-            Vertical = Input.GetAxisRaw("Vertical"),
+            Horizontal = _moveInput.x,
+            Vertical = _moveInput.y,
             Jump = _jumpPressed,
-            Yaw = GetYawFromMovement(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"))
+            Yaw = !isJoystick ? GetYawFromMouse() : GetYawFromMovement(_moveInput.x, _moveInput.y)
         };
 
-        _jumpPressed = false;
+        _jumpPressed = false; // reset jump after reading
         return data;
     }
 
+    private float GetYawFromMouse()
+    {
+        if (_camera == null)
+        {
+            return transform.eulerAngles.y;
+        }
+        
+        Vector2 mousePos = Mouse.current != null ? Mouse.current.position.ReadValue() : Vector2.zero;
+        Ray ray = _camera.ScreenPointToRay(mousePos);
+        Plane groundPlane = new Plane(Vector3.up, Vector3.zero);
+
+        if (groundPlane.Raycast(ray, out float enter))
+        {
+            Vector3 hitPoint = ray.GetPoint(enter);
+            Vector3 direction = (hitPoint - transform.position).normalized;
+            direction.y = 0f;
+            if (direction.sqrMagnitude > 0.01f)
+            {
+                return Quaternion.LookRotation(direction).eulerAngles.y;
+            }
+        }
+        return transform.eulerAngles.y;
+    }
+    
     private float GetYawFromMovement(float horizontal, float vertical)
     {
         Vector3 direction = new Vector3(horizontal, 0f, vertical);
@@ -192,9 +234,8 @@ public class PredictionMoving : TickNetworkBehaviour
         {
             return Quaternion.LookRotation(direction).eulerAngles.y;
         }
-        return transform.eulerAngles.y; // Keep current rotation if no input
+        return transform.eulerAngles.y; 
     }
-
 
     public override void CreateReconcile()
     {
@@ -220,23 +261,24 @@ public class PredictionMoving : TickNetworkBehaviour
         float move = IsServerInitialized ? _serverMoveRate : moveRate;
         float jump = IsServerInitialized ? _serverJumpForce : jumpForce;
         float rotate = IsServerInitialized ? _serverRotateRate : rotateRate;
+
         Vector3 direction = new Vector3(data.Horizontal, 0f, data.Vertical).normalized;
         Vector3 velocity = direction * move;
         velocity.y = _predictionRb.Rigidbody.linearVelocity.y;
-       
+
         animator.SetFloat("Velocity", velocity.magnitude / move);
 
         _isGrounded = Physics.CheckSphere(groundCheck.position, groundCheckRadius, groundLayer, QueryTriggerInteraction.Ignore);
 
         if (data.Jump && _isGrounded)
             velocity.y = jump;
-            
+
         if (IsOwner)
         {
             Quaternion targetRotation = Quaternion.Euler(0f, data.Yaw, 0f);
             transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotate * Time.fixedDeltaTime * 5f);
         }
-        
+
         _predictionRb.Rigidbody.linearVelocity = velocity;
         _predictionRb.Simulate();
     }
