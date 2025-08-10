@@ -147,16 +147,29 @@ public class PredictionMoving : TickNetworkBehaviour
         }
     }
 
+    public float followSpeed = 3f;
+    public float deadZoneRadius = 0.75f; // how far player can move before camera follows
+
     private void LateUpdate()
     {
         if (IsOwner && _camera != null)
         {
-            // Keep camera at a fixed offset from the character
-            Vector3 offset = new Vector3(0, 7, -5);
-            _camera.transform.position = transform.position + offset;
-            _camera.transform.rotation = Quaternion.Euler(45, 0, 0); // Fixed angle
+            Vector3 targetPos = transform.position + new Vector3(0, 7, -5);
+            float distance = Vector3.Distance(_camera.transform.position, targetPos);
+
+            if (distance > deadZoneRadius)
+            {
+                _camera.transform.position = Vector3.Lerp(
+                    _camera.transform.position,
+                    targetPos,
+                    followSpeed * Time.deltaTime
+                );
+            }
+
+            _camera.transform.rotation = Quaternion.Euler(45, 0, 0);
         }
     }
+
 
     private MoveData BuildMoveData()
     {
