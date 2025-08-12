@@ -49,6 +49,7 @@ public class PredictionMoving : TickNetworkBehaviour
     private bool isJoystick;
     internal bool canMove = true;
 
+    //storing input for replication (client -> server)
     private struct MoveData : IReplicateData
     {
         public float Horizontal;
@@ -62,6 +63,7 @@ public class PredictionMoving : TickNetworkBehaviour
         public void SetTick(uint value) => _tick = value;
     }
 
+    //storing the state for reconciliation (server -> client) 
     private struct ReconcileData : IReconcileData
     {
         public PredictionRigidbody Rigidbody;
@@ -73,6 +75,7 @@ public class PredictionMoving : TickNetworkBehaviour
         public void SetTick(uint value) => _tick = value;
     }
 
+    // interpolation states for other clients
     private struct InterpolationData
     {
         public Vector3 Position;
@@ -151,11 +154,13 @@ public class PredictionMoving : TickNetworkBehaviour
         if (IsOwner && _interpolationBuffer.Count < 2)
             return;
 
+        // calculate render timestamp for the interpolation 
         float renderTime = Time.time - InterpolationDelay;
 
         InterpolationData from = default, to = default;
         bool found = false;
 
+        //Find the buffered states to interpoalte between for the current renderTIme
         foreach (var pair in _interpolationBuffer)
         {
             if (pair.Time >= renderTime)
@@ -286,8 +291,11 @@ public class PredictionMoving : TickNetworkBehaviour
     [Reconcile]
     private void PerformReconcile(ReconcileData data, Channel channel = Channel.Unreliable)
     {
+        //apply the server-authoritive rigidbody and rotation state
         _predictionRb.Reconcile(data.Rigidbody);
         transform.rotation = data.Rotation;
+
+        //for other clients enqueue state for interpolation
         if (!IsOwner)
         {
             _interpolationBuffer.Enqueue(new InterpolationData
@@ -297,6 +305,7 @@ public class PredictionMoving : TickNetworkBehaviour
                 Time = Time.time,
             });
 
+            //limit the buffer size
             while(_interpolationBuffer.Count > 10)
             {
                 _interpolationBuffer.Dequeue();
