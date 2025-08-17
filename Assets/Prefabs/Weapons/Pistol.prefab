@@ -232,7 +232,7 @@ MonoBehaviour:
   fireRate: 1
   damage: 15
   maxAmmo: 12
-  currentAmmo: 0
+  currentAmmo: 12
   reloadTime: 0.75
 --- !u!114 &7218028557937402863
 MonoBehaviour:

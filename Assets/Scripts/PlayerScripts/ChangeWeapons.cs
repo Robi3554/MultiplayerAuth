@@ -7,12 +7,13 @@ public class ChangeWeapons : MonoBehaviour
 {
     private List<GameObject> weapons = new List<GameObject>();
 
-    private float currentWeaponIndex;
-    private float changeWeaponInput;
+    private int currentWeaponIndex;
+    private int changeWeaponInput;
 
     void Start()
     {
         GetWeapons(gameObject);
+        changeWeaponInput = currentWeaponIndex;
     }
 
     void Update()
@@ -22,24 +23,26 @@ public class ChangeWeapons : MonoBehaviour
 
     public void OnWeaponChange(InputAction.CallbackContext context)
     {
-        if(context.performed)
-        {
-            if (context.control == Keyboard.current.digit1Key)
-                changeWeaponInput = 1;
-            if (context.control == Keyboard.current.digit2Key)
-                changeWeaponInput = 2;
+        if (!context.performed)
+            return;
 
+        string keyName = context.control.name;
+
+        if (int.TryParse(keyName, out int weaponNumber))
+        {
+            changeWeaponInput = weaponNumber;
             SwitchWeapons();
         }
     }
 
     private void SwitchWeapons()
     {
-        float weaponToDisableIndex = currentWeaponIndex;
-        currentWeaponIndex = changeWeaponInput;
+        if (changeWeaponInput == currentWeaponIndex)
+            return;
 
-        weapons[(int)weaponToDisableIndex - 1].SetActive(false);
-        weapons[(int)currentWeaponIndex - 1].SetActive(true);
+        weapons[currentWeaponIndex - 1].SetActive(false);
+        currentWeaponIndex = changeWeaponInput;
+        weapons[currentWeaponIndex - 1].SetActive(true);
     }
 
     private void GetWeapons(GameObject parent)
@@ -50,6 +53,12 @@ public class ChangeWeapons : MonoBehaviour
                 weapons.Add(weapon.gameObject);
         }
 
+        foreach(GameObject w in weapons)
+        {
+            w.SetActive(false);
+        }
+
+        weapons[0].SetActive(true);
         currentWeaponIndex = 1;
     }
 }

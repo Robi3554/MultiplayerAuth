@@ -146,7 +146,7 @@ MonoBehaviour:
   fireRate: 0.25
   damage: 3
   maxAmmo: 30
-  currentAmmo: 0
+  currentAmmo: 30
   reloadTime: 1
 --- !u!114 &1730125441025775743
 MonoBehaviour:
@@ -186,9 +186,9 @@ MonoBehaviour:
   _enableStateForwarding: 1
   _networkTransform: {fileID: 0}
   _ownerInterpolation: 1
-  _ownerSmoothedProperties: 255
+  _ownerSmoothedProperties: 4294967295
   _adaptiveInterpolation: 3
-  _spectatorSmoothedProperties: 255
+  _spectatorSmoothedProperties: 4294967295
   _spectatorInterpolation: 2
   _enableTeleport: 0
   _teleportThreshold: 1

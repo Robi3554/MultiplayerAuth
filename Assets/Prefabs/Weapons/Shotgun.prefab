@@ -200,7 +200,7 @@ MonoBehaviour:
   fireRate: 1
   damage: 5
   maxAmmo: 12
-  currentAmmo: 0
+  currentAmmo: 12
   reloadTime: 1.25
   pelletCount: 8
   spreadAngle: 10
