@@ -102,6 +102,7 @@ GameObject:
   - component: {fileID: 7199575389901469437}
   - component: {fileID: 1980596935499707685}
   - component: {fileID: -391344365738287245}
+  - component: {fileID: 1194690757228506171}
   m_Layer: 6
   m_Name: Player
   m_TagString: Untagged
@@ -124,6 +125,9 @@ Transform:
   m_Children:
   - {fileID: 2156039228563948761}
   - {fileID: 7866655768829242622}
+  - {fileID: 5626201755323301306}
+  - {fileID: 4936992222875801895}
+  - {fileID: 3297895050014000253}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!136 &165882610217161522
@@ -246,6 +250,7 @@ MonoBehaviour:
   - {fileID: -1193924184065049292}
   InitializedParentNetworkBehaviour: {fileID: 0}
   InitializedNestedNetworkObjects:
+  - {fileID: 0}
   - {fileID: 4716943161824377245}
   - {fileID: 3999915610799513852}
   - {fileID: 5461043393114008415}
@@ -448,11 +453,39 @@ MonoBehaviour:
       m_Calls: []
     m_ActionId: 561640a1-ad0b-430b-a39d-2c2588fda209
     m_ActionName: Gameplay/Mouse
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1194690757228506171}
+        m_TargetAssemblyTypeName: ChangeWeapons, Assembly-CSharp
+        m_MethodName: OnWeaponChange
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 5ee08d96-217e-4377-868b-bfc319bb3a47
+    m_ActionName: 'Gameplay/ChangeWeaponSlot[/Keyboard/1,/Keyboard/2]'
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Gameplay
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
+--- !u!114 &1194690757228506171
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9169438871797631607}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e8f8a2b30dc037743bc10ea0de941ee8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &65793777264523975
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -461,6 +494,22 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 2329976083277543319}
     m_Modifications:
+    - target: {fileID: -8679921383154817045, guid: bb5eba3bd20ff4b479dcd9ca42d93f35, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 11
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: bb5eba3bd20ff4b479dcd9ca42d93f35, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 11
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: bb5eba3bd20ff4b479dcd9ca42d93f35, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 11
+      objectReference: {fileID: 0}
+    - target: {fileID: -7935228224354000910, guid: 28c9203fd9cae564b9bbe2f8e1748f8a, type: 3}
+      propertyPath: WasActiveDuringEdit
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: -7935228224354000910, guid: 28c9203fd9cae564b9bbe2f8e1748f8a, type: 3}
       propertyPath: <IsNested>k__BackingField
       value: 1
@@ -468,6 +517,10 @@ PrefabInstance:
     - target: {fileID: -7935228224354000910, guid: 28c9203fd9cae564b9bbe2f8e1748f8a, type: 3}
       propertyPath: <PrefabId>k__BackingField
       value: 65535
+      objectReference: {fileID: 0}
+    - target: {fileID: -7935228224354000910, guid: 28c9203fd9cae564b9bbe2f8e1748f8a, type: 3}
+      propertyPath: _spectatorSmoothedProperties
+      value: 4294967295
       objectReference: {fileID: 0}
     - target: {fileID: -7935228224354000910, guid: 28c9203fd9cae564b9bbe2f8e1748f8a, type: 3}
       propertyPath: <AssetPathHash>k__BackingField
@@ -552,6 +605,10 @@ PrefabInstance:
     - target: {fileID: 6907268702211009917, guid: 28c9203fd9cae564b9bbe2f8e1748f8a, type: 3}
       propertyPath: m_Name
       value: Shotgun
+      objectReference: {fileID: 0}
+    - target: {fileID: 6907268702211009917, guid: 28c9203fd9cae564b9bbe2f8e1748f8a, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7442745247455022180, guid: 28c9203fd9cae564b9bbe2f8e1748f8a, type: 3}
       propertyPath: _addedNetworkObject

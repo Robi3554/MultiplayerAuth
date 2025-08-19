@@ -9,9 +9,9 @@ public class PlayerManager : NetworkBehaviour
 {
     public static PlayerManager Instance;
 
-    private TMP_Text healthText;
-    private TMP_Text killText;
-    private TMP_Text deathText;
+    //private TMP_Text healthText;
+    //private TMP_Text killText;
+    //private TMP_Text deathText;
 
     private void Awake()
     {
@@ -20,7 +20,7 @@ public class PlayerManager : NetworkBehaviour
 
     private void Start()
     {
-        InstantiateTexts();
+        //InstantiateTexts();
     }
 
     public Dictionary<int, Player> players = new Dictionary<int, Player>();
@@ -94,12 +94,12 @@ public class PlayerManager : NetworkBehaviour
         player.transform.position = spawnPoints[spawn].position;
     }
 
-    private void InstantiateTexts()
-    {
-        healthText = GameObject.Find("PlayerHUD").transform.Find("Health Text").GetComponent<TMP_Text>();
-        killText = GameObject.Find("PlayerHUD").transform.Find("Kill Text").GetComponent<TMP_Text>();
-        deathText = GameObject.Find("PlayerHUD").transform.Find("Death Text").GetComponent<TMP_Text>();
-    }
+    //private void InstantiateTexts()
+    //{
+    //    healthText = GameObject.Find("PlayerHUD").transform.Find("Health Text").GetComponent<TMP_Text>();
+    //    killText = GameObject.Find("PlayerHUD").transform.Find("Kill Text").GetComponent<TMP_Text>();
+    //    deathText = GameObject.Find("PlayerHUD").transform.Find("Death Text").GetComponent<TMP_Text>();
+    //}
 
     IEnumerator ClearRespawningFlag(PlayerStats stats)
     {

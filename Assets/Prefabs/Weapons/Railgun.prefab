@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 238207502012538005}
   m_Layer: 0
   m_Name: Railgun
-  m_TagString: Untagged
+  m_TagString: Weapon
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -116,7 +116,7 @@ MonoBehaviour:
   fireRate: 3
   damage: 40
   maxAmmo: 4
-  currentAmmo: 0
+  currentAmmo: 4
   reloadTime: 1.5
   stopTime: 3
   shootTime: 1.5

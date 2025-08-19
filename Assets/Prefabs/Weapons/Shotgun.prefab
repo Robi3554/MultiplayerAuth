@@ -267,7 +267,7 @@ GameObject:
   - component: {fileID: 7442745247455022180}
   m_Layer: 0
   m_Name: Shotgun
-  m_TagString: Untagged
+  m_TagString: Weapon
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -369,7 +369,7 @@ MonoBehaviour:
   fireRate: 1
   damage: 5
   maxAmmo: 12
-  currentAmmo: 0
+  currentAmmo: 12
   reloadTime: 1.25
   pelletCount: 8
   spreadAngle: 10
