@@ -5,6 +5,7 @@ using UnityEngine.InputSystem;
 
 public class ChangeWeapons : MonoBehaviour
 {
+    [SerializeField]
     private List<GameObject> weapons = new List<GameObject>();
 
     private int currentWeaponIndex;

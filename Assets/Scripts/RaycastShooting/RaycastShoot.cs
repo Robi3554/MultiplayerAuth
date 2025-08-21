@@ -80,7 +80,7 @@ public abstract class RaycastShoot : NetworkBehaviour
     protected virtual void Shoot()
     {
         Vector3 origin = firePoint.position;
-        Vector3 direction = firePoint.right;
+        Vector3 direction = -firePoint.up;
 
         Vector3 hitPosition = origin + direction * maxDistance;
 
