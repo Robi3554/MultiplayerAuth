@@ -36,16 +36,29 @@ public abstract class RaycastShoot : NetworkBehaviour
     public override void OnStartClient()
     {
         base.OnStartClient();
-
-        if (!base.IsOwner)
-            return;
     }
 
-    protected void Start()
+    private void Start()
     {
         currentAmmo = maxAmmo;
+    }
 
+    protected void OnEnable()
+    {
         ammoText = GameObject.Find("PlayerHUD").transform.Find("Ammo Text").GetComponent<TMP_Text>();
+
+        isReloading = false;
+        nextShootTime = 0f;
+
+        if (IsClientInitialized && base.IsOwner == false && NetworkObject != null)
+        {
+            RequestWeaponOwnershipServerRpc(NetworkObject);
+        }
+    }
+
+    private void OnDisable()
+    {
+        ammoText = null;
     }
 
     protected void Update()
@@ -67,7 +80,7 @@ public abstract class RaycastShoot : NetworkBehaviour
     protected virtual void Shoot()
     {
         Vector3 origin = firePoint.position;
-        Vector3 direction = firePoint.right;
+        Vector3 direction = -firePoint.up;
 
         Vector3 hitPosition = origin + direction * maxDistance;
 
@@ -143,6 +156,15 @@ public abstract class RaycastShoot : NetworkBehaviour
         currentAmmo = maxAmmo;
 
         isReloading = false;
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    private void RequestWeaponOwnershipServerRpc(NetworkObject weaponNetObj)
+    {
+        if (weaponNetObj != null)
+        {
+            weaponNetObj.GiveOwnership(Owner);
+        }
     }
     protected abstract void HandleShootInput();
 }
