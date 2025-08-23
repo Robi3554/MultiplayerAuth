@@ -14,7 +14,7 @@ public class ShotgunShoot : SingleShot
 
         for(int i = 0; i < pelletCount; i++)
         {
-            Vector3 dir = GetSpreadDirection(firePoint.right, spreadAngle);
+            Vector3 dir = GetSpreadDirection(-firePoint.up, spreadAngle);
             if (Physics.Raycast(origin, dir, out RaycastHit hit, Mathf.Infinity, playerLayer))
             {
                 HitPlayer(hit.transform.GetComponent<NetworkObject>());
