@@ -1,0 +1,164 @@
+using FishNet.Component.Animating;
+using FishNet.Object;
+using UnityEngine;
+using UnityEngine.InputSystem;
+
+[RequireComponent(typeof(Rigidbody))]
+public class PredictionMoving : NetworkBehaviour
+{
+    [Header("Movement")]
+    [SerializeField] private float moveRate = 5f;
+    [SerializeField] private float rotateRate = 5f;
+    [SerializeField] private float jumpForce = 7f;
+    [SerializeField] private LayerMask groundLayer;
+    [SerializeField] private Transform groundCheck;
+    [SerializeField] private float groundCheckRadius = 0.2f;
+
+    [Header("Animation")]
+    [SerializeField] private Animator animator;
+    [SerializeField] private NetworkAnimator netAnimator;
+
+    [Header("Input")]
+    private Vector2 _moveInput;
+    private Vector2 _mouseLook, _joystickLook;
+    [SerializeField] private bool isJoystick;
+    internal bool canMove = true;
+
+    private Rigidbody _rb;
+    private Camera _camera;
+    private bool _isGrounded;
+    private bool _jumpPressed;
+    private bool _isSprinting;
+
+    private void Awake()
+    {
+        _rb = GetComponent<Rigidbody>();
+    }
+
+    public override void OnStartClient()
+    {
+        base.OnStartClient();
+        if (IsOwner)
+            _camera = Camera.main;
+    }
+    
+    // new input system
+    public void OnMove(InputAction.CallbackContext context)
+    {
+        _moveInput = context.ReadValue<Vector2>();
+    }
+
+    public void OnMouseLook(InputAction.CallbackContext context)
+    {
+        _mouseLook = context.ReadValue<Vector2>();
+    }
+
+    public void OnJoystickLook(InputAction.CallbackContext context)
+    {
+        _joystickLook = context.ReadValue<Vector2>();
+    }
+
+    public void OnSprint(InputAction.CallbackContext context)
+    {
+        _isSprinting = context.ReadValueAsButton();
+    }
+
+    public void OnJump(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            _jumpPressed = true;
+            if (netAnimator)
+                netAnimator.SetTrigger("Jumping");
+        }
+    }
+
+    private void FixedUpdate()
+    {
+        if (!IsOwner) return;
+        if (!canMove)
+        {
+            _rb.linearVelocity = new Vector3(0, _rb.linearVelocity.y, 0);
+            animator.SetFloat("Velocity", 0f);
+            return;
+        }
+        
+        _isGrounded = Physics.CheckSphere(
+            groundCheck.position, groundCheckRadius, groundLayer, QueryTriggerInteraction.Ignore);
+        
+        Vector3 direction = new Vector3(_moveInput.x, 0f, _moveInput.y).normalized;
+        float speed = _isSprinting ? moveRate * 2f : moveRate;
+        Vector3 velocity = direction * speed;
+        velocity.y = _rb.linearVelocity.y;
+        
+        if (_jumpPressed && _isGrounded)
+        {
+            velocity.y = jumpForce;
+        }
+        _jumpPressed = false;
+
+        _rb.linearVelocity = velocity;
+        
+        float targetYaw = !isJoystick
+            ? GetYawFromMouse()
+            : GetYawFromJoystickOrMovement();
+
+        Quaternion targetRotation = Quaternion.Euler(0f, targetYaw, 0f);
+        transform.rotation = Quaternion.Slerp(
+            transform.rotation, targetRotation, rotateRate * Time.fixedDeltaTime * 5f);
+        
+        animator.SetFloat("Velocity", direction.magnitude);
+    }
+
+    private void LateUpdate()
+    {
+        if (!IsOwner || _camera == null) return;
+        
+        Vector3 targetPos = transform.position + new Vector3(0, 9, -6);
+        _camera.transform.position = targetPos;
+        _camera.transform.rotation = Quaternion.Euler(45, 0, 0);
+    }
+
+    private float GetYawFromMouse()
+    {
+        if (_camera == null || Mouse.current == null)
+            return transform.eulerAngles.y;
+
+        Ray ray = _camera.ScreenPointToRay(Mouse.current.position.ReadValue());
+        Plane groundPlane = new Plane(Vector3.up, Vector3.zero);
+
+        if (groundPlane.Raycast(ray, out float enter))
+        {
+            Vector3 hitPoint = ray.GetPoint(enter);
+            Vector3 dir = (hitPoint - transform.position).normalized;
+            dir.y = 0f;
+            if (dir.sqrMagnitude > 0.01f)
+                return Quaternion.LookRotation(dir).eulerAngles.y;
+        }
+        return transform.eulerAngles.y;
+    }
+
+    private float GetYawFromJoystickOrMovement()
+    {
+        if (_joystickLook.sqrMagnitude > 0.1f)
+        {
+            Vector3 lookDir = new Vector3(_joystickLook.x, 0f, _joystickLook.y);
+            return Quaternion.LookRotation(lookDir).eulerAngles.y;
+        }
+        
+        Vector3 dir = new Vector3(_moveInput.x, 0f, _moveInput.y);
+        if (dir.sqrMagnitude > 0.01f)
+            return Quaternion.LookRotation(dir).eulerAngles.y;
+
+        return transform.eulerAngles.y;
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        if (groundCheck != null)
+        {
+            Gizmos.color = Color.red;
+            Gizmos.DrawWireSphere(groundCheck.position, groundCheckRadius);
+        }
+    }
+}
