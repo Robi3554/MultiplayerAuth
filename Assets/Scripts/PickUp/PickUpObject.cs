@@ -28,6 +28,7 @@ public class PickUpObject : NetworkBehaviour
             {
                 itemPickedUp = true;
                 ItemPickUp(other);
+                itemPickedUp = false;
             }   
         }
     }

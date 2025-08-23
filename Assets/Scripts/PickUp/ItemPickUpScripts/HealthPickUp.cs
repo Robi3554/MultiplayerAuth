@@ -6,18 +6,19 @@ using FishNet.CodeGenerating;
 public class HealthPickUp : PickUpObject
 {
     [SerializeField] private int healAmount = 50;
-    
+
     [AllowMutableSyncType]
     private SyncVar<Vector3> originalPosition;
     [AllowMutableSyncType]
     private SyncVar<Quaternion> originalRotation;
 
+    // private SyncVar<bool> pickedUp = new SyncVar<bool>(false);
 
     private void Awake()
     {
         originalPosition.Value = transform.position;
         originalRotation.Value = transform.rotation;
-    }    
+    }
     public override void OnStartServer()
     {
         base.OnStartServer();
@@ -48,7 +49,12 @@ public class HealthPickUp : PickUpObject
         {
             Debug.LogWarning("PickUpRespawn component not found on parent!");
         }
-        itemPickedUp = false;
         Despawn(); // despawn the health pickup
+    }
+
+    [Server]
+    void SpawnCollider()
+    {
+        gameObject.GetComponent<Collider>().enabled = true;
     }
 }

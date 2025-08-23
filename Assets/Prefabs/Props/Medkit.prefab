@@ -30,15 +30,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 7f560ebc19ded7a408f2fec9b6feb843, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -0.07
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 7f560ebc19ded7a408f2fec9b6feb843, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.7071068
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 7f560ebc19ded7a408f2fec9b6feb843, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.7071068
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 7f560ebc19ded7a408f2fec9b6feb843, type: 3}
       propertyPath: m_LocalRotation.y
@@ -76,6 +76,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Medkit
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 7f560ebc19ded7a408f2fec9b6feb843, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1926001830816858404, guid: 7f560ebc19ded7a408f2fec9b6feb843, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
@@ -103,6 +107,11 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 8978134950480721839}
   m_SourcePrefab: {fileID: 100100000, guid: 7f560ebc19ded7a408f2fec9b6feb843, type: 3}
+--- !u!4 &6921253670575640511 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 7f560ebc19ded7a408f2fec9b6feb843, type: 3}
+  m_PrefabInstance: {fileID: 7460075302945482836}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &7730124365743248645 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 7f560ebc19ded7a408f2fec9b6feb843, type: 3}
@@ -141,11 +150,11 @@ MonoBehaviour:
   _preventDespawnOnDisconnect: 0
   _defaultDespawnType: 0
   NetworkObserver: {fileID: 0}
-  _enablePrediction: 0
+  _enablePrediction: 1
   _predictionType: 0
-  _graphicalObject: {fileID: 0}
+  _graphicalObject: {fileID: 6921253670575640511}
   _detachGraphicalObject: 0
-  _enableStateForwarding: 1
+  _enableStateForwarding: 0
   _networkTransform: {fileID: 0}
   _ownerInterpolation: 1
   _ownerSmoothedProperties: 255
@@ -154,13 +163,13 @@ MonoBehaviour:
   _spectatorInterpolation: 2
   _enableTeleport: 0
   _teleportThreshold: 1
-  <PrefabId>k__BackingField: 2
+  <PrefabId>k__BackingField: 18
   <SpawnableCollectionId>k__BackingField: 0
-  <AssetPathHash>k__BackingField: 2855588226541048559
+  <AssetPathHash>k__BackingField: 15563859032278480200
   <SceneId>k__BackingField: 0
   SerializedTransformProperties:
-    Position: {x: 0, y: 0, z: -0.07}
-    Rotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
+    Position: {x: 0, y: 0, z: 0}
+    Rotation: {x: 1, y: 0, z: 0, w: 0}
     Scale: {x: 7.5, y: 7.5, z: 7.5}
     IsValid: 1
 --- !u!114 &-3585922572305821020
