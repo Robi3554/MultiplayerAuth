@@ -1,0 +1,45 @@
+using FishNet.Object;
+using UnityEngine;
+
+public class ShotgunShoot : SingleShot
+{
+    [SerializeField]
+    private int pelletCount;
+    [SerializeField]
+    private float spreadAngle;
+
+    protected override void Shoot()
+    {
+        Vector3 origin = firePoint.position;
+
+        for(int i = 0; i < pelletCount; i++)
+        {
+            Vector3 dir = GetSpreadDirection(-firePoint.up, spreadAngle);
+            if (Physics.Raycast(origin, dir, out RaycastHit hit, Mathf.Infinity, playerLayer))
+            {
+                HitPlayer(hit.transform.GetComponent<NetworkObject>());
+                StartCoroutine(ShowShotLine(origin, hit.point));
+            }
+            else
+            {
+                StartCoroutine(ShowShotLine(origin, origin + dir * maxDistance));
+            }
+        }
+
+        currentAmmo--;
+    }
+    private Vector3 GetSpreadDirection(Vector3 forward, float angle)
+    {
+        float spreadRadius = Mathf.Tan(spreadAngle * Mathf.Deg2Rad);
+
+        Vector2 rPoint = Random.insideUnitCircle * spreadRadius;
+
+        Vector3 right = Vector3.Cross(forward, Vector3.up).normalized;
+
+        Vector3 up = Vector3.Cross(right, forward).normalized;
+
+        Vector3 spread = (forward + right * rPoint.x +  up * rPoint.y).normalized;
+
+        return spread;
+    }
+}
