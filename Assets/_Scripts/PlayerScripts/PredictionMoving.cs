@@ -76,12 +76,6 @@ public class PredictionMoving : NetworkBehaviour
     private void FixedUpdate()
     {
         if (!IsOwner) return;
-        if (!canMove)
-        {
-            _rb.linearVelocity = new Vector3(0, _rb.linearVelocity.y, 0);
-            animator.SetFloat("Velocity", 0f);
-            return;
-        }
         
         _isGrounded = Physics.CheckSphere(
             groundCheck.position, groundCheckRadius, groundLayer, QueryTriggerInteraction.Ignore);
@@ -90,7 +84,7 @@ public class PredictionMoving : NetworkBehaviour
         float speed = _isSprinting ? moveRate * 2f : moveRate;
         Vector3 velocity = direction * speed;
         velocity.y = _rb.linearVelocity.y;
-        
+
         if (_jumpPressed && _isGrounded)
         {
             velocity.y = jumpForce;
@@ -98,23 +92,28 @@ public class PredictionMoving : NetworkBehaviour
         _jumpPressed = false;
 
         _rb.linearVelocity = velocity;
-        
+
+        animator.SetFloat("Velocity", direction.magnitude);
+    }
+    
+    private void Update()
+    {
+        if (!IsOwner) return;
+
         float targetYaw = !isJoystick
             ? GetYawFromMouse()
             : GetYawFromJoystickOrMovement();
 
         Quaternion targetRotation = Quaternion.Euler(0f, targetYaw, 0f);
         transform.rotation = Quaternion.Slerp(
-            transform.rotation, targetRotation, rotateRate * Time.fixedDeltaTime * 5f);
-        
-        animator.SetFloat("Velocity", direction.magnitude);
+            transform.rotation, targetRotation, rotateRate * Time.deltaTime);
     }
-
+    
     private void LateUpdate()
     {
         if (!IsOwner || _camera == null) return;
         
-        Vector3 targetPos = transform.position + new Vector3(0, 9, -6);
+        Vector3 targetPos = this.transform.position + new Vector3(0, 9, -6);
         _camera.transform.position = targetPos;
         _camera.transform.rotation = Quaternion.Euler(45, 0, 0);
     }
