@@ -250,7 +250,7 @@ MonoBehaviour:
   - {fileID: 4716943161824377245}
   - {fileID: 5461043393114008415}
   - {fileID: 3999915610799513852}
-  - {fileID: 5541112465938094921}
+  - {fileID: 0}
   - {fileID: 4450592116721523113}
   RuntimeParentNetworkBehaviour: {fileID: 0}
   RuntimeChildNetworkBehaviours: []
@@ -511,8 +511,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weapons:
   - {fileID: 8450302136500058735}
-  - {fileID: 6668112599580669669}
   - {fileID: 6859601662621620154}
+  - {fileID: 6668112599580669669}
   - {fileID: 6819098701946925535}
 --- !u!1001 &65793777264523975
 PrefabInstance:
@@ -522,6 +522,18 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 2329976083277543319}
     m_Modifications:
+    - target: {fileID: -8679921383154817045, guid: bb5eba3bd20ff4b479dcd9ca42d93f35, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 11
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: bb5eba3bd20ff4b479dcd9ca42d93f35, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 11
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: bb5eba3bd20ff4b479dcd9ca42d93f35, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 11
+      objectReference: {fileID: 0}
     - target: {fileID: -7935228224354000910, guid: 28c9203fd9cae564b9bbe2f8e1748f8a, type: 3}
       propertyPath: WasActiveDuringEdit
       value: 1
@@ -722,18 +734,6 @@ PrefabInstance:
       propertyPath: m_Data.m_Root
       value: 
       objectReference: {fileID: 5270559511735712823}
-    - target: {fileID: -8679921383154817045, guid: bb5eba3bd20ff4b479dcd9ca42d93f35, type: 3}
-      propertyPath: m_LocalScale.x
-      value: 11
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: bb5eba3bd20ff4b479dcd9ca42d93f35, type: 3}
-      propertyPath: m_LocalScale.y
-      value: 11
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: bb5eba3bd20ff4b479dcd9ca42d93f35, type: 3}
-      propertyPath: m_LocalScale.z
-      value: 11
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1657,17 +1657,6 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 70b342d8ce5c2fd48b8fa3147d48d1d1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &5541112465938094921 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: -5860623144785094024, guid: d5fbe6d1ba744e441bcc2dbe30e99ae8, type: 3}
-  m_PrefabInstance: {fileID: 7083913874484511025}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 26b716c41e9b56b4baafaf13a523ba2e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!4 &8488879633568406974 stripped

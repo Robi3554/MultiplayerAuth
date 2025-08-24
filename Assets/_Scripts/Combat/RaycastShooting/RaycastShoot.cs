@@ -1,7 +1,8 @@
 using System.Collections;
-using UnityEngine;
 using FishNet.Object;
 using TMPro;
+using UnityEngine;
+using static UnityEngine.GraphicsBuffer;
 
 public abstract class RaycastShoot : NetworkBehaviour
 {
@@ -12,10 +13,14 @@ public abstract class RaycastShoot : NetworkBehaviour
     [SerializeField]
     protected LayerMask playerLayer;
     [SerializeField]
+    protected LayerMask wallLayer;
+    [SerializeField]
     protected Transform firePoint;
     [SerializeField]
     protected GameObject shotLinePrefab;
 
+    [SerializeField]
+    protected float speed = 100f;
     [SerializeField]
     protected float maxDistance = 100f;
     [SerializeField]
@@ -33,6 +38,8 @@ public abstract class RaycastShoot : NetworkBehaviour
 
     protected float nextShootTime = 0f;
 
+    protected LayerMask combinedLayer;
+
     public override void OnStartClient()
     {
         base.OnStartClient();
@@ -41,6 +48,8 @@ public abstract class RaycastShoot : NetworkBehaviour
     private void Start()
     {
         currentAmmo = maxAmmo;
+
+        combinedLayer = playerLayer | wallLayer;
     }
 
     protected void OnEnable()
@@ -84,7 +93,7 @@ public abstract class RaycastShoot : NetworkBehaviour
 
         Vector3 hitPosition = origin + direction * maxDistance;
 
-        if (Physics.Raycast(origin, direction, out RaycastHit hit, Mathf.Infinity, playerLayer))
+        if (Physics.Raycast(origin, direction, out RaycastHit hit, Mathf.Infinity, combinedLayer))
         {
             hitPosition = hit.point;
             Debug.Log("Raycast hit at position: " + hitPosition);
@@ -123,29 +132,42 @@ public abstract class RaycastShoot : NetworkBehaviour
     protected IEnumerator ShowShotLine(Vector3 start, Vector3 end)
     {
         if (shotLinePrefab == null)
-        {
             yield break;
-        }
 
         GameObject tempGO = Instantiate(shotLinePrefab, firePoint.position, Quaternion.identity, firePoint.parent);
 
-        LineRenderer tempLine = tempGO.GetComponent<LineRenderer>();
-
-        if (tempLine == null)
+        LineRenderer lr = tempGO.GetComponent<LineRenderer>();
+        if (lr == null)
         {
-            Debug.LogWarning("Shot Line Prefab has no LineRenderer component!");
+            Debug.LogWarning("Shot Line Prefab has no LineRenderer!");
             Destroy(tempGO);
             yield break;
         }
 
-        tempLine.enabled = true;
-        tempLine.SetPosition(0, start);
-        tempLine.SetPosition(1, end);
+        lr.positionCount = 2;
+        lr.enabled = true;
 
-        yield return new WaitForSeconds(0.05f);
+        float distance = Vector3.Distance(start, end);
+        float travelTime = distance / speed;
+        float elapsed = 0f;
 
-        Destroy(tempLine.gameObject);
+        Vector3 direction = (end - start).normalized;
+
+        while (elapsed < travelTime)
+        {
+            elapsed += Time.deltaTime;
+            float t = elapsed / travelTime;
+            Vector3 currentPos = Vector3.Lerp(start, end, t);
+
+            lr.SetPosition(0, currentPos);
+            lr.SetPosition(1, currentPos - (direction * 0.5f));
+
+            yield return null;
+        }
+
+        Destroy(tempGO);
     }
+
 
     protected IEnumerator Reload()
     {
