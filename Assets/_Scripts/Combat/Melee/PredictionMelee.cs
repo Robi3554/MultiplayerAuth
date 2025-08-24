@@ -18,7 +18,6 @@ public class PredictionMelee : NetworkBehaviour
     [SerializeField] private SyncVar<int> damage = new SyncVar<int>(10);
 
     [Header("References")]
-    [SerializeField] private Collider meleeCollider;
     [SerializeField] private Transform slashPoint;
     [SerializeField] private float coneAngle = 60f;
 
