@@ -175,6 +175,17 @@
                 },
                 {
                     "name": "",
+                    "id": "15d49833-1df8-456c-bfc2-fbb7a2fe8e98",
+                    "path": "<Keyboard>/0",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "ChangeWeaponSlot",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "70a14d8c-28ff-411e-a9b9-113f9f55e8c4",
                     "path": "<Keyboard>/1",
                     "interactions": "",

@@ -1,20 +1,26 @@
 using System.Collections.Generic;
 using NUnit.Framework;
 using UnityEngine;
+using UnityEngine.Animations.Rigging;
 using UnityEngine.InputSystem;
 
 public class ChangeWeapons : MonoBehaviour
 {
     [SerializeField]
+    private RigBuilder characterRigBuilder;
+    [SerializeField]
     private List<GameObject> weapons = new List<GameObject>();
 
-    private int currentWeaponIndex;
-    private int changeWeaponInput;
+    private int currentWeaponIndex = 1;
 
     void Start()
     {
         GetWeapons(gameObject);
-        changeWeaponInput = currentWeaponIndex;
+
+        if (characterRigBuilder.layers.Count < weapons.Count)
+        {
+            Debug.Log("There are fewer weapon rig layers assigned than existing weapons");
+        }
     }
 
     void Update()
@@ -29,21 +35,24 @@ public class ChangeWeapons : MonoBehaviour
 
         string keyName = context.control.name;
 
-        if (int.TryParse(keyName, out int weaponNumber))
+        if (int.TryParse(keyName, out int keyboardNumber))
         {
-            changeWeaponInput = weaponNumber;
-            SwitchWeapons();
+            SwitchWeapon(keyboardNumber);
         }
     }
 
-    private void SwitchWeapons()
+    private void SwitchWeapon(int newWeaponIndex)
     {
-        if (changeWeaponInput == currentWeaponIndex)
+        if (newWeaponIndex == currentWeaponIndex)
             return;
 
-        weapons[currentWeaponIndex - 1].SetActive(false);
-        currentWeaponIndex = changeWeaponInput;
-        weapons[currentWeaponIndex - 1].SetActive(true);
+        weapons[currentWeaponIndex].SetActive(false);
+        characterRigBuilder.layers[currentWeaponIndex].active = false;
+        
+        weapons[newWeaponIndex].SetActive(true);
+        characterRigBuilder.layers[newWeaponIndex].active = true;
+
+        currentWeaponIndex = newWeaponIndex;
     }
 
     private void GetWeapons(GameObject parent)
@@ -54,12 +63,13 @@ public class ChangeWeapons : MonoBehaviour
                 weapons.Add(weapon.gameObject);
         }
 
-        foreach(GameObject w in weapons)
+        for (int i = 0; i < weapons.Count; i++)
         {
-            w.SetActive(false);
+            weapons[i].SetActive(false);
+            characterRigBuilder.layers[currentWeaponIndex].active = false;
         }
 
-        weapons[0].SetActive(true);
-        currentWeaponIndex = 1;
+        weapons[currentWeaponIndex].SetActive(true);
+        characterRigBuilder.layers[currentWeaponIndex].active = true;
     }
 }
