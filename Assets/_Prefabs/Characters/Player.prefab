@@ -347,6 +347,7 @@ MonoBehaviour:
   _componentIndexCache: 3
   _addedNetworkObject: {fileID: 4321920308961391652}
   _networkObjectCache: {fileID: 4321920308961391652}
+  playerHUD: {fileID: 3121754666558153067}
 --- !u!114 &6401364317876090744
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2555,11 +2556,20 @@ PrefabInstance:
       propertyPath: m_Name
       value: PlayerHUD
       objectReference: {fileID: 0}
+    - target: {fileID: 8747139576269685279, guid: 950c997c80c3f8a42956a570dbe956ce, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 950c997c80c3f8a42956a570dbe956ce, type: 3}
+--- !u!1 &3121754666558153067 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8747139576269685279, guid: 950c997c80c3f8a42956a570dbe956ce, type: 3}
+  m_PrefabInstance: {fileID: 5924105213593854836}
+  m_PrefabAsset: {fileID: 0}
 --- !u!224 &4691581259386671250 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 1381899205929497574, guid: 950c997c80c3f8a42956a570dbe956ce, type: 3}
