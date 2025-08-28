@@ -10,23 +10,26 @@ using OpenCover.Framework.Model;
 public class HealthPickUp : PickUpObject
 {
     [SerializeField] private int healAmount = 50;
-    [Tooltip("Change to the height of the plane + a bit(e.g 50.0f + 2.5f = 52.5) to keep it grounded. It can float otherwise 😭")]
-    [SerializeField] private float yBasePosition = 157.0f; // change to the height of the planne
     [AllowMutableSyncType]
     private SyncVar<bool> readyForPickUp = new SyncVar<bool>(false);
     [SerializeField] private float pickupDelay = 2f;
-    [SerializeField] private Vector3 initPosition;
+    private Vector3 initPosition;
+    private Quaternion initRotation;
 
     private Collider _col;
-   private void Awake()
+    private void Awake()
     {
         _col = GetComponent<Collider>();
+    }
+    private void Start()
+    {
+        initPosition = transform.position;
+        initRotation = transform.rotation;
     }
     public override void OnStartServer()
     {
         if (!IsServerInitialized) return;
 
-        initPosition = transform.position;
         // always reset state on server start
         ResetPickupState(); // resets itemPickedUp
         ResetPickup();      // disables collider + SyncVar
@@ -34,11 +37,18 @@ public class HealthPickUp : PickUpObject
     }
     private void OnEnable()
     {
-        if (!IsServerInitialized) return;
-
-        ResetPickupState();
-        ResetPickup(); // always reset collider off
-        StartCoroutine(EnablePickupAfterDelay(pickupDelay)); // always delay before ready
+        if (IsServerInitialized)
+        {
+            transform.position = initPosition;
+            transform.rotation = initRotation;
+            ResetPickupState();
+            ResetPickup(); // always reset collider off
+            StartCoroutine(EnablePickupAfterDelay(pickupDelay)); // always delay before ready
+        }
+        if (IsClientInitialized)
+        {
+            // client logic: could play a respawn VFX, glow effect, etc.
+        }
     }
     private void ResetPickup()
     {
@@ -83,13 +93,20 @@ public class HealthPickUp : PickUpObject
         {
             Debug.Log("healing: Calling StartRespawnTimer on parent");
             // Vector3 FloorPosition = new Vector3(transform.position.x, yBasePosition, transform.position.z);
-            parentRespawn.StartRespawnTimer(NetworkObject, initPosition, transform.rotation); // call the StartRespawnTimer method on the parent
+            parentRespawn.StartRespawnTimer(NetworkObject, initPosition, transform.rotation, itemPrefab); // call the StartRespawnTimer method on the parent
         }
         else
         {
             Debug.LogWarning("Healing: PickUpRespawn component not found on parent!");
         }
         ResetPickup();
-        ServerManager.Despawn(gameObject, DespawnType.Pool); // despawn the health pickup
+        ItemPickUpObserver();
+        // ServerManager.Despawn(gameObject, DespawnType.Pool); // despawn the health pickup
+    }
+
+    [ObserversRpc]
+    private void ItemPickUpObserver()
+    {
+        gameObject.SetActive(false);
     }
 }

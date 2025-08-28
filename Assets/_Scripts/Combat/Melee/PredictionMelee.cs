@@ -21,8 +21,7 @@ public class PredictionMelee : NetworkBehaviour
 
 	private CapsuleCollider playerCollider;
 	private bool _meleePressed;
-    private bool _processedMelee;
-    private bool _isOnCooldown;
+    private bool _isOnCooldown = false;
     private float _cooldownTimer;
     private Vector3 debugDirectionToTarget = new Vector3(0, 0, 0);
 	private Vector3 debugHitPosition = new Vector3(0, 0, 0);
@@ -37,8 +36,12 @@ public class PredictionMelee : NetworkBehaviour
 	}
 
 	public void OnDamage(InputAction.CallbackContext context)
-	{ 
-		
+	{
+		Debug.Log("Melee: left click pressed");
+		if (context.performed && !_isOnCooldown)
+		{
+			_meleePressed = true;
+		}
 	}
 
 	private void FixedUpdate()
@@ -57,22 +60,14 @@ public class PredictionMelee : NetworkBehaviour
 				_cooldownTimer = 0f;
 			}
 		}
-
-		if (Input.GetMouseButton(0) && !_processedMelee && !_isOnCooldown)
-		{
-			_meleePressed = true;
-			_processedMelee = true;
-		}
-		else if (!Input.GetMouseButton(0))
-		{
-			_processedMelee = false;
-		}
+		// Debug.Log($"Melee: checking if all conditions for attack are right: IsOwner:{IsOwner}, _meleePressed:{_meleePressed}, _isOnCooldown:{_isOnCooldown}");
 
 		if (IsOwner && _meleePressed && !_isOnCooldown)
 		{
 			Direction = -slashPoint.up;
 			Position = slashPoint.position;
-			PerformSlashRequestServerRpc(Direction,Position);
+			PerformSlashRequestServerRpc(Direction, Position);
+			 _meleePressed = false;
 		}
 	}
 	void OnDrawGizmosSelected()

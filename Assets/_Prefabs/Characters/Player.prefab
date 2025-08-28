@@ -493,6 +493,22 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: 5ee08d96-217e-4377-868b-bfc319bb3a47
     m_ActionName: 'Gameplay/ChangeWeaponSlot[/Keyboard/1,/Keyboard/2]'
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 6114573984931867356}
+        m_TargetAssemblyTypeName: PredictionMelee, Assembly-CSharp
+        m_MethodName: OnDamage
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 2e5fcd95-77fe-4bb6-8215-bf4d732aef82
+    m_ActionName: 'Gameplay/Damage[/Keyboard/tab]'
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Gameplay
@@ -3164,6 +3180,17 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 8968542474636396934, guid: d50dc5a3dd2728e419a45401c51ea688, type: 3}
   m_PrefabInstance: {fileID: 7515493197121882900}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &6114573984931867356 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4366012905060426184, guid: d50dc5a3dd2728e419a45401c51ea688, type: 3}
+  m_PrefabInstance: {fileID: 7515493197121882900}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8776716418547883992}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 190b35a899a6167469ffcaf00308684a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &8252557938008442210 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1930527489772375670, guid: d50dc5a3dd2728e419a45401c51ea688, type: 3}

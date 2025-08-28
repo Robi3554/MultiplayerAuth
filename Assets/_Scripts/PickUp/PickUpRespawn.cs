@@ -2,6 +2,7 @@ using UnityEngine;
 using FishNet.Object;
 using System.Collections.Generic;
 using FishNet.Object.Synchronizing;
+using FishNet.Connection;
 
 public class PickUpRespawn : NetworkBehaviour
 {
@@ -15,12 +16,13 @@ public class PickUpRespawn : NetworkBehaviour
         public Vector3 originalPosition;
         public Quaternion originalRotation;
         public float respawnTimer;
+        public NetworkObject itemPrefab;
     }
 
-    [Server] 
+    [Server]
     private void ModifyRespawnData(int index, RespawnData respawnData)
     {
-       if (index >= 0 && index < _respawnList.Count)
+        if (index >= 0 && index < _respawnList.Count)
         {
             _respawnList[index] = respawnData;
         }
@@ -38,7 +40,7 @@ public class PickUpRespawn : NetworkBehaviour
             * will be where it was added, which will be the end
             * of the list, while newItem is the value added. */
             case SyncListOperation.Add:
-            
+
                 Debug.Log($"Item added at index {index}. position:{newItem.originalPosition}, rotation:{newItem.originalRotation}");
                 break;
             /* An object was removed from the list. Index
@@ -85,7 +87,7 @@ public class PickUpRespawn : NetworkBehaviour
 
     // call this method to start the respawn timer in the item
     [ServerRpc(RequireOwnership = false)]
-    public void StartRespawnTimer(NetworkObject childNetObj, Vector3 originalPosition, Quaternion originalRotation)
+    public void StartRespawnTimer(NetworkObject childNetObj, Vector3 originalPosition, Quaternion originalRotation, NetworkObject itemPrefab)
     {
         Debug.Log("Starting respawn timer");
         RespawnData newRespawn = new RespawnData
@@ -93,7 +95,8 @@ public class PickUpRespawn : NetworkBehaviour
             childNetworkObject = childNetObj,
             originalPosition = originalPosition,
             originalRotation = originalRotation,
-            respawnTimer = respawnTime
+            respawnTimer = respawnTime,
+            itemPrefab = itemPrefab
         };
         _respawnList.Add(newRespawn);
     }
@@ -109,7 +112,7 @@ public class PickUpRespawn : NetworkBehaviour
 
             if (data.respawnTimer <= 0f)
             {
-                RespawnChild(data);
+                RespawnChildServer(data);
                 _respawnList.RemoveAt(i);
                 i--; // adjust index after removing
             }
@@ -118,10 +121,10 @@ public class PickUpRespawn : NetworkBehaviour
                 ModifyRespawnData(i, data);
             }
         }
-        
+
     }
     [ServerRpc(RequireOwnership = false)]
-    private void RespawnChild(RespawnData data)
+    private void RespawnChildServer(RespawnData data)
     {
         Debug.Log("Respawning child");
         if (data.childNetworkObject == null)
@@ -129,14 +132,14 @@ public class PickUpRespawn : NetworkBehaviour
             Debug.LogWarning("Tried to respawn null object.");
             return;
         }
-        // Get pooled instance
-        NetworkObject respawnObject = NetworkManager.GetPooledInstantiated(data.childNetworkObject, true);
-        respawnObject.transform.SetParent(transform);
-        respawnObject.transform.position = data.originalPosition;
-        respawnObject.transform.rotation = data.originalRotation;
+        RespawnChildObserver(data);
 
-        // Collider stays disabled until HealthPickUp enables it after delay
-        respawnObject.gameObject.SetActive(true);
-        ServerManager.Spawn(respawnObject);   
+        // ServerManager.Spawn(data.childNetworkObject);   
+    }
+    [ObserversRpc]
+    private void RespawnChildObserver(RespawnData data)
+    {
+        data.childNetworkObject.gameObject.SetActive(true);
+
     }
 }
