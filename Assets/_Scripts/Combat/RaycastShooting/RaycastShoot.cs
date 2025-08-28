@@ -33,8 +33,12 @@ public abstract class RaycastShoot : NetworkBehaviour
     protected int currentAmmo;
     [SerializeField]
     protected float reloadTime;
+    [SerializeField]
+    protected float afterChangeDelay;
 
     private bool isReloading = false;
+
+    protected bool canShoot = true;
 
     protected float nextShootTime = 0f;
 
@@ -63,6 +67,8 @@ public abstract class RaycastShoot : NetworkBehaviour
         {
             RequestWeaponOwnershipServerRpc(NetworkObject);
         }
+
+        StartCoroutine(WeaponChangeDelay(afterChangeDelay));
     }
 
     private void OnDisable()
@@ -88,6 +94,8 @@ public abstract class RaycastShoot : NetworkBehaviour
 
     protected virtual void Shoot()
     {
+        if(!canShoot) return;
+
         Vector3 origin = firePoint.position;
         Vector3 direction = -firePoint.up;
 
@@ -148,6 +156,16 @@ public abstract class RaycastShoot : NetworkBehaviour
         currentAmmo = maxAmmo;
 
         isReloading = false;
+    }
+
+    protected IEnumerator WeaponChangeDelay(float delay)
+    {
+        canShoot = false;
+
+        yield return new WaitForSeconds(delay);
+
+        canShoot = true;
+
     }
 
     [ServerRpc(RequireOwnership = false)]

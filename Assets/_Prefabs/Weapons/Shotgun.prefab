@@ -376,6 +376,7 @@ MonoBehaviour:
   maxAmmo: 12
   currentAmmo: 12
   reloadTime: 1.25
+  afterChangeDelay: 1
   pelletCount: 8
   spreadAngle: 10
 --- !u!114 &4407355958735364974

@@ -10,6 +10,8 @@ public class ShotgunShoot : SingleShot
 
     protected override void Shoot()
     {
+        if (!canShoot) return;
+
         Vector3 origin = firePoint.position;
 
         for(int i = 0; i < pelletCount; i++)
