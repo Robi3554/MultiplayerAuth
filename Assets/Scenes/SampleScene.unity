@@ -172,13 +172,17 @@ PrefabInstance:
       propertyPath: minHeight
       value: 0.5
       objectReference: {fileID: 0}
+    - target: {fileID: 716468589982145398, guid: a66f0e20d5f592e4383b99319b7f9ee2, type: 3}
+      propertyPath: yPosition
+      value: 52.5
+      objectReference: {fileID: 0}
     - target: {fileID: 4280865360469013579, guid: a66f0e20d5f592e4383b99319b7f9ee2, type: 3}
       propertyPath: m_IncludeLayers.m_Bits
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6921253670575640511, guid: a66f0e20d5f592e4383b99319b7f9ee2, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -19.62
+      value: -19.96
       objectReference: {fileID: 0}
     - target: {fileID: 6921253670575640511, guid: a66f0e20d5f592e4383b99319b7f9ee2, type: 3}
       propertyPath: m_LocalPosition.y
@@ -186,7 +190,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6921253670575640511, guid: a66f0e20d5f592e4383b99319b7f9ee2, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -58.86
+      value: -58.43
       objectReference: {fileID: 0}
     - target: {fileID: 6921253670575640511, guid: a66f0e20d5f592e4383b99319b7f9ee2, type: 3}
       propertyPath: m_LocalRotation.w
@@ -221,20 +225,16 @@ PrefabInstance:
       value: Medkit
       objectReference: {fileID: 0}
     - target: {fileID: 8067330900118231873, guid: a66f0e20d5f592e4383b99319b7f9ee2, type: 3}
-      propertyPath: _enablePrediction
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8067330900118231873, guid: a66f0e20d5f592e4383b99319b7f9ee2, type: 3}
       propertyPath: WasActiveDuringEdit
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8067330900118231873, guid: a66f0e20d5f592e4383b99319b7f9ee2, type: 3}
-      propertyPath: _defaultDespawnType
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8067330900118231873, guid: a66f0e20d5f592e4383b99319b7f9ee2, type: 3}
       propertyPath: <SceneId>k__BackingField
       value: 4293392381
+      objectReference: {fileID: 0}
+    - target: {fileID: 8067330900118231873, guid: a66f0e20d5f592e4383b99319b7f9ee2, type: 3}
+      propertyPath: 'NetworkBehaviours.Array.data[0]'
+      value: 
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -500,6 +500,10 @@ PrefabInstance:
       propertyPath: minHeight
       value: 0.5
       objectReference: {fileID: 0}
+    - target: {fileID: 716468589982145398, guid: a66f0e20d5f592e4383b99319b7f9ee2, type: 3}
+      propertyPath: yPosition
+      value: 52.5
+      objectReference: {fileID: 0}
     - target: {fileID: 4280865360469013579, guid: a66f0e20d5f592e4383b99319b7f9ee2, type: 3}
       propertyPath: m_IncludeLayers.m_Bits
       value: 0
@@ -550,7 +554,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8067330900118231873, guid: a66f0e20d5f592e4383b99319b7f9ee2, type: 3}
       propertyPath: WasActiveDuringEdit
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8067330900118231873, guid: a66f0e20d5f592e4383b99319b7f9ee2, type: 3}
       propertyPath: <SceneId>k__BackingField
@@ -1577,8 +1581,8 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 106576861}
-  - {fileID: 399448453}
   - {fileID: 1482004969}
+  - {fileID: 399448453}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1474728571 stripped
@@ -1648,6 +1652,10 @@ PrefabInstance:
       propertyPath: minHeight
       value: 0.5
       objectReference: {fileID: 0}
+    - target: {fileID: 716468589982145398, guid: a66f0e20d5f592e4383b99319b7f9ee2, type: 3}
+      propertyPath: yPosition
+      value: 52.5
+      objectReference: {fileID: 0}
     - target: {fileID: 4280865360469013579, guid: a66f0e20d5f592e4383b99319b7f9ee2, type: 3}
       propertyPath: m_IncludeLayers.m_Bits
       value: 0
@@ -1698,7 +1706,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8067330900118231873, guid: a66f0e20d5f592e4383b99319b7f9ee2, type: 3}
       propertyPath: WasActiveDuringEdit
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8067330900118231873, guid: a66f0e20d5f592e4383b99319b7f9ee2, type: 3}
       propertyPath: <SceneId>k__BackingField

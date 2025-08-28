@@ -22,31 +22,31 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 7f560ebc19ded7a408f2fec9b6feb843, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: -20.86436
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 7f560ebc19ded7a408f2fec9b6feb843, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 0.81666183
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 7f560ebc19ded7a408f2fec9b6feb843, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: 16.388435
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 7f560ebc19ded7a408f2fec9b6feb843, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.7071068
+      value: 0.668361
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 7f560ebc19ded7a408f2fec9b6feb843, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.7071068
+      value: 0.67285013
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 7f560ebc19ded7a408f2fec9b6feb843, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: -0.2186357
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 7f560ebc19ded7a408f2fec9b6feb843, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: 0.22970584
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 7f560ebc19ded7a408f2fec9b6feb843, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -78,7 +78,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 7f560ebc19ded7a408f2fec9b6feb843, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1926001830816858404, guid: 7f560ebc19ded7a408f2fec9b6feb843, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
@@ -88,6 +88,9 @@ PrefabInstance:
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 7f560ebc19ded7a408f2fec9b6feb843, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7838956769287489429}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 7f560ebc19ded7a408f2fec9b6feb843, type: 3}
       insertIndex: -1
       addedObject: {fileID: 8067330900118231873}
@@ -117,6 +120,23 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 7f560ebc19ded7a408f2fec9b6feb843, type: 3}
   m_PrefabInstance: {fileID: 7460075302945482836}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &7838956769287489429
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7730124365743248645}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e2b597e1828355a4d994a69cbb11ef85, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _componentIndexCache: 3
+  _addedNetworkObject: {fileID: 8067330900118231873}
+  _networkObjectCache: {fileID: 8067330900118231873}
+  _allowSpawning: 1
+  _allowDespawning: 1
 --- !u!114 &8067330900118231873
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -130,15 +150,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   <IsNested>k__BackingField: 0
-  WasActiveDuringEdit: 0
+  WasActiveDuringEdit: 1
   WasActiveDuringEdit_Set1: 1
   <ComponentIndex>k__BackingField: 0
-  <PredictedSpawn>k__BackingField: {fileID: 0}
+  <PredictedSpawn>k__BackingField: {fileID: 7838956769287489429}
   <PredictedOwner>k__BackingField: {fileID: 0}
   NetworkBehaviours:
   - {fileID: -3585922572305821020}
   - {fileID: 716468589982145398}
   - {fileID: 8978134950480721839}
+  - {fileID: 7838956769287489429}
   InitializedParentNetworkBehaviour: {fileID: 0}
   InitializedNestedNetworkObjects: []
   RuntimeParentNetworkBehaviour: {fileID: 0}
@@ -148,7 +169,7 @@ MonoBehaviour:
   _isGlobal: 0
   _initializeOrder: 0
   _preventDespawnOnDisconnect: 0
-  _defaultDespawnType: 0
+  _defaultDespawnType: 1
   NetworkObserver: {fileID: 0}
   _enablePrediction: 1
   _predictionType: 0
@@ -163,13 +184,13 @@ MonoBehaviour:
   _spectatorInterpolation: 2
   _enableTeleport: 0
   _teleportThreshold: 1
-  <PrefabId>k__BackingField: 19
+  <PrefabId>k__BackingField: 16
   <SpawnableCollectionId>k__BackingField: 0
   <AssetPathHash>k__BackingField: 8252367513679991891
   <SceneId>k__BackingField: 0
   SerializedTransformProperties:
-    Position: {x: 0, y: 0, z: 0}
-    Rotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
+    Position: {x: -20.86436, y: 0.81666183, z: 16.388435}
+    Rotation: {x: 0.67285013, y: -0.2186357, z: 0.22970584, w: 0.668361}
     Scale: {x: 7.5, y: 7.5, z: 7.5}
     IsValid: 1
 --- !u!114 &-3585922572305821020
@@ -237,6 +258,11 @@ MonoBehaviour:
     NetworkManager: {fileID: 0}
     NetworkBehaviour: {fileID: 0}
     _value: {x: 0, y: 0, z: 0, w: 0}
+  readyForPickUp:
+    NetworkManager: {fileID: 0}
+    NetworkBehaviour: {fileID: 0}
+    _value: 0
+  pickupDelay: 0.1
 --- !u!95 &1876162221756031095
 Animator:
   serializedVersion: 7

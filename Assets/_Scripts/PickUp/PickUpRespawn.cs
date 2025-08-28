@@ -7,7 +7,7 @@ public class PickUpRespawn : NetworkBehaviour
 {
     [SerializeField] private float respawnTime = 10f;
     private readonly SyncList<RespawnData> _respawnList = new SyncList<RespawnData>();
-    
+
     [System.Serializable]
     private struct RespawnData
     {
@@ -100,48 +100,43 @@ public class PickUpRespawn : NetworkBehaviour
 
     private void Update()
     {
-        if (IsServerInitialized)
-        {
-            for (int i = 0; i < _respawnList.Count; i++)
-            {
-                RespawnData data = _respawnList[i];
-                data.respawnTimer -= Time.deltaTime;
+        if (!IsServerInitialized) return;
 
-                if (data.respawnTimer <= 0)
-                {
-                    RespawnChild(data);
-                    _respawnList.RemoveAt(i);
-                    i--; // adjust index after removing
-                }
-                else
-                {
-                    ModifyRespawnData(i, data);
-                }
+        for (int i = 0; i < _respawnList.Count; i++)
+        {
+            RespawnData data = _respawnList[i];
+            data.respawnTimer -= Time.deltaTime;
+
+            if (data.respawnTimer <= 0f)
+            {
+                RespawnChild(data);
+                _respawnList.RemoveAt(i);
+                i--; // adjust index after removing
+            }
+            else
+            {
+                ModifyRespawnData(i, data);
             }
         }
+        
     }
-
+    [ServerRpc(RequireOwnership = false)]
     private void RespawnChild(RespawnData data)
     {
         Debug.Log("Respawning child");
-        if (data.childNetworkObject != null)
+        if (data.childNetworkObject == null)
         {
-            // reset the object's state
-            data.childNetworkObject.transform.position = data.originalPosition; // reset to original position
-            data.childNetworkObject.transform.rotation = data.originalRotation; // reset rotation
-
-            // deinitialize the NetworkObject before spawning (had errors in console for this lol)
-            data.childNetworkObject.gameObject.SetActive(false); // disable the object (needs to be disabled while reseting)
-            data.childNetworkObject.ResetState(true); // reset the NetworkObject as server
-            // data.childNetworkObject.RemoveOwnership(); // remove ownership
-            data.childNetworkObject.gameObject.SetActive(true); // enable the object
-
-            // spawn the NetworkObject
-            ServerManager.Spawn(data.childNetworkObject, Owner);
+            Debug.LogWarning("Tried to respawn null object.");
+            return;
         }
-        else
-        {
-            Debug.LogWarning("child to respawn is null!");
-        }
+        // Get pooled instance
+        NetworkObject respawnObject = NetworkManager.GetPooledInstantiated(data.childNetworkObject, true);
+        respawnObject.transform.SetParent(transform);
+        respawnObject.transform.position = data.originalPosition;
+        respawnObject.transform.rotation = data.originalRotation;
+
+        // Collider stays disabled until HealthPickUp enables it after delay
+        respawnObject.gameObject.SetActive(true);
+        ServerManager.Spawn(respawnObject);   
     }
 }

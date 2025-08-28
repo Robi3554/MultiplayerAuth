@@ -108,6 +108,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 3aa75194356fb2b409ab9f89e54db8f3, type: 3}
       insertIndex: -1
       addedObject: {fileID: -8156182823083461611}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 3aa75194356fb2b409ab9f89e54db8f3, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7619287463612209682}
   m_SourcePrefab: {fileID: 100100000, guid: 3aa75194356fb2b409ab9f89e54db8f3, type: 3}
 --- !u!1 &1261373116390708428 stripped
 GameObject:
@@ -173,11 +176,11 @@ MonoBehaviour:
   _preventDespawnOnDisconnect: 0
   _defaultDespawnType: 0
   NetworkObserver: {fileID: 0}
-  _enablePrediction: 0
+  _enablePrediction: 1
   _predictionType: 0
   _graphicalObject: {fileID: 0}
   _detachGraphicalObject: 0
-  _enableStateForwarding: 1
+  _enableStateForwarding: 0
   _networkTransform: {fileID: 0}
   _ownerInterpolation: 1
   _ownerSmoothedProperties: 255
@@ -195,6 +198,25 @@ MonoBehaviour:
     Rotation: {x: 0, y: 0, z: 0, w: 0}
     Scale: {x: 0, y: 0, z: 0}
     IsValid: 0
+--- !u!114 &7619287463612209682
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1261373116390708428}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3fdaae44044276a49a52229c1597e33b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _updateOrder: 0
+  _timingType: 0
+  _allowTickDropping: 1
+  _maximumFrameTicks: 3
+  _tickRate: 30
+  _pingInterval: 1
+  _physicsMode: 1
 --- !u!4 &1930527489772375670 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 3aa75194356fb2b409ab9f89e54db8f3, type: 3}
