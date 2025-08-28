@@ -14,7 +14,8 @@ public class HealthPickUp : PickUpObject
     [SerializeField] private float yBasePosition = 157.0f; // change to the height of the planne
     [AllowMutableSyncType]
     private SyncVar<bool> readyForPickUp = new SyncVar<bool>(false);
-    [SerializeField] private float pickupDelay = 2f; 
+    [SerializeField] private float pickupDelay = 2f;
+    [SerializeField] private Vector3 initPosition;
 
     private Collider _col;
    private void Awake()
@@ -25,6 +26,7 @@ public class HealthPickUp : PickUpObject
     {
         if (!IsServerInitialized) return;
 
+        initPosition = transform.position;
         // always reset state on server start
         ResetPickupState(); // resets itemPickedUp
         ResetPickup();      // disables collider + SyncVar
@@ -81,7 +83,7 @@ public class HealthPickUp : PickUpObject
         {
             Debug.Log("healing: Calling StartRespawnTimer on parent");
             // Vector3 FloorPosition = new Vector3(transform.position.x, yBasePosition, transform.position.z);
-            parentRespawn.StartRespawnTimer(NetworkObject, transform.position, transform.rotation); // call the StartRespawnTimer method on the parent
+            parentRespawn.StartRespawnTimer(NetworkObject, initPosition, transform.rotation); // call the StartRespawnTimer method on the parent
         }
         else
         {
