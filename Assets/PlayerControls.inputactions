@@ -212,6 +212,8 @@
                     "processors": "",
                     "groups": "",
                     "action": "Damage",
+		    "isComposite": false,
+                    "isPartOfComposite": false
                 },
                 {
                     "name": "",
