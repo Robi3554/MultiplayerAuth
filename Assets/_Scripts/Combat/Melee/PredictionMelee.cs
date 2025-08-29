@@ -37,6 +37,8 @@ public class PredictionMelee : NetworkBehaviour
 
 	public void OnDamage(InputAction.CallbackContext context)
 	{
+		if (!this.isActiveAndEnabled) return;
+		
 		Debug.Log("Melee: left click pressed");
 		if (context.performed && !_isOnCooldown)
 		{

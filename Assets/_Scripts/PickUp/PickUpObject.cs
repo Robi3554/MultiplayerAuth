@@ -6,7 +6,6 @@ using UnityEngine;
 public class PickUpObject : NetworkBehaviour
 {
     protected bool itemPickedUp = false;
-    [SerializeField] protected NetworkObject itemPrefab;
     private void OnTriggerEnter(Collider other)
     {
         Debug.Log($"PickupObject: IsServerInitialized:{IsServerInitialized}");

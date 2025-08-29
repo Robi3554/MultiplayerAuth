@@ -52,7 +52,7 @@ MonoBehaviour:
   _addedNetworkObject: {fileID: 5388096707036169814}
   _networkObjectCache: {fileID: 5388096707036169814}
   IgnoredParameters: []
-  _animator: {fileID: 0}
+  _animator: {fileID: 4983882301100394205}
   _synchronizeWhenDisabled: 1
   _smoothFloats: 1
   _interpolation: 2
@@ -351,7 +351,7 @@ GameObject:
   - component: {fileID: 5388096707036169814}
   - component: {fileID: 4961023987807242301}
   - component: {fileID: 4297683254458283122}
-  - component: {fileID: 6285959960648330557}
+  - component: {fileID: 5240636864935270614}
   m_Layer: 0
   m_Name: Medkit
   m_TagString: Untagged
@@ -413,7 +413,7 @@ MonoBehaviour:
   NetworkBehaviours:
   - {fileID: 2960659720246470344}
   - {fileID: 4961023987807242301}
-  - {fileID: 6285959960648330557}
+  - {fileID: 0}
   - {fileID: 0}
   InitializedParentNetworkBehaviour: {fileID: 0}
   InitializedNestedNetworkObjects: []
@@ -489,7 +489,7 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.1375872, y: 0.09449657, z: 0.1589769}
   m_Center: {x: -0.0031377699, y: 0.014250438, z: -0.03766705}
---- !u!114 &6285959960648330557
+--- !u!114 &5240636864935270614
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -501,10 +501,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ffde54cd360f2b34180e9380dc5444fc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _componentIndexCache: 2
+  _componentIndexCache: 255
   _addedNetworkObject: {fileID: 5388096707036169814}
-  _networkObjectCache: {fileID: 5388096707036169814}
-  itemPrefab: {fileID: 5388096707036169814}
+  _networkObjectCache: {fileID: 0}
   healAmount: 50
   readyForPickUp:
     NetworkManager: {fileID: 0}
