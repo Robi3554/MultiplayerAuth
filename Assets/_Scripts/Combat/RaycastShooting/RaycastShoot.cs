@@ -33,8 +33,12 @@ public abstract class RaycastShoot : NetworkBehaviour
     protected int currentAmmo;
     [SerializeField]
     protected float reloadTime;
+    [SerializeField]
+    protected float afterChangeDelay;
 
     private bool isReloading = false;
+
+    protected bool canShoot = true;
 
     protected float nextShootTime = 0f;
 
@@ -63,6 +67,8 @@ public abstract class RaycastShoot : NetworkBehaviour
         {
             RequestWeaponOwnershipServerRpc(NetworkObject);
         }
+
+        StartCoroutine(WeaponChangeDelay(afterChangeDelay));
     }
 
     private void OnDisable()
@@ -88,6 +94,8 @@ public abstract class RaycastShoot : NetworkBehaviour
 
     protected virtual void Shoot()
     {
+        if(!canShoot) return;
+
         Vector3 origin = firePoint.position;
         Vector3 direction = -firePoint.up;
 
@@ -105,7 +113,7 @@ public abstract class RaycastShoot : NetworkBehaviour
         }
 
         currentAmmo--;
-        StartCoroutine(ShowShotLine(origin, hitPosition));
+        ShowShotLine(origin, hitPosition);
     }
 
     [ServerRpc(RequireOwnership = false)]
@@ -129,45 +137,15 @@ public abstract class RaycastShoot : NetworkBehaviour
         PlayerManager.Instance.DamagePlayer(targetId, damage, attackerId);
     }
 
-    protected IEnumerator ShowShotLine(Vector3 start, Vector3 end)
+    protected void ShowShotLine(Vector3 start, Vector3 end)
     {
         if (shotLinePrefab == null)
-            yield break;
+            return;
 
-        GameObject tempGO = Instantiate(shotLinePrefab, firePoint.position, Quaternion.identity, firePoint.parent);
+        GameObject tempGO = Instantiate(shotLinePrefab, firePoint.position, Quaternion.identity);
 
-        LineRenderer lr = tempGO.GetComponent<LineRenderer>();
-        if (lr == null)
-        {
-            Debug.LogWarning("Shot Line Prefab has no LineRenderer!");
-            Destroy(tempGO);
-            yield break;
-        }
-
-        lr.positionCount = 2;
-        lr.enabled = true;
-
-        float distance = Vector3.Distance(start, end);
-        float travelTime = distance / speed;
-        float elapsed = 0f;
-
-        Vector3 direction = (end - start).normalized;
-
-        while (elapsed < travelTime)
-        {
-            elapsed += Time.deltaTime;
-            float t = elapsed / travelTime;
-            Vector3 currentPos = Vector3.Lerp(start, end, t);
-
-            lr.SetPosition(0, currentPos);
-            lr.SetPosition(1, currentPos - (direction * 0.5f));
-
-            yield return null;
-        }
-
-        Destroy(tempGO);
+        tempGO.GetComponent<LineProjectile>().Initialize(speed, start, end);   
     }
-
 
     protected IEnumerator Reload()
     {
@@ -178,6 +156,16 @@ public abstract class RaycastShoot : NetworkBehaviour
         currentAmmo = maxAmmo;
 
         isReloading = false;
+    }
+
+    protected IEnumerator WeaponChangeDelay(float delay)
+    {
+        canShoot = false;
+
+        yield return new WaitForSeconds(delay);
+
+        canShoot = true;
+
     }
 
     [ServerRpc(RequireOwnership = false)]

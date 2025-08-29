@@ -34,6 +34,26 @@ public class ChangeWeapons : MonoBehaviour
             changeWeaponInput = weaponNumber;
             SwitchWeapons();
         }
+        else
+        {
+            float scrollValue = context.ReadValue<float>();
+
+            if (scrollValue > 0f)
+            {
+                changeWeaponInput++;
+            }
+            else if (scrollValue < 0f)
+            {
+                changeWeaponInput--;
+            }
+
+            if (changeWeaponInput > weapons.Count)
+                changeWeaponInput = 1;
+            else if (changeWeaponInput < 1)
+                changeWeaponInput = weapons.Count;
+
+            SwitchWeapons();
+        }
     }
 
     private void SwitchWeapons()

@@ -109,8 +109,12 @@ MonoBehaviour:
   playerLayer:
     serializedVersion: 2
     m_Bits: 64
+  wallLayer:
+    serializedVersion: 2
+    m_Bits: 128
   firePoint: {fileID: 1013854621173224026}
   shotLinePrefab: {fileID: 7133602437278059814, guid: 0e3e214fbff67c642a1f4f61c1361237, type: 3}
+  speed: 150
   maxDistance: 100
   fireRate: 1
   damage: 7
@@ -163,14 +167,14 @@ MonoBehaviour:
   _spectatorInterpolation: 2
   _enableTeleport: 0
   _teleportThreshold: 1
-  <PrefabId>k__BackingField: 6
+  <PrefabId>k__BackingField: 8
   <SpawnableCollectionId>k__BackingField: 0
   <AssetPathHash>k__BackingField: 3249044280350577070
   <SceneId>k__BackingField: 0
   SerializedTransformProperties:
     Position: {x: 0.535, y: 0.029999971, z: -0.087}
     Rotation: {x: 0, y: -0.7071068, z: 0, w: 0.7071068}
-    Scale: {x: 1, y: 1, z: 1}
+    Scale: {x: 0.25, y: 0.5, z: 0.25}
     IsValid: 1
 --- !u!1 &645928686248586991
 GameObject:

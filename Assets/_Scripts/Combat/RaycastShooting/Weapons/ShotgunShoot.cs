@@ -10,19 +10,21 @@ public class ShotgunShoot : SingleShot
 
     protected override void Shoot()
     {
+        if (!canShoot) return;
+
         Vector3 origin = firePoint.position;
 
         for(int i = 0; i < pelletCount; i++)
         {
             Vector3 dir = GetSpreadDirection(-firePoint.up, spreadAngle);
-            if (Physics.Raycast(origin, dir, out RaycastHit hit, Mathf.Infinity, playerLayer))
+            if (Physics.Raycast(origin, dir, out RaycastHit hit, Mathf.Infinity, combinedLayer))
             {
                 HitPlayer(hit.transform.GetComponent<NetworkObject>());
-                StartCoroutine(ShowShotLine(origin, hit.point));
+                ShowShotLine(origin, hit.point);
             }
             else
             {
-                StartCoroutine(ShowShotLine(origin, origin + dir * maxDistance));
+                ShowShotLine(origin, origin + dir * maxDistance);
             }
         }
 
