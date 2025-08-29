@@ -2,59 +2,111 @@ using UnityEngine;
 using FishNet.Object;
 using FishNet.Object.Synchronizing;
 using FishNet.CodeGenerating;
+using System;
+using System.Collections;
+using System.Threading;
+using OpenCover.Framework.Model;
 
 public class HealthPickUp : PickUpObject
 {
     [SerializeField] private int healAmount = 50;
-
     [AllowMutableSyncType]
-    private SyncVar<Vector3> originalPosition;
-    [AllowMutableSyncType]
-    private SyncVar<Quaternion> originalRotation;
+    private SyncVar<bool> readyForPickUp = new SyncVar<bool>(false);
+    [SerializeField] private float pickupDelay = 2f;
+    private Vector3 initPosition;
+    private Quaternion initRotation;
 
-    // private SyncVar<bool> pickedUp = new SyncVar<bool>(false);
-
+    private Collider _col;
     private void Awake()
     {
-        originalPosition.Value = transform.position;
-        originalRotation.Value = transform.rotation;
+        _col = GetComponent<Collider>();
+    }
+    private void Start()
+    {
+        initPosition = transform.position;
+        initRotation = transform.rotation;
     }
     public override void OnStartServer()
     {
-        base.OnStartServer();
+        if (!IsServerInitialized) return;
+
+        // always reset state on server start
+        ResetPickupState(); // resets itemPickedUp
+        ResetPickup();      // disables collider + SyncVar
+        StartCoroutine(EnablePickupAfterDelay(pickupDelay)); // wait before enabling
+    }
+    private void OnEnable()
+    {
+        if (IsServerInitialized)
+        {
+            transform.position = initPosition;
+            transform.rotation = initRotation;
+            ResetPickupState();
+            ResetPickup(); // always reset collider off
+            StartCoroutine(EnablePickupAfterDelay(pickupDelay)); // always delay before ready
+        }
+        if (IsClientInitialized)
+        {
+            // client logic: could play a respawn VFX, glow effect, etc.
+        }
+    }
+    private void ResetPickup()
+    {
+        readyForPickUp.Value = false;
+        if (_col != null)
+            _col.enabled = false;
+        Debug.Log($"HealthPickUp: _col.enabled:{_col.enabled}, readyForPickUp.Value:{readyForPickUp.Value}");
     }
 
+
+    private IEnumerator EnablePickupAfterDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        if (this != null && IsServerInitialized)
+        {
+            _col.enabled = true;
+            readyForPickUp.Value = true;
+        }
+        Debug.Log($"HealthPickUp: _col.enabled:{_col.enabled}, readyForPickUp.Value:{readyForPickUp.Value}");
+    }
+    [Server]
     override protected void ItemPickUp(Collider other)
     {
-        Debug.Log("Health pack picked up");
+        Debug.Log($"HealthPickUp::ItemPickUp : readyForPickUp.Value:{readyForPickUp.Value}");
+        if (!readyForPickUp.Value) return;
+
+        Debug.Log("Healing: Health pack picked up");
         // get the PlayerStats component from the player
         PlayerStats playerStats = other.GetComponentInParent<PlayerStats>();
         if (playerStats != null)
         {
-            Debug.Log("Healing player");
+            Debug.Log("Healing: Healing player");
             playerStats.HealPlayer(healAmount); // call the server-side HealPlayer method
         }
         else
         {
-            Debug.Log("PlayerStats component not found");
+            Debug.LogWarning("Healing: PlayerStats component not found");
         }
         // get the PickUpRespawn component from the parent
         PickUpRespawn parentRespawn = GetComponentInParent<PickUpRespawn>();
         if (parentRespawn != null)
         {
-            Debug.Log("Calling StartRespawnTimer on parent");
-            parentRespawn.StartRespawnTimer(NetworkObject, originalPosition.Value, originalRotation.Value); // call the StartRespawnTimer method on the parent
+            Debug.Log("healing: Calling StartRespawnTimer on parent");
+            // Vector3 FloorPosition = new Vector3(transform.position.x, yBasePosition, transform.position.z);
+            parentRespawn.StartRespawnTimer(NetworkObject, initPosition, transform.rotation, itemPrefab); // call the StartRespawnTimer method on the parent
         }
         else
         {
-            Debug.LogWarning("PickUpRespawn component not found on parent!");
+            Debug.LogWarning("Healing: PickUpRespawn component not found on parent!");
         }
-        Despawn(); // despawn the health pickup
+        ResetPickup();
+        ItemPickUpObserver();
+        // ServerManager.Despawn(gameObject, DespawnType.Pool); // despawn the health pickup
     }
 
-    [Server]
-    void SpawnCollider()
+    [ObserversRpc]
+    private void ItemPickUpObserver()
     {
-        gameObject.GetComponent<Collider>().enabled = true;
+        gameObject.SetActive(false);
     }
 }

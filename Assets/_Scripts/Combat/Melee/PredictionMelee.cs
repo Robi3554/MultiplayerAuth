@@ -1,10 +1,8 @@
 using FishNet.CodeGenerating;
 using FishNet.Object;
-using FishNet.Object.Prediction;
 using FishNet.Object.Synchronizing;
-using FishNet.Transporting;
-using LiteNetLib;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class PredictionMelee : NetworkBehaviour
 {
@@ -23,43 +21,30 @@ public class PredictionMelee : NetworkBehaviour
 
 	private CapsuleCollider playerCollider;
 	private bool _meleePressed;
-    private bool _processedMelee;
-    private bool _isOnCooldown;
+    private bool _isOnCooldown = false;
     private float _cooldownTimer;
     private Vector3 debugDirectionToTarget = new Vector3(0, 0, 0);
 	private Vector3 debugHitPosition = new Vector3(0, 0, 0);
-    private struct AttackData : IReplicateData
-    {
-	    public bool Slash;
-	    public Vector3 Direction;
-	    public Vector3 Position;
-	    private uint _tick;
-	    public void Dispose() { }
-	    public uint GetTick() => _tick;
-	    public void SetTick(uint value) => _tick = value;
-    }
-
-    private struct ReconcileData : IReconcileData
-    {
-	   private uint _tick;
-	   public void Dispose() { }
-	   public uint GetTick() => _tick;
-	   public void SetTick(uint value) => _tick = value;
-    }
+	private bool Slash;
+	private Vector3 Direction;
+	private Vector3 Position;
 
 	public override void OnStartNetwork()
 	{
 		base.OnStartNetwork();
-
-		Debug.Log($"OnStartNetwork called. TimeManager: {base.TimeManager}");
-
-		if (base.Owner.IsLocalClient)
-		{
-			base.TimeManager.OnTick += OnTick;
-		}
 		playerCollider = GetComponentInParent<CapsuleCollider>();
 	}
-	private void Update()
+
+	public void OnDamage(InputAction.CallbackContext context)
+	{
+		Debug.Log("Melee: left click pressed");
+		if (context.performed && !_isOnCooldown)
+		{
+			_meleePressed = true;
+		}
+	}
+
+	private void FixedUpdate()
 	{
 		if (!IsOwner)
 		{
@@ -75,36 +60,16 @@ public class PredictionMelee : NetworkBehaviour
 				_cooldownTimer = 0f;
 			}
 		}
+		// Debug.Log($"Melee: checking if all conditions for attack are right: IsOwner:{IsOwner}, _meleePressed:{_meleePressed}, _isOnCooldown:{_isOnCooldown}");
 
-		if (Input.GetMouseButton(0) && !_processedMelee && !_isOnCooldown)
-		{
-			_meleePressed = true;
-			_processedMelee = true;
-		}
-		else if (!Input.GetMouseButton(0))
-		{
-			_processedMelee = false;
-		}
-	}
-
-    private void OnTick()
-	{
 		if (IsOwner && _meleePressed && !_isOnCooldown)
 		{
-			AttackData attackData = new AttackData
-			{
-				Slash = true,
-				Direction = slashPoint.up,
-				Position = slashPoint.position
-			};
-
-			PerformReplicate(attackData);
-			_meleePressed = false;
+			Direction = -slashPoint.up;
+			Position = slashPoint.position;
+			PerformSlashRequestServerRpc(Direction, Position);
+			 _meleePressed = false;
 		}
-
-		CreateReconcile();
 	}
-
 	void OnDrawGizmosSelected()
 	{
 		Gizmos.color = Color.blue;
@@ -113,26 +78,17 @@ public class PredictionMelee : NetworkBehaviour
 		Gizmos.DrawLine(debugHitPosition, debugDirectionToTarget);
     }
 
-	void OnDrawGizmos()
+	[ServerRpc]
+	private void PerformSlashRequestServerRpc(Vector3 direction, Vector3 position)
 	{
-		
-    }
-
-	public override void OnStartServer()
-	{
-		base.OnStartServer();
-		Debug.Log("PredictionMelee: OnStartServer called");
+		Slash = true;
+		Direction = direction;
+		Position = position;
+		PerformSlash();
 	}
-	public override void OnStartClient()
-{
-    base.OnStartClient();
-    Debug.Log($"PredictionMelee: OnStartClient called. IsServerInitialized: {IsServerInitialized}");
-}
-
-	[Replicate]
-	private void PerformReplicate(AttackData data, ReplicateState state = ReplicateState.Invalid, Channel channel = Channel.Unreliable)
+	private void PerformSlash()
 	{
-		if (data.Slash && IsServerInitialized) // IsServerInitialized is false here on client, idk why
+		if (Slash)
 		{
 			Debug.Log("Melee: Attack pressed");
 			//get what we can hit, check if the enemy is in front of the player, call dmg function on server and start cooldown timer after hit
@@ -143,17 +99,17 @@ public class PredictionMelee : NetworkBehaviour
 			{
 				if (hit.CompareTag("Player") && hit != playerCollider)
 				{
-					debugDirectionToTarget = data.Position;
+					debugDirectionToTarget = Position;
 					debugHitPosition = hit.transform.position;
 					// get the horizontal direction to the target
-					Vector3 directionToTarget = hit.transform.position - data.Position;
+					Vector3 directionToTarget = hit.transform.position - Position;
 					directionToTarget.y = 0; // zero out the vertical component
 					directionToTarget.Normalize(); // normalize the direction
 
 					// get the horizontal forward direction of the slash point
-					Vector3 forwardDirection = data.Direction;
-					forwardDirection.y = 0; 
-					forwardDirection.Normalize(); 
+					Vector3 forwardDirection = Direction;
+					forwardDirection.y = 0;
+					forwardDirection.Normalize();
 
 					Debug.Log($"Direction to target: {directionToTarget}");
 
@@ -174,29 +130,21 @@ public class PredictionMelee : NetworkBehaviour
 					}
 				}
 			}
-
 			_isOnCooldown = true;
 			_cooldownTimer = 0f;
+			_meleePressed = false;
+			Slash = false;
 		}
 	}
 
-	[Reconcile]
-	private void PerformReconcile(ReconcileData data, Channel channel = Channel.Unreliable)
+	public override void OnStartServer()
 	{
-
+		base.OnStartServer();
+		Debug.Log("PredictionMelee: OnStartServer called");
 	}
-
-	public override void CreateReconcile()
+	public override void OnStartClient()
 	{
-		ReconcileData rd = new ReconcileData();
-		PerformReconcile(rd);
-	}
-
-	public override void OnStopNetwork()
-	{
-		if (base.TimeManager != null)
-		{
-		base.TimeManager.OnTick -= OnTick;
-		}
+		base.OnStartClient();
+		Debug.Log($"PredictionMelee: OnStartClient called. IsServerInitialized: {IsServerInitialized}");
 	}
 }
