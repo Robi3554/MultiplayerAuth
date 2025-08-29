@@ -13,10 +13,7 @@ public class PickUpRespawn : NetworkBehaviour
     private struct RespawnData
     {
         public NetworkObject childNetworkObject;
-        public Vector3 originalPosition;
-        public Quaternion originalRotation;
         public float respawnTimer;
-        public NetworkObject itemPrefab;
     }
 
     [Server]
@@ -41,7 +38,7 @@ public class PickUpRespawn : NetworkBehaviour
             * of the list, while newItem is the value added. */
             case SyncListOperation.Add:
 
-                Debug.Log($"Item added at index {index}. position:{newItem.originalPosition}, rotation:{newItem.originalRotation}");
+                Debug.Log($"Item added at index {index}");
                 break;
             /* An object was removed from the list. Index
             * is from where the object was removed. oldItem
@@ -87,16 +84,13 @@ public class PickUpRespawn : NetworkBehaviour
 
     // call this method to start the respawn timer in the item
     [ServerRpc(RequireOwnership = false)]
-    public void StartRespawnTimer(NetworkObject childNetObj, Vector3 originalPosition, Quaternion originalRotation, NetworkObject itemPrefab)
+    public void StartRespawnTimer(NetworkObject childNetObj)
     {
         Debug.Log("Starting respawn timer");
         RespawnData newRespawn = new RespawnData
         {
             childNetworkObject = childNetObj,
-            originalPosition = originalPosition,
-            originalRotation = originalRotation,
-            respawnTimer = respawnTime,
-            itemPrefab = itemPrefab
+            respawnTimer = respawnTime
         };
         _respawnList.Add(newRespawn);
     }

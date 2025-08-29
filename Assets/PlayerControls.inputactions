@@ -212,7 +212,7 @@
                     "processors": "",
                     "groups": "",
                     "action": "Damage",
-		    "isComposite": false,
+                    "isComposite": false,
                     "isPartOfComposite": false
                 },
                 {
@@ -223,7 +223,6 @@
                     "processors": "",
                     "groups": "",
                     "action": "ChangeWeaponSlot",
-
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -274,27 +273,5 @@
             ]
         }
     ],
-    "controlSchemes": [
-        {
-            "name": "mouse, keyboard and controller",
-            "bindingGroup": "mouse, keyboard and controller",
-            "devices": [
-                {
-                    "devicePath": "<Keyboard>",
-                    "isOptional": false,
-                    "isOR": false
-                },
-                {
-                    "devicePath": "<Mouse>",
-                    "isOptional": false,
-                    "isOR": false
-                },
-                {
-                    "devicePath": "<Gamepad>",
-                    "isOptional": false,
-                    "isOR": false
-                }
-            ]
-        }
-    ]
+    "controlSchemes": []
 }

@@ -50,7 +50,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8a6a39c46bf52104ba8efe3100bce3f7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _componentIndexCache: 5
+  _componentIndexCache: 6
   _addedNetworkObject: {fileID: 4321920308961391652}
   _networkObjectCache: {fileID: 4321920308961391652}
 --- !u!1 &8046090742000089634
@@ -246,6 +246,7 @@ MonoBehaviour:
   - {fileID: 2914300976222849180}
   - {fileID: 4968674162819163841}
   - {fileID: 6401364317876090744}
+  - {fileID: 9057493670606306785}
   - {fileID: -1193924184065049292}
   InitializedParentNetworkBehaviour: {fileID: 0}
   InitializedNestedNetworkObjects:
@@ -530,11 +531,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   weapons:
-  - {fileID: 8776716418547883992}
+  - {fileID: 6668112599580669669}
   - {fileID: 8450302136500058735}
+  - {fileID: 8776716418547883992}
   - {fileID: 6859601662621620154}
   - {fileID: 8450302136500058735}
-  - {fileID: 6668112599580669669}
 --- !u!114 &9057493670606306785
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -547,9 +548,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 453481867b26f7c43b5bf38802a5f50e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _componentIndexCache: 255
+  _componentIndexCache: 5
   _addedNetworkObject: {fileID: 4321920308961391652}
-  _networkObjectCache: {fileID: 0}
+  _networkObjectCache: {fileID: 4321920308961391652}
   _initializationSettings:
     TargetTransform: {fileID: 179044650430106392}
     DetachOnStart: 0
@@ -3324,6 +3325,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 190b35a899a6167469ffcaf00308684a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &7386765208379145985 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: -8156182823083461611, guid: d50dc5a3dd2728e419a45401c51ea688, type: 3}
+  m_PrefabInstance: {fileID: 7515493197121882900}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8776716418547883992}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 26b716c41e9b56b4baafaf13a523ba2e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!4 &8252557938008442210 stripped

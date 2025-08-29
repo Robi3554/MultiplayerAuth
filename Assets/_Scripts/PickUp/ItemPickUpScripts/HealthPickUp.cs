@@ -93,7 +93,7 @@ public class HealthPickUp : PickUpObject
         {
             Debug.Log("healing: Calling StartRespawnTimer on parent");
             // Vector3 FloorPosition = new Vector3(transform.position.x, yBasePosition, transform.position.z);
-            parentRespawn.StartRespawnTimer(NetworkObject, initPosition, transform.rotation, itemPrefab); // call the StartRespawnTimer method on the parent
+            parentRespawn.StartRespawnTimer(NetworkObject); // call the StartRespawnTimer method on the parent
         }
         else
         {
