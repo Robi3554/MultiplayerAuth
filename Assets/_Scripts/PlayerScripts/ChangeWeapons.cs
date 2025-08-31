@@ -1,13 +1,17 @@
+using System;
 using System.Collections.Generic;
-using NUnit.Framework;
+using FishNet.Object;
 using UnityEngine;
+using UnityEngine.Animations.Rigging;
 using UnityEngine.InputSystem;
 
-public class ChangeWeapons : MonoBehaviour
+public class ChangeWeapons : NetworkBehaviour
 {
     [SerializeField]
     private List<GameObject> weapons = new List<GameObject>();
-
+    [SerializeField]
+    private GameObject ModelRig;
+    private RigBuilder rigBuilder;
     private int currentWeaponIndex;
     private int changeWeaponInput;
 
@@ -15,6 +19,7 @@ public class ChangeWeapons : MonoBehaviour
     {
         GetWeapons(gameObject);
         changeWeaponInput = currentWeaponIndex;
+        rigBuilder = ModelRig.GetComponent<RigBuilder>();
     }
 
     void Update()
@@ -24,11 +29,21 @@ public class ChangeWeapons : MonoBehaviour
 
     public void OnWeaponChange(InputAction.CallbackContext context)
     {
-        if (!context.performed)
+        if (!context.performed || !IsOwner)
             return;
 
         string keyName = context.control.name;
-
+        float scrollValue = context.ReadValue<float>();
+        OnWeaponChangeServer(keyName,scrollValue);
+    }
+    [ServerRpc]
+    private void OnWeaponChangeServer(string keyName, float scrollValue)
+    {
+        OnWeaponChangeClient(keyName, scrollValue);
+    }
+    [ObserversRpc]
+    private void OnWeaponChangeClient(string keyName, float scrollValue)
+    { 
         if (int.TryParse(keyName, out int weaponNumber))
         {
             changeWeaponInput = weaponNumber;
@@ -36,8 +51,6 @@ public class ChangeWeapons : MonoBehaviour
         }
         else
         {
-            float scrollValue = context.ReadValue<float>();
-
             if (scrollValue > 0f)
             {
                 changeWeaponInput++;
@@ -54,8 +67,31 @@ public class ChangeWeapons : MonoBehaviour
 
             SwitchWeapons();
         }
+        UpdateRigLayers();
     }
 
+
+    [ObserversRpc]
+    private void UpdateRigLayers()      //tine cont ca RigLayer-ul sa fie de format "RigLayer_<Weapon name>"
+    {                                   //se poate imbunatati cu dictionare daca vrem sa facem mai eficient. pt 3 arme/player e ok
+        string currentWeaponRigName = "RigLayer_" + weapons[currentWeaponIndex - 1].name;
+        Debug.Log(currentWeaponRigName);
+        for (int i = 0; i < rigBuilder.layers.Count; i++)
+        {
+            var layer = rigBuilder.layers[i];
+            if (layer.rig.name == currentWeaponRigName)
+            {
+                layer.active = true;
+            }
+            else if (layer.rig != null)
+            {
+                layer.active = false;
+            }
+            rigBuilder.layers[i] = layer;
+        }
+        rigBuilder.Build();
+    }
+    [ObserversRpc]
     private void SwitchWeapons()
     {
         if (changeWeaponInput == currentWeaponIndex)
