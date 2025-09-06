@@ -6,9 +6,15 @@
   <component name="ChangeListManager">
     <list default="true" id="fbac54e2-f599-4c60-a987-3e77a97a2654" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.MultiplayerAuth/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.MultiplayerAuth/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/FishNet/CodeGenerating/cecil-0.11.4/Mono.Cecil.sln.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/FishNet/Runtime/Transporting/Transports/Tugboat/LiteNetLib/LiteNetLib.csproj.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/PlayerControls.inputactions" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/PlayerControls.inputactions" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scenes/SampleScene.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/SampleScene.unity" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/_Models/Characters/GamerGirl/Animation/Dance_Gamer_Girl.anim" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/_Models/Characters/GamerGirl/Animation/Dance_Gamer_Girl.anim" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/_Models/Characters/GamerGirl/Animation/GamerGirl_animCTRL.controller" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/_Models/Characters/GamerGirl/Animation/GamerGirl_animCTRL.controller" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/_Models/Characters/GamerGirl/Animation/Idle2_Gamer_Girl.anim" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/_Models/Characters/GamerGirl/Animation/Idle2_Gamer_Girl.anim" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/_Models/Characters/GamerGirl/Animation/dance2_Gamer_Girl.anim" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/_Models/Characters/GamerGirl/Animation/dance2_Gamer_Girl.anim" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/_Prefabs/Characters/Player.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/_Prefabs/Characters/Player.prefab" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/_Scripts/PlayerScripts/ChangeWeapons.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/_Scripts/PlayerScripts/ChangeWeapons.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ProjectSettings/EditorBuildSettings.asset" beforeDir="false" afterPath="$PROJECT_DIR$/ProjectSettings/EditorBuildSettings.asset" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -42,7 +48,8 @@
   }
 }</component>
   <component name="HighlightingSettingsPerFile">
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/2431722e3e3e41d78b6718bb39ab91111df400/ea/2139756e/Component.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/dae597be082047f8a4d252112cbcea2034600/5c/9e193059/StateMachineBehaviour.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/ToggleIK.cs" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="MetaFilesCheckinStateConfiguration" checkMetaFiles="false" />
   <component name="ProjectColorInfo">{
@@ -58,7 +65,7 @@
     "ModuleVcsDetector.initialDetectionPerformed": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "main",
+    "git-widget-placeholder": "Octa/AddEmotes",
     "ignore.virus.scanning.warn.message": "true",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
@@ -82,7 +89,7 @@
       <method v="2" />
     </configuration>
     <configuration name="Start Unity" type="RunUnityExe" factoryName="Unity Executable">
-      <option name="EXE_PATH" value="G:\Unity\6000.0.41f1\Editor\Unity.exe" />
+      <option name="EXE_PATH" value="C:\Program Files\Unity\Hub\Editor\6000.0.41f1\Editor\Unity.exe" />
       <option name="PROGRAM_PARAMETERS" value="-projectPath &quot;D:\Unity Development\MultiplayerAuth&quot; -debugCodeOptimization" />
       <option name="WORKING_DIRECTORY" value="D:\Unity Development\MultiplayerAuth" />
       <option name="PASS_PARENT_ENVS" value="1" />
@@ -93,7 +100,7 @@
       <method v="2" />
     </configuration>
     <configuration name="Unit Tests (batch mode)" type="RunUnityExe" factoryName="Unity Executable">
-      <option name="EXE_PATH" value="G:\Unity\6000.0.41f1\Editor\Unity.exe" />
+      <option name="EXE_PATH" value="C:\Program Files\Unity\Hub\Editor\6000.0.41f1\Editor\Unity.exe" />
       <option name="PROGRAM_PARAMETERS" value="-runTests -batchmode -projectPath &quot;D:\Unity Development\MultiplayerAuth&quot; -testResults Logs/results.xml -logFile Logs/Editor.log -testPlatform EditMode -debugCodeOptimization" />
       <option name="WORKING_DIRECTORY" value="D:\Unity Development\MultiplayerAuth" />
       <option name="PASS_PARENT_ENVS" value="1" />
