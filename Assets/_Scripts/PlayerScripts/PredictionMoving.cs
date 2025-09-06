@@ -65,7 +65,7 @@ public class PredictionMoving : NetworkBehaviour
 
     public void OnJump(InputAction.CallbackContext context)
     {
-        if (context.performed)
+        if (context.performed && _isGrounded && !_jumpPressed)
         {
             _jumpPressed = true;
             if (netAnimator)
@@ -85,11 +85,11 @@ public class PredictionMoving : NetworkBehaviour
         Vector3 velocity = direction * speed;
         velocity.y = _rb.linearVelocity.y;
 
-        if (_jumpPressed && _isGrounded)
+        if (_jumpPressed)
         {
-            velocity.y = jumpForce;
+            _rb.AddForce(Vector3.up * jumpForce, ForceMode.VelocityChange);
+            _jumpPressed = false;
         }
-        _jumpPressed = false;
 
         _rb.linearVelocity = velocity;
 
