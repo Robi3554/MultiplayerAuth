@@ -22,11 +22,6 @@ public class ChangeWeapons : NetworkBehaviour
         rigBuilder = ModelRig.GetComponent<RigBuilder>();
     }
 
-    void Update()
-    {
-        
-    }
-
     public void OnWeaponChange(InputAction.CallbackContext context)
     {
         if (!context.performed || !IsOwner)
