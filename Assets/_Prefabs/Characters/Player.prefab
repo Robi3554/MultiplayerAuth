@@ -79,7 +79,7 @@ Transform:
   m_GameObject: {fileID: 8046090742000089634}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.996, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -177,7 +177,7 @@ CapsuleCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.36542496
+  m_Radius: 0.3
   m_Height: 1.45
   m_Direction: 1
   m_Center: {x: 0, y: 0.7, z: 0}
@@ -333,7 +333,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 8
   groundCheck: {fileID: 7866655768829242622}
-  groundCheckRadius: 0.2
+  groundCheckRadius: 0.1
   animator: {fileID: 5407669308721553059}
   netAnimator: {fileID: 7199575389901469437}
   isJoystick: 0
