@@ -4,8 +4,6 @@ using FishNet.Object.Synchronizing;
 using FishNet.CodeGenerating;
 using System;
 using System.Collections;
-using System.Threading;
-using OpenCover.Framework.Model;
 
 public class HealthPickUp : PickUpObject
 {
