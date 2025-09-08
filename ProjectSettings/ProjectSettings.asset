@@ -141,7 +141,8 @@ PlayerSettings:
   visionOSBundleVersion: 1.0
   tvOSBundleVersion: 1.0
   bundleVersion: 0.1
-  preloadedAssets: []
+  preloadedAssets:
+  - {fileID: -944628639613478452, guid: 0233f63e95b82504bb4af551c071ec3f, type: 3}
   metroInputSource: 0
   wsaTransparentSwapchain: 0
   m_HolographicPauseOnTrackingLoss: 1
@@ -746,6 +747,7 @@ PlayerSettings:
   webGLCloseOnQuit: 0
   webWasm2023: 0
   scriptingDefineSymbols:
+    Server: FISHNET;FISHNET_V4
     Standalone: FISHNET;FISHNET_V4;FISHNET_DISABLE_V3TOV4_HELPERS;CLIENT
   additionalCompilerArguments: {}
   platformArchitecture: {}
