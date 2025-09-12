@@ -160,6 +160,17 @@
                 },
                 {
                     "name": "",
+                    "id": "9277a99d-1284-4e47-9e2a-adfd0945c878",
+                    "path": "<XInputController>/buttonSouth",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Jump",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "b62ba228-3544-4079-b013-f4b464da3c0c",
                     "path": "<Keyboard>/leftShift",
                     "interactions": "",
@@ -173,6 +184,17 @@
                     "name": "",
                     "id": "aed9d029-a0b7-40d0-9ef4-245e1cb39989",
                     "path": "<DualShockGamepad>/rightStickPress",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Sprint",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "cc12a53e-0334-4c2c-993e-58a35c7dc8ac",
+                    "path": "<XInputController>/buttonEast",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -247,6 +269,28 @@
                     "isPartOfComposite": false
                 },
                 {
+                    "name": "",
+                    "id": "3c14a51a-9049-4902-8cc2-194f8d072e10",
+                    "path": "<XInputController>/buttonWest",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Damage",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "473afa83-578f-485c-9e09-953cfb632fa5",
+                    "path": "<XInputController>/leftTrigger",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Damage",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
                     "name": "1D Axis",
                     "id": "6c896cda-c491-4a77-94b0-72d414699627",
                     "path": "1DAxis",
@@ -281,6 +325,17 @@
                 },
                 {
                     "name": "",
+                    "id": "0e7963b1-e19f-4b9e-a1e7-f38b697b777f",
+                    "path": "<XInputController>/dpad/left",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "ChangeWeaponSlot",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "f4a17449-7f27-4af7-bca3-8a81c74e83a4",
                     "path": "<Keyboard>/f1",
                     "interactions": "",
@@ -305,6 +360,17 @@
                     "name": "",
                     "id": "da3250c9-80dd-448b-b918-b339bd618043",
                     "path": "<Keyboard>/f3",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Emote",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "ec9296b5-2310-44a4-a451-46092d9fd2ac",
+                    "path": "<XInputController>/rightTrigger",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
