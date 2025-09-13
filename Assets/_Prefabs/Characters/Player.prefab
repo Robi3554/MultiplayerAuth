@@ -594,9 +594,9 @@ MonoBehaviour:
     DetachOnStart: 0
     AttachOnStop: 0
   _controllerMovementSettings:
-    EnableTeleport: 0
+    EnableTeleport: 1
     TeleportThreshold: 795
-    AdaptiveInterpolationValue: 0
+    AdaptiveInterpolationValue: 4
     InterpolationValue: 2
     SmoothedProperties: 1
     SnapNonSmoothedProperties: 0
