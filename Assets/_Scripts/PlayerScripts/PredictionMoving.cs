@@ -108,15 +108,6 @@ public class PredictionMoving : NetworkBehaviour
         transform.rotation = Quaternion.Slerp(
             transform.rotation, targetRotation, rotateRate * Time.deltaTime);
     }
-    
-    // private void LateUpdate()
-    // {
-    //     if (!IsOwner || _camera == null) return;
-    //     
-    //     Vector3 targetPos = this.transform.position + new Vector3(0, 9, -6);
-    //     _camera.transform.position = targetPos;
-    //     _camera.transform.rotation = Quaternion.Euler(45, 0, 0);
-    // }
 
     private float GetYawFromMouse()
     {
