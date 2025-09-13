@@ -332,7 +332,7 @@ MonoBehaviour:
   _addedNetworkObject: {fileID: 4321920308961391652}
   _networkObjectCache: {fileID: 4321920308961391652}
   moveRate: 5
-  rotateRate: 5
+  rotateRate: 9
   jumpForce: 4
   groundLayer:
     serializedVersion: 2
