@@ -5615,11 +5615,6 @@ MonoBehaviour:
   _networkObjectCache: {fileID: 0}
   animator: {fileID: 5407669308721553059}
   netAnimator: {fileID: 7199575389901469437}
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-=======
->>>>>>> Stashed changes
 --- !u!1 &9183801858864454969
 GameObject:
   m_ObjectHideFlags: 0
@@ -5651,10 +5646,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 6840738101867017194}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
 --- !u!1001 &65793777264523975
 PrefabInstance:
   m_ObjectHideFlags: 0
