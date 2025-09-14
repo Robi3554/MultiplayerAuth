@@ -5103,14 +5103,13 @@ GameObject:
   - component: {fileID: 1194690757228506171}
   - component: {fileID: 9057493670606306785}
   - component: {fileID: 2479726324464138772}
-  - component: {fileID: 7339000183388362240}
   m_Layer: 6
   m_Name: Player
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &179044650430106392
 Transform:
   m_ObjectHideFlags: 0
@@ -5248,7 +5247,7 @@ MonoBehaviour:
   - {fileID: 1194690757228506171}
   - {fileID: 9057493670606306785}
   - {fileID: 2479726324464138772}
-  - {fileID: 7339000183388362240}
+  - {fileID: 0}
   - {fileID: -1193924184065049292}
   InitializedParentNetworkBehaviour: {fileID: 0}
   InitializedNestedNetworkObjects:
@@ -5620,21 +5619,37 @@ MonoBehaviour:
   _networkObjectCache: {fileID: 4321920308961391652}
   animator: {fileID: 5407669308721553059}
   netAnimator: {fileID: 7199575389901469437}
---- !u!114 &7339000183388362240
-MonoBehaviour:
+--- !u!1 &9183801858864454969
+GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9169438871797631607}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 17496d320ec230a4c8b65b83f1b7d232, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _componentIndexCache: 8
-  _addedNetworkObject: {fileID: 4321920308961391652}
-  _networkObjectCache: {fileID: 4321920308961391652}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8178557171222781453}
+  m_Layer: 0
+  m_Name: mixamorig:RightHandRing4
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8178557171222781453
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9183801858864454969}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -0.0000015886982, y: 0.0015499168, z: -2.2884729e-11}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6840738101867017194}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &65793777264523975
 PrefabInstance:
   m_ObjectHideFlags: 0
