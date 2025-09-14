@@ -8,7 +8,7 @@ public class PredictionMoving : NetworkBehaviour
 {
     [Header("Movement")]
     [SerializeField] private float moveRate = 5f;
-    [SerializeField] private float rotateRate = 5f;
+    [SerializeField] private float rotateRate = 7f;
     [SerializeField] private float jumpForce = 7f;
     [SerializeField] private LayerMask groundLayer;
     [SerializeField] private Transform groundCheck;
@@ -108,15 +108,6 @@ public class PredictionMoving : NetworkBehaviour
         transform.rotation = Quaternion.Slerp(
             transform.rotation, targetRotation, rotateRate * Time.deltaTime);
     }
-    
-    private void LateUpdate()
-    {
-        if (!IsOwner || _camera == null) return;
-        
-        Vector3 targetPos = this.transform.position + new Vector3(0, 9, -6);
-        _camera.transform.position = targetPos;
-        _camera.transform.rotation = Quaternion.Euler(45, 0, 0);
-    }
 
     private float GetYawFromMouse()
     {
@@ -124,18 +115,18 @@ public class PredictionMoving : NetworkBehaviour
             return transform.eulerAngles.y;
 
         Ray ray = _camera.ScreenPointToRay(Mouse.current.position.ReadValue());
-        Plane groundPlane = new Plane(Vector3.up, Vector3.zero);
 
-        if (groundPlane.Raycast(ray, out float enter))
+        if (Physics.Raycast(ray, out RaycastHit hit, 100f, groundLayer, QueryTriggerInteraction.Ignore))
         {
-            Vector3 hitPoint = ray.GetPoint(enter);
-            Vector3 dir = (hitPoint - transform.position).normalized;
+            Vector3 dir = (hit.point - transform.position);
             dir.y = 0f;
             if (dir.sqrMagnitude > 0.01f)
                 return Quaternion.LookRotation(dir).eulerAngles.y;
         }
+
         return transform.eulerAngles.y;
     }
+
 
     private float GetYawFromJoystickOrMovement()
     {
