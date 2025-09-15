@@ -629,6 +629,8 @@ MonoBehaviour:
   - {fileID: 319315277333349243}
   - {fileID: 2754163214167274212}
   ModelRig: {fileID: 5970322229919129022}
+  weaponsInHand:
+  - {fileID: 7571421773413778065}
 --- !u!114 &3719605036728346066
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1120,6 +1122,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 177.581
       objectReference: {fileID: 0}
+    - target: {fileID: 1305148260922259572, guid: d50dc5a3dd2728e419a45401c51ea688, type: 3}
+      propertyPath: netAnimator
+      value: 
+      objectReference: {fileID: 6766728125162970839}
     - target: {fileID: 2077536159360935046, guid: d50dc5a3dd2728e419a45401c51ea688, type: 3}
       propertyPath: m_Data.m_Mid
       value: 
@@ -2070,6 +2076,11 @@ PrefabInstance:
 --- !u!4 &7086633162130642987 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 543f115edf8202349a6dead24f893598, type: 3}
+  m_PrefabInstance: {fileID: 7337065474761539520}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &7571421773413778065 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 543f115edf8202349a6dead24f893598, type: 3}
   m_PrefabInstance: {fileID: 7337065474761539520}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &8782947880510332825

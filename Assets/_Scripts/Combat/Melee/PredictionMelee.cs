@@ -1,4 +1,5 @@
 using FishNet.CodeGenerating;
+using FishNet.Component.Animating;
 using FishNet.Object;
 using FishNet.Object.Synchronizing;
 using UnityEngine;
@@ -19,6 +20,9 @@ public class PredictionMelee : NetworkBehaviour
     [SerializeField] private Transform slashPoint;
     [SerializeField] private float coneAngle = 60f;
 	[SerializeField] private ParticleSystem VFX_SLASH;
+
+	[Header("Animation")]
+    [SerializeField] private NetworkAnimator netAnimator;
 	private CapsuleCollider playerCollider;
 	private bool _meleePressed;
     private bool _isOnCooldown = false;
@@ -43,6 +47,7 @@ public class PredictionMelee : NetworkBehaviour
 		if (context.performed && !_isOnCooldown)
 		{
 			_meleePressed = true;
+			netAnimator.SetTrigger("SlashTrigger");
 		}
 	}
 
