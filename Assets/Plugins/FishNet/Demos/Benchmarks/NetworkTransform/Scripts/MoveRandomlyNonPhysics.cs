@@ -8,7 +8,7 @@ namespace FishNet.Demo.Benchmarks.NetworkTransforms
 {
     public class MoveRandomlyNonPhysics : TickNetworkBehaviour
     {
-        [System.Serializable]
+        [Serializable]
         private struct GoalData
         {
             public Vector3 Position;
@@ -17,10 +17,8 @@ namespace FishNet.Demo.Benchmarks.NetworkTransforms
 
         [SerializeField]
         private bool _isActive = true;
-
         [SerializeField]
         private bool _is2d;
-        
         [Header("Changes")]
         [SerializeField]
         [Range(0, 3)]
@@ -31,13 +29,16 @@ namespace FishNet.Demo.Benchmarks.NetworkTransforms
         [SerializeField]
         [Range(0f, 1f)]
         private float _rotationChance = 0.33f;
-
         [Header("Movement")]
+        [Range(0f, 5f)]
+        [SerializeField]
+        private float _delayBetweenMovements = 1.5f;
+        [SerializeField]
+        private float _yOffsetPerInstance = 0f;
         [SerializeField]
         private bool _randomMovement = true;
         [SerializeField]
         private List<GoalData> _goalDatas = new();
-
         [SerializeField]
         private bool _moveInUpdate = false;
         [SerializeField]
@@ -50,48 +51,54 @@ namespace FishNet.Demo.Benchmarks.NetworkTransforms
         [SerializeField]
         private float _range = 6f;
 
-        //Position to move towards.
+        // Position to move towards.
         private Vector3 _goalPosition;
-        //Rotation to move towards.
+        // Rotation to move towards.
         private Quaternion _goalRotation;
-
         private Quaternion _lastRot;
         private int _nextGoalDataIndex = 0;
+        private float _nextMoveTime = float.MinValue;
 
         public override void OnStartNetwork()
         {
-            if (!base.IsServerStarted && !base.Owner.IsLocalClient)
+            if (!IsServerStarted && !Owner.IsLocalClient)
             {
-                base.SetTickCallbacks(TickCallback.None);
+                SetTickCallbacks(TickCallback.None);
                 DestroyImmediate(this);
             }
             else
             {
                 if (_moveInUpdate)
-                    base.SetTickCallbacks(TickCallback.Update);
+                    SetTickCallbacks(TickCallback.Update);
                 else
-                    base.SetTickCallbacks(TickCallback.Tick);
+                    SetTickCallbacks(TickCallback.Tick);
             }
         }
 
         protected override void TimeManager_OnUpdate()
         {
-            Move(Time.deltaTime);
+            if (_moveInUpdate)
+                Move(Time.deltaTime);
         }
 
         protected override void TimeManager_OnTick()
         {
-            float delta = (float)base.TimeManager.TickDelta;
-            Move(delta);
+            if (!_moveInUpdate)
+            {
+                float delta = (float)TimeManager.TickDelta;
+                Move(delta);
+            }
         }
 
         private void Move(float delta)
         {
             if (!_isActive)
                 return;
-            if (!base.IsController)
+            if (!IsController)
                 return;
-            
+            if (Time.time < _nextMoveTime)
+                return;
+
             transform.position = Vector3.MoveTowards(transform.position, _goalPosition, _moveRate * delta);
             if (!_is2d)
                 transform.rotation = Quaternion.RotateTowards(transform.rotation, _goalRotation, _rotateRate * delta);
@@ -104,7 +111,25 @@ namespace FishNet.Demo.Benchmarks.NetworkTransforms
 
         public override void OnStartServer()
         {
+            TrySetFirstGoal();
+        }
+
+        public override void OnStartClient()
+        {
+            TrySetFirstGoal();
+        }
+
+        private void TrySetFirstGoal()
+        {
+            if (!IsController)
+                return;
+
             SetNextGoal();
+
+            transform.position = _goalPosition;
+            transform.rotation = _goalRotation;
+
+            _nextMoveTime = float.MinValue;
         }
 
         private void SetNextGoal()
@@ -114,16 +139,19 @@ namespace FishNet.Demo.Benchmarks.NetworkTransforms
             else
                 SetSpecifiedGoal();
 
+            _nextMoveTime = Time.time + _delayBetweenMovements;
+
             void SetSpecifiedGoal()
             {
-                if (_goalDatas.Count == 0) return;
+                if (_goalDatas.Count == 0)
+                    return;
 
                 if (_nextGoalDataIndex >= _goalDatas.Count)
                     _nextGoalDataIndex = 0;
 
                 int index = _nextGoalDataIndex;
                 _nextGoalDataIndex++;
-                
+
                 _goalPosition = _goalDatas[index].Position;
                 _goalRotation = Quaternion.Euler(_goalDatas[index].Eulers);
             }
@@ -132,7 +160,7 @@ namespace FishNet.Demo.Benchmarks.NetworkTransforms
             {
                 if (_axes > 0)
                 {
-                    Vector3 rnd = (Random.insideUnitSphere * _range);
+                    Vector3 rnd = Random.insideUnitSphere * _range;
                     Vector3 next = transform.position;
 
                     if (_axes >= 1 && RandomizeAxes())
@@ -141,12 +169,12 @@ namespace FishNet.Demo.Benchmarks.NetworkTransforms
                         next.y = rnd.y;
                     if (_axes >= 3 && RandomizeAxes())
                         next.z = rnd.z;
-                    
-                    //Make sure at least one axes is set.
+
+                    // Make sure at least one axes is set.
                     if (next == transform.position)
                         next.x = rnd.x;
-                    
-                    bool RandomizeAxes() => (Random.Range(0f, 1f) <= _chancePerAxes);
+
+                    bool RandomizeAxes() => Random.Range(0f, 1f) <= _chancePerAxes;
 
                     _goalPosition = next;
                 }
@@ -162,8 +190,8 @@ namespace FishNet.Demo.Benchmarks.NetworkTransforms
                         }
                         else
                         {
-                            float nextY = (transform.eulerAngles.y == 0f) ? 180f : 0f;
-                            euler = new Vector3(0f, nextY, 0f);
+                            float nextY = transform.eulerAngles.y == 0f ? 180f : 0f;
+                            euler = new(0f, nextY, 0f);
                         }
 
                         _goalRotation = Quaternion.Euler(euler);

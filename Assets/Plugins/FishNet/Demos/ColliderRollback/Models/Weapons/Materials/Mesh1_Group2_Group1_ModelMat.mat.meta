@@ -6,3 +6,10 @@ NativeFormatImporter:
   userData: 
   assetBundleName: 
   assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 207815
+  packageName: 'FishNet: Networking Evolved'
+  packageVersion: 4.6.12R
+  assetPath: Assets/Plugins/FishNet/Demos/ColliderRollback/Models/Weapons/Materials/Mesh1_Group2_Group1_ModelMat.mat
+  uploadId: 773595
