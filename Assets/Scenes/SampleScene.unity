@@ -333,9 +333,9 @@ MonoBehaviour:
   _componentIndexCache: 255
   _addedNetworkObject: {fileID: 1127687229}
   _networkObjectCache: {fileID: 0}
-  _maximumSimultaneousHits: 16
-  _additionalSize: 0.1
-  _layers:
+  MaximumSimultaneousHits: 16
+  AdditionalSize: 0.1
+  Layers:
     serializedVersion: 2
     m_Bits: 64
 --- !u!114 &349333602
@@ -353,9 +353,9 @@ MonoBehaviour:
   _componentIndexCache: 255
   _addedNetworkObject: {fileID: 1127687229}
   _networkObjectCache: {fileID: 0}
-  _maximumSimultaneousHits: 16
-  _additionalSize: 0.1
-  _layers:
+  MaximumSimultaneousHits: 16
+  AdditionalSize: 0.1
+  Layers:
     serializedVersion: 2
     m_Bits: 64
 --- !u!1 &374221880
@@ -426,9 +426,9 @@ MonoBehaviour:
   _componentIndexCache: 255
   _addedNetworkObject: {fileID: 1127687229}
   _networkObjectCache: {fileID: 0}
-  _maximumSimultaneousHits: 16
-  _additionalSize: 0.1
-  _layers:
+  MaximumSimultaneousHits: 16
+  AdditionalSize: 0.1
+  Layers:
     serializedVersion: 2
     m_Bits: 64
 --- !u!1001 &470683317
@@ -1661,9 +1661,9 @@ MonoBehaviour:
   _componentIndexCache: 255
   _addedNetworkObject: {fileID: 1127687229}
   _networkObjectCache: {fileID: 0}
-  _maximumSimultaneousHits: 16
-  _additionalSize: 0.1
-  _layers:
+  MaximumSimultaneousHits: 16
+  AdditionalSize: 0.1
+  Layers:
     serializedVersion: 2
     m_Bits: 64
 --- !u!114 &762259169
@@ -1681,9 +1681,9 @@ MonoBehaviour:
   _componentIndexCache: 255
   _addedNetworkObject: {fileID: 1127687229}
   _networkObjectCache: {fileID: 0}
-  _maximumSimultaneousHits: 16
-  _additionalSize: 0.1
-  _layers:
+  MaximumSimultaneousHits: 16
+  AdditionalSize: 0.1
+  Layers:
     serializedVersion: 2
     m_Bits: 64
 --- !u!1 &767506189
@@ -1825,9 +1825,9 @@ MonoBehaviour:
   _componentIndexCache: 255
   _addedNetworkObject: {fileID: 1127687229}
   _networkObjectCache: {fileID: 0}
-  _maximumSimultaneousHits: 16
-  _additionalSize: 0.1
-  _layers:
+  MaximumSimultaneousHits: 16
+  AdditionalSize: 0.1
+  Layers:
     serializedVersion: 2
     m_Bits: 64
 --- !u!65 &895843631
@@ -1866,9 +1866,9 @@ MonoBehaviour:
   _componentIndexCache: 255
   _addedNetworkObject: {fileID: 1127687229}
   _networkObjectCache: {fileID: 0}
-  _maximumSimultaneousHits: 16
-  _additionalSize: 0.1
-  _layers:
+  MaximumSimultaneousHits: 16
+  AdditionalSize: 0.1
+  Layers:
     serializedVersion: 2
     m_Bits: 64
 --- !u!1 &899646953
@@ -2113,9 +2113,9 @@ MonoBehaviour:
   _componentIndexCache: 255
   _addedNetworkObject: {fileID: 1127687229}
   _networkObjectCache: {fileID: 0}
-  _maximumSimultaneousHits: 16
-  _additionalSize: 0.1
-  _layers:
+  MaximumSimultaneousHits: 16
+  AdditionalSize: 0.1
+  Layers:
     serializedVersion: 2
     m_Bits: 64
 --- !u!1 &935370074
@@ -2331,9 +2331,9 @@ MonoBehaviour:
   _componentIndexCache: 255
   _addedNetworkObject: {fileID: 1127687229}
   _networkObjectCache: {fileID: 0}
-  _maximumSimultaneousHits: 16
-  _additionalSize: 0.1
-  _layers:
+  MaximumSimultaneousHits: 16
+  AdditionalSize: 0.1
+  Layers:
     serializedVersion: 2
     m_Bits: 64
 --- !u!65 &1099049551
@@ -2372,9 +2372,9 @@ MonoBehaviour:
   _componentIndexCache: 255
   _addedNetworkObject: {fileID: 1127687229}
   _networkObjectCache: {fileID: 0}
-  _maximumSimultaneousHits: 16
-  _additionalSize: 0.1
-  _layers:
+  MaximumSimultaneousHits: 16
+  AdditionalSize: 0.1
+  Layers:
     serializedVersion: 2
     m_Bits: 64
 --- !u!65 &1119069747
@@ -2413,9 +2413,9 @@ MonoBehaviour:
   _componentIndexCache: 255
   _addedNetworkObject: {fileID: 1127687229}
   _networkObjectCache: {fileID: 0}
-  _maximumSimultaneousHits: 16
-  _additionalSize: 0.1
-  _layers:
+  MaximumSimultaneousHits: 16
+  AdditionalSize: 0.1
+  Layers:
     serializedVersion: 2
     m_Bits: 64
 --- !u!1 &1127687227 stripped
@@ -2495,9 +2495,9 @@ MonoBehaviour:
   _componentIndexCache: 255
   _addedNetworkObject: {fileID: 1127687229}
   _networkObjectCache: {fileID: 0}
-  _maximumSimultaneousHits: 16
-  _additionalSize: 0.1
-  _layers:
+  MaximumSimultaneousHits: 16
+  AdditionalSize: 0.1
+  Layers:
     serializedVersion: 2
     m_Bits: 64
 --- !u!65 &1156075421
@@ -2536,9 +2536,9 @@ MonoBehaviour:
   _componentIndexCache: 255
   _addedNetworkObject: {fileID: 1127687229}
   _networkObjectCache: {fileID: 0}
-  _maximumSimultaneousHits: 16
-  _additionalSize: 0.1
-  _layers:
+  MaximumSimultaneousHits: 16
+  AdditionalSize: 0.1
+  Layers:
     serializedVersion: 2
     m_Bits: 64
 --- !u!65 &1157043314
@@ -2577,9 +2577,9 @@ MonoBehaviour:
   _componentIndexCache: 255
   _addedNetworkObject: {fileID: 1127687229}
   _networkObjectCache: {fileID: 0}
-  _maximumSimultaneousHits: 16
-  _additionalSize: 0.1
-  _layers:
+  MaximumSimultaneousHits: 16
+  AdditionalSize: 0.1
+  Layers:
     serializedVersion: 2
     m_Bits: 64
 --- !u!65 &1159139350
@@ -2618,9 +2618,9 @@ MonoBehaviour:
   _componentIndexCache: 255
   _addedNetworkObject: {fileID: 1127687229}
   _networkObjectCache: {fileID: 0}
-  _maximumSimultaneousHits: 16
-  _additionalSize: 0.1
-  _layers:
+  MaximumSimultaneousHits: 16
+  AdditionalSize: 0.1
+  Layers:
     serializedVersion: 2
     m_Bits: 64
 --- !u!65 &1159356946
@@ -2659,9 +2659,9 @@ MonoBehaviour:
   _componentIndexCache: 255
   _addedNetworkObject: {fileID: 1127687229}
   _networkObjectCache: {fileID: 0}
-  _maximumSimultaneousHits: 16
-  _additionalSize: 0.1
-  _layers:
+  MaximumSimultaneousHits: 16
+  AdditionalSize: 0.1
+  Layers:
     serializedVersion: 2
     m_Bits: 64
 --- !u!65 &1198582384
@@ -2700,9 +2700,9 @@ MonoBehaviour:
   _componentIndexCache: 255
   _addedNetworkObject: {fileID: 1127687229}
   _networkObjectCache: {fileID: 0}
-  _maximumSimultaneousHits: 16
-  _additionalSize: 0.1
-  _layers:
+  MaximumSimultaneousHits: 16
+  AdditionalSize: 0.1
+  Layers:
     serializedVersion: 2
     m_Bits: 64
 --- !u!64 &1198824114
@@ -2742,9 +2742,9 @@ MonoBehaviour:
   _componentIndexCache: 255
   _addedNetworkObject: {fileID: 1127687229}
   _networkObjectCache: {fileID: 0}
-  _maximumSimultaneousHits: 16
-  _additionalSize: 0.1
-  _layers:
+  MaximumSimultaneousHits: 16
+  AdditionalSize: 0.1
+  Layers:
     serializedVersion: 2
     m_Bits: 64
 --- !u!1 &1209338175
@@ -3036,9 +3036,9 @@ MonoBehaviour:
   _componentIndexCache: 255
   _addedNetworkObject: {fileID: 1127687229}
   _networkObjectCache: {fileID: 0}
-  _maximumSimultaneousHits: 16
-  _additionalSize: 0.1
-  _layers:
+  MaximumSimultaneousHits: 16
+  AdditionalSize: 0.1
+  Layers:
     serializedVersion: 2
     m_Bits: 64
 --- !u!64 &1312389853
@@ -3078,9 +3078,9 @@ MonoBehaviour:
   _componentIndexCache: 255
   _addedNetworkObject: {fileID: 1127687229}
   _networkObjectCache: {fileID: 0}
-  _maximumSimultaneousHits: 16
-  _additionalSize: 0.1
-  _layers:
+  MaximumSimultaneousHits: 16
+  AdditionalSize: 0.1
+  Layers:
     serializedVersion: 2
     m_Bits: 64
 --- !u!65 &1317921560
@@ -3119,9 +3119,9 @@ MonoBehaviour:
   _componentIndexCache: 255
   _addedNetworkObject: {fileID: 1127687229}
   _networkObjectCache: {fileID: 0}
-  _maximumSimultaneousHits: 16
-  _additionalSize: 0.1
-  _layers:
+  MaximumSimultaneousHits: 16
+  AdditionalSize: 0.1
+  Layers:
     serializedVersion: 2
     m_Bits: 64
 --- !u!1 &1367368830
@@ -3174,9 +3174,9 @@ MonoBehaviour:
   _componentIndexCache: 255
   _addedNetworkObject: {fileID: 1127687229}
   _networkObjectCache: {fileID: 0}
-  _maximumSimultaneousHits: 16
-  _additionalSize: 0.1
-  _layers:
+  MaximumSimultaneousHits: 16
+  AdditionalSize: 0.1
+  Layers:
     serializedVersion: 2
     m_Bits: 64
 --- !u!23 &1367368834
@@ -3289,9 +3289,9 @@ MonoBehaviour:
   _componentIndexCache: 255
   _addedNetworkObject: {fileID: 1127687229}
   _networkObjectCache: {fileID: 0}
-  _maximumSimultaneousHits: 16
-  _additionalSize: 0.1
-  _layers:
+  MaximumSimultaneousHits: 16
+  AdditionalSize: 0.1
+  Layers:
     serializedVersion: 2
     m_Bits: 64
 --- !u!114 &1403392022
@@ -3309,9 +3309,9 @@ MonoBehaviour:
   _componentIndexCache: 255
   _addedNetworkObject: {fileID: 1127687229}
   _networkObjectCache: {fileID: 0}
-  _maximumSimultaneousHits: 16
-  _additionalSize: 0.1
-  _layers:
+  MaximumSimultaneousHits: 16
+  AdditionalSize: 0.1
+  Layers:
     serializedVersion: 2
     m_Bits: 64
 --- !u!65 &1512180826
@@ -3371,9 +3371,9 @@ MonoBehaviour:
   _componentIndexCache: 255
   _addedNetworkObject: {fileID: 1127687229}
   _networkObjectCache: {fileID: 0}
-  _maximumSimultaneousHits: 16
-  _additionalSize: 0.1
-  _layers:
+  MaximumSimultaneousHits: 16
+  AdditionalSize: 0.1
+  Layers:
     serializedVersion: 2
     m_Bits: 64
 --- !u!114 &1669817377
@@ -3391,9 +3391,9 @@ MonoBehaviour:
   _componentIndexCache: 255
   _addedNetworkObject: {fileID: 1127687229}
   _networkObjectCache: {fileID: 0}
-  _maximumSimultaneousHits: 16
-  _additionalSize: 0.1
-  _layers:
+  MaximumSimultaneousHits: 16
+  AdditionalSize: 0.1
+  Layers:
     serializedVersion: 2
     m_Bits: 64
 --- !u!114 &1686285356
@@ -3411,9 +3411,9 @@ MonoBehaviour:
   _componentIndexCache: 255
   _addedNetworkObject: {fileID: 1127687229}
   _networkObjectCache: {fileID: 0}
-  _maximumSimultaneousHits: 16
-  _additionalSize: 0.1
-  _layers:
+  MaximumSimultaneousHits: 16
+  AdditionalSize: 0.1
+  Layers:
     serializedVersion: 2
     m_Bits: 64
 --- !u!65 &1743439347
@@ -3452,9 +3452,9 @@ MonoBehaviour:
   _componentIndexCache: 255
   _addedNetworkObject: {fileID: 1127687229}
   _networkObjectCache: {fileID: 0}
-  _maximumSimultaneousHits: 16
-  _additionalSize: 0.1
-  _layers:
+  MaximumSimultaneousHits: 16
+  AdditionalSize: 0.1
+  Layers:
     serializedVersion: 2
     m_Bits: 64
 --- !u!65 &1776114892
@@ -3493,9 +3493,9 @@ MonoBehaviour:
   _componentIndexCache: 255
   _addedNetworkObject: {fileID: 1127687229}
   _networkObjectCache: {fileID: 0}
-  _maximumSimultaneousHits: 16
-  _additionalSize: 0.1
-  _layers:
+  MaximumSimultaneousHits: 16
+  AdditionalSize: 0.1
+  Layers:
     serializedVersion: 2
     m_Bits: 64
 --- !u!65 &1807674927
@@ -3534,9 +3534,9 @@ MonoBehaviour:
   _componentIndexCache: 255
   _addedNetworkObject: {fileID: 1127687229}
   _networkObjectCache: {fileID: 0}
-  _maximumSimultaneousHits: 16
-  _additionalSize: 0.1
-  _layers:
+  MaximumSimultaneousHits: 16
+  AdditionalSize: 0.1
+  Layers:
     serializedVersion: 2
     m_Bits: 64
 --- !u!65 &1828444944
@@ -3575,9 +3575,9 @@ MonoBehaviour:
   _componentIndexCache: 255
   _addedNetworkObject: {fileID: 1127687229}
   _networkObjectCache: {fileID: 0}
-  _maximumSimultaneousHits: 16
-  _additionalSize: 0.1
-  _layers:
+  MaximumSimultaneousHits: 16
+  AdditionalSize: 0.1
+  Layers:
     serializedVersion: 2
     m_Bits: 64
 --- !u!65 &1957221783
@@ -3616,9 +3616,9 @@ MonoBehaviour:
   _componentIndexCache: 255
   _addedNetworkObject: {fileID: 1127687229}
   _networkObjectCache: {fileID: 0}
-  _maximumSimultaneousHits: 16
-  _additionalSize: 0.1
-  _layers:
+  MaximumSimultaneousHits: 16
+  AdditionalSize: 0.1
+  Layers:
     serializedVersion: 2
     m_Bits: 64
 --- !u!65 &1975958798
@@ -3657,9 +3657,9 @@ MonoBehaviour:
   _componentIndexCache: 255
   _addedNetworkObject: {fileID: 1127687229}
   _networkObjectCache: {fileID: 0}
-  _maximumSimultaneousHits: 16
-  _additionalSize: 0.1
-  _layers:
+  MaximumSimultaneousHits: 16
+  AdditionalSize: 0.1
+  Layers:
     serializedVersion: 2
     m_Bits: 64
 --- !u!1 &1996512446
@@ -3761,9 +3761,9 @@ MonoBehaviour:
   _componentIndexCache: 255
   _addedNetworkObject: {fileID: 1127687229}
   _networkObjectCache: {fileID: 0}
-  _maximumSimultaneousHits: 16
-  _additionalSize: 0.1
-  _layers:
+  MaximumSimultaneousHits: 16
+  AdditionalSize: 0.1
+  Layers:
     serializedVersion: 2
     m_Bits: 64
 --- !u!114 &2105902996
@@ -3781,9 +3781,9 @@ MonoBehaviour:
   _componentIndexCache: 255
   _addedNetworkObject: {fileID: 1127687229}
   _networkObjectCache: {fileID: 0}
-  _maximumSimultaneousHits: 16
-  _additionalSize: 0.1
-  _layers:
+  MaximumSimultaneousHits: 16
+  AdditionalSize: 0.1
+  Layers:
     serializedVersion: 2
     m_Bits: 64
 --- !u!1001 &2124546724
@@ -3988,6 +3988,7 @@ GameObject:
   - component: {fileID: 7443408887111934081}
   - component: {fileID: 7443408887111934083}
   - component: {fileID: 7443408887111934084}
+  - component: {fileID: 7443408887111934085}
   m_Layer: 0
   m_Name: NetworkManager
   m_TagString: Untagged
@@ -4088,7 +4089,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _stopSocketsOnThread: 0
   _dontRoute: 0
-  _reuseAddress: 0
+  _reuseAddress: 1
   _unreliableMtu: 1023
   _ipv4BindAddress: 
   _enableIpv6: 1
@@ -4109,8 +4110,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   networkManager: {fileID: 7443408887111934077}
-  address: 127.0.0.1
-  port: 7777
+  defaultAddress: 34.88.228.209
+  defaultPort: 7777
 --- !u!82 &7443408887111934084
 AudioSource:
   m_ObjectHideFlags: 0
@@ -4208,6 +4209,18 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &7443408887111934085
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7443408887111934076}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbea0b6c51dfa0d47807e6ce0900981e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
