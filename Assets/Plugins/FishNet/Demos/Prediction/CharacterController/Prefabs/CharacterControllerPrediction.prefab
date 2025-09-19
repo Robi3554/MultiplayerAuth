@@ -100,7 +100,7 @@ MonoBehaviour:
   _spectatorInterpolation: 2
   _enableTeleport: 0
   _teleportThreshold: 1
-  <PrefabId>k__BackingField: 11
+  <PrefabId>k__BackingField: 23
   <SpawnableCollectionId>k__BackingField: 0
   <AssetPathHash>k__BackingField: 7254153142387898761
   <SceneId>k__BackingField: 0
@@ -204,9 +204,9 @@ MonoBehaviour:
   _componentIndexCache: 0
   _addedNetworkObject: {fileID: 8013474958425823559}
   _networkObjectCache: {fileID: 8013474958425823559}
-  _maximumSimultaneousHits: 16
-  _additionalSize: 0.1
-  _layers:
+  MaximumSimultaneousHits: 16
+  AdditionalSize: 0.1
+  Layers:
     serializedVersion: 2
     m_Bits: 1
 --- !u!114 &8013474958425823559
