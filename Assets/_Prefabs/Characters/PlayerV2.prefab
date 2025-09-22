@@ -86,6 +86,37 @@ MonoBehaviour:
   _componentIndexCache: 8
   _addedNetworkObject: {fileID: 7709259699627967468}
   _networkObjectCache: {fileID: 7709259699627967468}
+--- !u!1 &5643556077258067416
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8620197731634073087}
+  m_Layer: 0
+  m_Name: RightHandTarget_ref
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!4 &8620197731634073087
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5643556077258067416}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0.6023011, y: 0.21969512, z: 0.49235362, w: -0.5886895}
+  m_LocalPosition: {x: -0.0009608185, y: 0.002033179, z: 0.0046094703}
+  m_LocalScale: {x: 0.011966947, y: 0.011966945, z: 0.011966942}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7086633162130642987}
+  m_LocalEulerAnglesHint: {x: 14.491, y: -118.575, z: 177.581}
 --- !u!1 &6218001962461496881
 GameObject:
   m_ObjectHideFlags: 0
@@ -242,6 +273,7 @@ MonoBehaviour:
   _sendToOwner: 1
   _interval: 1
   _synchronizePosition: 1
+  _positionSensitivity: 0.001
   _positionSnapping:
     X: 0
     Y: 0
@@ -252,6 +284,7 @@ MonoBehaviour:
     Y: 0
     Z: 0
   _synchronizeScale: 1
+  _scaleSensitivity: 0.001
   _scaleSnapping:
     X: 0
     Y: 0
@@ -1141,7 +1174,7 @@ PrefabInstance:
     - target: {fileID: 2077536159360935046, guid: d50dc5a3dd2728e419a45401c51ea688, type: 3}
       propertyPath: m_Data.m_Target
       value: 
-      objectReference: {fileID: 3043340774679885438}
+      objectReference: {fileID: 0}
     - target: {fileID: 2325135146794036649, guid: d50dc5a3dd2728e419a45401c51ea688, type: 3}
       propertyPath: WasActiveDuringEdit
       value: 1
@@ -1294,6 +1327,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: RigLayer_Sword
       objectReference: {fileID: 0}
+    - target: {fileID: 8143431865961915490, guid: d50dc5a3dd2728e419a45401c51ea688, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1331,11 +1368,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 190b35a899a6167469ffcaf00308684a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!4 &3043340774679885438 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 1249992022742562933, guid: d50dc5a3dd2728e419a45401c51ea688, type: 3}
-  m_PrefabInstance: {fileID: 4279760295798623755}
-  m_PrefabAsset: {fileID: 0}
 --- !u!114 &5931901483855639000 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 7581418171957395411, guid: d50dc5a3dd2728e419a45401c51ea688, type: 3}
@@ -1912,6 +1944,16 @@ PrefabInstance:
       propertyPath: m_Controller
       value: 
       objectReference: {fileID: 9100000, guid: e012b937d9d14524d9d4d2f5122e7227, type: 2}
+    - target: {fileID: 5866666021909216657, guid: 66e0ef251cc7b2143ad5f1b36eeedcf1, type: 3}
+      propertyPath: m_WarningMessage
+      value: "\nBinding warning: Some generic clip(s) animate transforms that are
+        already bound by a Humanoid avatar. These transforms can only be changed
+        by Humanoid clips.\n\tTransform 'mixamorig:Hips'\n\tTransform 'mixamorig:LeftFoot'\n\tTransform
+        'mixamorig:Spine1'\n\tTransform 'mixamorig:RightArm'\n\tTransform 'mixamorig:LeftLeg'\n\tTransform
+        'mixamorig:LeftShoulder'\n\tTransform 'mixamorig:RightFoot'\n\tTransform
+        'mixamorig:Head'\n\tTransform 'mixamorig:LeftUpLeg'\n\tTransform 'mixamorig:LeftArm'\n\tand
+        more ...\n\tFrom animation clip 'GamerGirl_Slash'"
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
@@ -2070,7 +2112,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: 543f115edf8202349a6dead24f893598, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 8620197731634073087}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 543f115edf8202349a6dead24f893598, type: 3}
 --- !u!4 &7086633162130642987 stripped

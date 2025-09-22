@@ -48,6 +48,7 @@ public class PredictionMelee : NetworkBehaviour
 		{
 			_meleePressed = true;
 			netAnimator.SetTrigger("SlashTrigger");
+			Debug.Log("do your job wtf");
 		}
 	}
 
