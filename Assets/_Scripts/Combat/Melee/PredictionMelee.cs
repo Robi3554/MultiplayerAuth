@@ -48,7 +48,6 @@ public class PredictionMelee : NetworkBehaviour
 		{
 			_meleePressed = true;
 			netAnimator.SetTrigger("SlashTrigger");
-			Debug.Log("do your job wtf");
 		}
 	}
 
@@ -93,9 +92,10 @@ public class PredictionMelee : NetworkBehaviour
 		Direction = direction;
 		Position = position;
 		PerformSlash();
+		PlayWeaponVfx();
 	}
 	[ObserversRpc]
-	private void PlaySlashVfx()
+	private void PlayWeaponVfx()
 	{
 		VFX_SLASH.Play();
 	}
@@ -104,7 +104,6 @@ public class PredictionMelee : NetworkBehaviour
 		if (Slash)
 		{
 			Debug.Log("Melee: Attack pressed");
-			PlaySlashVfx();
 			//get what we can hit, check if the enemy is in front of the player, call dmg function on server and start cooldown timer after hit
 			Collider[] hits = Physics.OverlapSphere(slashPoint.position, attackRange.Value);
 			// we could add more stuff here. if we want to apply damage the closest enemy only for e.g. 
