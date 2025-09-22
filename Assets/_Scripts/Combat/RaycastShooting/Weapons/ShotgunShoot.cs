@@ -20,11 +20,11 @@ public class ShotgunShoot : SingleShot
             if (Physics.Raycast(origin, dir, out RaycastHit hit, Mathf.Infinity, combinedLayer))
             {
                 HitPlayer(hit.transform.GetComponent<NetworkObject>());
-                ShowShotLine(origin, hit.point);
+                ShowShotLineObserversRpc(origin, hit.point);
             }
             else
             {
-                ShowShotLine(origin, origin + dir * maxDistance);
+                ShowShotLineObserversRpc(origin, origin + dir * maxDistance);
             }
         }
 

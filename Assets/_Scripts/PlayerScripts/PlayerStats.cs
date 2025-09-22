@@ -1,3 +1,4 @@
+using FishNet.Connection;
 using FishNet.Object;
 using FishNet.Object.Synchronizing;
 using TMPro;
@@ -45,6 +46,8 @@ public class PlayerStats : NetworkBehaviour
     {
         if (isRespawning) return;
         health.Value = Mathf.Clamp(health.Value - damage, 0, 100);
+
+        TargetShakeCamera(Owner, 0.5f, 0.1f);
     }
 
     [Server]
@@ -78,6 +81,13 @@ public class PlayerStats : NetworkBehaviour
             Debug.Log($"Player healed to {health.Value}");
         }
     }
+
+    [TargetRpc]
+    private void TargetShakeCamera(NetworkConnection target, float amplitude, float duration)
+    {
+        CameraShake.Instance.ShakeCamera(amplitude, duration);
+    }
+
     private void InitTexts()
     {
         healthText = GameObject.Find("PlayerHUD").transform.Find("Health Text").GetComponent<TMP_Text>();
