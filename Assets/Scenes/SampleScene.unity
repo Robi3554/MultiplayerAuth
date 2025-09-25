@@ -1963,11 +1963,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   TrackerSettings:
     BindingMode: 4
-    PositionDamping: {x: 1, y: 0.5, z: 1}
+    PositionDamping: {x: 0, y: 0, z: 0}
     AngularDampingMode: 0
     RotationDamping: {x: 1, y: 1, z: 1}
     QuaternionDamping: 1
-  FollowOffset: {x: 0, y: 8, z: -6.47}
+  FollowOffset: {x: 0, y: 11.31, z: -8.6}
 --- !u!114 &899646957
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2165,7 +2165,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &935370075
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4077,7 +4077,7 @@ MonoBehaviour:
   _timingType: 0
   _allowTickDropping: 1
   _maximumFrameTicks: 3
-  _tickRate: 144
+  _tickRate: 60
   _pingInterval: 1
   _physicsMode: 1
 --- !u!114 &7443408887111934080
@@ -4141,7 +4141,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   networkManager: {fileID: 7443408887111934077}
-  defaultAddress: 34.88.228.209
+  defaultAddress: 35.228.130.207
   defaultPort: 7777
 --- !u!82 &7443408887111934084
 AudioSource:
@@ -4156,7 +4156,7 @@ AudioSource:
   m_audioClip: {fileID: 8300000, guid: 38823cb095a547643adcfd70e83299f5, type: 3}
   m_Resource: {fileID: 8300000, guid: 38823cb095a547643adcfd70e83299f5, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 1
+  m_Volume: 0.05
   m_Pitch: 1
   Loop: 0
   Mute: 0

@@ -112,5 +112,6 @@ public class PlayerManager : NetworkBehaviour
         public GameObject playerObject;
         public NetworkConnection connection;
         public PlayerStats stats;
+        public string username;
     }
 }

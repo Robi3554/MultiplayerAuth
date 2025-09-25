@@ -6,7 +6,7 @@ using System;
 public class NetworkBootstrap : MonoBehaviour
 {
     [SerializeField] private NetworkManager networkManager;
-    [SerializeField] private string defaultAddress = "127.0.0.1";
+    [SerializeField] private string defaultAddress = "localhost";
     [SerializeField] private ushort defaultPort = 7777;
 
     private void Awake()
@@ -45,7 +45,11 @@ public class NetworkBootstrap : MonoBehaviour
         else
         {
             Debug.Log("[ParrelSync] Starting as HOST (original).");
-            networkManager.ServerManager.StartConnection();
+            if (defaultAddress == "localhost")
+            {
+                networkManager.ServerManager.StartConnection();    
+            }
+            
             networkManager.ClientManager.StartConnection();
         }
 
