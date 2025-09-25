@@ -543,7 +543,7 @@ MonoBehaviour:
   groundCheckRadius: 0.1
   animator: {fileID: 1112710266342022526}
   netAnimator: {fileID: 6766728125162970839}
-  isJoystick: 1
+  isJoystick: 0
 --- !u!114 &1930605675685772441
 MonoBehaviour:
   m_ObjectHideFlags: 0

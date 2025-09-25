@@ -24,16 +24,15 @@ public class NetworkBootstrap : MonoBehaviour
             Debug.LogError("No Tugboat transport found on NetworkManager!");
             return;
         }
+        
+        string address = string.IsNullOrWhiteSpace(ConnectionInfo.IpAddress) ? "localhost" : ConnectionInfo.IpAddress;
 
-        // Command line overrides
-        (string cmdAddress, ushort? cmdPort) = ParseCommandLineArgs();
-        string finalAddress = string.IsNullOrEmpty(cmdAddress) ? defaultAddress : cmdAddress;
-        ushort finalPort = cmdPort ?? defaultPort;
+        tugboat.SetClientAddress(address);
+        tugboat.SetPort(defaultPort);
 
-        tugboat.SetClientAddress(finalAddress);
-        tugboat.SetPort(finalPort);
-
-        Debug.Log($"[Bootstrap] Using Address={finalAddress}, Port={finalPort}");
+        Debug.Log($"[Bootstrap] Using Address={address}, Port={defaultPort}");
+        
+        
 
 #if UNITY_EDITOR
         // --- EDITOR MODE (ParrelSync) ---
@@ -45,7 +44,7 @@ public class NetworkBootstrap : MonoBehaviour
         else
         {
             Debug.Log("[ParrelSync] Starting as HOST (original).");
-            if (defaultAddress == "localhost")
+            if (address == "localhost")
             {
                 networkManager.ServerManager.StartConnection();    
             }
@@ -60,7 +59,7 @@ public class NetworkBootstrap : MonoBehaviour
 
 #elif CLIENT
         // --- BUILD MODE: Client only ---
-        Debug.Log($"[Bootstrap] Starting Client. Connecting to {finalAddress}:{finalPort}");
+        Debug.Log($"[Bootstrap] Starting Client. Connecting to {address}:{defaultPort}");
         networkManager.ClientManager.StartConnection();
 
 #else
@@ -70,23 +69,6 @@ public class NetworkBootstrap : MonoBehaviour
         networkManager.ClientManager.StartConnection();
 
 #endif
-    }
-
-    private (string, ushort?) ParseCommandLineArgs()
-    {
-        string[] args = Environment.GetCommandLineArgs();
-        string address = null;
-        ushort? port = null;
-
-        for (int i = 0; i < args.Length; i++)
-        {
-            if (args[i] == "-address" && i + 1 < args.Length)
-                address = args[i + 1];
-            if (args[i] == "-port" && i + 1 < args.Length && ushort.TryParse(args[i + 1], out ushort p))
-                port = p;
-        }
-
-        return (address, port);
     }
 }
 /*
