@@ -5008,7 +5008,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   networkManager: {fileID: 0}
-  defaultAddress: 35.228.130.207
+  defaultAddress: localhost
   defaultPort: 7777
 --- !u!82 &7443408887111934084
 AudioSource:
