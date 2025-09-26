@@ -92,6 +92,7 @@ public abstract class RaycastShoot : NetworkBehaviour
             HandleShootInput();
     }
 
+    [ServerRpc]
     protected virtual void Shoot()
     {
         if(!canShoot) return;
