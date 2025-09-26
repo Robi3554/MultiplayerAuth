@@ -2,6 +2,7 @@ using UnityEngine;
 using FishNet.Managing;
 using FishNet.Transporting.Tugboat;
 using System;
+using FishNet.Transporting;
 
 public class NetworkBootstrap : MonoBehaviour
 {
@@ -54,6 +55,19 @@ public class NetworkBootstrap : MonoBehaviour
 
 #elif DEDICATED_SERVER
         // --- BUILD MODE: Dedicated Server ---
+
+        Console.WriteLine("-----------------------------------------");
+        Console.WriteLine($"Enter the server IP address to bind to:");
+        string serverAddress = Console.ReadLine();
+
+        if (string.IsNullOrWhiteSpace(serverAddress))
+        {
+            Console.WriteLine("-----------------------------------------");
+            Console.WriteLine($"Renter the server IP address to bind to:");
+        }
+
+        tugboat.SetServerBindAddress(serverAddress, IPAddressType.IPv4);
+
         Debug.Log("[Bootstrap] Starting Dedicated Server.");
         networkManager.ServerManager.StartConnection();
 
@@ -64,9 +78,21 @@ public class NetworkBootstrap : MonoBehaviour
 
 #else
         // --- BUILD MODE: Default Host (no defines) ---
-        Debug.Log("[Bootstrap] Starting Host (default).");
+        Console.WriteLine("-----------------------------------------");
+        Console.WriteLine($"Enter the server IP address to bind to:");
+        string serverAddress = Console.ReadLine();
+
+        if (string.IsNullOrWhiteSpace(serverAddress))
+        {
+            Console.WriteLine("-----------------------------------------");
+            Console.WriteLine($"Renter the server IP address to bind to:");
+        }
+
+        tugboat.SetServerBindAddress(serverAddress, IPAddressType.IPv4);
+
+        Debug.Log("[Bootstrap] Starting Dedicated Server.");
         networkManager.ServerManager.StartConnection();
-        networkManager.ClientManager.StartConnection();
+        Debug.Log("[Bootstrap] Starting Host (default).");
 
 #endif
     }

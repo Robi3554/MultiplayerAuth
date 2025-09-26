@@ -4036,8 +4036,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a992c2da639e46145b70b089681eb50c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  networkManager: {fileID: 0}
-  defaultAddress: localhost
+  networkManager: {fileID: 7443408887111934077}
+  defaultAddress: 34.88.157.199
   defaultPort: 7777
 --- !u!82 &7443408887111934084
 AudioSource:
