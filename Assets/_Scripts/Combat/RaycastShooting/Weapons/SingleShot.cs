@@ -7,7 +7,7 @@ public class SingleShot : RaycastShoot
         if (Input.GetKeyDown(shootKey) && Time.time >= nextShootTime)
         {
             nextShootTime = Time.time + fireRate;
-            Shoot();
+            ShootObserverRpc();
         }
     }
 }

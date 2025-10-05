@@ -1,12 +1,16 @@
 using System.Collections;
 using FishNet.Object;
+using FishNet.Object.Synchronizing;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using static UnityEngine.GraphicsBuffer;
 
 public abstract class RaycastShoot : NetworkBehaviour
 {
     private TMP_Text ammoText;
+
+    protected readonly SyncVar<int> currentAmmo = new();
 
     [SerializeField]
     protected KeyCode shootKey = KeyCode.Mouse0;
@@ -30,8 +34,6 @@ public abstract class RaycastShoot : NetworkBehaviour
     [SerializeField]
     protected int maxAmmo;
     [SerializeField]
-    protected int currentAmmo;
-    [SerializeField]
     protected float reloadTime;
     [SerializeField]
     protected float afterChangeDelay;
@@ -51,7 +53,7 @@ public abstract class RaycastShoot : NetworkBehaviour
 
     private void Start()
     {
-        currentAmmo = maxAmmo;
+        currentAmmo.Value = maxAmmo;
 
         combinedLayer = playerLayer | wallLayer;
     }
@@ -81,18 +83,17 @@ public abstract class RaycastShoot : NetworkBehaviour
         if (!base.IsOwner)
             return;
 
-        ammoText.text = currentAmmo.ToString() + '/' + maxAmmo.ToString();
+        ammoText.text = currentAmmo.Value.ToString() + '/' + maxAmmo.ToString();
 
         if (isReloading)
             return;
 
-        if (currentAmmo <= 0f || Input.GetKeyDown(KeyCode.R))
-            StartCoroutine(Reload());
-        else if(currentAmmo > 0)
+        if (currentAmmo.Value <= 0f || Input.GetKeyDown(KeyCode.R))
+            ReloadServerRpc();
+        else if (currentAmmo.Value > 0)
             HandleShootInput();
     }
 
-    [ServerRpc]
     protected virtual void Shoot()
     {
         if(!canShoot) return;
@@ -113,8 +114,14 @@ public abstract class RaycastShoot : NetworkBehaviour
             Debug.Log("Raycast did not hit anything. Drawing to max distance.");
         }
 
-        currentAmmo--;
+        currentAmmo.Value--;
         ShowShotLineObserversRpc(origin, hitPosition);
+    }
+
+    [ServerRpc]
+    protected virtual void ShootObserverRpc()
+    {
+        Shoot();
     }
 
     [ServerRpc(RequireOwnership = false)]
@@ -160,9 +167,15 @@ public abstract class RaycastShoot : NetworkBehaviour
 
         yield return new WaitForSeconds(reloadTime);
 
-        currentAmmo = maxAmmo;
+        currentAmmo.Value = maxAmmo;
 
         isReloading = false;
+    }
+
+    [ServerRpc]
+    protected void ReloadServerRpc()
+    {
+        StartCoroutine(Reload());
     }
 
     protected IEnumerator WeaponChangeDelay(float delay)
@@ -183,5 +196,6 @@ public abstract class RaycastShoot : NetworkBehaviour
             weaponNetObj.GiveOwnership(Owner);
         }
     }
+
     protected abstract void HandleShootInput();
 }

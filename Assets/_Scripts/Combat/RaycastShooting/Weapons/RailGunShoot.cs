@@ -30,7 +30,7 @@ public class RailGunShoot : RaycastShoot
 
         yield return new WaitForSeconds(shootTime);
 
-        Shoot();
+        ShootObserverRpc();
 
         yield return new WaitForSeconds(stopTime);
 

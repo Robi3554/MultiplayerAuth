@@ -22,7 +22,7 @@ public class BurstShot : RaycastShoot
     {
         for(int i = 0; i < burstCount; i++)
         {
-            Shoot();
+            ShootObserverRpc();
 
             yield return new WaitForSeconds(timeBetweenShots);
         }

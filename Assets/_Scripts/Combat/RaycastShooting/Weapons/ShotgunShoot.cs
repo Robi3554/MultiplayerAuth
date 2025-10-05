@@ -28,8 +28,9 @@ public class ShotgunShoot : SingleShot
             }
         }
 
-        currentAmmo--;
+        currentAmmo.Value--;
     }
+
     private Vector3 GetSpreadDirection(Vector3 forward, float angle)
     {
         float spreadRadius = Mathf.Tan(spreadAngle * Mathf.Deg2Rad);
