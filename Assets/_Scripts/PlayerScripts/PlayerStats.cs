@@ -1,3 +1,4 @@
+using FishNet.Connection;
 using FishNet.Object;
 using FishNet.Object.Synchronizing;
 using TMPro;
@@ -8,10 +9,13 @@ public class PlayerStats : NetworkBehaviour
     public readonly SyncVar<int> health = new SyncVar<int>(100);
     public readonly SyncVar<int> kills = new SyncVar<int>(0);
     public readonly SyncVar<int> deaths = new SyncVar<int>(0);
+    
+    [SerializeField] private TMP_Text _usernameTextOnBillboard;
 
     private TMP_Text healthText;
     private TMP_Text killText;
     private TMP_Text deathText;
+
 
     public bool isRespawning = false;
 
@@ -25,7 +29,31 @@ public class PlayerStats : NetworkBehaviour
             if (healthText != null)
                 healthText.text = health.Value.ToString();
             health.OnChange += OnHealthChanged;
+            
+            if (!string.IsNullOrEmpty(ConnectionInfo.username))
+            {
+                CmdSetUsername(ConnectionInfo.username);
+            }
+            else
+            {
+                CmdSetUsername("Player " + OwnerId); 
+            }
         }
+    }
+    
+    [ServerRpc]
+    private void CmdSetUsername(string username)
+    {
+        // This runs on the server. The server now calls an RPC to tell all clients.
+        RpcSetUsername(username);
+    }
+    
+    [ObserversRpc(BufferLast = true)]
+    private void RpcSetUsername(string username)
+    {
+        // This runs on all clients, including the host.
+        // It sets the text on the billboard for everyone to see.
+        _usernameTextOnBillboard.text = username;
     }
 
     void Update()
@@ -45,6 +73,8 @@ public class PlayerStats : NetworkBehaviour
     {
         if (isRespawning) return;
         health.Value = Mathf.Clamp(health.Value - damage, 0, 100);
+
+        TargetShakeCamera(Owner, 0.5f, 0.1f);
     }
 
     [Server]
@@ -78,6 +108,13 @@ public class PlayerStats : NetworkBehaviour
             Debug.Log($"Player healed to {health.Value}");
         }
     }
+
+    [TargetRpc]
+    private void TargetShakeCamera(NetworkConnection target, float amplitude, float duration)
+    {
+        CameraShake.Instance.ShakeCamera(amplitude, duration);
+    }
+
     private void InitTexts()
     {
         healthText = GameObject.Find("PlayerHUD").transform.Find("Health Text").GetComponent<TMP_Text>();

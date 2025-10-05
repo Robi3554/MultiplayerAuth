@@ -92,6 +92,7 @@ public abstract class RaycastShoot : NetworkBehaviour
             HandleShootInput();
     }
 
+    [ServerRpc]
     protected virtual void Shoot()
     {
         if(!canShoot) return;
@@ -113,7 +114,7 @@ public abstract class RaycastShoot : NetworkBehaviour
         }
 
         currentAmmo--;
-        ShowShotLine(origin, hitPosition);
+        ShowShotLineObserversRpc(origin, hitPosition);
     }
 
     [ServerRpc(RequireOwnership = false)]
@@ -137,6 +138,12 @@ public abstract class RaycastShoot : NetworkBehaviour
         PlayerManager.Instance.DamagePlayer(targetId, damage, attackerId);
     }
 
+    [ObserversRpc]
+    protected void ShowShotLineObserversRpc(Vector3 start, Vector3 end)
+    {
+        ShowShotLine(start, end);
+    }
+
     protected void ShowShotLine(Vector3 start, Vector3 end)
     {
         if (shotLinePrefab == null)
@@ -144,7 +151,7 @@ public abstract class RaycastShoot : NetworkBehaviour
 
         GameObject tempGO = Instantiate(shotLinePrefab, firePoint.position, Quaternion.identity);
 
-        tempGO.GetComponent<LineProjectile>().Initialize(speed, start, end);   
+        tempGO.GetComponent<LineProjectile>().Initialize(speed, start, end);
     }
 
     protected IEnumerator Reload()
