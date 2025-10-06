@@ -41,7 +41,7 @@ ParticleSystem:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 268654498562888797}
   serializedVersion: 8
-  lengthInSec: 1
+  lengthInSec: 0.5
   simulationSpeed: 1
   stopAction: 0
   cullingMode: 0
@@ -5136,6 +5136,10 @@ MonoBehaviour:
   coneAngle: 60
   VFX_SLASH: {fileID: 4236577414767703950}
   netAnimator: {fileID: 0}
+  _isOnCooldown:
+    NetworkManager: {fileID: 0}
+    NetworkBehaviour: {fileID: 0}
+    _value: 0
 --- !u!114 &2325135146794036649
 MonoBehaviour:
   m_ObjectHideFlags: 0
