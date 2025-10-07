@@ -53,9 +53,14 @@ public abstract class RaycastShoot : NetworkBehaviour
 
     private void Start()
     {
-        currentAmmo.Value = maxAmmo;
-
         combinedLayer = playerLayer | wallLayer;
+    }
+
+    public override void OnStartServer()
+    {
+        base.OnStartServer();
+
+        currentAmmo.Value = maxAmmo;
     }
 
     protected void OnEnable()
