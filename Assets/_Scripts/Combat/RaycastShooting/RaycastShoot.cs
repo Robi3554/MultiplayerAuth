@@ -129,7 +129,6 @@ public abstract class RaycastShoot : NetworkBehaviour
         Shoot();
     }
 
-    [ServerRpc(RequireOwnership = false)]
     protected void HitPlayer(NetworkObject playerHit)
     {
         NetworkObject attackerNetObj = GetComponentInParent<NetworkObject>();
