@@ -5135,6 +5135,7 @@ MonoBehaviour:
   slashPoint: {fileID: 5980016326099079226}
   coneAngle: 60
   VFX_SLASH: {fileID: 4236577414767703950}
+  animator: {fileID: 0}
   netAnimator: {fileID: 0}
   _isOnCooldown:
     NetworkManager: {fileID: 0}
@@ -5237,7 +5238,7 @@ Transform:
   m_GameObject: {fileID: 4741095187432154755}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -1.991, z: 0}
+  m_LocalPosition: {x: 0, y: -1.36, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
