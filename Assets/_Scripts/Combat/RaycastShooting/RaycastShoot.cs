@@ -65,17 +65,7 @@ public abstract class RaycastShoot : NetworkBehaviour
 
     protected void OnEnable()
     {
-        ammoText = GameObject.Find("PlayerHUD").transform.Find("Ammo Text").GetComponent<TMP_Text>();
-
-        isReloading = false;
-        nextShootTime = 0f;
-
-        if (IsClientInitialized && base.IsOwner == false && NetworkObject != null)
-        {
-            RequestWeaponOwnershipServerRpc(NetworkObject);
-        }
-
-        StartCoroutine(WeaponChangeDelay(afterChangeDelay));
+        InitializeWeapon();
     }
 
     private void OnDisable()
@@ -193,12 +183,29 @@ public abstract class RaycastShoot : NetworkBehaviour
     }
 
     [ServerRpc(RequireOwnership = false)]
-    private void RequestWeaponOwnershipServerRpc(NetworkObject weaponNetObj)
+    public void RequestWeaponOwnershipServerRpc(NetworkObject weaponNetObj)
     {
         if (weaponNetObj != null)
         {
             weaponNetObj.GiveOwnership(Owner);
         }
+    }
+
+    public void InitializeWeapon()
+    {
+        if (ammoText == null)
+            ammoText = GameObject.Find("PlayerHUD").transform.Find("Ammo Text").GetComponent<TMP_Text>();
+
+        canShoot = false;
+        nextShootTime = 0f;
+
+        if (IsClientInitialized && base.IsOwner == false && NetworkObject != null)
+        {
+            RequestWeaponOwnershipServerRpc(NetworkObject);
+        }
+
+        Debug.Log("IsOwner: " + base.IsOwner);
+        StartCoroutine(WeaponChangeDelay(afterChangeDelay));
     }
 
     protected abstract void HandleShootInput();

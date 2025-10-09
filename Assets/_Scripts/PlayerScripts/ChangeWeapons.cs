@@ -92,10 +92,19 @@ public class ChangeWeapons : NetworkBehaviour
 
         weapons[currentWeaponIndex - 1].SetActive(false);
         currentWeaponIndex = changeWeaponInput;
-        weapons[currentWeaponIndex - 1].SetActive(true);
+        var newWeapon = weapons[currentWeaponIndex - 1];
+        newWeapon.SetActive(true);
 
         if (IsOwner)
+        {
+            var weaponScript = newWeapon.GetComponent<RaycastShoot>();
+            if (weaponScript != null)
+            {
+                weaponScript.InitializeWeapon();
+            }
+
             RequestWeaponOwnershipServerRpc(currentWeaponIndex - 1);
+        }
     }
 
     private void GetWeapons(GameObject parent)
@@ -120,7 +129,10 @@ public class ChangeWeapons : NetworkBehaviour
     {
         var newWeaponObj = weapons[newWeaponIndex].GetComponent<NetworkObject>();
         if (newWeaponObj == null)
+        {
+            Debug.Log("No Netwrok Object Found!");
             return;
+        }
 
         newWeaponObj.GiveOwnership(Owner);
     }
