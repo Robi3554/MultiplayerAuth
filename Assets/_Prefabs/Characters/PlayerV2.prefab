@@ -696,6 +696,11 @@ MonoBehaviour:
   _addedNetworkObject: {fileID: 4321920308961391652, guid: f1b59ab8e2618a64f89923fa93ae63db, type: 3}
   _networkObjectCache: {fileID: 7709259699627967468}
   playerHUD: {fileID: 4584507489508830465}
+  weapons:
+  - {fileID: 1945318272994646557}
+  - {fileID: 1879072507561131230}
+  - {fileID: 319315277333349243}
+  - {fileID: 2754163214167274212}
 --- !u!114 &9182203847071727739
 MonoBehaviour:
   m_ObjectHideFlags: 0
