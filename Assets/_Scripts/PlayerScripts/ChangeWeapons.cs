@@ -93,6 +93,9 @@ public class ChangeWeapons : NetworkBehaviour
         weapons[currentWeaponIndex - 1].SetActive(false);
         currentWeaponIndex = changeWeaponInput;
         weapons[currentWeaponIndex - 1].SetActive(true);
+
+        if (IsOwner)
+            RequestWeaponOwnershipServerRpc(currentWeaponIndex - 1);
     }
 
     private void GetWeapons(GameObject parent)
@@ -110,5 +113,15 @@ public class ChangeWeapons : NetworkBehaviour
 
         weapons[0].SetActive(true);
         currentWeaponIndex = 1;
+    }
+
+    [ServerRpc]
+    private void RequestWeaponOwnershipServerRpc(int newWeaponIndex)
+    {
+        var newWeaponObj = weapons[newWeaponIndex].GetComponent<NetworkObject>();
+        if (newWeaponObj == null)
+            return;
+
+        newWeaponObj.GiveOwnership(Owner);
     }
 }
