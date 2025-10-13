@@ -69,7 +69,6 @@ public class ChangeWeapons : NetworkBehaviour
         UpdateWeaponModelVisual();
     }
 
-    [ObserversRpc]
     private void UpdateWeaponModelVisual() // this gets called for items that are fused to the hand for animation purposes(e.g. sword)
     {
         string currentWeaponModelName = weapons[currentWeaponIndex - 1].name + "_Model"; // tineti formatul <WeaponsModelName>_Model (e.g. Sword_Model)
@@ -86,7 +85,6 @@ public class ChangeWeapons : NetworkBehaviour
         }
     }
 
-    [ObserversRpc]
     private void UpdateRigLayers()      //tine cont ca RigLayer-ul sa fie de format "RigLayer_<Weapon name>"
     {                                   //se poate imbunatati cu dictionare daca vrem sa facem mai eficient. pt 3 arme/player e ok
         string currentWeaponRigName = "RigLayer_" + weapons[currentWeaponIndex - 1].name;
@@ -106,7 +104,7 @@ public class ChangeWeapons : NetworkBehaviour
         }
         rigBuilder.Build();
     }
-    [ObserversRpc]
+
     private void SwitchWeapons()
     {
         if (changeWeaponInput == currentWeaponIndex)
