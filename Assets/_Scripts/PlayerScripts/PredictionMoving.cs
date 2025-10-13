@@ -8,6 +8,7 @@ public class PredictionMoving : NetworkBehaviour
 {
     [Header("Movement")]
     [SerializeField] private float moveRate = 5f;
+    [SerializeField] private float sprintMultiplier = 2f;
     [SerializeField] private float rotateRate = 7f;
     [SerializeField] private float jumpForce = 7f;
     [SerializeField] private LayerMask groundLayer;
@@ -20,6 +21,7 @@ public class PredictionMoving : NetworkBehaviour
 
     [Header("Input")]
     private Vector2 _moveInput;
+    private bool _isAnalogMovement;
     private Vector2 _mouseLook, _joystickLook;
     [SerializeField] private bool isJoystick;
     internal bool canMove = true;
@@ -46,6 +48,7 @@ public class PredictionMoving : NetworkBehaviour
     public void OnMove(InputAction.CallbackContext context)
     {
         _moveInput = context.ReadValue<Vector2>();
+        _isAnalogMovement = context.control.device is not Keyboard;
     }
 
     public void OnMouseLook(InputAction.CallbackContext context)
@@ -81,7 +84,7 @@ public class PredictionMoving : NetworkBehaviour
             groundCheck.position, groundCheckRadius, groundLayer, QueryTriggerInteraction.Ignore);
         
         Vector3 direction = new Vector3(_moveInput.x, 0f, _moveInput.y).normalized;
-        float speed = _isSprinting ? moveRate * 2f : moveRate;
+        float speed = _isSprinting ? moveRate * sprintMultiplier : moveRate;
         Vector3 velocity = direction * speed;
         velocity.y = _rb.linearVelocity.y;
 
@@ -93,7 +96,16 @@ public class PredictionMoving : NetworkBehaviour
 
         _rb.linearVelocity = velocity;
 
-        animator.SetFloat("Velocity", direction.magnitude);
+        if (_isAnalogMovement)
+        {
+            animator.SetFloat("Velocity", direction.magnitude);
+        }
+        else
+        {
+            var vel = direction.magnitude > 0 ? 0.5f : 0f;
+            vel *= _isSprinting ? 2f : 1f;
+            animator.SetFloat("Velocity", vel);
+        }
     }
     
     private void Update()
