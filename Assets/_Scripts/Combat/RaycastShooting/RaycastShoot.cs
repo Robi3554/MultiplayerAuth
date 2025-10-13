@@ -61,6 +61,9 @@ public abstract class RaycastShoot : MonoBehaviour
 
     protected void Update()
     {
+        if (playerNet != null && !playerNet.IsOwner)
+            return;
+
         if (ammoText == null)
         {
             ammoText = GameObject.Find("PlayerHUD").transform.Find("Ammo Text").GetComponent<TMP_Text>();
