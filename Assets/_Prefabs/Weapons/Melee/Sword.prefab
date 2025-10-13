@@ -27,7 +27,7 @@ Transform:
   m_GameObject: {fileID: 268654498562888797}
   serializedVersion: 2
   m_LocalRotation: {x: -0.006949645, y: -0.1500458, z: -0.9885061, w: 0.017138965}
-  m_LocalPosition: {x: 0.9, y: -64.3, z: 22.5}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1.3302, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -41,7 +41,7 @@ ParticleSystem:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 268654498562888797}
   serializedVersion: 8
-  lengthInSec: 1
+  lengthInSec: 0.5
   simulationSpeed: 1
   stopAction: 0
   cullingMode: 0
@@ -5135,6 +5135,12 @@ MonoBehaviour:
   slashPoint: {fileID: 5980016326099079226}
   coneAngle: 60
   VFX_SLASH: {fileID: 4236577414767703950}
+  animator: {fileID: 0}
+  netAnimator: {fileID: 0}
+  _isOnCooldown:
+    NetworkManager: {fileID: 0}
+    NetworkBehaviour: {fileID: 0}
+    _value: 0
 --- !u!114 &2325135146794036649
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5232,7 +5238,7 @@ Transform:
   m_GameObject: {fileID: 4741095187432154755}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: -1.36, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:

@@ -1,33 +1,44 @@
 using FishNet.CodeGenerating;
+using FishNet.Component.Animating;
 using FishNet.Object;
 using FishNet.Object.Synchronizing;
+using NUnit.Framework.Constraints;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class PredictionMelee : NetworkBehaviour
 {
-    [Header("Weapon Settings")]
+	[Header("Weapon Settings")]
 
 	[AllowMutableSyncType]
 	[SerializeField] private SyncVar<float> cooldownTime = new SyncVar<float>(1f);
 	[AllowMutableSyncType]
-    [SerializeField] private SyncVar<float> attackRange = new SyncVar<float>(3f);
+	[SerializeField] private SyncVar<float> attackRange = new SyncVar<float>(3f);
 	[AllowMutableSyncType]
-    [SerializeField] private SyncVar<int> damage = new SyncVar<int>(10);
+	[SerializeField] private SyncVar<int> damage = new SyncVar<int>(10);
 
-    [Header("References")]
-    [SerializeField] private Transform slashPoint;
-    [SerializeField] private float coneAngle = 60f;
+	[Header("References")]
+	[SerializeField] private Transform slashPoint;
+	[SerializeField] private float coneAngle = 60f;
 	[SerializeField] private ParticleSystem VFX_SLASH;
+
+	[Header("Animation")]
+	[SerializeField] private Animator animator;
+	[SerializeField] private NetworkAnimator netAnimator;
+	private static readonly int SlashTriggerHash = Animator.StringToHash("SlashTrigger");
+
+	private static readonly int IsSlashingHash = Animator.StringToHash("IsSlashing");
 	private CapsuleCollider playerCollider;
 	private bool _meleePressed;
-    private bool _isOnCooldown = false;
-    private float _cooldownTimer;
-    private Vector3 debugDirectionToTarget = new Vector3(0, 0, 0);
+	[AllowMutableSyncType]
+	private SyncVar<bool> _isOnCooldown = new SyncVar<bool>(false);
+	private float _cooldownTimer;
+	private Vector3 debugDirectionToTarget = new Vector3(0, 0, 0);
 	private Vector3 debugHitPosition = new Vector3(0, 0, 0);
 	private bool Slash;
 	private Vector3 Direction;
 	private Vector3 Position;
+
 
 	public override void OnStartNetwork()
 	{
@@ -38,14 +49,23 @@ public class PredictionMelee : NetworkBehaviour
 	public void OnDamage(InputAction.CallbackContext context)
 	{
 		if (!this.isActiveAndEnabled) return;
-		
+
 		Debug.Log("Melee: left click pressed");
-		if (context.performed && !_isOnCooldown)
+		if (context.performed && !_isOnCooldown.Value)
 		{
 			_meleePressed = true;
 		}
 	}
-
+	[ServerRpc] // a trebuit sa fac asa ca latra parrel syncu ca nu se seteaza sync vars pe server side
+	private void StartCooldownServerRpc()
+	{
+		_isOnCooldown.Value = true;
+	}
+	[ServerRpc]
+	private void ResetCooldownServerRpc()
+	{
+		_isOnCooldown.Value = false;
+	}
 	private void FixedUpdate()
 	{
 		if (!IsOwner)
@@ -53,23 +73,23 @@ public class PredictionMelee : NetworkBehaviour
 			return;
 		}
 
-		if (_isOnCooldown)
+		if (_isOnCooldown.Value)
 		{
 			_cooldownTimer += Time.deltaTime;
 			if (_cooldownTimer >= cooldownTime.Value)
 			{
-				_isOnCooldown = false;
+				ResetCooldownServerRpc();
 				_cooldownTimer = 0f;
 			}
 		}
-		// Debug.Log($"Melee: checking if all conditions for attack are right: IsOwner:{IsOwner}, _meleePressed:{_meleePressed}, _isOnCooldown:{_isOnCooldown}");
 
-		if (IsOwner && _meleePressed && !_isOnCooldown)
+		if (IsOwner && _meleePressed && !_isOnCooldown.Value && !animator.GetBool(IsSlashingHash))
 		{
 			Direction = -slashPoint.up;
 			Position = slashPoint.position;
 			PerformSlashRequestServerRpc(Direction, Position);
-			 _meleePressed = false;
+			netAnimator.SetTrigger(SlashTriggerHash);
+			_meleePressed = false;
 		}
 	}
 	void OnDrawGizmosSelected()
@@ -78,27 +98,37 @@ public class PredictionMelee : NetworkBehaviour
 		Gizmos.DrawSphere(slashPoint.position, attackRange.Value);
 		Gizmos.color = Color.yellow;
 		Gizmos.DrawLine(debugHitPosition, debugDirectionToTarget);
-    }
+	}
 
 	[ServerRpc]
 	private void PerformSlashRequestServerRpc(Vector3 direction, Vector3 position)
 	{
-		Slash = true;
 		Direction = direction;
 		Position = position;
-		PerformSlash();
+		Slash = true;	
 	}
-	[ObserversRpc]
-	private void PlaySlashVfx()
+
+	[ServerRpc(RequireOwnership = false)]
+	private void PlayServerWeaponVfx()
 	{
-		VFX_SLASH.Play();
+		PlayObserverWeaponVfx();
 	}
-	private void PerformSlash()
+
+	[ObserversRpc]
+	private void PlayObserverWeaponVfx()
+	{
+		if (VFX_SLASH != null && !VFX_SLASH.isPlaying)
+		{
+			VFX_SLASH.Play();
+		}
+	}
+
+	public void PerformSlash()
 	{
 		if (Slash)
 		{
 			Debug.Log("Melee: Attack pressed");
-			PlaySlashVfx();
+			PlayServerWeaponVfx();
 			//get what we can hit, check if the enemy is in front of the player, call dmg function on server and start cooldown timer after hit
 			Collider[] hits = Physics.OverlapSphere(slashPoint.position, attackRange.Value);
 			// we could add more stuff here. if we want to apply damage the closest enemy only for e.g. 
@@ -138,21 +168,10 @@ public class PredictionMelee : NetworkBehaviour
 					}
 				}
 			}
-			_isOnCooldown = true;
+			StartCooldownServerRpc();
 			_cooldownTimer = 0f;
 			_meleePressed = false;
 			Slash = false;
 		}
-	}
-
-	public override void OnStartServer()
-	{
-		base.OnStartServer();
-		Debug.Log("PredictionMelee: OnStartServer called");
-	}
-	public override void OnStartClient()
-	{
-		base.OnStartClient();
-		Debug.Log($"PredictionMelee: OnStartClient called. IsServerInitialized: {IsServerInitialized}");
 	}
 }

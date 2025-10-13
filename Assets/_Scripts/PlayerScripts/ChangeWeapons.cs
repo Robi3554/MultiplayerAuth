@@ -12,6 +12,8 @@ public class ChangeWeapons : NetworkBehaviour
     private List<GameObject> weapons = new List<GameObject>();
     [SerializeField]
     private GameObject ModelRig;
+    [SerializeField]
+    private List<GameObject> weaponsInHand = new List<GameObject>();
     private RigBuilder rigBuilder;
     private int currentWeaponIndex;
     private int changeWeaponInput;
@@ -64,8 +66,27 @@ public class ChangeWeapons : NetworkBehaviour
             SwitchWeapons();
         }
         UpdateRigLayers();
+        UpdateWeaponModelVisual();
     }
 
+    [ObserversRpc]
+    private void UpdateWeaponModelVisual() // this gets called for items that are fused to the hand for animation purposes(e.g. sword)
+    {
+        string currentWeaponModelName = weapons[currentWeaponIndex - 1].name + "_Model"; // tineti formatul <WeaponsModelName>_Model (e.g. Sword_Model)
+        foreach (GameObject weapon in weaponsInHand)
+        {
+            if (weapon.name == currentWeaponModelName)
+            {
+                weapon.SetActive(true);
+            }
+            else
+            {
+                weapon.SetActive(false);
+            }
+        }
+    }
+
+    [ObserversRpc]
     private void UpdateRigLayers()      //tine cont ca RigLayer-ul sa fie de format "RigLayer_<Weapon name>"
     {                                   //se poate imbunatati cu dictionare daca vrem sa facem mai eficient. pt 3 arme/player e ok
         string currentWeaponRigName = "RigLayer_" + weapons[currentWeaponIndex - 1].name;
@@ -85,7 +106,7 @@ public class ChangeWeapons : NetworkBehaviour
         }
         rigBuilder.Build();
     }
-
+    [ObserversRpc]
     private void SwitchWeapons()
     {
         if (changeWeaponInput == currentWeaponIndex)
