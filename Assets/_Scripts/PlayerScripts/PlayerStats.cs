@@ -11,6 +11,8 @@ public class PlayerStats : NetworkBehaviour
     public readonly SyncVar<int> deaths = new SyncVar<int>(0);
     
     [SerializeField] private TMP_Text _usernameTextOnBillboard;
+    [SerializeField] private AudioSource _audioSource;
+    [SerializeField] private AudioClip _hurtSound;
 
     private TMP_Text healthText;
     private TMP_Text killText;
@@ -75,6 +77,16 @@ public class PlayerStats : NetworkBehaviour
         health.Value = Mathf.Clamp(health.Value - damage, 0, 100);
 
         TargetShakeCamera(Owner, 0.5f, 0.1f);
+        TargetPlayHurtSound(Owner);
+    }
+    
+    [TargetRpc]
+    private void TargetPlayHurtSound(NetworkConnection target)
+    {
+        if (_audioSource && _hurtSound)
+        {
+            _audioSource.PlayOneShot(_hurtSound);
+        }
     }
 
     [Server]

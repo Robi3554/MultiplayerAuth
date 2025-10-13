@@ -8,6 +8,7 @@ public class ShotgunShoot : SingleShot
     [SerializeField]
     private float spreadAngle;
 
+    [ServerRpc]
     protected override void Shoot()
     {
         if (!canShoot) return;
@@ -26,6 +27,10 @@ public class ShotgunShoot : SingleShot
             {
                 ShowShotLineObserversRpc(origin, origin + dir * maxDistance);
             }
+        }
+        if (shootAudioSource && shootSound)
+        {
+            shootAudioSource.PlayOneShot(shootSound);
         }
 
         currentAmmo--;

@@ -1,4 +1,5 @@
 using System.Collections;
+using FishNet.Connection;
 using FishNet.Object;
 using TMPro;
 using UnityEngine;
@@ -35,6 +36,14 @@ public abstract class RaycastShoot : NetworkBehaviour
     protected float reloadTime;
     [SerializeField]
     protected float afterChangeDelay;
+    [SerializeField]
+    protected AudioSource shootAudioSource;
+    [SerializeField]
+    protected AudioSource reloadAudioSource;
+    [SerializeField]
+    protected AudioClip shootSound;
+    [SerializeField]
+    protected AudioClip reloadSound;
 
     private bool isReloading = false;
 
@@ -63,6 +72,11 @@ public abstract class RaycastShoot : NetworkBehaviour
         isReloading = false;
         nextShootTime = 0f;
 
+        if (reloadAudioSource && reloadSound)
+        {
+            reloadAudioSource.pitch = reloadSound.length / reloadTime;
+        }
+        
         if (IsClientInitialized && base.IsOwner == false && NetworkObject != null)
         {
             RequestWeaponOwnershipServerRpc(NetworkObject);
@@ -115,6 +129,10 @@ public abstract class RaycastShoot : NetworkBehaviour
 
         currentAmmo--;
         ShowShotLineObserversRpc(origin, hitPosition);
+        if (shootAudioSource && shootSound)
+        {
+            shootAudioSource.PlayOneShot(shootSound);
+        }
     }
 
     [ServerRpc(RequireOwnership = false)]
@@ -156,6 +174,11 @@ public abstract class RaycastShoot : NetworkBehaviour
 
     protected IEnumerator Reload()
     {
+        if (reloadAudioSource && reloadSound)
+        {
+            reloadAudioSource.PlayOneShot(reloadSound);
+        }
+        
         isReloading = true;
 
         yield return new WaitForSeconds(reloadTime);
