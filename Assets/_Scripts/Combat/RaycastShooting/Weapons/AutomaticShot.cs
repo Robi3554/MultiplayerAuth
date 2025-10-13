@@ -8,7 +8,7 @@ public class AutomaticShot : RaycastShoot
         if (Time.time >= nextShootTime && Input.GetKey(shootKey))
         {
             nextShootTime = Time.time + fireRate;
-            ShootObserverRpc();
+            Shoot();
         }
     }
 }

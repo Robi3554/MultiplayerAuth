@@ -11,7 +11,7 @@ public class BurstShot : RaycastShoot
 
     protected override void HandleShootInput()
     {
-        if (Input.GetKeyDown(shootKey) && Time.time >= nextShootTime)
+        if (Time.time >= nextShootTime && Input.GetKey(shootKey))
         {
             nextShootTime = Time.time + fireRate;
             StartCoroutine(Burst());
@@ -22,7 +22,7 @@ public class BurstShot : RaycastShoot
     {
         for(int i = 0; i < burstCount; i++)
         {
-            ShootObserverRpc();
+            Shoot();
 
             yield return new WaitForSeconds(timeBetweenShots);
         }

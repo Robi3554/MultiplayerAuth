@@ -266,6 +266,7 @@ GameObject:
   - component: {fileID: 1518114421956982367}
   - component: {fileID: 2448810507949122747}
   - component: {fileID: 1730125441025775743}
+  - component: {fileID: 2799138715180261069}
   m_Layer: 0
   m_Name: Assault Rifle
   m_TagString: Weapon
@@ -357,9 +358,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 15808dafdf0472b4788f35e47d5973b8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _componentIndexCache: 0
-  _addedNetworkObject: {fileID: 1730125441025775743}
-  _networkObjectCache: {fileID: 1730125441025775743}
   shootKey: 323
   playerLayer:
     serializedVersion: 2
@@ -374,7 +372,6 @@ MonoBehaviour:
   fireRate: 0.25
   damage: 3
   maxAmmo: 30
-  currentAmmo: 0
   reloadTime: 1
   afterChangeDelay: 0.75
 --- !u!114 &1730125441025775743
@@ -396,7 +393,7 @@ MonoBehaviour:
   <PredictedSpawn>k__BackingField: {fileID: 0}
   <PredictedOwner>k__BackingField: {fileID: 0}
   NetworkBehaviours:
-  - {fileID: 2448810507949122747}
+  - {fileID: 2799138715180261069}
   InitializedParentNetworkBehaviour: {fileID: 0}
   InitializedNestedNetworkObjects: []
   RuntimeParentNetworkBehaviour: {fileID: 0}
@@ -430,3 +427,18 @@ MonoBehaviour:
     Rotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
     Scale: {x: 1, y: 1, z: 1}
     IsValid: 1
+--- !u!114 &2799138715180261069
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3184836833926552461}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a6a39c46bf52104ba8efe3100bce3f7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _componentIndexCache: 0
+  _addedNetworkObject: {fileID: 1730125441025775743}
+  _networkObjectCache: {fileID: 1730125441025775743}

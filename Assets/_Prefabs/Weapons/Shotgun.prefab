@@ -266,6 +266,7 @@ GameObject:
   - component: {fileID: 8755584757610548341}
   - component: {fileID: 7442745247455022180}
   - component: {fileID: 4407355958735364974}
+  - component: {fileID: 1081345410627700130}
   m_Layer: 0
   m_Name: Shotgun
   m_TagString: Weapon
@@ -357,9 +358,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1113581c51f50784d980d067be0537ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _componentIndexCache: 0
-  _addedNetworkObject: {fileID: 4407355958735364974}
-  _networkObjectCache: {fileID: 4407355958735364974}
   shootKey: 323
   playerLayer:
     serializedVersion: 2
@@ -374,7 +372,6 @@ MonoBehaviour:
   fireRate: 1
   damage: 5
   maxAmmo: 12
-  currentAmmo: 12
   reloadTime: 1.25
   afterChangeDelay: 1
   pelletCount: 8
@@ -398,7 +395,7 @@ MonoBehaviour:
   <PredictedSpawn>k__BackingField: {fileID: 0}
   <PredictedOwner>k__BackingField: {fileID: 0}
   NetworkBehaviours:
-  - {fileID: 7442745247455022180}
+  - {fileID: 1081345410627700130}
   InitializedParentNetworkBehaviour: {fileID: 0}
   InitializedNestedNetworkObjects: []
   RuntimeParentNetworkBehaviour: {fileID: 0}
@@ -429,6 +426,21 @@ MonoBehaviour:
   <SceneId>k__BackingField: 0
   SerializedTransformProperties:
     Position: {x: 0.535, y: 0.029999971, z: -0.087}
-    Rotation: {x: 0, y: -0.7071068, z: 0, w: 0.7071068}
+    Rotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
     Scale: {x: 1, y: 1, z: 1}
     IsValid: 1
+--- !u!114 &1081345410627700130
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6907268702211009917}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a6a39c46bf52104ba8efe3100bce3f7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _componentIndexCache: 0
+  _addedNetworkObject: {fileID: 4407355958735364974}
+  _networkObjectCache: {fileID: 4407355958735364974}

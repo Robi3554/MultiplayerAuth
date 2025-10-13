@@ -6,7 +6,7 @@ public class PistolShoot : RaycastShoot
     {
         if (Input.GetKeyDown(shootKey))
         {
-            ShootObserverRpc();
+            Shoot();
         }
     }
 }

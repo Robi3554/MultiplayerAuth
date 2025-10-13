@@ -44,6 +44,7 @@ GameObject:
   - component: {fileID: 1518114421956982367}
   - component: {fileID: 2448810507949122747}
   - component: {fileID: 1730125441025775743}
+  - component: {fileID: -5961929945289205156}
   m_Layer: 0
   m_Name: AR
   m_TagString: Untagged
@@ -133,21 +134,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 15808dafdf0472b4788f35e47d5973b8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _componentIndexCache: 0
-  _addedNetworkObject: {fileID: 1730125441025775743}
-  _networkObjectCache: {fileID: 1730125441025775743}
   shootKey: 323
   playerLayer:
     serializedVersion: 2
     m_Bits: 64
+  wallLayer:
+    serializedVersion: 2
+    m_Bits: 0
   firePoint: {fileID: 4603806096536025725}
   shotLinePrefab: {fileID: 7133602437278059814, guid: 0e3e214fbff67c642a1f4f61c1361237, type: 3}
+  speed: 100
   maxDistance: 100
   fireRate: 0.25
   damage: 3
   maxAmmo: 30
-  currentAmmo: 0
   reloadTime: 1
+  afterChangeDelay: 0
 --- !u!114 &1730125441025775743
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -167,7 +169,7 @@ MonoBehaviour:
   <PredictedSpawn>k__BackingField: {fileID: 0}
   <PredictedOwner>k__BackingField: {fileID: 0}
   NetworkBehaviours:
-  - {fileID: 2448810507949122747}
+  - {fileID: -5961929945289205156}
   InitializedParentNetworkBehaviour: {fileID: 0}
   InitializedNestedNetworkObjects: []
   RuntimeParentNetworkBehaviour: {fileID: 0}
@@ -192,7 +194,7 @@ MonoBehaviour:
   _spectatorInterpolation: 2
   _enableTeleport: 0
   _teleportThreshold: 1
-  <PrefabId>k__BackingField: 0
+  <PrefabId>k__BackingField: 10
   <SpawnableCollectionId>k__BackingField: 0
   <AssetPathHash>k__BackingField: 4127091621893861728
   <SceneId>k__BackingField: 0
@@ -201,6 +203,21 @@ MonoBehaviour:
     Rotation: {x: 0, y: -0.7071068, z: 0, w: 0.7071068}
     Scale: {x: 0.25, y: 0.5, z: 0.25}
     IsValid: 1
+--- !u!114 &-5961929945289205156
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3184836833926552461}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a6a39c46bf52104ba8efe3100bce3f7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _componentIndexCache: 0
+  _addedNetworkObject: {fileID: 1730125441025775743}
+  _networkObjectCache: {fileID: 1730125441025775743}
 --- !u!1 &6267115027452185041
 GameObject:
   m_ObjectHideFlags: 0
