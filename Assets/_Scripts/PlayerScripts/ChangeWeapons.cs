@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using FishNet.Object;
 using UnityEngine;
@@ -65,8 +66,6 @@ public class ChangeWeapons : NetworkBehaviour
         UpdateRigLayers();
     }
 
-
-    [ObserversRpc]
     private void UpdateRigLayers()      //tine cont ca RigLayer-ul sa fie de format "RigLayer_<Weapon name>"
     {                                   //se poate imbunatati cu dictionare daca vrem sa facem mai eficient. pt 3 arme/player e ok
         string currentWeaponRigName = "RigLayer_" + weapons[currentWeaponIndex - 1].name;
@@ -86,7 +85,7 @@ public class ChangeWeapons : NetworkBehaviour
         }
         rigBuilder.Build();
     }
-    [ObserversRpc]
+
     private void SwitchWeapons()
     {
         if (changeWeaponInput == currentWeaponIndex)
@@ -94,7 +93,19 @@ public class ChangeWeapons : NetworkBehaviour
 
         weapons[currentWeaponIndex - 1].SetActive(false);
         currentWeaponIndex = changeWeaponInput;
-        weapons[currentWeaponIndex - 1].SetActive(true);
+        var newWeapon = weapons[currentWeaponIndex - 1];
+        newWeapon.SetActive(true);
+
+        if (IsOwner)
+        {
+            var weaponScript = newWeapon.GetComponent<RaycastShoot>();
+            if (weaponScript != null)
+            {
+                weaponScript.InitializeWeapon();
+            }
+
+            RequestWeaponOwnershipServerRpc(currentWeaponIndex - 1);
+        }
     }
 
     private void GetWeapons(GameObject parent)
@@ -112,5 +123,18 @@ public class ChangeWeapons : NetworkBehaviour
 
         weapons[0].SetActive(true);
         currentWeaponIndex = 1;
+    }
+
+    [ServerRpc]
+    private void RequestWeaponOwnershipServerRpc(int newWeaponIndex)
+    {
+        var newWeaponObj = weapons[newWeaponIndex].GetComponent<NetworkObject>();
+        if (newWeaponObj == null)
+        {
+            Debug.Log("No Netwrok Object Found!");
+            return;
+        }
+
+        newWeaponObj.GiveOwnership(Owner);
     }
 }

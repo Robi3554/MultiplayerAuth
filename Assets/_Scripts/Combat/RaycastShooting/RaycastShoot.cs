@@ -1,74 +1,57 @@
-using System.Collections;
-using FishNet.Object;
+﻿using System.Collections;
 using TMPro;
 using UnityEngine;
-using static UnityEngine.GraphicsBuffer;
 
-public abstract class RaycastShoot : NetworkBehaviour
+public abstract class RaycastShoot : MonoBehaviour
 {
     private TMP_Text ammoText;
 
-    [SerializeField]
-    protected KeyCode shootKey = KeyCode.Mouse0;
-    [SerializeField]
-    protected LayerMask playerLayer;
-    [SerializeField]
-    protected LayerMask wallLayer;
-    [SerializeField]
-    protected Transform firePoint;
-    [SerializeField]
-    protected GameObject shotLinePrefab;
+    protected int currentAmmo;
 
     [SerializeField]
+    protected KeyCode shootKey = KeyCode.Mouse0;
+    [SerializeField] 
+    protected LayerMask playerLayer;
+    [SerializeField] 
+    protected LayerMask wallLayer;
+    [SerializeField] 
+    protected Transform firePoint;
+    [SerializeField] 
+    protected GameObject shotLinePrefab;
+
+    [SerializeField] 
     protected float speed = 100f;
-    [SerializeField]
+    [SerializeField] 
     protected float maxDistance = 100f;
-    [SerializeField]
+    [SerializeField] 
     protected float fireRate;
-    [SerializeField]
+    [SerializeField] 
     protected int damage;
-    [SerializeField]
+    [SerializeField] 
     protected int maxAmmo;
-    [SerializeField]
-    protected int currentAmmo;
-    [SerializeField]
+    [SerializeField] 
     protected float reloadTime;
-    [SerializeField]
+    [SerializeField] 
     protected float afterChangeDelay;
 
     private bool isReloading = false;
-
     protected bool canShoot = true;
-
     protected float nextShootTime = 0f;
 
     protected LayerMask combinedLayer;
 
-    public override void OnStartClient()
-    {
-        base.OnStartClient();
-    }
+    private PlayerNetworkInitializer playerNet;
 
     private void Start()
     {
-        currentAmmo = maxAmmo;
-
         combinedLayer = playerLayer | wallLayer;
+        currentAmmo = maxAmmo;
+        playerNet = GetComponentInParent<PlayerNetworkInitializer>();
     }
 
     protected void OnEnable()
     {
-        ammoText = GameObject.Find("PlayerHUD").transform.Find("Ammo Text").GetComponent<TMP_Text>();
-
-        isReloading = false;
-        nextShootTime = 0f;
-
-        if (IsClientInitialized && base.IsOwner == false && NetworkObject != null)
-        {
-            RequestWeaponOwnershipServerRpc(NetworkObject);
-        }
-
-        StartCoroutine(WeaponChangeDelay(afterChangeDelay));
+        InitializeWeapon();
     }
 
     private void OnDisable()
@@ -78,110 +61,91 @@ public abstract class RaycastShoot : NetworkBehaviour
 
     protected void Update()
     {
-        if (!base.IsOwner)
+        if (playerNet != null && !playerNet.IsOwner)
             return;
 
-        ammoText.text = currentAmmo.ToString() + '/' + maxAmmo.ToString();
+        if (ammoText == null)
+        {
+            ammoText = GameObject.Find("PlayerHUD").transform.Find("Ammo Text").GetComponent<TMP_Text>();
+        }
+
+        ammoText.text = $"{currentAmmo}/{maxAmmo}";
 
         if (isReloading)
             return;
 
-        if (currentAmmo <= 0f || Input.GetKeyDown(KeyCode.R))
+        if (currentAmmo <= 0 || Input.GetKeyDown(KeyCode.R))
+        {
             StartCoroutine(Reload());
-        else if(currentAmmo > 0)
+            playerNet?.NotifyReloadServer(maxAmmo);
+        }
+        else if (currentAmmo > 0)
+        {
             HandleShootInput();
+        }
     }
 
-    [ServerRpc]
     protected virtual void Shoot()
     {
-        if(!canShoot) return;
+        if (!canShoot) return;
 
         Vector3 origin = firePoint.position;
         Vector3 direction = -firePoint.up;
-
         Vector3 hitPosition = origin + direction * maxDistance;
 
         if (Physics.Raycast(origin, direction, out RaycastHit hit, Mathf.Infinity, combinedLayer))
         {
             hitPosition = hit.point;
             Debug.Log("Raycast hit at position: " + hitPosition);
-            HitPlayer(hit.transform.GetComponent<NetworkObject>());
+
+            var hitNetObj = hit.transform.GetComponent<FishNet.Object.NetworkObject>();
+            if (hitNetObj != null)
+                playerNet?.NotifyHitServer(hitNetObj, damage);
         }
-        else
-        {
-            Debug.Log("Raycast did not hit anything. Drawing to max distance.");
-        }
+
+        // locally show the bullet
+        //ShowShotLine(origin, hitPosition);
+
+        // tell the server to show the tracer for others
+        playerNet?.NotifyShotServer(origin, hitPosition);
 
         currentAmmo--;
-        ShowShotLineObserversRpc(origin, hitPosition);
     }
 
-    [ServerRpc(RequireOwnership = false)]
-    protected void HitPlayer(NetworkObject playerHit)
-    {
-        NetworkObject attackerNetObj = GetComponentInParent<NetworkObject>();
 
-        Debug.Log("Attacker NetworkObject: " + attackerNetObj);
-        Debug.Log("Target NetworkObject: " + playerHit);
-
-        if (playerHit == null || attackerNetObj == null)
-        {
-            Debug.LogWarning("One of the NetworkObjects is null!");
-            return;
-        }
-
-        int targetId = playerHit.Owner.ClientId;
-        int attackerId = attackerNetObj.Owner.ClientId;
-
-        Debug.Log($"Player {attackerId} hit Player {targetId} for {damage} damage.");
-        PlayerManager.Instance.DamagePlayer(targetId, damage, attackerId);
-    }
-
-    [ObserversRpc]
-    protected void ShowShotLineObserversRpc(Vector3 start, Vector3 end)
-    {
-        ShowShotLine(start, end);
-    }
-
-    protected void ShowShotLine(Vector3 start, Vector3 end)
+    public void ShowShotLine(Vector3 start, Vector3 end)
     {
         if (shotLinePrefab == null)
             return;
 
         GameObject tempGO = Instantiate(shotLinePrefab, firePoint.position, Quaternion.identity);
-
         tempGO.GetComponent<LineProjectile>().Initialize(speed, start, end);
     }
 
     protected IEnumerator Reload()
     {
         isReloading = true;
-
         yield return new WaitForSeconds(reloadTime);
-
         currentAmmo = maxAmmo;
-
         isReloading = false;
     }
 
     protected IEnumerator WeaponChangeDelay(float delay)
     {
         canShoot = false;
-
         yield return new WaitForSeconds(delay);
-
         canShoot = true;
-
     }
 
-    [ServerRpc(RequireOwnership = false)]
-    private void RequestWeaponOwnershipServerRpc(NetworkObject weaponNetObj)
+    public void InitializeWeapon()
     {
-        if (weaponNetObj != null)
-        {
-            weaponNetObj.GiveOwnership(Owner);
-        }
+        if (ammoText == null)
+            ammoText = GameObject.Find("PlayerHUD").transform.Find("Ammo Text").GetComponent<TMP_Text>();
+
+        canShoot = false;
+        nextShootTime = 0f;
+        StartCoroutine(WeaponChangeDelay(afterChangeDelay));
     }
+
     protected abstract void HandleShootInput();
 }

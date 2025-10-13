@@ -355,6 +355,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 67e34182af6df46459194cf4e20cd0ee, type: 3}
       insertIndex: -1
       addedObject: {fileID: 6185355539522147739}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 67e34182af6df46459194cf4e20cd0ee, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: -8816568010276086457}
   m_SourcePrefab: {fileID: 100100000, guid: 67e34182af6df46459194cf4e20cd0ee, type: 3}
 --- !u!1 &4798214918135629857 stripped
 GameObject:
@@ -373,9 +376,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9843bf2612ed08e47acf8ea3bd7ce4dc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _componentIndexCache: 0
-  _addedNetworkObject: {fileID: 6185355539522147739}
-  _networkObjectCache: {fileID: 6185355539522147739}
   shootKey: 323
   playerLayer:
     serializedVersion: 2
@@ -390,7 +390,6 @@ MonoBehaviour:
   fireRate: 1
   damage: 15
   maxAmmo: 15
-  currentAmmo: 0
   reloadTime: 0.75
   afterChangeDelay: 0.5
 --- !u!114 &6185355539522147739
@@ -412,7 +411,7 @@ MonoBehaviour:
   <PredictedSpawn>k__BackingField: {fileID: 0}
   <PredictedOwner>k__BackingField: {fileID: 0}
   NetworkBehaviours:
-  - {fileID: 3980028035428594428}
+  - {fileID: -8816568010276086457}
   InitializedParentNetworkBehaviour: {fileID: 0}
   InitializedNestedNetworkObjects: []
   RuntimeParentNetworkBehaviour: {fileID: 0}
@@ -444,8 +443,23 @@ MonoBehaviour:
   SerializedTransformProperties:
     Position: {x: 0, y: 1.187, z: 0.427}
     Rotation: {x: -0.70710695, y: 0.0000019632278, z: 0.0000040829177, w: 0.70710665}
-    Scale: {x: 1, y: 1, z: 1}
+    Scale: {x: 2, y: 2, z: 2}
     IsValid: 1
+--- !u!114 &-8816568010276086457
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4798214918135629857}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a6a39c46bf52104ba8efe3100bce3f7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _componentIndexCache: 0
+  _addedNetworkObject: {fileID: 6185355539522147739}
+  _networkObjectCache: {fileID: 6185355539522147739}
 --- !u!4 &5322550691431191195 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 67e34182af6df46459194cf4e20cd0ee, type: 3}

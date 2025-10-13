@@ -14,22 +14,34 @@ public class ShotgunShoot : SingleShot
 
         Vector3 origin = firePoint.position;
 
-        for(int i = 0; i < pelletCount; i++)
+        var playerNet = GetComponentInParent<PlayerNetworkInitializer>();
+
+        for (int i = 0; i < pelletCount; i++)
         {
             Vector3 dir = GetSpreadDirection(-firePoint.up, spreadAngle);
+
+            Vector3 hitPosition = origin + dir * maxDistance;
+
             if (Physics.Raycast(origin, dir, out RaycastHit hit, Mathf.Infinity, combinedLayer))
             {
-                HitPlayer(hit.transform.GetComponent<NetworkObject>());
-                ShowShotLineObserversRpc(origin, hit.point);
+                hitPosition = hit.point;
+
+                var hitNetObj = hit.transform.GetComponent<NetworkObject>();
+                if (hitNetObj != null)
+                    playerNet?.NotifyHitServer(hitNetObj, damage);
+
+                // locally show the bullet
+                //ShowShotLine(origin, hitPosition);
             }
-            else
-            {
-                ShowShotLineObserversRpc(origin, origin + dir * maxDistance);
-            }
+
+            // Notify server to replicate the pellet to all observers
+            playerNet?.NotifyShotServer(origin, hitPosition);
         }
 
         currentAmmo--;
     }
+
+
     private Vector3 GetSpreadDirection(Vector3 forward, float angle)
     {
         float spreadRadius = Mathf.Tan(spreadAngle * Mathf.Deg2Rad);

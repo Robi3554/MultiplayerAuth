@@ -12,7 +12,7 @@ public class RailGunShoot : RaycastShoot
 
     protected override void HandleShootInput()
     {
-        if (Input.GetKeyDown(shootKey) && Time.time >= nextShootTime)
+        if (Time.time >= nextShootTime && Input.GetKey(shootKey))
         {
             nextShootTime = Time.time + fireRate;
             StartCoroutine(StopAndShoot());

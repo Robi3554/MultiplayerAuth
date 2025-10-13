@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 1043683319989321788}
   - component: {fileID: 8859040949006782697}
   - component: {fileID: 7727761707012604863}
+  - component: {fileID: 6202255741427689647}
   m_Layer: 0
   m_Name: Burst Rifle
   m_TagString: Weapon
@@ -102,9 +103,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cf40e658b9ac8ef489b5333048eb7d42, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _componentIndexCache: 0
-  _addedNetworkObject: {fileID: 7727761707012604863}
-  _networkObjectCache: {fileID: 7727761707012604863}
   shootKey: 323
   playerLayer:
     serializedVersion: 2
@@ -119,8 +117,8 @@ MonoBehaviour:
   fireRate: 1
   damage: 7
   maxAmmo: 24
-  currentAmmo: 24
   reloadTime: 1
+  afterChangeDelay: 0
   timeBetweenShots: 0.15
   burstCount: 3
 --- !u!114 &7727761707012604863
@@ -142,7 +140,7 @@ MonoBehaviour:
   <PredictedSpawn>k__BackingField: {fileID: 0}
   <PredictedOwner>k__BackingField: {fileID: 0}
   NetworkBehaviours:
-  - {fileID: 8859040949006782697}
+  - {fileID: 6202255741427689647}
   InitializedParentNetworkBehaviour: {fileID: 0}
   InitializedNestedNetworkObjects: []
   RuntimeParentNetworkBehaviour: {fileID: 0}
@@ -176,6 +174,21 @@ MonoBehaviour:
     Rotation: {x: 0, y: -0.7071068, z: 0, w: 0.7071068}
     Scale: {x: 0.25, y: 0.5, z: 0.25}
     IsValid: 1
+--- !u!114 &6202255741427689647
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 152636926904193692}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a6a39c46bf52104ba8efe3100bce3f7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _componentIndexCache: 0
+  _addedNetworkObject: {fileID: 7727761707012604863}
+  _networkObjectCache: {fileID: 7727761707012604863}
 --- !u!1 &645928686248586991
 GameObject:
   m_ObjectHideFlags: 0

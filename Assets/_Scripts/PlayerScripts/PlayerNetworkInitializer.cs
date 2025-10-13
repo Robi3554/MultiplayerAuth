@@ -3,8 +3,7 @@ using UnityEngine;
 
 public class PlayerNetworkInitializer : NetworkBehaviour
 {
-    [SerializeField]
-    private GameObject playerHUD;
+    [SerializeField] private GameObject playerHUD;
 
     public override void OnStartServer()
     {
@@ -27,5 +26,42 @@ public class PlayerNetworkInitializer : NetworkBehaviour
 
         if (!IsOwner)
             playerHUD.SetActive(false);
+    }
+
+    // Called by RaycastShoot when a hit happens
+    [ServerRpc(RequireOwnership = false)]
+    public void NotifyHitServer(NetworkObject targetPlayer, int damage)
+    {
+        if (targetPlayer == null)
+            return;
+
+        int targetId = (int)targetPlayer.Owner.ClientId;
+        int attackerId = (int)Owner.ClientId;
+
+        Debug.Log($"[Server] Player {attackerId} hit Player {targetId} for {damage} damage.");
+        PlayerManager.Instance.DamagePlayer(targetId, damage, attackerId);
+    }
+
+    // Called when a player fires a bullet
+    [ServerRpc(RequireOwnership = false)]
+    public void NotifyShotServer(Vector3 start, Vector3 end)
+    {
+        // Tell all observers to show the shot
+        ShowShotObserversRpc(start, end);
+    }
+
+    [ObserversRpc]
+    private void ShowShotObserversRpc(Vector3 start, Vector3 end)
+    {
+        // Recreate the shot line on all clients
+        var weapon = GetComponentInChildren<RaycastShoot>();
+        if (weapon != null)
+            weapon.ShowShotLine(start, end);
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void NotifyReloadServer(int newAmmo)
+    {
+        Debug.Log($"[Server] Player {Owner.ClientId} reloaded. Ammo reset to {newAmmo}");
     }
 }

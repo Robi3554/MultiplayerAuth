@@ -68,32 +68,15 @@ public class PlayerStats : NetworkBehaviour
             deathText.text = "D:" + deaths.Value.ToString();
     }
 
-    [Server]
     public void TakeDamage(int damage)
     {
         if (isRespawning) return;
-        health.Value = Mathf.Clamp(health.Value - damage, 0, 100);
+        
+        SetHealth(damage);
 
         TargetShakeCamera(Owner, 0.5f, 0.1f);
     }
 
-    [Server]
-    public void ResetHealth()
-    {
-        health.Value = 100;
-    }
-
-    [Server]
-    public void AddKill()
-    {
-        kills.Value++;
-    }
-
-    [Server]
-    public void AddDeath()
-    {
-        deaths.Value++;
-    }
     [Server]
     public void HealPlayer(int healAmount)
     {
@@ -107,6 +90,25 @@ public class PlayerStats : NetworkBehaviour
             health.Value += healAmount;
             Debug.Log($"Player healed to {health.Value}");
         }
+    }
+
+    public void AddKill()
+    {
+        kills.Value++;
+    }
+
+    public void AddDeath()
+    {
+        deaths.Value++;
+    }
+    public void ResetHealth()
+    {
+        health.Value = 100;
+    }
+
+    private void SetHealth(int value)
+    {
+        health.Value = Mathf.Clamp(health.Value - value, 0, 100);
     }
 
     [TargetRpc]
