@@ -33,10 +33,21 @@ public abstract class RaycastShoot : MonoBehaviour
     protected float reloadTime;
     [SerializeField] 
     protected float afterChangeDelay;
-
+    
+    [SerializeField]
+    protected AudioSource shootAudioSource;
+    [SerializeField]
+    protected AudioClip shootAudioClip;
+    [SerializeField]
+    protected AudioSource reloadAudioSource;
+    [SerializeField]
+    protected AudioClip reloadAudioClip;
+    
     private bool isReloading = false;
     protected bool canShoot = true;
     protected float nextShootTime = 0f;
+    private bool canPlayShootSound;
+    private bool canPlayReloadSound;
 
     protected LayerMask combinedLayer;
 
@@ -113,11 +124,15 @@ public abstract class RaycastShoot : MonoBehaviour
     }
 
 
-    public void ShowShotLine(Vector3 start, Vector3 end)
+    public void CreateBulletEffect(Vector3 start, Vector3 end)
     {
         if (shotLinePrefab == null)
             return;
 
+        if (canPlayShootSound)
+        {
+            shootAudioSource.PlayOneShot(shootAudioClip);
+        }
         GameObject tempGO = Instantiate(shotLinePrefab, firePoint.position, Quaternion.identity);
         tempGO.GetComponent<LineProjectile>().Initialize(speed, start, end);
     }
@@ -125,6 +140,10 @@ public abstract class RaycastShoot : MonoBehaviour
     protected IEnumerator Reload()
     {
         isReloading = true;
+        if (canPlayReloadSound)
+        {
+            reloadAudioSource.PlayOneShot(reloadAudioClip);
+        }
         yield return new WaitForSeconds(reloadTime);
         currentAmmo = maxAmmo;
         isReloading = false;
@@ -144,6 +163,11 @@ public abstract class RaycastShoot : MonoBehaviour
 
         canShoot = false;
         nextShootTime = 0f;
+        canPlayShootSound = shootAudioSource && shootAudioClip;
+        canPlayReloadSound = reloadAudioSource && reloadAudioClip;
+        
+        reloadAudioSource.pitch = reloadAudioClip.length / reloadTime;
+        
         StartCoroutine(WeaponChangeDelay(afterChangeDelay));
     }
 

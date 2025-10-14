@@ -56,7 +56,7 @@ public class PlayerNetworkInitializer : NetworkBehaviour
         // Recreate the shot line on all clients
         var weapon = GetComponentInChildren<RaycastShoot>();
         if (weapon != null)
-            weapon.ShowShotLine(start, end);
+            weapon.CreateBulletEffect(start, end);
     }
 
     [ServerRpc(RequireOwnership = false)]
