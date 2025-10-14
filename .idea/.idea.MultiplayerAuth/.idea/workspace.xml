@@ -4,212 +4,52 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="fbac54e2-f599-4c60-a987-3e77a97a2654" name="Changes" comment="" />
+    <list default="true" id="a0eb1c48-2865-41a0-83f6-bbf548ef18a9" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/Assets/FishNet/CodeGenerating/cecil-0.11.4/Mono.Cecil.sln.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/FishNet/Runtime/Transporting/Transports/Tugboat/LiteNetLib/LiteNetLib.csproj.meta" beforeDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="ChangesViewManager">
-    <option name="groupingKeys">
-      <option value="directory" />
-      <option value="repository" />
-    </option>
-  </component>
   <component name="Git.Settings">
-    <option name="RECENT_BRANCH_BY_REPOSITORY">
-      <map>
-        <entry key="$PROJECT_DIR$" value="Octa/FixFenceAndAddWalkAnim" />
-      </map>
-    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="GitHubPullRequestSearchHistory">{
-  &quot;lastFilter&quot;: {
-    &quot;state&quot;: &quot;OPEN&quot;,
-    &quot;assignee&quot;: &quot;OctavianNistora&quot;
-  }
-}</component>
-  <component name="GithubPullRequestsUISettings">{
-  &quot;selectedUrlAndAccountId&quot;: {
-    &quot;url&quot;: &quot;https://github.com/Robi3554/MultiplayerAuth.git&quot;,
-    &quot;accountId&quot;: &quot;4f803c2e-97a4-470a-94e3-fc2417efc456&quot;
-  }
-}</component>
   <component name="HighlightingSettingsPerFile">
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/2431722e3e3e41d78b6718bb39ab91111df400/17/5c79b9d3/RefreshRate.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/2431722e3e3e41d78b6718bb39ab91111df400/8d/987b6983/GameObject.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/2431722e3e3e41d78b6718bb39ab91111df400/e3/fc1853f6/Resolution.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Assets/_Scripts/Camera/Billboard.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Assets/_Scripts/Managers/PlayerSpawnerCustom.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Assets/_Scripts/Managers/ServerCommandLine.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Assets/_Scripts/PlayerScripts/PlayerCamera.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.cinemachine@b66fdb7cd1f2/Runtime/Behaviours/CinemachineBrain.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/Sularfy/Documents/MultiplayerAuth/Assets/_Prefabs/Characters/PlayerV2.prefab" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/Sularfy/Documents/MultiplayerAuth/Assets/_Prefabs/Characters/PlayerV2.prefab" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/Sularfy/Documents/MultiplayerAuth/Assets/_Prefabs/Characters/PlayerV2.prefab" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/Sularfy/Documents/MultiplayerAuth/Assets/_Prefabs/Characters/PlayerV2.prefab" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/Sularfy/Documents/MultiplayerAuth/Assets/_Prefabs/Characters/PlayerV2.prefab" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/Sularfy/Documents/MultiplayerAuth/Assets/_Prefabs/Characters/PlayerV2.prefab" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/Sularfy/Documents/MultiplayerAuth/Assets/_Prefabs/Characters/PlayerV2.prefab" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/Sularfy/Documents/MultiplayerAuth/Assets/_Prefabs/Characters/PlayerV2.prefab" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/Sularfy/Documents/MultiplayerAuth/Assets/_Scripts/Combat/RaycastShooting/RaycastShoot.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/Sularfy/Documents/MultiplayerAuth/Assets/_Scripts/Combat/RaycastShooting/RaycastShoot.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/Sularfy/Documents/MultiplayerAuth/Assets/_Scripts/Combat/RaycastShooting/RaycastShoot.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/Sularfy/Documents/MultiplayerAuth/Assets/_Scripts/Combat/RaycastShooting/RaycastShoot.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/Sularfy/Documents/MultiplayerAuth/Assets/_Scripts/Combat/RaycastShooting/RaycastShoot.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/Sularfy/Documents/MultiplayerAuth/Assets/_Scripts/Combat/RaycastShooting/RaycastShoot.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/Sularfy/Documents/MultiplayerAuth/Assets/_Scripts/Combat/RaycastShooting/RaycastShoot.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/Sularfy/Documents/MultiplayerAuth/Assets/_Scripts/Combat/RaycastShooting/RaycastShoot.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/Sularfy/Documents/MultiplayerAuth/Assets/_Scripts/Combat/RaycastShooting/RaycastShoot.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/Sularfy/Documents/MultiplayerAuth/Assets/_Scripts/Combat/RaycastShooting/RaycastShoot.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
   <component name="MetaFilesCheckinStateConfiguration" checkMetaFiles="false" />
-  <component name="ProjectColorInfo">{
-  &quot;associatedIndex&quot;: 1
-}</component>
-  <component name="ProjectId" id="30sDVeHdEAO3sc9Cukqf2vL1NIB" />
-  <component name="ProjectViewState">
-    <option name="hideEmptyMiddlePackages" value="true" />
-    <option name="showLibraryContents" value="true" />
-  </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "Octa/FixFenceAndAddWalkAnim",
-    "ignore.virus.scanning.warn.message": "true",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "CodeLensConfigurable",
-    "vue.rearranger.settings.migration": "true"
+    "git-widget-placeholder": "Octa/AddBasicSounds",
+    "node.js.selected.package.tslint": "(autodetect)"
   }
-}</component>
-  <component name="RunManager" selected="Attach to Unity Editor.Attach to Unity Editor">
-    <configuration name="Standalone Player" type="RunUnityExe" factoryName="Unity Executable">
-      <option name="EXE_PATH" value="$PROJECT_DIR$/../windows_client\MultiplayerAuth.exe" />
-      <option name="PROGRAM_PARAMETERS" value="" />
-      <option name="WORKING_DIRECTORY" value="D:\Unity Development" />
-      <option name="PASS_PARENT_ENVS" value="1" />
-      <option name="USE_EXTERNAL_CONSOLE" value="0" />
-      <option name="ENV_FILE_PATHS" value="" />
-      <option name="REDIRECT_INPUT_PATH" value="" />
-      <option name="PTY_MODE" value="Auto" />
-      <method v="2" />
-    </configuration>
-    <configuration name="Start Unity" type="RunUnityExe" factoryName="Unity Executable">
-      <option name="EXE_PATH" value="G:\Unity\6000.0.41f1\Editor\Unity.exe" />
-      <option name="PROGRAM_PARAMETERS" value="-projectPath &quot;D:\Unity Development\MultiplayerAuth&quot; -debugCodeOptimization" />
-      <option name="WORKING_DIRECTORY" value="D:\Unity Development\MultiplayerAuth" />
-      <option name="PASS_PARENT_ENVS" value="1" />
-      <option name="USE_EXTERNAL_CONSOLE" value="0" />
-      <option name="ENV_FILE_PATHS" value="" />
-      <option name="REDIRECT_INPUT_PATH" value="" />
-      <option name="PTY_MODE" value="Auto" />
-      <method v="2" />
-    </configuration>
-    <configuration name="Unit Tests (batch mode)" type="RunUnityExe" factoryName="Unity Executable">
-      <option name="EXE_PATH" value="G:\Unity\6000.0.41f1\Editor\Unity.exe" />
-      <option name="PROGRAM_PARAMETERS" value="-runTests -batchmode -projectPath &quot;D:\Unity Development\MultiplayerAuth&quot; -testResults Logs/results.xml -logFile Logs/Editor.log -testPlatform EditMode -debugCodeOptimization" />
-      <option name="WORKING_DIRECTORY" value="D:\Unity Development\MultiplayerAuth" />
-      <option name="PASS_PARENT_ENVS" value="1" />
-      <option name="USE_EXTERNAL_CONSOLE" value="0" />
-      <option name="ENV_FILE_PATHS" value="" />
-      <option name="REDIRECT_INPUT_PATH" value="" />
-      <option name="PTY_MODE" value="Auto" />
-      <method v="2" />
-    </configuration>
-    <configuration name="Attach to Unity Editor &amp; Play" type="UNITY_DEBUG_RUN_CONFIGURATION" factoryName="UNITY_ATTACH_AND_PLAY" show_console_on_std_err="false" show_console_on_std_out="false" port="50000" address="localhost">
-      <option name="allowRunningInParallel" value="false" />
-      <option name="listenPortForConnections" value="false" />
-      <option name="pid" />
-      <option name="projectPathOnTarget" />
-      <option name="runtimes">
-        <list />
-      </option>
-      <option name="selectedOptions">
-        <list />
-      </option>
-      <option name="useMixedMode" value="false" />
-      <method v="2" />
-    </configuration>
-    <configuration name="Attach to Unity Editor" type="UNITY_DEBUG_RUN_CONFIGURATION" factoryName="Unity Debug" show_console_on_std_err="false" show_console_on_std_out="false" port="50000" address="localhost">
-      <option name="allowRunningInParallel" value="false" />
-      <option name="listenPortForConnections" value="false" />
-      <option name="pid" />
-      <option name="projectPathOnTarget" />
-      <option name="runtimes">
-        <list />
-      </option>
-      <option name="selectedOptions">
-        <list />
-      </option>
-      <option name="useMixedMode" value="false" />
-      <method v="2" />
-    </configuration>
-    <configuration name="Attach to Device" type="UnityDevicePlayer" factoryName="UnityAttachToDevicePlayer">
-      <method v="2" />
-    </configuration>
-  </component>
-  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+}]]></component>
   <component name="TaskManager">
-    <task active="true" id="Default" summary="Default task">
-      <changelist id="fbac54e2-f599-4c60-a987-3e77a97a2654" name="Changes" comment="" />
-      <created>1754407412822</created>
-      <option name="number" value="Default" />
-      <option name="presentableId" value="Default" />
-      <updated>1754407412822</updated>
-      <workItem from="1754407415429" duration="1349000" />
-      <workItem from="1754842806949" duration="244000" />
-      <workItem from="1755209601606" duration="589000" />
-      <workItem from="1755347602642" duration="2871000" />
-      <workItem from="1755462854818" duration="2366000" />
-      <workItem from="1755947080538" duration="354000" />
-      <workItem from="1755947933020" duration="647000" />
-      <workItem from="1755952045470" duration="170000" />
-      <workItem from="1755952325806" duration="85000" />
-      <workItem from="1755952526642" duration="34000" />
-      <workItem from="1755952888605" duration="3776000" />
-      <workItem from="1756054793405" duration="2211000" />
-      <workItem from="1756402581617" duration="1121000" />
-      <workItem from="1757160769104" duration="312000" />
-      <workItem from="1757401738153" duration="489000" />
-      <workItem from="1757519102663" duration="70000" />
-      <workItem from="1757520738905" duration="959000" />
-      <workItem from="1757709556629" duration="2657000" />
-      <workItem from="1757791468811" duration="3100000" />
-      <workItem from="1757925778219" duration="1537000" />
-      <workItem from="1759658281656" duration="2278000" />
-    </task>
     <servers />
-  </component>
-  <component name="TypeScriptGeneratedFilesManager">
-    <option name="version" value="3" />
   </component>
   <component name="UnityCheckinConfiguration" checkUnsavedScenes="false" />
   <component name="UnityProjectConfiguration" hasMinimizedUI="true" />
-  <component name="UnityProjectDiscoverer">
-    <option name="hasUnityReference" value="true" />
-    <option name="unityProject" value="true" />
-    <option name="unityProjectFolder" value="true" />
-  </component>
   <component name="UnityUnitTestConfiguration" currentTestLauncher="Both" />
-  <component name="Vcs.Log.Tabs.Properties">
-    <option name="TAB_STATES">
-      <map>
-        <entry key="MAIN">
-          <value>
-            <State />
-          </value>
-        </entry>
-      </map>
-    </option>
-  </component>
   <component name="VcsManagerConfiguration">
-    <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <breakpoint enabled="true" type="DotNet_Exception_Breakpoints">
-          <properties exception="System.OperationCanceledException" breakIfHandledByOtherCode="false" displayValue="System.OperationCanceledException" />
-          <option name="timeStamp" value="1" />
-        </breakpoint>
-        <breakpoint enabled="true" type="DotNet_Exception_Breakpoints">
-          <properties exception="System.Threading.Tasks.TaskCanceledException" breakIfHandledByOtherCode="false" displayValue="System.Threading.Tasks.TaskCanceledException" />
-          <option name="timeStamp" value="2" />
-        </breakpoint>
-        <breakpoint enabled="true" type="DotNet_Exception_Breakpoints">
-          <properties exception="System.Threading.ThreadAbortException" breakIfHandledByOtherCode="false" displayValue="System.Threading.ThreadAbortException" />
-          <option name="timeStamp" value="3" />
-        </breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
+    <option name="LAST_COMMIT_MESSAGE" value="" />
   </component>
 </project>
