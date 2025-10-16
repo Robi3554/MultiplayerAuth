@@ -12,10 +12,13 @@ public class PlayerStats : NetworkBehaviour
     public readonly SyncVar<int> deaths = new SyncVar<int>(0);
     
     [SerializeField] private TMP_Text _usernameTextOnBillboard;
+    [SerializeField] private AudioSource _hitAudioSource;
+    [SerializeField] private AudioClip _hitAudioClip;
 
     private TMP_Text healthText;
     private TMP_Text killText;
     private TMP_Text deathText;
+    private bool _canPlayHitSound;
 
     private Slider healthSlider;
 
@@ -31,6 +34,7 @@ public class PlayerStats : NetworkBehaviour
             if (healthText != null)
                 healthText.text = health.Value.ToString();
             health.OnChange += OnHealthChanged;
+            _canPlayHitSound = _hitAudioSource && _hitAudioClip;
             
             if (!string.IsNullOrEmpty(ConnectionInfo.username))
             {
@@ -75,7 +79,8 @@ public class PlayerStats : NetworkBehaviour
         if (isRespawning) return;
         
         SetHealth(damage);
-
+        
+        TargetHitSound(Owner);
         TargetShakeCamera(Owner, 0.5f, 0.1f);
     }
 
@@ -111,6 +116,15 @@ public class PlayerStats : NetworkBehaviour
     private void SetHealth(int value)
     {
         health.Value = Mathf.Clamp(health.Value - value, 0, 100);
+    }
+    
+    [TargetRpc]
+    private void TargetHitSound(NetworkConnection target)
+    {
+        if (_canPlayHitSound)
+        {
+            _hitAudioSource.PlayOneShot(_hitAudioClip);
+        }
     }
 
     [TargetRpc]
