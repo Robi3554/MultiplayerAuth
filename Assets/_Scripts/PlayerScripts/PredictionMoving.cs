@@ -31,7 +31,7 @@ public class PredictionMoving : NetworkBehaviour
     private bool _isGrounded;
     private bool _jumpPressed;
     private bool _isSprinting;
-
+    private bool _isMovingBackwards;
     private void Awake()
     {
         _rb = GetComponent<Rigidbody>();
@@ -88,6 +88,11 @@ public class PredictionMoving : NetworkBehaviour
         Vector3 velocity = direction * speed;
         velocity.y = _rb.linearVelocity.y;
 
+        //calculate if we are moving backwards
+        float dotProductDirection = Vector3.Dot(transform.forward, direction);
+        _isMovingBackwards = dotProductDirection < 0f && direction.magnitude > 0.1f;
+        float movingBackwards = _isMovingBackwards ? -1f : 1f;
+        animator.SetFloat("VelocityBackwardsValue", movingBackwards);
         if (_jumpPressed)
         {
             _rb.AddForce(Vector3.up * jumpForce, ForceMode.VelocityChange);
