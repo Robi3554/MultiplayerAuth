@@ -3,6 +3,7 @@ using FishNet.Object;
 using FishNet.Object.Synchronizing;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerStats : NetworkBehaviour
 {
@@ -16,6 +17,7 @@ public class PlayerStats : NetworkBehaviour
     private TMP_Text killText;
     private TMP_Text deathText;
 
+    private Slider healthSlider;
 
     public bool isRespawning = false;
 
@@ -25,7 +27,7 @@ public class PlayerStats : NetworkBehaviour
 
         if (IsOwner)
         {
-            InitTexts();
+            InitUI();
             if (healthText != null)
                 healthText.text = health.Value.ToString();
             health.OnChange += OnHealthChanged;
@@ -62,7 +64,7 @@ public class PlayerStats : NetworkBehaviour
             return;
 
         if (killText != null)
-            killText.text = "K:" + kills.Value.ToString();
+            killText.text = kills.Value.ToString();
 
         if (deathText != null)
             deathText.text = "D:" + deaths.Value.ToString();
@@ -117,17 +119,23 @@ public class PlayerStats : NetworkBehaviour
         CameraShake.Instance.ShakeCamera(amplitude, duration);
     }
 
-    private void InitTexts()
+    private void InitUI()
     {
-        healthText = GameObject.Find("PlayerHUD").transform.Find("Health Text").GetComponent<TMP_Text>();
-        killText = GameObject.Find("PlayerHUD").transform.Find("Kill Text").GetComponent<TMP_Text>();
+        var playerHealth = GameObject.Find("PlayerHUD").transform.Find("Player Health");
+        healthText = playerHealth.Find("Health Text").GetComponent<TMP_Text>();
+        healthSlider = playerHealth.Find("Health Bar").GetComponent<Slider>();
+        healthSlider.maxValue = health.Value;
+        killText = GameObject.Find("PlayerHUD").transform.Find("Objective Bar").transform.Find("Kill Text").GetComponent<TMP_Text>();
         deathText = GameObject.Find("PlayerHUD").transform.Find("Death Text").GetComponent<TMP_Text>();
     }
 
     private void OnHealthChanged(int previous, int current, bool asServer)
     {
         if (healthText != null)
+        {
             healthText.text = current.ToString();
+            healthSlider.value = health.Value;
+        }
     }
 
     public override void OnStopClient()

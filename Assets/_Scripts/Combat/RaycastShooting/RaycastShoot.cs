@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using TMPro;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public abstract class RaycastShoot : MonoBehaviour
 {
@@ -8,8 +9,6 @@ public abstract class RaycastShoot : MonoBehaviour
 
     protected int currentAmmo;
 
-    [SerializeField]
-    protected KeyCode shootKey = KeyCode.Mouse0;
     [SerializeField] 
     protected LayerMask playerLayer;
     [SerializeField] 
@@ -59,6 +58,27 @@ public abstract class RaycastShoot : MonoBehaviour
         ammoText = null;
     }
 
+    public void OnDamage(InputAction.CallbackContext context)
+    {
+        if (!this.isActiveAndEnabled) return;
+
+        if (isReloading)
+            return;
+
+        if (context.performed)
+        {
+            if (currentAmmo <= 0 || Input.GetKeyDown(KeyCode.R))
+            {
+                StartCoroutine(Reload());
+                playerNet?.NotifyReloadServer(maxAmmo);
+            }
+            else if (currentAmmo > 0)
+            {
+                HandleShootInput();
+            }
+        }
+    }
+
     protected void Update()
     {
         if (playerNet != null && !playerNet.IsOwner)
@@ -66,23 +86,10 @@ public abstract class RaycastShoot : MonoBehaviour
 
         if (ammoText == null)
         {
-            ammoText = GameObject.Find("PlayerHUD").transform.Find("Ammo Text").GetComponent<TMP_Text>();
+            ammoText = GameObject.Find("PlayerHUD").transform.Find("Player Ammo").transform.Find("Ammo Text").GetComponent<TMP_Text>();
         }
 
         ammoText.text = $"{currentAmmo}/{maxAmmo}";
-
-        if (isReloading)
-            return;
-
-        if (currentAmmo <= 0 || Input.GetKeyDown(KeyCode.R))
-        {
-            StartCoroutine(Reload());
-            playerNet?.NotifyReloadServer(maxAmmo);
-        }
-        else if (currentAmmo > 0)
-        {
-            HandleShootInput();
-        }
     }
 
     protected virtual void Shoot()
@@ -140,7 +147,7 @@ public abstract class RaycastShoot : MonoBehaviour
     public void InitializeWeapon()
     {
         if (ammoText == null)
-            ammoText = GameObject.Find("PlayerHUD").transform.Find("Ammo Text").GetComponent<TMP_Text>();
+            ammoText = GameObject.Find("PlayerHUD").transform.Find("Player Ammo").transform.Find("Ammo Text").GetComponent<TMP_Text>();
 
         canShoot = false;
         nextShootTime = 0f;
