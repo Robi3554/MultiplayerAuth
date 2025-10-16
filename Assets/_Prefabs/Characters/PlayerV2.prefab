@@ -2564,7 +2564,8 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 457918788075985721, guid: d50dc5a3dd2728e419a45401c51ea688, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d50dc5a3dd2728e419a45401c51ea688, type: 3}
@@ -3392,11 +3393,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_RigLayers:
-  - m_Rig: {fileID: 5247345835523512195}
-    m_Active: 1
-  - m_Rig: {fileID: 272430212967232313}
-    m_Active: 0
   - m_Rig: {fileID: 5931901483855639000}
+    m_Active: 1
+  - m_Rig: {fileID: 5247345835523512195}
+    m_Active: 0
+  - m_Rig: {fileID: 272430212967232313}
     m_Active: 0
   - m_Rig: {fileID: 7501330802479646577}
     m_Active: 0
@@ -3531,7 +3532,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 543f115edf8202349a6dead24f893598, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
