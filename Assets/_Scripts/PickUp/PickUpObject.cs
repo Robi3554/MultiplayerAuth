@@ -9,14 +9,10 @@ public class PickUpObject : NetworkBehaviour
     private void OnTriggerEnter(Collider other)
     {
         Debug.Log($"PickupObject: IsServerInitialized:{IsServerInitialized}");
-        if (!IsServerInitialized) return;
-
         TryPickUp(other);
     }
     private void OnTriggerStay(Collider other)
     {
-        if (!IsServerInitialized) return;
-
         TryPickUp(other);
     }
 
@@ -29,8 +25,20 @@ public class PickUpObject : NetworkBehaviour
         if (other.gameObject.layer == LayerMask.NameToLayer("Player"))
         {
             Debug.Log("PickupObject: player");
-            itemPickedUp = true;
-            ItemPickUp(other);
+            RequestPickupServerRpc(other.gameObject);
+        }
+    }
+    [ServerRpc(RequireOwnership = false)]
+    private void RequestPickupServerRpc(GameObject player)
+    {
+        if (itemPickedUp)
+            return;
+
+        itemPickedUp = true;
+        Collider playerCollider = player.GetComponent<Collider>();
+        if (playerCollider != null)
+        {
+            ItemPickUp(playerCollider);
         }
     }
     protected virtual void ItemPickUp(Collider other)
