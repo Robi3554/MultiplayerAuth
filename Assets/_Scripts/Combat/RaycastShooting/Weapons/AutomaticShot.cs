@@ -5,7 +5,7 @@ public class AutomaticShot : RaycastShoot
 {
     protected override void HandleShootInput()
     {
-        if (Time.time >= nextShootTime && Input.GetKey(shootKey))
+        if (Time.time >= nextShootTime)
         {
             nextShootTime = Time.time + fireRate;
             Shoot();
