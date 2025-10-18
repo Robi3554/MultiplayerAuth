@@ -664,7 +664,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9843bf2612ed08e47acf8ea3bd7ce4dc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  shootKey: 323
   playerLayer:
     serializedVersion: 2
     m_Bits: 64
@@ -673,7 +672,7 @@ MonoBehaviour:
     m_Bits: 128
   firePoint: {fileID: 2080829876005719708}
   shotLinePrefab: {fileID: 7133602437278059814, guid: 0e3e214fbff67c642a1f4f61c1361237, type: 3}
-  speed: 100
+  speed: 200
   maxDistance: 150
   fireRate: 1
   damage: 15
