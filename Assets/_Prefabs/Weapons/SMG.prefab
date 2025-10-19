@@ -752,7 +752,7 @@ MonoBehaviour:
   maxDistance: 250
   fireRate: 1
   damage: 20
-  maxAmmo: 25
+  maxAmmo: 30
   reloadTime: 0.75
   afterChangeDelay: 0.5
   shootAudioSource: {fileID: 2472542210249486467}
