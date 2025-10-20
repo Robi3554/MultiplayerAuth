@@ -29,7 +29,7 @@ public class PlayerNetworkInitializer : NetworkBehaviour
     }
 
     // Called by RaycastShoot when a hit happens
-    [ServerRpc(RequireOwnership = false)]
+    [ServerRpc]
     public void NotifyHitServer(NetworkObject targetPlayer, int damage)
     {
         if (targetPlayer == null)
@@ -43,7 +43,7 @@ public class PlayerNetworkInitializer : NetworkBehaviour
     }
 
     // Called when a player fires a bullet
-    [ServerRpc(RequireOwnership = false)]
+    [ServerRpc]
     public void NotifyShotServer(Vector3 start, Vector3 end)
     {
         // Tell all observers to show the shot

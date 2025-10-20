@@ -7,6 +7,21 @@ public abstract class RaycastShoot : MonoBehaviour
 {
     private TMP_Text ammoText;
 
+    protected int CurrentAmmo
+    {
+        get => currentAmmo;
+        set
+        {
+            currentAmmo = value;
+
+            if(currentAmmo <= 0)
+            {
+                StartCoroutine(Reload());
+                playerNet?.NotifyReloadServer(maxAmmo);
+            }
+        }
+    }
+
     protected int currentAmmo;
 
     [SerializeField] 
@@ -62,11 +77,17 @@ public abstract class RaycastShoot : MonoBehaviour
     protected void OnEnable()
     {
         InitializeWeapon();
+        if(currentAmmo <= 0)
+        {
+            StartCoroutine(Reload());
+            playerNet?.NotifyReloadServer(maxAmmo);
+        }
     }
 
     private void OnDisable()
     {
         ammoText = null;
+        isReloading = false;
     }
 
     public void OnDamage(InputAction.CallbackContext context)
@@ -78,7 +99,7 @@ public abstract class RaycastShoot : MonoBehaviour
 
         if (context.performed)
         {
-            if (currentAmmo <= 0 || Input.GetKeyDown(KeyCode.R))
+            if (currentAmmo <= 0)
             {
                 StartCoroutine(Reload());
                 playerNet?.NotifyReloadServer(maxAmmo);
@@ -87,6 +108,15 @@ public abstract class RaycastShoot : MonoBehaviour
             {
                 HandleShootInput();
             }
+        }
+    }
+
+    public void OnReload(InputAction.CallbackContext context)
+    {
+        if (context.performed && currentAmmo != maxAmmo)
+        {
+            StartCoroutine(Reload());
+            playerNet?.NotifyReloadServer(maxAmmo);
         }
     }
 
@@ -127,7 +157,7 @@ public abstract class RaycastShoot : MonoBehaviour
         // tell the server to show the tracer for others
         playerNet?.NotifyShotServer(origin, hitPosition);
 
-        currentAmmo--;
+        CurrentAmmo--;
     }
 
 

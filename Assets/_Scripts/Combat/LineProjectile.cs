@@ -26,7 +26,6 @@ public class LineProjectile : MonoBehaviour
         this.speed = speed;
         this.startPos = startPos;
         this.endPos = endPos;
-
         StartCoroutine(MoveProjectile());
     }
 
@@ -50,6 +49,7 @@ public class LineProjectile : MonoBehaviour
             yield return null;
         }
 
+        lr.enabled = false;
         Destroy(gameObject);
     }
 }
