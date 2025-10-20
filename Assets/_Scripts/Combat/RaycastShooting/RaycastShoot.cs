@@ -69,13 +69,13 @@ public abstract class RaycastShoot : MonoBehaviour
 
     private void Start()
     {
-        combinedLayer = playerLayer | wallLayer;
-        currentAmmo = maxAmmo;
+        combinedLayer = playerLayer | wallLayer;       
         playerNet = GetComponentInParent<PlayerNetworkInitializer>();
     }
 
     protected void OnEnable()
     {
+        currentAmmo = maxAmmo;
         InitializeWeapon();
         if(currentAmmo <= 0)
         {
@@ -113,6 +113,8 @@ public abstract class RaycastShoot : MonoBehaviour
 
     public void OnReload(InputAction.CallbackContext context)
     {
+        if (!this.isActiveAndEnabled) return;
+
         if (context.performed && currentAmmo != maxAmmo)
         {
             StartCoroutine(Reload());
