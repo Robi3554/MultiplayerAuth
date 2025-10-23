@@ -19,6 +19,8 @@ public class PickUpRespawn : NetworkBehaviour
     [Server]
     private void ModifyRespawnData(int index, RespawnData respawnData)
     {
+        Debug.Log("PickUpRespawn: ModifyRespawnData");
+
         if (index >= 0 && index < _respawnList.Count)
         {
             _respawnList[index] = respawnData;
@@ -83,10 +85,10 @@ public class PickUpRespawn : NetworkBehaviour
     }
 
     // call this method to start the respawn timer in the item
-    [ServerRpc(RequireOwnership = false)]
+    // [ServerRpc(RequireOwnership = false)]
     public void StartRespawnTimer(NetworkObject childNetObj)
     {
-        Debug.Log("Starting respawn timer");
+        Debug.Log("PickUpRespawn: Starting respawn timer");
         RespawnData newRespawn = new RespawnData
         {
             childNetworkObject = childNetObj,
@@ -103,24 +105,27 @@ public class PickUpRespawn : NetworkBehaviour
         {
             RespawnData data = _respawnList[i];
             data.respawnTimer -= Time.deltaTime;
+            // Debug.Log($"PickUpRespawn: Item {i} timer: {data.respawnTimer}");
 
             if (data.respawnTimer <= 0f)
             {
+                Debug.Log("PickUpRespawn: Update RespawnChildServer");
                 RespawnChildServer(data);
                 _respawnList.RemoveAt(i);
                 i--; // adjust index after removing
             }
             else
             {
+                Debug.Log("PickUpRespawn: Update ModifyRespawnData");
                 ModifyRespawnData(i, data);
             }
         }
 
     }
-    [ServerRpc(RequireOwnership = false)]
+    // [ServerRpc(RequireOwnership = false)]
     private void RespawnChildServer(RespawnData data)
     {
-        Debug.Log("Respawning child");
+        Debug.Log("PickUpRespawn: Respawning child");
         if (data.childNetworkObject == null)
         {
             Debug.LogWarning("Tried to respawn null object.");
@@ -133,6 +138,8 @@ public class PickUpRespawn : NetworkBehaviour
     [ObserversRpc]
     private void RespawnChildObserver(RespawnData data)
     {
+        Debug.Log("PickUpRespawn: RespawnChildObserver");
+
         data.childNetworkObject.gameObject.SetActive(true);
 
     }
