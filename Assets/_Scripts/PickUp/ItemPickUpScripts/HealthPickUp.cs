@@ -26,8 +26,7 @@ public class HealthPickUp : PickUpObject
     }
     public override void OnStartServer()
     {
-        if (!IsServerInitialized) return;
-
+        Debug.Log("HealthPickUp: OnStartServer");
         // always reset state on server start
         ResetPickupState(); // resets itemPickedUp
         ResetPickup();      // disables collider + SyncVar
@@ -37,6 +36,7 @@ public class HealthPickUp : PickUpObject
     {
         if (IsServerInitialized)
         {
+            Debug.Log("HealthPickUp: Enable on server");
             transform.position = initPosition;
             transform.rotation = initRotation;
             ResetPickupState();
@@ -45,11 +45,14 @@ public class HealthPickUp : PickUpObject
         }
         if (IsClientInitialized)
         {
+            Debug.Log("HealthPickUp: Enable on client");
             // client logic: could play a respawn VFX, glow effect, etc.
         }
     }
     private void ResetPickup()
     {
+        Debug.Log("HealthPickUp: ResetPickup");
+
         readyForPickUp.Value = false;
         if (_col != null)
             _col.enabled = false;
@@ -73,29 +76,29 @@ public class HealthPickUp : PickUpObject
         Debug.Log($"HealthPickUp::ItemPickUp : readyForPickUp.Value:{readyForPickUp.Value}");
         if (!readyForPickUp.Value) return;
 
-        Debug.Log("Healing: Health pack picked up");
+        Debug.Log("HealthPickUp: Health pack picked up");
         // get the PlayerStats component from the player
         PlayerStats playerStats = other.GetComponentInParent<PlayerStats>();
         if (playerStats != null)
         {
-            Debug.Log("Healing: Healing player");
+            Debug.Log("HealthPickUp: Healing player");
             playerStats.HealPlayer(healAmount); // call the server-side HealPlayer method
         }
         else
         {
-            Debug.LogWarning("Healing: PlayerStats component not found");
+            Debug.LogWarning("HealthPickUp: PlayerStats component not found");
         }
         // get the PickUpRespawn component from the parent
         PickUpRespawn parentRespawn = GetComponentInParent<PickUpRespawn>();
         if (parentRespawn != null)
         {
-            Debug.Log("healing: Calling StartRespawnTimer on parent");
+            Debug.Log("HealthPickUp: Calling StartRespawnTimer on parent");
             // Vector3 FloorPosition = new Vector3(transform.position.x, yBasePosition, transform.position.z);
             parentRespawn.StartRespawnTimer(NetworkObject); // call the StartRespawnTimer method on the parent
         }
         else
         {
-            Debug.LogWarning("Healing: PickUpRespawn component not found on parent!");
+            Debug.LogWarning("HealthPickUp: PickUpRespawn component not found on parent!");
         }
         ResetPickup();
         ItemPickUpObserver();
@@ -105,6 +108,7 @@ public class HealthPickUp : PickUpObject
     [ObserversRpc]
     private void ItemPickUpObserver()
     {
+        Debug.Log("HealthPickUp: ItemPickUpObserver");
         gameObject.SetActive(false);
     }
 }

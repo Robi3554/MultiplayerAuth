@@ -13,6 +13,7 @@ public class PickUpObject : NetworkBehaviour
     }
     private void OnTriggerStay(Collider other)
     {
+        Debug.Log($"PickupObject: IsServerInitialized:{IsServerInitialized}");
         TryPickUp(other);
     }
 
@@ -31,9 +32,12 @@ public class PickUpObject : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     private void RequestPickupServerRpc(GameObject player)
     {
-        if (itemPickedUp)
-            return;
+        Debug.Log("PickupObject: RequestPickupServerRpc");
 
+        if (itemPickedUp){ 
+            Debug.Log($"PickupObject: itemPickedUp: {itemPickedUp}");
+            return;
+        }
         itemPickedUp = true;
         Collider playerCollider = player.GetComponent<Collider>();
         if (playerCollider != null)
@@ -43,11 +47,12 @@ public class PickUpObject : NetworkBehaviour
     }
     protected virtual void ItemPickUp(Collider other)
     {
-        Debug.Log("Default item pickup does nothing");
+        Debug.Log("PickupObject: Default item pickup does nothing");
     }
     
     protected void ResetPickupState()
     {
+        Debug.Log("PickupObject: ResetPickupState");
         itemPickedUp = false;
     }
 }
