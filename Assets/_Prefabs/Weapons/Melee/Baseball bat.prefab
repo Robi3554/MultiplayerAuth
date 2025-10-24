@@ -96,6 +96,8 @@ MeshRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -117,6 +119,7 @@ MeshRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
@@ -188,7 +191,7 @@ MonoBehaviour:
   _teleportThreshold: 1
   <PrefabId>k__BackingField: 20
   <SpawnableCollectionId>k__BackingField: 0
-  <AssetPathHash>k__BackingField: 3127707319155143589
+  <AssetPathHash>k__BackingField: 4105127200748074610
   <SceneId>k__BackingField: 0
   SerializedTransformProperties:
     Position: {x: 0, y: 0.843, z: 0.676}
@@ -210,9 +213,24 @@ MonoBehaviour:
   _componentIndexCache: 0
   _addedNetworkObject: {fileID: 6406373118243344036}
   _networkObjectCache: {fileID: 6406373118243344036}
-  cooldownTime: 1
-  attackRange: 2
-  damage: 30
-  meleeCollider: {fileID: 4309282833044710168}
+  cooldownTime:
+    NetworkManager: {fileID: 0}
+    NetworkBehaviour: {fileID: 0}
+    _value: 1
+  attackRange:
+    NetworkManager: {fileID: 0}
+    NetworkBehaviour: {fileID: 0}
+    _value: 3
+  damage:
+    NetworkManager: {fileID: 0}
+    NetworkBehaviour: {fileID: 0}
+    _value: 10
   slashPoint: {fileID: 2663590362845606013}
   coneAngle: 60
+  VFX_SLASH: {fileID: 0}
+  animator: {fileID: 0}
+  netAnimator: {fileID: 0}
+  _isOnCooldown:
+    NetworkManager: {fileID: 0}
+    NetworkBehaviour: {fileID: 0}
+    _value: 0

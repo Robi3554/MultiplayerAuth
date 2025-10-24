@@ -92,6 +92,8 @@ MeshRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -113,6 +115,7 @@ MeshRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
@@ -183,6 +186,8 @@ MeshRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -204,6 +209,7 @@ MeshRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
@@ -220,7 +226,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 20c2575f86f044744a8dfd76a15b8e4f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  shootKey: 323
   playerLayer:
     serializedVersion: 2
     m_Bits: 64
@@ -236,6 +241,10 @@ MonoBehaviour:
   maxAmmo: 12
   reloadTime: 0.75
   afterChangeDelay: 0
+  shootAudioSource: {fileID: 0}
+  shootAudioClip: {fileID: 0}
+  reloadAudioSource: {fileID: 0}
+  reloadAudioClip: {fileID: 0}
 --- !u!114 &7218028557937402863
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -282,7 +291,7 @@ MonoBehaviour:
   _teleportThreshold: 1
   <PrefabId>k__BackingField: 21
   <SpawnableCollectionId>k__BackingField: 0
-  <AssetPathHash>k__BackingField: 11827871233806011288
+  <AssetPathHash>k__BackingField: 15618812217139151484
   <SceneId>k__BackingField: 0
   SerializedTransformProperties:
     Position: {x: 0.535, y: 0.029999971, z: -0.087}

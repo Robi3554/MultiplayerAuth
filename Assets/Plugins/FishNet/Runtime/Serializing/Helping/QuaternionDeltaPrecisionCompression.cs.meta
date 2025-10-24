@@ -13,6 +13,6 @@ AssetOrigin:
   serializedVersion: 1
   productId: 207815
   packageName: 'FishNet: Networking Evolved'
-  packageVersion: 4.6.12R
+  packageVersion: 4.6.15R
   assetPath: Assets/Plugins/FishNet/Runtime/Serializing/Helping/QuaternionDeltaPrecisionCompression.cs
-  uploadId: 773595
+  uploadId: 801984
