@@ -100,7 +100,7 @@ public class PredictionMelee : NetworkBehaviour
 		Gizmos.DrawLine(debugHitPosition, debugDirectionToTarget);
 	}
 
-	[ServerRpc]
+	[ServerRpc(RequireOwnership = false)]
 	private void PerformSlashRequestServerRpc(Vector3 direction, Vector3 position)
 	{
 		Direction = direction;
@@ -108,11 +108,12 @@ public class PredictionMelee : NetworkBehaviour
 		Slash = true;	
 	}
 
-	[ServerRpc(RequireOwnership = false)]
-	private void PlayServerWeaponVfx()
-	{
-		PlayObserverWeaponVfx();
-	}
+	// [ServerRpc(RequireOwnership = false)]
+	// private void PlayServerWeaponVfx()
+	// {
+	// 	Debug.Log("Melee: server weapon vfx");
+	// 	PlayObserverWeaponVfx();
+	// }
 
 	[ObserversRpc]
 	private void PlayObserverWeaponVfx()
@@ -128,7 +129,7 @@ public class PredictionMelee : NetworkBehaviour
 		if (Slash)
 		{
 			Debug.Log("Melee: Attack pressed");
-			PlayServerWeaponVfx();
+			PlayObserverWeaponVfx();
 			//get what we can hit, check if the enemy is in front of the player, call dmg function on server and start cooldown timer after hit
 			Collider[] hits = Physics.OverlapSphere(slashPoint.position, attackRange.Value);
 			// we could add more stuff here. if we want to apply damage the closest enemy only for e.g. 

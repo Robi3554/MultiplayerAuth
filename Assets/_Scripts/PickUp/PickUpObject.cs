@@ -8,7 +8,6 @@ public class PickUpObject : NetworkBehaviour
     protected bool itemPickedUp = false;
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log($"PickupObject: IsServerInitialized:{IsServerInitialized}");
         TryPickUp(other);
     }
     private void OnTriggerStay(Collider other)
@@ -19,10 +18,8 @@ public class PickUpObject : NetworkBehaviour
 
     private void TryPickUp(Collider other)
     {
-        Debug.Log($"PickupObject: itemPickedUp: {itemPickedUp}");
         if (itemPickedUp)
             return;
-        Debug.Log("PickupObject: item collided with");
         if (other.gameObject.layer == LayerMask.NameToLayer("Player"))
         {
             Debug.Log("PickupObject: player");
@@ -35,7 +32,7 @@ public class PickUpObject : NetworkBehaviour
         Debug.Log("PickupObject: RequestPickupServerRpc");
 
         if (itemPickedUp){ 
-            Debug.Log($"PickupObject: itemPickedUp: {itemPickedUp}");
+            // Debug.Log($"PickupObject: itemPickedUp: {itemPickedUp}");
             return;
         }
         itemPickedUp = true;
