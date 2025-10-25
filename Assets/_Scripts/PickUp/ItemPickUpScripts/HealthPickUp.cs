@@ -26,7 +26,6 @@ public class HealthPickUp : PickUpObject
     }
     public override void OnStartServer()
     {
-        Debug.Log("HealthPickUp: OnStartServer");
         // always reset state on server start
         ResetPickupState(); // resets itemPickedUp
         ResetPickup();      // disables collider + SyncVar
@@ -51,8 +50,6 @@ public class HealthPickUp : PickUpObject
     }
     private void ResetPickup()
     {
-        Debug.Log("HealthPickUp: ResetPickup");
-
         readyForPickUp.Value = false;
         if (_col != null)
             _col.enabled = false;
@@ -73,9 +70,8 @@ public class HealthPickUp : PickUpObject
     [Server]
     override protected void ItemPickUp(Collider other)
     {
-        Debug.Log($"HealthPickUp::ItemPickUp : readyForPickUp.Value:{readyForPickUp.Value}");
+        // Debug.Log($"HealthPickUp::ItemPickUp : readyForPickUp.Value:{readyForPickUp.Value}");
         if (!readyForPickUp.Value) return;
-
         Debug.Log("HealthPickUp: Health pack picked up");
         // get the PlayerStats component from the player
         PlayerStats playerStats = other.GetComponentInParent<PlayerStats>();
@@ -92,7 +88,6 @@ public class HealthPickUp : PickUpObject
         PickUpRespawn parentRespawn = GetComponentInParent<PickUpRespawn>();
         if (parentRespawn != null)
         {
-            Debug.Log("HealthPickUp: Calling StartRespawnTimer on parent");
             // Vector3 FloorPosition = new Vector3(transform.position.x, yBasePosition, transform.position.z);
             parentRespawn.StartRespawnTimer(NetworkObject); // call the StartRespawnTimer method on the parent
         }
@@ -108,7 +103,6 @@ public class HealthPickUp : PickUpObject
     [ObserversRpc]
     private void ItemPickUpObserver()
     {
-        Debug.Log("HealthPickUp: ItemPickUpObserver");
         gameObject.SetActive(false);
     }
 }

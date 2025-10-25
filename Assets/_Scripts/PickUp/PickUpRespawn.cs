@@ -19,8 +19,6 @@ public class PickUpRespawn : NetworkBehaviour
     [Server]
     private void ModifyRespawnData(int index, RespawnData respawnData)
     {
-        Debug.Log("PickUpRespawn: ModifyRespawnData");
-
         if (index >= 0 && index < _respawnList.Count)
         {
             _respawnList[index] = respawnData;
@@ -109,14 +107,12 @@ public class PickUpRespawn : NetworkBehaviour
 
             if (data.respawnTimer <= 0f)
             {
-                Debug.Log("PickUpRespawn: Update RespawnChildServer");
                 RespawnChildServer(data);
                 _respawnList.RemoveAt(i);
                 i--; // adjust index after removing
             }
             else
             {
-                Debug.Log("PickUpRespawn: Update ModifyRespawnData");
                 ModifyRespawnData(i, data);
             }
         }
@@ -138,8 +134,6 @@ public class PickUpRespawn : NetworkBehaviour
     [ObserversRpc]
     private void RespawnChildObserver(RespawnData data)
     {
-        Debug.Log("PickUpRespawn: RespawnChildObserver");
-
         data.childNetworkObject.gameObject.SetActive(true);
 
     }
