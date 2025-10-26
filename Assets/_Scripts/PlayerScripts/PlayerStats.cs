@@ -7,6 +7,7 @@ using UnityEngine.UI;
 
 public class PlayerStats : NetworkBehaviour
 {
+    public readonly SyncVar<string> username = new SyncVar<string>("");
     public readonly SyncVar<int> health = new SyncVar<int>(100);
     public readonly SyncVar<int> kills = new SyncVar<int>(0);
     public readonly SyncVar<int> deaths = new SyncVar<int>(0);
@@ -28,6 +29,12 @@ public class PlayerStats : NetworkBehaviour
     {
         base.OnStartClient();
 
+        // Notify scoreboard that this player spawned
+        if (ScoreboardManager.Instance != null)
+        {
+            ScoreboardManager.Instance.RegisterPlayer(this);
+        }
+
         if (IsOwner)
         {
             InitUI();
@@ -35,7 +42,7 @@ public class PlayerStats : NetworkBehaviour
                 healthText.text = health.Value.ToString();
             health.OnChange += OnHealthChanged;
             _canPlayHitSound = _hitAudioSource && _hitAudioClip;
-            
+        
             if (!string.IsNullOrEmpty(ConnectionInfo.username))
             {
                 CmdSetUsername(ConnectionInfo.username);
@@ -46,11 +53,25 @@ public class PlayerStats : NetworkBehaviour
             }
         }
     }
+
+    public override void OnStopClient()
+    {
+        base.OnStopClient();
+
+        // Notify scoreboard that this player despawned
+        if (ScoreboardManager.Instance != null)
+        {
+            ScoreboardManager.Instance.UnregisterPlayer(this);
+        }
+
+        if (IsOwner)
+            health.OnChange -= OnHealthChanged;
+    }
     
     [ServerRpc]
     private void CmdSetUsername(string username)
     {
-        // This runs on the server. The server now calls an RPC to tell all clients.
+        this.username.Value = username;
         RpcSetUsername(username);
     }
     
@@ -150,13 +171,5 @@ public class PlayerStats : NetworkBehaviour
             healthText.text = current.ToString();
             healthSlider.value = health.Value;
         }
-    }
-
-    public override void OnStopClient()
-    {
-        base.OnStopClient();
-
-        if (IsOwner)
-            health.OnChange -= OnHealthChanged;
     }
 }
