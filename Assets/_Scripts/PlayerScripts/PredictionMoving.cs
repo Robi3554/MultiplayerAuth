@@ -20,10 +20,12 @@ public class PredictionMoving : NetworkBehaviour
     [SerializeField] private NetworkAnimator netAnimator;
 
     [Header("Input")]
+    [SerializeField] private PlayerInput _playerInput;
+    [SerializeField] private bool isJoystick;
+    
     private Vector2 _moveInput;
     private bool _isAnalogMovement;
     private Vector2 _mouseLook, _joystickLook;
-    [SerializeField] private bool isJoystick;
     internal bool canMove = true;
 
     private Rigidbody _rb;
@@ -115,7 +117,7 @@ public class PredictionMoving : NetworkBehaviour
     
     private void Update()
     {
-        if (!IsOwner) return;
+        if (!IsOwner || !_playerInput.currentActionMap.name.Equals("Gameplay")) return;
 
         float targetYaw = !isJoystick
             ? GetYawFromMouse()
