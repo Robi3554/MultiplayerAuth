@@ -1,7 +1,8 @@
+using FishNet.Object;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class LittleRobot : MonoBehaviour
+public class LittleRobot : NetworkBehaviour
 {
     [Header("Detection")]
     public float detectionRadius = 12f;
@@ -31,6 +32,9 @@ public class LittleRobot : MonoBehaviour
 
     void Update()
     {
+        if (!IsServerInitialized)
+            return;
+
         float closestDist = DetectClosestPlayer();
 
         switch (currentState)
