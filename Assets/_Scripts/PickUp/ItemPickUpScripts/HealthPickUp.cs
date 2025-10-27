@@ -33,7 +33,7 @@ public class HealthPickUp : PickUpObject
     }
     private void OnEnable()
     {
-        if (IsServerInitialized)
+        if (IsServerStarted)
         {
             Debug.Log("HealthPickUp: Enable on server");
             transform.position = initPosition;
