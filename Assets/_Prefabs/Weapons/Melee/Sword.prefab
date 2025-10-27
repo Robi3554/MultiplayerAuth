@@ -5134,7 +5134,7 @@ MonoBehaviour:
   damage:
     NetworkManager: {fileID: 0}
     NetworkBehaviour: {fileID: 0}
-    _value: 10
+    _value: 25
   slashPoint: {fileID: 5980016326099079226}
   coneAngle: 60
   VFX_SLASH: {fileID: 4236577414767703950}
@@ -5188,7 +5188,7 @@ MonoBehaviour:
   _spectatorInterpolation: 2
   _enableTeleport: 0
   _teleportThreshold: 1
-  <PrefabId>k__BackingField: 6
+  <PrefabId>k__BackingField: 8
   <SpawnableCollectionId>k__BackingField: 0
   <AssetPathHash>k__BackingField: 7246522133757223338
   <SceneId>k__BackingField: 0
