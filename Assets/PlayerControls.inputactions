@@ -1,4 +1,5 @@
 {
+    "version": 1,
     "name": "PlayerControls",
     "maps": [
         {
@@ -72,6 +73,15 @@
                     "name": "Reload",
                     "type": "Button",
                     "id": "dac1b1da-6d17-49b9-9d7f-34e0e8476349",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Perspective",
+                    "type": "Button",
+                    "id": "d4325b5f-7763-4833-999e-c6b021a20d60",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
@@ -395,6 +405,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "Reload",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "f01bab52-c55e-47b0-bce2-46188a5cc99f",
+                    "path": "<Keyboard>/p",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Perspective",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

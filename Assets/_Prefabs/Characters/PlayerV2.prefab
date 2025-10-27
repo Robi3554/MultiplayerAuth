@@ -2603,6 +2603,18 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -3321919801592875672, guid: 66e0ef251cc7b2143ad5f1b36eeedcf1, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 2.2602963
+      objectReference: {fileID: 0}
+    - target: {fileID: -3321919801592875672, guid: 66e0ef251cc7b2143ad5f1b36eeedcf1, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1.7810755
+      objectReference: {fileID: 0}
+    - target: {fileID: -3321919801592875672, guid: 66e0ef251cc7b2143ad5f1b36eeedcf1, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1.3394
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 66e0ef251cc7b2143ad5f1b36eeedcf1, type: 3}
       propertyPath: m_Name
       value: GamerGirl
@@ -2864,6 +2876,18 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 7005966477742677644}
     m_Modifications:
+    - target: {fileID: -8679921383154817045, guid: bb5eba3bd20ff4b479dcd9ca42d93f35, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 11
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: bb5eba3bd20ff4b479dcd9ca42d93f35, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 11
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: bb5eba3bd20ff4b479dcd9ca42d93f35, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 11
+      objectReference: {fileID: 0}
     - target: {fileID: -7935228224354000910, guid: 28c9203fd9cae564b9bbe2f8e1748f8a, type: 3}
       propertyPath: WasActiveDuringEdit
       value: 1
@@ -3068,18 +3092,6 @@ PrefabInstance:
       propertyPath: m_Data.m_Target
       value: 
       objectReference: {fileID: 2285458030534571882}
-    - target: {fileID: -8679921383154817045, guid: bb5eba3bd20ff4b479dcd9ca42d93f35, type: 3}
-      propertyPath: m_LocalScale.x
-      value: 11
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: bb5eba3bd20ff4b479dcd9ca42d93f35, type: 3}
-      propertyPath: m_LocalScale.y
-      value: 11
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: bb5eba3bd20ff4b479dcd9ca42d93f35, type: 3}
-      propertyPath: m_LocalScale.z
-      value: 11
-      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 4407355958735364974, guid: 28c9203fd9cae564b9bbe2f8e1748f8a, type: 3}
     - {fileID: 1081345410627700130, guid: 28c9203fd9cae564b9bbe2f8e1748f8a, type: 3}
