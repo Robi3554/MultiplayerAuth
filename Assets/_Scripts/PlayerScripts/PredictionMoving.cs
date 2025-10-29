@@ -7,7 +7,7 @@ using UnityEngine.InputSystem;
 public class PredictionMoving : NetworkBehaviour
 {
     [Header("Movement")]
-    [SerializeField] private float moveRate = 5f;
+    public float moveRate = 5f;
     [SerializeField] private float sprintMultiplier = 2f;
     [SerializeField] private float rotateRate = 7f;
     [SerializeField] private float jumpForce = 7f;
