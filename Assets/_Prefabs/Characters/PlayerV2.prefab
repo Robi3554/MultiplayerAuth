@@ -264,7 +264,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1566322875208896472
 RectTransform:
   m_ObjectHideFlags: 0
@@ -961,6 +961,10 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: dac1b1da-6d17-49b9-9d7f-34e0e8476349
     m_ActionName: 'Gameplay/Reload[/Keyboard/r]'
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: d4325b5f-7763-4833-999e-c6b021a20d60
+    m_ActionName: 'Gameplay/Perspective[/Keyboard/p]'
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Gameplay
@@ -1401,6 +1405,8 @@ PrefabInstance:
     - {fileID: 6916499300835226618, guid: 950c997c80c3f8a42956a570dbe956ce, type: 3}
     - {fileID: 5130004752326518577, guid: 950c997c80c3f8a42956a570dbe956ce, type: 3}
     - {fileID: 8001986236993254923, guid: 950c997c80c3f8a42956a570dbe956ce, type: 3}
+    - {fileID: 6134763170643833720, guid: 950c997c80c3f8a42956a570dbe956ce, type: 3}
+    - {fileID: 7698299182707414592, guid: 950c997c80c3f8a42956a570dbe956ce, type: 3}
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: 1381899205929497574, guid: 950c997c80c3f8a42956a570dbe956ce, type: 3}
       insertIndex: -1
