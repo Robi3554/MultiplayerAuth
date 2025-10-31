@@ -79,6 +79,15 @@
                     "initialStateCheck": false
                 },
                 {
+                    "name": "Perspective",
+                    "type": "Button",
+                    "id": "d4325b5f-7763-4833-999e-c6b021a20d60",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
                     "name": "Pause",
                     "type": "Button",
                     "id": "be74178d-8689-4d4d-963e-40c6d14427b0",
@@ -405,6 +414,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "Reload",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "f01bab52-c55e-47b0-bce2-46188a5cc99f",
+                    "path": "<Keyboard>/p",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Perspective",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },

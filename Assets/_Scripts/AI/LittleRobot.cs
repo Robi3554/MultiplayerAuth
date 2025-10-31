@@ -1,3 +1,4 @@
+using System.Collections;
 using FishNet.Object;
 using UnityEngine;
 using UnityEngine.AI;
@@ -66,7 +67,7 @@ public class LittleRobot : NetworkBehaviour
         }
     }
 
-    float DetectClosestPlayer()
+    private float DetectClosestPlayer()
     {
         Collider[] players = Physics.OverlapSphere(transform.position, detectionRadius, playerMask);
         float closestDist = Mathf.Infinity;
@@ -85,7 +86,7 @@ public class LittleRobot : NetworkBehaviour
         return closestDist;
     }
 
-    void FleeFromPlayer()
+    private void FleeFromPlayer()
     {
         if (targetPlayer == null) return;
 
@@ -116,7 +117,22 @@ public class LittleRobot : NetworkBehaviour
         agent.ResetPath();
     }
 
-    void OnDrawGizmosSelected()
+    public void DestroyRobot(Collider player)
+    {
+        StartCoroutine(ChangeSpeed(player));
+        Destroy(gameObject);
+    }
+
+    private IEnumerator ChangeSpeed(Collider player)
+    {
+        player.GetComponent<PredictionMoving>().moveRate += 5;
+
+        yield return new WaitForSeconds(5f);
+
+        player.GetComponent<PredictionMoving>().moveRate -= 5;
+    }
+
+    private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.yellow;
         Gizmos.DrawWireSphere(transform.position, detectionRadius);

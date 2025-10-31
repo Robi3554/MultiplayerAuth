@@ -1,4 +1,4 @@
-using FishNet.CodeGenerating;
+  using FishNet.CodeGenerating;
 using FishNet.Component.Animating;
 using FishNet.Object;
 using FishNet.Object.Synchronizing;
@@ -136,31 +136,13 @@ public class PredictionMelee : NetworkBehaviour
 			// currently, it damages every enemy in area technically (did not test yet, only 1 target)
 			foreach (var hit in hits)
 			{
-				if (hit.CompareTag("Player") && hit != playerCollider)
+
+
+                if (hit.CompareTag("Player") && hit != playerCollider)
 				{
-					debugDirectionToTarget = Position;
-					debugHitPosition = hit.transform.position;
-					// get the horizontal direction to the target
-					Vector3 directionToTarget = hit.transform.position - Position;
-					directionToTarget.y = 0; // zero out the vertical component
-					directionToTarget.Normalize(); // normalize the direction
+                    float angle = FindAngle(hit);
 
-					// get the horizontal forward direction of the slash point
-					Vector3 forwardDirection = Direction;
-					forwardDirection.y = 0;
-					forwardDirection.Normalize();
-
-					Debug.Log($"Direction to target: {directionToTarget}");
-
-					float angle = Mathf.Atan2(directionToTarget.x, directionToTarget.z) - Mathf.Atan2(forwardDirection.x, forwardDirection.z);
-					angle = Mathf.Abs(angle * Mathf.Rad2Deg);
-					if (angle > 180) // there s sometimes a bug that return angle between 320 and 350 ish. happened a few times
-					{
-						angle = 360 - angle;
-					}
-					Debug.Log($"Angle: {angle}");
-
-					if (angle <= coneAngle * 0.5f) // half the cone angle 
+                    if (angle <= coneAngle * 0.5f) // half the cone angle 
 					{
 						Debug.Log("Melee: Hit a player");
 						int targetId = hit.transform.GetComponent<NetworkObject>().Owner.ClientId;
@@ -168,11 +150,49 @@ public class PredictionMelee : NetworkBehaviour
 						PlayerManager.Instance.DamagePlayer(targetId, damage.Value, attackerId);
 					}
 				}
-			}
+                else if (hit.CompareTag("Robot"))
+                {
+                    float angle = FindAngle(hit);
+
+                    if (angle <= coneAngle * 0.5f) // half the cone angle 
+                    {
+                        Debug.Log("Melee: Hit robot!");
+
+						hit.GetComponent<LittleRobot>().DestroyRobot(playerCollider);
+                    }
+                }
+            }
 			StartCooldownServerRpc();
 			_cooldownTimer = 0f;
 			_meleePressed = false;
 			Slash = false;
 		}
 	}
+
+	public float FindAngle(Collider hit)
+	{
+        debugDirectionToTarget = Position;
+        debugHitPosition = hit.transform.position;
+        // get the horizontal direction to the target
+        Vector3 directionToTarget = hit.transform.position - Position;
+        directionToTarget.y = 0; // zero out the vertical component
+        directionToTarget.Normalize(); // normalize the direction
+
+        // get the horizontal forward direction of the slash point
+        Vector3 forwardDirection = Direction;
+        forwardDirection.y = 0;
+        forwardDirection.Normalize();
+
+        Debug.Log($"Direction to target: {directionToTarget}");
+
+        float angle = Mathf.Atan2(directionToTarget.x, directionToTarget.z) - Mathf.Atan2(forwardDirection.x, forwardDirection.z);
+        angle = Mathf.Abs(angle * Mathf.Rad2Deg);
+        if (angle > 180) // there s sometimes a bug that return angle between 320 and 350 ish. happened a few times
+        {
+            angle = 360 - angle;
+        }
+        Debug.Log($"Angle: {angle}");
+
+		return angle;
+    }
 }
