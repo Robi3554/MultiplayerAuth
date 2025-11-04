@@ -1,6 +1,7 @@
 using System.Collections;
 using FishNet.Object;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class BurstShot : RaycastShoot
 {
@@ -8,23 +9,51 @@ public class BurstShot : RaycastShoot
     private float timeBetweenShots;
     [SerializeField]
     private int burstCount;
+    
+    private bool _canCheckInput = true;
 
-    protected override void HandleShootInput()
+    protected override void HandleShootInput(InputAction.CallbackContext context)
     {
-        if (Time.time >= nextShootTime)
+        if (_canCheckInput)
         {
-            nextShootTime = Time.time + fireRate;
-            StartCoroutine(Burst());
+            _canCheckInput = false;
+            StartCoroutine(Burst(context.action));
         }
     }
 
-    private IEnumerator Burst()
+    private IEnumerator Burst(InputAction action)
     {
-        for(int i = 0; i < burstCount; i++)
+        for (int i = 0; i < burstCount; i++)
         {
             Shoot();
 
             yield return new WaitForSeconds(timeBetweenShots);
+            
+            if (currentAmmo <= 0)
+            {
+                Reload();
+                _canCheckInput = true;
+                yield break;
+            }
         }
+        
+        yield return new WaitForSeconds(1/fireRate);
+
+        if (currentAmmo > 0)
+        {
+
+            var held = action.ReadValue<float>();
+            if (held > 0)
+            {
+                StartCoroutine(Burst(action));
+                yield break;
+            }
+        }
+        else
+        {
+            Reload();
+        }
+        
+        _canCheckInput = true;
     }
 }

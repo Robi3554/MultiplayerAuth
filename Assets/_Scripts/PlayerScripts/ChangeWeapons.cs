@@ -1,132 +1,33 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using FishNet.Object;
+using FishNet.Object.Synchronizing;
 using UnityEngine;
 using UnityEngine.Animations.Rigging;
 using UnityEngine.InputSystem;
+using UnityEngine.Serialization;
 
 public class ChangeWeapons : NetworkBehaviour
 {
-    [SerializeField]
-    private List<GameObject> weapons = new List<GameObject>();
-    [SerializeField]
-    private GameObject ModelRig;
-    [SerializeField]
-    private List<GameObject> weaponsInHand = new List<GameObject>();
-    private RigBuilder rigBuilder;
-    private int currentWeaponIndex;
-    private int changeWeaponInput;
+    [SerializeField] private List<GameObject> weapons = new List<GameObject>();
+    [SerializeField] private RigBuilder modelRigBuilder;
+    
+    private readonly SyncVar<int> _currentWeaponIndex = new SyncVar<int>(1);
+    private int _newWeaponIndex;
 
     void Start()
     {
         GetWeapons(gameObject);
-        changeWeaponInput = currentWeaponIndex;
-        rigBuilder = ModelRig.GetComponent<RigBuilder>();
-    }
-
-    public void OnChangeWeaponSlot(InputAction.CallbackContext context)
-    {
-        if (!context.performed || !IsOwner)
-            return;
-
-        string keyName = context.control.name;
-        float scrollValue = context.ReadValue<float>();
-        OnWeaponChangeServer(keyName,scrollValue);
-    }
-    [ServerRpc]
-    private void OnWeaponChangeServer(string keyName, float scrollValue)
-    {
-        OnWeaponChangeClient(keyName, scrollValue);
-    }
-    [ObserversRpc]
-    private void OnWeaponChangeClient(string keyName, float scrollValue)
-    { 
-        if (int.TryParse(keyName, out int weaponNumber))
+        
+        if (IsClientStarted)
         {
-            changeWeaponInput = weaponNumber;
-            SwitchWeapons();
-        }
-        else
-        {
-            if (scrollValue > 0f)
-            {
-                changeWeaponInput++;
-            }
-            else if (scrollValue < 0f)
-            {
-                changeWeaponInput--;
-            }
-
-            if (changeWeaponInput > weapons.Count)
-                changeWeaponInput = 1;
-            else if (changeWeaponInput < 1)
-                changeWeaponInput = weapons.Count;
-
-            SwitchWeapons();
-        }
-        UpdateRigLayers();
-        UpdateWeaponModelVisual();
-    }
-
-    private void UpdateWeaponModelVisual() // this gets called for items that are fused to the hand for animation purposes(e.g. sword)
-    {
-        string currentWeaponModelName = weapons[currentWeaponIndex - 1].name + "_Model"; // tineti formatul <WeaponsModelName>_Model (e.g. Sword_Model)
-        foreach (GameObject weapon in weaponsInHand)
-        {
-            if (weapon.name == currentWeaponModelName)
-            {
-                weapon.SetActive(true);
-            }
-            else
-            {
-                weapon.SetActive(false);
-            }
+            _currentWeaponIndex.OnChange += SwitchWeapon;
+            SwitchWeapon(-1, _currentWeaponIndex.Value, IsServerOnlyStarted);
         }
     }
-
-    private void UpdateRigLayers()      //tine cont ca RigLayer-ul sa fie de format "RigLayer_<Weapon name>"
-    {                                   //se poate imbunatati cu dictionare daca vrem sa facem mai eficient. pt 3 arme/player e ok
-        string currentWeaponRigName = "RigLayer_" + weapons[currentWeaponIndex - 1].name;
-        Debug.Log(currentWeaponRigName);
-        for (int i = 0; i < rigBuilder.layers.Count; i++)
-        {
-            var layer = rigBuilder.layers[i];
-            if (layer.rig.name == currentWeaponRigName)
-            {
-                layer.active = true;
-            }
-            else if (layer.rig != null)
-            {
-                layer.active = false;
-            }
-            rigBuilder.layers[i] = layer;
-        }
-        rigBuilder.Build();
-    }
-
-    private void SwitchWeapons()
-    {
-        if (changeWeaponInput == currentWeaponIndex)
-            return;
-
-        weapons[currentWeaponIndex - 1].SetActive(false);
-        currentWeaponIndex = changeWeaponInput;
-        var newWeapon = weapons[currentWeaponIndex - 1];
-        newWeapon.SetActive(true);
-
-        if (IsOwner)
-        {
-            var weaponScript = newWeapon.GetComponent<RaycastShoot>();
-            if (weaponScript != null)
-            {
-                weaponScript.InitializeWeapon();
-            }
-
-            RequestWeaponOwnershipServerRpc(currentWeaponIndex - 1);
-        }
-    }
-
+    
     private void GetWeapons(GameObject parent)
     {
         foreach(Transform weapon in parent.transform)
@@ -140,10 +41,96 @@ public class ChangeWeapons : NetworkBehaviour
             w.SetActive(false);
         }
 
-        weapons[0].SetActive(true);
-        currentWeaponIndex = 1;
+        weapons[_currentWeaponIndex.Value].SetActive(true);
     }
 
+    public void OnChangeWeaponSlot(InputAction.CallbackContext context)
+    {
+        if (!context.performed || !IsOwner)
+            return;
+
+        var keyName = context.control.name;
+        var scrollValue = context.ReadValue<float>();
+        
+        if (int.TryParse(keyName, out int weaponNumber))
+        {
+            _newWeaponIndex = weaponNumber;
+        }
+        else
+        {
+            if (scrollValue > 0f)
+            {
+                _newWeaponIndex++;
+            }
+            else if (scrollValue < 0f)
+            {
+                _newWeaponIndex--;
+            }
+
+            if (_newWeaponIndex > weapons.Count - 1)
+                _newWeaponIndex = 0;
+            else if (_newWeaponIndex < 0)
+                _newWeaponIndex = weapons.Count - 1;
+
+        }
+        
+        if (_newWeaponIndex == _currentWeaponIndex.Value)
+            return;
+        
+        OnWeaponChangeServer(_newWeaponIndex);
+    }
+    
+    [ServerRpc]
+    private void OnWeaponChangeServer(int index)
+    {
+        _currentWeaponIndex.Value = index;
+    }
+    
+    /*
+    [ObserversRpc]
+    private void OnWeaponChangeClient()
+    {
+        var activeWeaponIndex = _currentWeaponIndex.Value;
+        
+        SwitchActiveWeaponPrefab(activeWeaponIndex);
+        UpdateRigLayers(activeWeaponIndex);
+    }
+    */
+    
+    private void SwitchWeapon(int prev, int newActiveIndex, bool asServer)
+    {
+        SwitchActiveWeaponPrefab(newActiveIndex);
+        UpdateRigLayers(newActiveIndex);
+    }
+
+    private void SwitchActiveWeaponPrefab(int activeWeaponIndex)
+    {
+        for (int i = 0; i < weapons.Count; i++)
+        {
+            if (i == activeWeaponIndex)
+            {
+                weapons[i].SetActive(true);
+            }
+            else
+            {
+                weapons[i].SetActive(false);
+            }
+        }
+    }
+    
+    private void UpdateRigLayers(int activeWeaponIndex)      //tine cont ca RigLayer-ul sa fie de format "RigLayer_<Weapon name>"
+    {                                   //se poate imbunatati cu dictionare daca vrem sa facem mai eficient. pt 3 arme/player e ok
+        var currentWeaponRigName = "RigLayer_" + weapons[activeWeaponIndex].name;
+        
+        foreach (var layer in modelRigBuilder.layers.Where(layer => layer.rig))
+        {
+            layer.active = layer.rig.name.Equals(currentWeaponRigName);
+        }
+        
+        modelRigBuilder.Build();
+    }
+
+    /*
     [ServerRpc]
     private void RequestWeaponOwnershipServerRpc(int newWeaponIndex)
     {
@@ -156,4 +143,15 @@ public class ChangeWeapons : NetworkBehaviour
 
         newWeaponObj.GiveOwnership(Owner);
     }
+    
+    private void UpdateWeaponModelVisual(int activeWeaponIndex) // this gets called for items that are fused to the hand for animation purposes(e.g. sword)
+    {
+        var currentWeaponModelName = weapons[activeWeaponIndex].name + "_Model"; // tineti formatul <WeaponsModelName>_Model (e.g. Sword_Model)
+        
+        foreach (var weapon in weaponsInHand)
+        {
+            weapon.SetActive(weapon.name.Equals(currentWeaponModelName));
+        }
+    }
+    */
 }
