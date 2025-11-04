@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class RailGunShoot : RaycastShoot
 {
@@ -10,11 +11,11 @@ public class RailGunShoot : RaycastShoot
         stopTime,
         shootTime;
 
-    protected override void HandleShootInput()
+    protected override void HandleShootInput(InputAction.CallbackContext context)
     {
         if (Time.time >= nextShootTime)
         {
-            nextShootTime = Time.time + fireRate;
+            nextShootTime = Time.time + 1/fireRate;
             StartCoroutine(StopAndShoot());
         }
     }
