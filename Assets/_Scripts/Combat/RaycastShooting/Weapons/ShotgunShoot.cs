@@ -19,10 +19,10 @@ public class ShotgunShoot : SingleShot
         for (int i = 0; i < pelletCount; i++)
         {
             Vector3 dir = GetSpreadDirection(-firePoint.up, spreadAngle);
-
+            
             Vector3 hitPosition = origin + dir * maxDistance;
 
-            if (Physics.Raycast(origin, dir, out RaycastHit hit, Mathf.Infinity, combinedLayer))
+            if (Physics.Raycast(origin, dir, out RaycastHit hit, maxDistance, combinedLayer))
             {
                 hitPosition = hit.point;
 
@@ -34,6 +34,8 @@ public class ShotgunShoot : SingleShot
                 //ShowShotLine(origin, hitPosition);
             }
 
+            Debug.Log("Origin: " + origin);
+            Debug.Log("Hit Position: " + hitPosition);
             // Notify server to replicate the pellet to all observers
             playerNet?.NotifyShotServer(origin, hitPosition);
         }

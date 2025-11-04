@@ -234,6 +234,17 @@
                 },
                 {
                     "name": "",
+                    "id": "6c4410e2-3f15-47c8-a1b7-37a84bef73d4",
+                    "path": "<Keyboard>/0",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "ChangeWeaponSlot",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "70a14d8c-28ff-411e-a9b9-113f9f55e8c4",
                     "path": "<Keyboard>/1",
                     "interactions": "",

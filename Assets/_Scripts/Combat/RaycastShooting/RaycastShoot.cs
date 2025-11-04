@@ -16,7 +16,7 @@ public abstract class RaycastShoot : MonoBehaviour
 
             if(currentAmmo <= 0)
             {
-                StartCoroutine(Reload());
+                StartCoroutine(ReloadClient());
                 playerNet?.NotifyReloadServer(maxAmmo);
             }
         }
@@ -57,7 +57,6 @@ public abstract class RaycastShoot : MonoBehaviour
     [SerializeField]
     protected AudioClip reloadAudioClip;
     
-    private bool isReloading = false;
     protected bool canShoot = true;
     protected float nextShootTime = 0f;
     private bool canPlayShootSound;
@@ -77,38 +76,18 @@ public abstract class RaycastShoot : MonoBehaviour
     {
         currentAmmo = maxAmmo;
         InitializeWeapon();
-        if(currentAmmo <= 0)
-        {
-            StartCoroutine(Reload());
-            playerNet?.NotifyReloadServer(maxAmmo);
-        }
     }
 
     private void OnDisable()
     {
         ammoText = null;
-        isReloading = false;
     }
 
     public void OnDamage(InputAction.CallbackContext context)
     {
-        if (!this.isActiveAndEnabled) return;
-
-        if (isReloading)
-            return;
-
-        if (context.performed)
-        {
-            if (currentAmmo <= 0)
-            {
-                StartCoroutine(Reload());
-                playerNet?.NotifyReloadServer(maxAmmo);
-            }
-            else if (currentAmmo > 0)
-            {
-                HandleShootInput();
-            }
-        }
+        if (!this.isActiveAndEnabled || !context.performed || currentAmmo <= 0) return;
+        
+        HandleShootInput(context);
     }
 
     public void OnReload(InputAction.CallbackContext context)
@@ -117,8 +96,7 @@ public abstract class RaycastShoot : MonoBehaviour
 
         if (context.performed && currentAmmo != maxAmmo)
         {
-            StartCoroutine(Reload());
-            playerNet?.NotifyReloadServer(maxAmmo);
+            Reload();
         }
     }
 
@@ -143,10 +121,9 @@ public abstract class RaycastShoot : MonoBehaviour
         Vector3 direction = -firePoint.up;
         Vector3 hitPosition = origin + direction * maxDistance;
 
-        if (Physics.Raycast(origin, direction, out RaycastHit hit, Mathf.Infinity, combinedLayer))
+        if (Physics.Raycast(origin, direction, out RaycastHit hit, maxDistance, combinedLayer))
         {
             hitPosition = hit.point;
-            Debug.Log("Raycast hit at position: " + hitPosition);
 
             var hitNetObj = hit.transform.GetComponent<FishNet.Object.NetworkObject>();
             if (hitNetObj != null)
@@ -176,16 +153,20 @@ public abstract class RaycastShoot : MonoBehaviour
         tempGO.GetComponent<LineProjectile>().Initialize(speed, start, end);
     }
 
-    protected IEnumerator Reload()
+    protected void Reload()
     {
-        isReloading = true;
+        StartCoroutine(ReloadClient());
+        playerNet?.NotifyReloadServer(maxAmmo);
+    }
+
+    protected IEnumerator ReloadClient()
+    {
         if (canPlayReloadSound)
         {
             reloadAudioSource.PlayOneShot(reloadAudioClip);
         }
         yield return new WaitForSeconds(reloadTime);
         currentAmmo = maxAmmo;
-        isReloading = false;
     }
 
     protected IEnumerator WeaponChangeDelay(float delay)
@@ -210,5 +191,5 @@ public abstract class RaycastShoot : MonoBehaviour
         StartCoroutine(WeaponChangeDelay(afterChangeDelay));
     }
 
-    protected abstract void HandleShootInput();
+    protected abstract void HandleShootInput(InputAction.CallbackContext context);
 }
