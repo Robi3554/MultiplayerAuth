@@ -5599,7 +5599,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1194690757228506171}
         m_TargetAssemblyTypeName: ChangeWeapons, Assembly-CSharp
-        m_MethodName: OnWeaponChange
+        m_MethodName: OnChangeWeaponSlot
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

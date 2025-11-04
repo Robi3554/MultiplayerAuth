@@ -44,7 +44,7 @@ public class ChangeWeapons : NetworkBehaviour
         weapons[_currentWeaponIndex.Value].SetActive(true);
     }
 
-    public void OnWeaponChange(InputAction.CallbackContext context)
+    public void OnChangeWeaponSlot(InputAction.CallbackContext context)
     {
         if (!context.performed || !IsOwner)
             return;
