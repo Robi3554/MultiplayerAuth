@@ -23,6 +23,8 @@ public class PredictionMoving : NetworkBehaviour
     [Header("Input")]
     [SerializeField] private PlayerInput _playerInput;
     [SerializeField] private bool isJoystick;
+    
+    public bool IsJoystickMode => isJoystick;
 
     [Header("Dash Settings")]
     [SerializeField] private float dashForce = 20f;
@@ -136,6 +138,18 @@ public class PredictionMoving : NetworkBehaviour
         Quaternion targetRotation = Quaternion.Euler(0f, targetYaw, 0f);
         transform.rotation = Quaternion.Slerp(
             transform.rotation, targetRotation, rotateRate * Time.deltaTime);
+    }
+    
+    public void ToggleInputMode()
+    {
+        isJoystick = !isJoystick;
+        Debug.Log($"[PredictionMoving] Input mode toggled to: {(isJoystick ? "Joystick" : "Mouse & Keyboard")}");
+    }
+    
+    public void SetInputMode(bool useJoystick)
+    {
+        isJoystick = useJoystick;
+        Debug.Log($"[PredictionMoving] Input mode set to: {(isJoystick ? "Joystick" : "Mouse & Keyboard")}");
     }
 
     private float GetYawFromMouse()
