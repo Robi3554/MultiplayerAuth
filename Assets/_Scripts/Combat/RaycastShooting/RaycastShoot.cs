@@ -72,7 +72,7 @@ public abstract class RaycastShoot : MonoBehaviour
         playerNet = GetComponentInParent<PlayerNetworkInitializer>();
     }
 
-    protected void OnEnable()
+    protected virtual void OnEnable()
     {
         currentAmmo = maxAmmo;
         InitializeWeapon();
