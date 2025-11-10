@@ -12,6 +12,11 @@ public class BurstShot : RaycastShoot
     
     private bool _canCheckInput = true;
 
+    protected override void OnEnable()
+    {
+        base.OnEnable();
+        _canCheckInput = true;
+    }
     protected override void HandleShootInput(InputAction.CallbackContext context)
     {
         if (_canCheckInput)

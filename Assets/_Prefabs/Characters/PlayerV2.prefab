@@ -1949,8 +1949,8 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: RaycastShoot, Assembly-CSharp
+      - m_Target: {fileID: 990796205943166328}
+        m_TargetAssemblyTypeName: ShotgunShoot, Assembly-CSharp
         m_MethodName: OnDamage
         m_Mode: 0
         m_Arguments:
@@ -2005,8 +2005,8 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: RaycastShoot, Assembly-CSharp
+      - m_Target: {fileID: 990796205943166328}
+        m_TargetAssemblyTypeName: ShotgunShoot, Assembly-CSharp
         m_MethodName: OnReload
         m_Mode: 0
         m_Arguments:
@@ -4699,6 +4699,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6150143733585687789, guid: 9e0837ead7a06c64b822b3a0a5cc1200, type: 3}
+      propertyPath: m_Resource
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 6737699475807013708, guid: 9e0837ead7a06c64b822b3a0a5cc1200, type: 3}
       propertyPath: m_LocalPosition.x
       value: -2.14
@@ -4760,6 +4764,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9e0837ead7a06c64b822b3a0a5cc1200, type: 3}
+--- !u!114 &990796205943166328 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8598559443094501375, guid: 9e0837ead7a06c64b822b3a0a5cc1200, type: 3}
+  m_PrefabInstance: {fileID: 8832750361882550919}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4412511933998750678}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1113581c51f50784d980d067be0537ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &2816199328491006411 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6737699475807013708, guid: 9e0837ead7a06c64b822b3a0a5cc1200, type: 3}
