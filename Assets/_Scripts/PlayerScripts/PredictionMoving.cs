@@ -1,3 +1,4 @@
+using System.Collections;
 using FishNet.Component.Animating;
 using FishNet.Object;
 using UnityEngine;
@@ -23,6 +24,13 @@ public class PredictionMoving : NetworkBehaviour
     [SerializeField] private PlayerInput _playerInput;
     [SerializeField] private bool isJoystick;
     
+    public bool IsJoystickMode => isJoystick;
+
+    [Header("Dash Settings")]
+    [SerializeField] private float dashForce = 20f;
+    [SerializeField] private float dashDuration = 0.2f;
+    [SerializeField] private float dashCooldown = 1f;
+
     private Vector2 _moveInput;
     private bool _isAnalogMovement;
     private Vector2 _mouseLook, _joystickLook;
@@ -32,7 +40,8 @@ public class PredictionMoving : NetworkBehaviour
     private Camera _camera;
     private bool _isGrounded;
     private bool _jumpPressed;
-    private bool _isSprinting;
+    private bool _isDashing;
+    private bool _canDash = true;
     private bool _isMovingBackwards;
     private void Awake()
     {
@@ -63,9 +72,10 @@ public class PredictionMoving : NetworkBehaviour
         _joystickLook = context.ReadValue<Vector2>();
     }
 
-    public void OnSprint(InputAction.CallbackContext context)
+    public void OnDash(InputAction.CallbackContext context)
     {
-        _isSprinting = context.ReadValueAsButton();
+        if (context.performed && _canDash && !_isDashing)
+            StartCoroutine(PerformDash());
     }
 
     public void OnJump(InputAction.CallbackContext context)
@@ -84,9 +94,11 @@ public class PredictionMoving : NetworkBehaviour
         
         _isGrounded = Physics.CheckSphere(
             groundCheck.position, groundCheckRadius, groundLayer, QueryTriggerInteraction.Ignore);
-        
+
+        if (_isDashing) return;
+
         Vector3 direction = new Vector3(_moveInput.x, 0f, _moveInput.y).normalized;
-        float speed = _isSprinting ? moveRate * sprintMultiplier : moveRate;
+        float speed = moveRate;
         Vector3 velocity = direction * speed;
         velocity.y = _rb.linearVelocity.y;
 
@@ -110,7 +122,7 @@ public class PredictionMoving : NetworkBehaviour
         else
         {
             var vel = direction.magnitude > 0 ? 0.5f : 0f;
-            vel *= _isSprinting ? 2f : 1f;
+            vel *= 1f;
             animator.SetFloat("Velocity", vel);
         }
     }
@@ -126,6 +138,18 @@ public class PredictionMoving : NetworkBehaviour
         Quaternion targetRotation = Quaternion.Euler(0f, targetYaw, 0f);
         transform.rotation = Quaternion.Slerp(
             transform.rotation, targetRotation, rotateRate * Time.deltaTime);
+    }
+    
+    public void ToggleInputMode()
+    {
+        isJoystick = !isJoystick;
+        Debug.Log($"[PredictionMoving] Input mode toggled to: {(isJoystick ? "Joystick" : "Mouse & Keyboard")}");
+    }
+    
+    public void SetInputMode(bool useJoystick)
+    {
+        isJoystick = useJoystick;
+        Debug.Log($"[PredictionMoving] Input mode set to: {(isJoystick ? "Joystick" : "Mouse & Keyboard")}");
     }
 
     private float GetYawFromMouse()
@@ -146,6 +170,30 @@ public class PredictionMoving : NetworkBehaviour
         return transform.eulerAngles.y;
     }
 
+    private IEnumerator PerformDash()
+    {
+        _canDash = false;
+        _isDashing = true;
+
+        Vector3 dashDir = new Vector3(_moveInput.x, 0, _moveInput.y).normalized;
+        if (dashDir == Vector3.zero)
+            dashDir = transform.forward;
+
+        float originalDamping = _rb.linearDamping;
+        _rb.linearDamping = 0f;
+        _rb.linearVelocity = Vector3.zero;
+
+        _rb.AddForce(dashDir * dashForce, ForceMode.VelocityChange);
+
+        yield return new WaitForSeconds(dashDuration);
+
+        _rb.linearDamping = originalDamping;
+        _isDashing = false;
+
+        yield return new WaitForSeconds(dashCooldown);
+
+        _canDash = true;
+    }
 
     private float GetYawFromJoystickOrMovement()
     {
