@@ -323,8 +323,8 @@ MonoBehaviour:
   firePoint: {fileID: 8618280175570269345}
   shotLinePrefab: {fileID: 7133602437278059814, guid: 0e3e214fbff67c642a1f4f61c1361237, type: 3}
   speed: 30
-  maxDistance: 1
-  fireRate: 1
+  maxDistance: 7
+  fireRate: 0.5
   damage: 5
   maxAmmo: 12
   reloadTime: 1.25
