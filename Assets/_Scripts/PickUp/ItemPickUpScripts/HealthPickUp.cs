@@ -11,19 +11,31 @@ public class HealthPickUp : PickUpObject
     [AllowMutableSyncType]
     private SyncVar<bool> readyForPickUp = new SyncVar<bool>(false);
     [SerializeField] private float pickupDelay = 2f;
-    private Vector3 initPosition;
-    private Quaternion initRotation;
+    
+    [AllowMutableSyncType]
+    private SyncVar<Vector3> initPosition = new SyncVar<Vector3>();
+    [AllowMutableSyncType]
+    private SyncVar<Quaternion> initRotation = new SyncVar<Quaternion>();
 
     private Collider _col;
+
     private void Awake()
     {
         _col = GetComponent<Collider>();
     }
-    private void Start()
+
+    public override void OnStartNetwork()
     {
-        initPosition = transform.position;
-        initRotation = transform.rotation;
+        base.OnStartNetwork();
+        if (IsServerStarted)
+        {
+            // cache initial position and rotation on server
+            initPosition.Value = transform.position;
+            initRotation.Value = transform.rotation;
+            Debug.Log($"HealthPickUp: Cached initial position at {initPosition.Value}");
+        }
     }
+
     public override void OnStartServer()
     {
         // always reset state on server start
@@ -31,13 +43,19 @@ public class HealthPickUp : PickUpObject
         ResetPickup();      // disables collider + SyncVar
         StartCoroutine(EnablePickupAfterDelay(pickupDelay)); // wait before enabling
     }
+
     private void OnEnable()
     {
-        if (IsServerStarted)
+        Debug.Log($"HealthPickUp: OnEnable IsServerInitialized:{IsServerInitialized}, IsServerStarted:{IsServerStarted}, IsClientInitialized:{IsClientInitialized}");
+
+        if (!IsServerInitialized)
+        {
+            StartCoroutine(EnablePickupAfterDelay(pickupDelay)); // goes to sleep for x seconds and continues after
+        }
+
+        if (IsServerInitialized)
         {
             Debug.Log("HealthPickUp: Enable on server");
-            transform.position = initPosition;
-            transform.rotation = initRotation;
             ResetPickupState();
             ResetPickup(); // always reset collider off
             StartCoroutine(EnablePickupAfterDelay(pickupDelay)); // always delay before ready
@@ -56,10 +74,11 @@ public class HealthPickUp : PickUpObject
         Debug.Log($"HealthPickUp: _col.enabled:{_col.enabled}, readyForPickUp.Value:{readyForPickUp.Value}");
     }
 
-
     private IEnumerator EnablePickupAfterDelay(float delay)
     {
         yield return new WaitForSeconds(delay);
+        Debug.Log($"HealthPickUp: EnablePickupAfterDelay IsServerInitialized:{IsServerInitialized}");
+
         if (this != null && IsServerInitialized)
         {
             _col.enabled = true;
@@ -88,21 +107,20 @@ public class HealthPickUp : PickUpObject
         PickUpRespawn parentRespawn = GetComponentInParent<PickUpRespawn>();
         if (parentRespawn != null)
         {
-            // Vector3 FloorPosition = new Vector3(transform.position.x, yBasePosition, transform.position.z);
-            parentRespawn.StartRespawnTimer(NetworkObject); // call the StartRespawnTimer method on the parent
+            parentRespawn.StartRespawnTimer(this.NetworkObject,initPosition.Value,initRotation.Value); // call the StartRespawnTimer method on the parent
         }
         else
         {
             Debug.LogWarning("HealthPickUp: PickUpRespawn component not found on parent!");
         }
         ResetPickup();
-        ItemPickUpObserver();
-        // ServerManager.Despawn(gameObject, DespawnType.Pool); // despawn the health pickup
+        DespawnHealthPack(gameObject);
     }
 
-    [ObserversRpc]
-    private void ItemPickUpObserver()
+    private void DespawnHealthPack(GameObject obj)
     {
-        gameObject.SetActive(false);
+        ServerManager.Despawn(obj);
+        // Destroy(obj);
+        // gameObject.SetActive(false); implementarea veche care nu mere
     }
 }
