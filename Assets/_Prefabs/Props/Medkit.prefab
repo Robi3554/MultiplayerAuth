@@ -361,6 +361,7 @@ GameObject:
   - component: {fileID: 4961023987807242301}
   - component: {fileID: 4297683254458283122}
   - component: {fileID: 5240636864935270614}
+  - component: {fileID: -1519296466912973805}
   m_Layer: 0
   m_Name: Medkit
   m_TagString: Untagged
@@ -422,8 +423,8 @@ MonoBehaviour:
   NetworkBehaviours:
   - {fileID: 2960659720246470344}
   - {fileID: 4961023987807242301}
-  - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: 5240636864935270614}
+  - {fileID: 5242468857166722336}
   InitializedParentNetworkBehaviour: {fileID: 0}
   InitializedNestedNetworkObjects: []
   RuntimeParentNetworkBehaviour: {fileID: 0}
@@ -448,13 +449,13 @@ MonoBehaviour:
   _spectatorInterpolation: 2
   _enableTeleport: 0
   _teleportThreshold: 1
-  <PrefabId>k__BackingField: 16
+  <PrefabId>k__BackingField: 0
   <SpawnableCollectionId>k__BackingField: 0
   <AssetPathHash>k__BackingField: 626665662866106261
   <SceneId>k__BackingField: 0
   SerializedTransformProperties:
-    Position: {x: -20.86436, y: 0.81666183, z: 16.388435}
-    Rotation: {x: 0.67285013, y: -0.2186357, z: 0.22970584, w: 0.668361}
+    Position: {x: 0, y: 0, z: 0}
+    Rotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
     Scale: {x: 7.5, y: 7.5, z: 7.5}
     IsValid: 1
 --- !u!114 &4961023987807242301
@@ -510,12 +511,37 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ffde54cd360f2b34180e9380dc5444fc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _componentIndexCache: 255
+  _componentIndexCache: 2
   _addedNetworkObject: {fileID: 5388096707036169814}
-  _networkObjectCache: {fileID: 0}
+  _networkObjectCache: {fileID: 5388096707036169814}
   healAmount: 50
   readyForPickUp:
     NetworkManager: {fileID: 0}
     NetworkBehaviour: {fileID: 0}
     _value: 0
   pickupDelay: 0.1
+  initPosition:
+    NetworkManager: {fileID: 0}
+    NetworkBehaviour: {fileID: 0}
+    _value: {x: 0, y: 0, z: 0}
+  initRotation:
+    NetworkManager: {fileID: 0}
+    NetworkBehaviour: {fileID: 0}
+    _value: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &-1519296466912973805
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5771119212130239381}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e2b597e1828355a4d994a69cbb11ef85, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: FishNet.Runtime::FishNet.Component.Ownership.PredictedSpawn
+  _componentIndexCache: 255
+  _addedNetworkObject: {fileID: 5388096707036169814}
+  _networkObjectCache: {fileID: 0}
+  _allowSpawning: 1
+  _allowDespawning: 1
