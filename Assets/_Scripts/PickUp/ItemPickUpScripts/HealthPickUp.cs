@@ -114,13 +114,5 @@ public class HealthPickUp : PickUpObject
             Debug.LogWarning("HealthPickUp: PickUpRespawn component not found on parent!");
         }
         ResetPickup();
-        DespawnHealthPack(gameObject);
-    }
-
-    private void DespawnHealthPack(GameObject obj)
-    {
-        ServerManager.Despawn(obj);
-        // Destroy(obj);
-        // gameObject.SetActive(false); implementarea veche care nu mere
     }
 }
