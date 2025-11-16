@@ -5,7 +5,7 @@ using UnityEngine.InputSystem;
 
 public abstract class RaycastShoot : MonoBehaviour
 {
-    private TMP_Text ammoText;
+    protected TMP_Text ammoText;
 
     protected int CurrentAmmo
     {
@@ -59,12 +59,12 @@ public abstract class RaycastShoot : MonoBehaviour
     
     protected bool canShoot = true;
     protected float nextShootTime = 0f;
-    private bool canPlayShootSound;
-    private bool canPlayReloadSound;
+    protected bool canPlayShootSound;
+    protected bool canPlayReloadSound;
 
     protected LayerMask combinedLayer;
 
-    private PlayerNetworkInitializer playerNet;
+    protected PlayerNetworkInitializer playerNet;
 
     private void Start()
     {

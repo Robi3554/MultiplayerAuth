@@ -1,4 +1,5 @@
 using FishNet.Object;
+using GameKit.Dependencies.Utilities.ObjectPooling.Examples;
 using UnityEngine;
 
 public class PlayerNetworkInitializer : NetworkBehaviour
@@ -42,7 +43,7 @@ public class PlayerNetworkInitializer : NetworkBehaviour
         PlayerManager.Instance.DamagePlayer(targetId, damage, attackerId);
     }
 
-    // Called when a player fires a bullet
+    // Called when a player fires a raycast bullet
     [ServerRpc]
     public void NotifyShotServer(Vector3 start, Vector3 end)
     {
@@ -63,5 +64,32 @@ public class PlayerNetworkInitializer : NetworkBehaviour
     public void NotifyReloadServer(int newAmmo)
     {
         Debug.Log($"[Server] Player {Owner.ClientId} reloaded. Ammo reset to {newAmmo}");
+    }
+
+    // Called when a player fires a rigidbody bullet
+    [ServerRpc]
+    public void NotifyProjectileShotServer(GameObject projectilePrefab, Vector3 origin, Vector3 velocity, int damage, float maxDistance)
+    {
+        GameObject go = Instantiate(projectilePrefab, origin, Quaternion.LookRotation(velocity));
+        ServerManager.Spawn(go);
+
+        if (go.TryGetComponent(out ProjectileScript p))
+        {
+            p.ServerInitialize(velocity, damage, maxDistance);
+        }
+    }
+
+    // Called by Projectile when a hit happens
+    [ServerRpc]
+    public void NotifyProjectileHitServer(NetworkObject targetPlayer, int damage)
+    {
+        if (targetPlayer == null)
+            return;
+
+        int targetId = (int)targetPlayer.Owner.ClientId;
+        int attackerId = (int)Owner.ClientId;
+
+        Debug.Log($"[Server] Player {attackerId} hit Player {targetId} for {damage} damage.");
+        PlayerManager.Instance.DamagePlayer(targetId, damage, attackerId);
     }
 }

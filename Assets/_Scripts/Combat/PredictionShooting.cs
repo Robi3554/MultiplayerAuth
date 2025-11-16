@@ -102,7 +102,7 @@ public class PredictionShooting : NetworkBehaviour
                 return;
             }
 
-            proj.Initialize(data.Direction * projectileSpeed);
+            //proj.Initialize(data.Direction * projectileSpeed);
         }
     }
 
