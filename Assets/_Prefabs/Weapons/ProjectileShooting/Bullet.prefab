@@ -156,6 +156,8 @@ MonoBehaviour:
   _componentIndexCache: 0
   _addedNetworkObject: {fileID: 2737851581900287445}
   _networkObjectCache: {fileID: 2737851581900287445}
+  maxTravelDistance: 0
+  minDamage: 5
 --- !u!114 &2737851581900287445
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -194,9 +196,9 @@ MonoBehaviour:
   _enableStateForwarding: 1
   _networkTransform: {fileID: 0}
   _ownerInterpolation: 1
-  _ownerSmoothedProperties: 255
+  _ownerSmoothedProperties: 4294967295
   _adaptiveInterpolation: 3
-  _spectatorSmoothedProperties: 255
+  _spectatorSmoothedProperties: 4294967295
   _spectatorInterpolation: 2
   _enableTeleport: 0
   _teleportThreshold: 1

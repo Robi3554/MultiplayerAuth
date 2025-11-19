@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Weapon
   - Robot
+  - Wall
   layers:
   - Default
   - TransparentFX

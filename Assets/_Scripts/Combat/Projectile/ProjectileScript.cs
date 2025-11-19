@@ -3,8 +3,13 @@ using UnityEngine;
 
 public class ProjectileScript : NetworkBehaviour
 {
-    private float maxTravelDistance = 80f;
-    private int damage = 10;
+    [SerializeField]
+    private float maxTravelDistance;
+    [SerializeField]
+    private float minDamage;
+    private int damage;
+
+    private int finalDamage;
 
     private Rigidbody rb;
     private Vector3 spawnPosition;
@@ -55,6 +60,10 @@ public class ProjectileScript : NetworkBehaviour
 
         float distance = Vector3.Distance(spawnPosition, transform.position);
 
+        float t = distance / maxTravelDistance;
+        float falloff = Mathf.Lerp(damage, minDamage, t);
+        finalDamage = (int)falloff;
+
         if (distance >= maxTravelDistance)
             ServerManager.Despawn(gameObject);
     }
@@ -66,10 +75,13 @@ public class ProjectileScript : NetworkBehaviour
 
         if (col.gameObject.CompareTag("Player"))
         {
-            col.GetComponent<PlayerStats>().TakeDamage(damage);
+            col.GetComponent<PlayerStats>().TakeDamage(finalDamage);
+            DespawnProjectile();
         }
-
-        DespawnProjectile();
+        else if (col.gameObject.CompareTag("Wall"))
+        {
+            DespawnProjectile();
+        }
     }
 
     private void DespawnProjectile()

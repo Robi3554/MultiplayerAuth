@@ -1,7 +1,7 @@
 using FishNet.Object;
 using UnityEngine;
 
-public class ShotgunShoot : PistolShoot
+public class ProjectileShotgun : ProjectileShooting
 {
     [SerializeField]
     private int pelletCount;
@@ -19,22 +19,11 @@ public class ShotgunShoot : PistolShoot
         for (int i = 0; i < pelletCount; i++)
         {
             Vector3 dir = GetSpreadDirection(-firePoint.up, spreadAngle);
-            
+
             Vector3 hitPosition = origin + dir * maxDistance;
 
-            if (Physics.Raycast(origin, dir, out RaycastHit hit, maxDistance, combinedLayer))
-            {
-                hitPosition = hit.point;
-
-                var hitNetObj = hit.transform.GetComponent<NetworkObject>();
-                if (hitNetObj != null)
-                    playerNet?.NotifyHitServer(hitNetObj, damage);
-            }
-
-            Debug.Log("Origin: " + origin);
-            Debug.Log("Hit Position: " + hitPosition);
             // Notify server to replicate the pellet to all observers
-            playerNet?.NotifyShotServer(origin, hitPosition);
+            playerNet.NotifyProjectileShotServer(projectilePrefab, origin, dir * speed, damage, maxDistance);
         }
 
         currentAmmo--;
@@ -51,7 +40,7 @@ public class ShotgunShoot : PistolShoot
 
         Vector3 up = Vector3.Cross(right, forward).normalized;
 
-        Vector3 spread = (forward + right * rPoint.x +  up * rPoint.y).normalized;
+        Vector3 spread = (forward + right * rPoint.x + up * rPoint.y).normalized;
 
         return spread;
     }

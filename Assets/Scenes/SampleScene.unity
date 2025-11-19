@@ -1630,6 +1630,10 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3594243245622329198, guid: ef290ad47f18cfa47b84e38bcc130ab3, type: 3}
+      propertyPath: m_TagString
+      value: Wall
+      objectReference: {fileID: 0}
+    - target: {fileID: 3594243245622329198, guid: ef290ad47f18cfa47b84e38bcc130ab3, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 0
       objectReference: {fileID: 0}

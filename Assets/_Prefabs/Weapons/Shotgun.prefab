@@ -274,6 +274,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1267558020200924156}
   - component: {fileID: 8598559443094501375}
+  - component: {fileID: 9127795528253200911}
   m_Layer: 0
   m_Name: Shotgun
   m_TagString: Weapon
@@ -314,14 +315,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1113581c51f50784d980d067be0537ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerLayer:
-    serializedVersion: 2
-    m_Bits: 64
-  wallLayer:
-    serializedVersion: 2
-    m_Bits: 128
   firePoint: {fileID: 8618280175570269345}
-  shotLinePrefab: {fileID: 7133602437278059814, guid: 0e3e214fbff67c642a1f4f61c1361237, type: 3}
   speed: 30
   maxDistance: 7
   fireRate: 0.5
@@ -333,6 +327,40 @@ MonoBehaviour:
   shootAudioClip: {fileID: 8300000, guid: acce5e47e57cd2f4fbede04e73a12e5b, type: 3}
   reloadAudioSource: {fileID: 4943300222967389306}
   reloadAudioClip: {fileID: 8300000, guid: 08392cd69dbbb044abc76cb1348ef6f2, type: 3}
+  playerLayer:
+    serializedVersion: 2
+    m_Bits: 64
+  wallLayer:
+    serializedVersion: 2
+    m_Bits: 128
+  shotLinePrefab: {fileID: 7133602437278059814, guid: 0e3e214fbff67c642a1f4f61c1361237, type: 3}
+  pelletCount: 8
+  spreadAngle: 10
+--- !u!114 &9127795528253200911
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5163482106140866897}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ffc93d56e90d790449f357428181b956, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ProjectileShotgun
+  firePoint: {fileID: 8618280175570269345}
+  speed: 25
+  maxDistance: 10
+  fireRate: 0.5
+  damage: 5
+  maxAmmo: 12
+  reloadTime: 1.25
+  afterChangeDelay: 1
+  shootAudioSource: {fileID: 6150143733585687789}
+  shootAudioClip: {fileID: 8300000, guid: acce5e47e57cd2f4fbede04e73a12e5b, type: 3}
+  reloadAudioSource: {fileID: 4943300222967389306}
+  reloadAudioClip: {fileID: 8300000, guid: 08392cd69dbbb044abc76cb1348ef6f2, type: 3}
+  projectilePrefab: {fileID: 72838035728811199, guid: 962a47bbe2fb0b646b8895cdf8b44160, type: 3}
   pelletCount: 8
   spreadAngle: 10
 --- !u!1 &5211001199002756778

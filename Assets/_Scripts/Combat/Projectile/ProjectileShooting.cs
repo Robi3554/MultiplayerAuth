@@ -1,10 +1,11 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class ProjectileShooting : RaycastShoot
+public class ProjectileShooting : Weapon
 {
     [SerializeField]
-    private GameObject projectilePrefab;
+    protected GameObject projectilePrefab;
+    protected Vector3 direction;
 
     protected override void HandleShootInput(InputAction.CallbackContext context)
     {
@@ -22,10 +23,7 @@ public class ProjectileShooting : RaycastShoot
             return;
         }
 
-        Vector3 origin = firePoint.position;
-        Vector3 direction = -firePoint.up;
-
-        playerNet.NotifyProjectileShotServer(projectilePrefab, origin, direction * speed, damage, maxDistance);
+        playerNet.NotifyProjectileShotServer(projectilePrefab, firePoint.position, -firePoint.up * speed, damage, maxDistance);
 
         if (canPlayShootSound)
         {
