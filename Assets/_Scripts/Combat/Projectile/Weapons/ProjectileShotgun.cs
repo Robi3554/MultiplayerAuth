@@ -24,6 +24,11 @@ public class ProjectileShotgun : ProjectileShooting
 
             // Notify server to replicate the pellet to all observers
             playerNet.NotifyProjectileShotServer(projectilePrefab, origin, dir * speed, damage, maxDistance);
+
+            if (canPlayShootSound)
+            {
+                playerNet.ProjectileWeaponSound();
+            }
         }
 
         currentAmmo--;

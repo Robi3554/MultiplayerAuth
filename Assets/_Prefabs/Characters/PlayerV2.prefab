@@ -3329,12 +3329,20 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2325135146794036649, guid: d50dc5a3dd2728e419a45401c51ea688, type: 3}
+      propertyPath: _ownerSmoothedProperties
+      value: 4294967295
+      objectReference: {fileID: 0}
+    - target: {fileID: 2325135146794036649, guid: d50dc5a3dd2728e419a45401c51ea688, type: 3}
       propertyPath: <IsNested>k__BackingField
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2325135146794036649, guid: d50dc5a3dd2728e419a45401c51ea688, type: 3}
       propertyPath: <PrefabId>k__BackingField
       value: 65535
+      objectReference: {fileID: 0}
+    - target: {fileID: 2325135146794036649, guid: d50dc5a3dd2728e419a45401c51ea688, type: 3}
+      propertyPath: _spectatorSmoothedProperties
+      value: 4294967295
       objectReference: {fileID: 0}
     - target: {fileID: 2325135146794036649, guid: d50dc5a3dd2728e419a45401c51ea688, type: 3}
       propertyPath: <AssetPathHash>k__BackingField

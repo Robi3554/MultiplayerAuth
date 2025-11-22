@@ -79,6 +79,14 @@ public class PlayerNetworkInitializer : NetworkBehaviour
         }
     }
 
+    [ServerRpc]
+    public void ProjectileWeaponSound()
+    {
+        var weapon = GetComponentInChildren<ProjectileShooting>();
+        if (weapon != null)
+            weapon.PlaySound();
+    }
+
     // Called by Projectile when a hit happens
     [ServerRpc]
     public void NotifyProjectileHitServer(NetworkObject targetPlayer, int damage)

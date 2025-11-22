@@ -27,10 +27,15 @@ public class ProjectileShooting : Weapon
 
         if (canPlayShootSound)
         {
-            shootAudioSource.PlayOneShot(shootAudioClip);
+            playerNet.ProjectileWeaponSound();
         }
 
         CurrentAmmo--;
+    }
+
+    public void PlaySound()
+    {
+        shootAudioSource.PlayOneShot(shootAudioClip);
     }
 
 }
