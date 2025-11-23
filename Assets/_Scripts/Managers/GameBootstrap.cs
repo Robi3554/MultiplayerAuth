@@ -7,7 +7,7 @@ using FishNet.Transporting;
 public class NetworkBootstrap : MonoBehaviour
 {
     [SerializeField] private NetworkManager networkManager;
-    [SerializeField] private string defaultAddress = "193.226.15.26";
+    [SerializeField] private string defaultAddress = "localhost";
     [SerializeField] private ushort defaultPort = 7777;
 
     private void Awake()
@@ -26,7 +26,7 @@ public class NetworkBootstrap : MonoBehaviour
             return;
         }
         
-        string address = string.IsNullOrWhiteSpace(ConnectionInfo.IpAddress) ? "193.226.15.26" : ConnectionInfo.IpAddress;
+        string address = string.IsNullOrWhiteSpace(ConnectionInfo.IpAddress) ? "localhost" : ConnectionInfo.IpAddress;
 
         tugboat.SetClientAddress(address);
         tugboat.SetPort(defaultPort);
