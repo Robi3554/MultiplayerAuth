@@ -1,4 +1,6 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
+using GameKit.Dependencies.Utilities;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -56,12 +58,17 @@ public abstract class RaycastShoot : MonoBehaviour
     [SerializeField]
     protected AudioSource reloadAudioSource;
     
+    [SerializeField]
+    protected BoxCollider wallCheckCollider;
+    
+    
     protected bool canShoot;
     protected float nextShootTime = 0f;
     private bool canPlayShootSound;
     protected bool canPlayReloadSound;
     protected bool isReloading;
     private Coroutine _reloadCoroutine;
+    protected bool isBlocked;
 
     protected LayerMask combinedLayer;
 
@@ -86,6 +93,11 @@ public abstract class RaycastShoot : MonoBehaviour
             return;
         
         if (!this.isActiveAndEnabled || !context.performed || !canShoot) return;
+
+        var colliders = Physics.OverlapBox(wallCheckCollider.bounds.center,
+            wallCheckCollider.size.Multiply(wallCheckCollider.transform.lossyScale) / 2,
+            wallCheckCollider.transform.rotation, wallCheckCollider.includeLayers);
+        if (colliders.Length > 0) return;
 
         if (_reloadCoroutine != null)
         {

@@ -4,27 +4,23 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a0eb1c48-2865-41a0-83f6-bbf548ef18a9" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.MultiplayerAuth/.idea/AndroidProjectSystem.xml" beforeDir="false" />
+    <list default="true" id="a0eb1c48-2865-41a0-83f6-bbf548ef18a9" name="Changes" comment="Fixed reload spam, fixed shotgun not reloading, fixed gun script methods not owned from using player inputs">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.MultiplayerAuth/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.MultiplayerAuth/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Plugins/FishNet/CodeGenerating/cecil-0.11.4/Mono.Cecil.sln.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Plugins/FishNet/Runtime/Transporting/Transports/Tugboat/LiteNetLib/LiteNetLib.csproj.meta" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/_Prefabs/Characters/PlayerV2.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/_Prefabs/Characters/PlayerV2.prefab" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/_Prefabs/Weapons/Assault Rifle.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/_Prefabs/Weapons/Assault Rifle.prefab" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/_Prefabs/Weapons/Burst Rifle.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/_Prefabs/Weapons/Burst Rifle.prefab" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/_Prefabs/Weapons/Energy Pistol.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/_Prefabs/Weapons/Energy Pistol.prefab" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/_Prefabs/Weapons/Melee/Sword.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/_Prefabs/Weapons/Melee/Sword.prefab" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/_Prefabs/Weapons/Railgun.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/_Prefabs/Weapons/Railgun.prefab" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/_Prefabs/Weapons/SMG.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/_Prefabs/Weapons/SMG.prefab" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/_Prefabs/Weapons/Shotgun.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/_Prefabs/Weapons/Shotgun.prefab" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/_Scripts/Combat/RaycastShooting/RaycastShoot.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/_Scripts/Combat/RaycastShooting/RaycastShoot.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/_Scripts/Combat/RaycastShooting/Weapons/BurstShot.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/_Scripts/Combat/RaycastShooting/Weapons/BurstShot.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/_Scripts/Combat/RaycastShooting/Weapons/ShotgunShoot.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/_Scripts/Combat/RaycastShooting/Weapons/ShotgunShoot.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ChangesViewManager">
+    <option name="groupingKeys">
+      <option value="directory" />
+      <option value="repository" />
+    </option>
   </component>
   <component name="DpaMonitoringSettings">
     <option name="firstShow" value="false" />
@@ -52,6 +48,9 @@
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/038ae34513ab4db49caf29025be8f0451f7000/10/48d6c7d9/MonoBehaviour.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/038ae34513ab4db49caf29025be8f0451f7000/6b/d0a58c13/Object.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/07baf6498e9846a48ab680e23790030729c00/0d/264aad62/Collider.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/07baf6498e9846a48ab680e23790030729c00/b8/7543b4a1/BoxCollider.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="mock://E:/GitHub/MultiplayerAuth/Assets/_Scripts/Combat/RaycastShooting/RaycastShoot.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
   <component name="MetaFilesCheckinStateConfiguration" checkMetaFiles="false" />
   <component name="ProjectColorInfo">{
@@ -164,8 +163,17 @@
       <workItem from="1762205533473" duration="3669000" />
       <workItem from="1762686350962" duration="1141000" />
       <workItem from="1762719335859" duration="2005000" />
-      <workItem from="1763903557867" duration="8336000" />
+      <workItem from="1763903557867" duration="18330000" />
     </task>
+    <task id="LOCAL-00001" summary="Fixed reload spam, fixed shotgun not reloading, fixed gun script methods not owned from using player inputs">
+      <option name="closed" value="true" />
+      <created>1763912298329</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1763912298329</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -191,7 +199,8 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <option name="LAST_COMMIT_MESSAGE" value="" />
+    <MESSAGE value="Fixed reload spam, fixed shotgun not reloading, fixed gun script methods not owned from using player inputs" />
+    <option name="LAST_COMMIT_MESSAGE" value="Fixed reload spam, fixed shotgun not reloading, fixed gun script methods not owned from using player inputs" />
   </component>
   <component name="github-copilot-workspace">
     <instructionFileLocations>
