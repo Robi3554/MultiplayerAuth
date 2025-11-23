@@ -19,6 +19,14 @@ public class MainMenuController : MonoBehaviour
         // Load the game scene.
         SceneManager.LoadScene(_gameSceneName);
     }
+
+    public void OnLocalhostClicked()
+    {
+        ConnectionInfo.IpAddress = "localhost";
+        ConnectionInfo.username = _usernameInput.text;
+        
+        SceneManager.LoadScene(_gameSceneName);
+    }
 }
 
 #endif
