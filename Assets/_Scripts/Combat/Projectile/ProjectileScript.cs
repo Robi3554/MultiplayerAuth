@@ -8,6 +8,7 @@ public class ProjectileScript : NetworkBehaviour
     [SerializeField]
     private float minDamage;
     private int damage;
+    private int attackerId;
 
     private int finalDamage;
 
@@ -19,7 +20,7 @@ public class ProjectileScript : NetworkBehaviour
         rb = GetComponent<Rigidbody>();
     }
 
-    public void ServerInitialize(Vector3 velocity, int damage, float maxDistance)
+    public void ServerInitialize(Vector3 velocity, int damage, float maxDistance, int attackerId)
     {
         spawnPosition = transform.position;
 
@@ -28,7 +29,7 @@ public class ProjectileScript : NetworkBehaviour
 
         rb.linearVelocity = velocity;
 
-        InitializeObserversRpc(velocity, damage, maxDistance);
+        InitializeObserversRpc(velocity, damage, maxDistance, attackerId);
     }
 
     public void InitializeClientProjectile(Vector3 velocity, int damage, float maxDistance)
@@ -42,13 +43,14 @@ public class ProjectileScript : NetworkBehaviour
     }
 
     [ObserversRpc(BufferLast = true)]
-    private void InitializeObserversRpc(Vector3 velocity, int damage, float maxDistance)
+    private void InitializeObserversRpc(Vector3 velocity, int damage, float maxDistance, int attackerId)
     {
         if (!IsServerInitialized)
         {
             spawnPosition = transform.position;
             this.damage = damage;
             this.maxTravelDistance = maxDistance;
+            this.attackerId = attackerId;
             rb.linearVelocity = velocity;
         }
     }
@@ -75,7 +77,10 @@ public class ProjectileScript : NetworkBehaviour
 
         if (col.gameObject.CompareTag("Player"))
         {
-            col.GetComponent<PlayerStats>().TakeDamage(finalDamage);
+            var targetPlayer = col.GetComponent<NetworkObject>();
+            var targetId = (int)targetPlayer.Owner.ClientId;
+
+            PlayerManager.Instance.DamagePlayer(targetId, damage, attackerId);
             DespawnProjectile();
         }
         else if (col.gameObject.CompareTag("Wall"))

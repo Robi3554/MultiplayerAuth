@@ -73,9 +73,11 @@ public class PlayerNetworkInitializer : NetworkBehaviour
         GameObject go = Instantiate(projectilePrefab, origin, Quaternion.LookRotation(velocity));
         ServerManager.Spawn(go);
 
+        int attackerId = (int)Owner.ClientId;
+
         if (go.TryGetComponent(out ProjectileScript p))
         {
-            p.ServerInitialize(velocity, damage, maxDistance);
+            p.ServerInitialize(velocity, damage, maxDistance, attackerId);
         }
     }
 
@@ -85,19 +87,5 @@ public class PlayerNetworkInitializer : NetworkBehaviour
         var weapon = GetComponentInChildren<ProjectileShooting>();
         if (weapon != null)
             weapon.PlaySound();
-    }
-
-    // Called by Projectile when a hit happens
-    [ServerRpc]
-    public void NotifyProjectileHitServer(NetworkObject targetPlayer, int damage)
-    {
-        if (targetPlayer == null)
-            return;
-
-        int targetId = (int)targetPlayer.Owner.ClientId;
-        int attackerId = (int)Owner.ClientId;
-
-        Debug.Log($"[Server] Player {attackerId} hit Player {targetId} for {damage} damage.");
-        PlayerManager.Instance.DamagePlayer(targetId, damage, attackerId);
     }
 }
