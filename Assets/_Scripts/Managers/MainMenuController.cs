@@ -13,7 +13,7 @@ public class MainMenuController : MonoBehaviour
     public void OnConnectClicked()
     {
         // Save the IP address to our persistent data holder.
-        ConnectionInfo.IpAddress = _addressInput.text;
+        ConnectionInfo.IpAddress = "193.226.15.26";
         ConnectionInfo.username = _usernameInput.text;
 
         // Load the game scene.
