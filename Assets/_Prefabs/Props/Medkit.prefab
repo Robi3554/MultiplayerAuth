@@ -515,10 +515,6 @@ MonoBehaviour:
   _addedNetworkObject: {fileID: 5388096707036169814}
   _networkObjectCache: {fileID: 5388096707036169814}
   healAmount: 50
-  readyForPickUp:
-    NetworkManager: {fileID: 0}
-    NetworkBehaviour: {fileID: 0}
-    _value: 0
   pickupDelay: 0.1
   initPosition:
     NetworkManager: {fileID: 0}

@@ -1,7 +1,9 @@
+using System;
 using FishNet.Connection;
 using FishNet.Object;
 using FishNet.Object.Synchronizing;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -15,7 +17,7 @@ public class PlayerStats : NetworkBehaviour
     [SerializeField] private TMP_Text _usernameTextOnBillboard;
     [SerializeField] private AudioSource _hitAudioSource;
     [SerializeField] private AudioClip _hitAudioClip;
-
+    [SerializeField] private GameObject _damageTakenVfx;
     private TMP_Text healthText;
     private TMP_Text killText;
     private TMP_Text deathText;
@@ -103,6 +105,7 @@ public class PlayerStats : NetworkBehaviour
         
         TargetHitSound(Owner);
         TargetShakeCamera(Owner, 0.5f, 0.1f);
+        TargetDamagedVFX();
     }
 
     [Server]
@@ -152,6 +155,15 @@ public class PlayerStats : NetworkBehaviour
     private void TargetShakeCamera(NetworkConnection target, float amplitude, float duration)
     {
         CameraShake.Instance.ShakeCamera(amplitude, duration);
+    }
+
+    [ObserversRpc]
+    private void TargetDamagedVFX()
+    {
+        if (_damageTakenVfx != null)
+        {
+            _damageTakenVfx.GetComponent<ParticleSystem>().Play();
+        }
     }
 
     private void InitUI()
