@@ -5,21 +5,36 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a0eb1c48-2865-41a0-83f6-bbf548ef18a9" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.MultiplayerAuth/.idea/AndroidProjectSystem.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.MultiplayerAuth/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.MultiplayerAuth/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scenes/GameScene.unity" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scenes/GameScene.unity.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Plugins/FishNet/CodeGenerating/cecil-0.11.4/Mono.Cecil.sln.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Plugins/FishNet/Runtime/Transporting/Transports/Tugboat/LiteNetLib/LiteNetLib.csproj.meta" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/_Prefabs/Characters/PlayerV2.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/_Prefabs/Characters/PlayerV2.prefab" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/_Scripts/Managers/MainMenuController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/_Scripts/Managers/MainMenuController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/_Scripts/Managers/PauseMenuManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/_Scripts/Managers/PauseMenuManager.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/_Scripts/PlayerScripts/PredictionMoving.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/_Scripts/PlayerScripts/PredictionMoving.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ProjectSettings/EditorBuildSettings.asset" beforeDir="false" afterPath="$PROJECT_DIR$/ProjectSettings/EditorBuildSettings.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/_Prefabs/Weapons/Assault Rifle.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/_Prefabs/Weapons/Assault Rifle.prefab" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/_Prefabs/Weapons/Burst Rifle.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/_Prefabs/Weapons/Burst Rifle.prefab" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/_Prefabs/Weapons/Energy Pistol.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/_Prefabs/Weapons/Energy Pistol.prefab" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/_Prefabs/Weapons/Melee/Sword.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/_Prefabs/Weapons/Melee/Sword.prefab" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/_Prefabs/Weapons/Railgun.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/_Prefabs/Weapons/Railgun.prefab" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/_Prefabs/Weapons/SMG.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/_Prefabs/Weapons/SMG.prefab" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/_Prefabs/Weapons/Shotgun.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/_Prefabs/Weapons/Shotgun.prefab" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/_Scripts/Combat/RaycastShooting/RaycastShoot.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/_Scripts/Combat/RaycastShooting/RaycastShoot.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/_Scripts/Combat/RaycastShooting/Weapons/BurstShot.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/_Scripts/Combat/RaycastShooting/Weapons/BurstShot.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/_Scripts/Combat/RaycastShooting/Weapons/ShotgunShoot.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/_Scripts/Combat/RaycastShooting/Weapons/ShotgunShoot.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="DpaMonitoringSettings">
+    <option name="firstShow" value="false" />
+  </component>
   <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="main" />
+      </map>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="GitHubPullRequestSearchHistory">{
@@ -28,20 +43,15 @@
     &quot;assignee&quot;: &quot;OctavianNistora&quot;
   }
 }</component>
-  <component name="GithubPullRequestsUISettings">{
-  &quot;selectedUrlAndAccountId&quot;: {
-    &quot;url&quot;: &quot;https://github.com/Robi3554/MultiplayerAuth&quot;,
-    &quot;accountId&quot;: &quot;437bce02-810c-4c03-ace9-4d03d7aa5371&quot;
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/Robi3554/MultiplayerAuth.git",
+    "accountId": "4f803c2e-97a4-470a-94e3-fc2417efc456"
   }
-}</component>
+}]]></component>
   <component name="HighlightingSettingsPerFile">
-    <setting file="mock://C:/Users/Sularfy/Documents/MultiplayerAuth/Assets/_Audio.meta" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/Sularfy/Documents/MultiplayerAuth/Assets/_Audio.meta" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/Sularfy/Documents/MultiplayerAuth/Assets/_Audio.meta" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/Sularfy/Documents/MultiplayerAuth/Assets/_Prefabs/Characters/PlayerV2.prefab" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/Sularfy/Documents/MultiplayerAuth/Assets/_Prefabs/Characters/PlayerV2.prefab" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/Sularfy/Documents/MultiplayerAuth/Assets/_Scripts/PlayerScripts/PlayerStats.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/Sularfy/Documents/MultiplayerAuth/Assets/_Scripts/PlayerScripts/PlayerStats.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/038ae34513ab4db49caf29025be8f0451f7000/10/48d6c7d9/MonoBehaviour.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/038ae34513ab4db49caf29025be8f0451f7000/6b/d0a58c13/Object.cs" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="MetaFilesCheckinStateConfiguration" checkMetaFiles="false" />
   <component name="ProjectColorInfo">{
@@ -49,6 +59,9 @@
   &quot;associatedIndex&quot;: 5
 }</component>
   <component name="ProjectId" id="349tr8c2730b78LiUtJ46D7E8AS" />
+  <component name="ProjectLevelVcsManager">
+    <OptionsSetting value="false" id="Update" />
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -56,10 +69,11 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "Attach to Unity Editor.Attach to Unity Editor.executor": "Debug",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "git-widget-placeholder": "main",
+    "git-widget-placeholder": "octa/bugfix/reload-sounds",
     "ignore.virus.scanning.warn.message": "true",
     "node.js.detected.package.eslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -78,6 +92,7 @@
       <option name="ENV_FILE_PATHS" value="" />
       <option name="REDIRECT_INPUT_PATH" value="" />
       <option name="PTY_MODE" value="Auto" />
+      <option name="MIXED_MODE_DEBUG" value="0" />
       <method v="2" />
     </configuration>
     <configuration name="Start Unity" type="RunUnityExe" factoryName="Unity Executable">
@@ -89,6 +104,7 @@
       <option name="ENV_FILE_PATHS" value="" />
       <option name="REDIRECT_INPUT_PATH" value="" />
       <option name="PTY_MODE" value="Auto" />
+      <option name="MIXED_MODE_DEBUG" value="0" />
       <method v="2" />
     </configuration>
     <configuration name="Unit Tests (batch mode)" type="RunUnityExe" factoryName="Unity Executable">
@@ -100,6 +116,7 @@
       <option name="ENV_FILE_PATHS" value="" />
       <option name="REDIRECT_INPUT_PATH" value="" />
       <option name="PTY_MODE" value="Auto" />
+      <option name="MIXED_MODE_DEBUG" value="0" />
       <method v="2" />
     </configuration>
     <configuration name="Attach to Unity Editor &amp; Play" type="UNITY_DEBUG_RUN_CONFIGURATION" factoryName="UNITY_ATTACH_AND_PLAY" show_console_on_std_err="false" show_console_on_std_out="false" port="50000" address="localhost">
@@ -116,13 +133,15 @@
       <option name="useMixedMode" value="false" />
       <method v="2" />
     </configuration>
-    <configuration name="Attach to Unity Editor" type="UNITY_DEBUG_RUN_CONFIGURATION" factoryName="Unity Debug" show_console_on_std_err="false" show_console_on_std_out="false" port="50000" address="localhost">
+    <configuration name="Attach to Unity Editor" type="UNITY_DEBUG_RUN_CONFIGURATION" factoryName="Unity Debug" show_console_on_std_err="false" show_console_on_std_out="false" port="50000" address="localhost" ignored-value-for-modified-check="13544">
       <option name="allowRunningInParallel" value="false" />
       <option name="listenPortForConnections" value="false" />
-      <option name="pid" />
+      <option name="pid" value="13544" />
       <option name="projectPathOnTarget" />
       <option name="runtimes">
-        <list />
+        <list>
+          <MonoRuntime />
+        </list>
       </option>
       <option name="selectedOptions">
         <list />
@@ -145,6 +164,7 @@
       <workItem from="1762205533473" duration="3669000" />
       <workItem from="1762686350962" duration="1141000" />
       <workItem from="1762719335859" duration="2005000" />
+      <workItem from="1763903557867" duration="8336000" />
     </task>
     <servers />
   </component>
@@ -159,7 +179,26 @@
     <option name="unityProjectFolder" value="true" />
   </component>
   <component name="UnityUnitTestConfiguration" currentTestLauncher="Both" />
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
   <component name="VcsManagerConfiguration">
     <option name="LAST_COMMIT_MESSAGE" value="" />
+  </component>
+  <component name="github-copilot-workspace">
+    <instructionFileLocations>
+      <option value=".github/instructions" />
+    </instructionFileLocations>
+    <promptFileLocations>
+      <option value=".github/prompts" />
+    </promptFileLocations>
   </component>
 </project>

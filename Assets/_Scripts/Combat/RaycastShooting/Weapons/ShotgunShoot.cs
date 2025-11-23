@@ -10,8 +10,6 @@ public class ShotgunShoot : SingleShot
 
     protected override void Shoot()
     {
-        if (!canShoot) return;
-
         Vector3 origin = firePoint.position;
 
         var playerNet = GetComponentInParent<PlayerNetworkInitializer>();
@@ -40,7 +38,7 @@ public class ShotgunShoot : SingleShot
             playerNet?.NotifyShotServer(origin, hitPosition);
         }
 
-        currentAmmo--;
+        CurrentAmmo--;
     }
 
 

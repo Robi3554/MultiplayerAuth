@@ -9,20 +9,21 @@ public abstract class RaycastShoot : MonoBehaviour
 
     protected int CurrentAmmo
     {
-        get => currentAmmo;
+        get => _currentAmmo;
         set
         {
-            currentAmmo = value;
+            var prevAmmo = _currentAmmo;
+            _currentAmmo = Mathf.Clamp(value, 0, maxAmmo);
 
-            if(currentAmmo <= 0)
+            canShoot = _currentAmmo != 0;
+            if (prevAmmo != _currentAmmo && _currentAmmo == 0)
             {
-                StartCoroutine(ReloadClient());
-                playerNet?.NotifyReloadServer(maxAmmo);
+                Reload();
             }
         }
     }
 
-    protected int currentAmmo;
+    private int _currentAmmo;
 
     [SerializeField] 
     protected LayerMask playerLayer;
@@ -54,13 +55,13 @@ public abstract class RaycastShoot : MonoBehaviour
     protected AudioClip shootAudioClip;
     [SerializeField]
     protected AudioSource reloadAudioSource;
-    [SerializeField]
-    protected AudioClip reloadAudioClip;
     
-    protected bool canShoot = true;
+    protected bool canShoot;
     protected float nextShootTime = 0f;
     private bool canPlayShootSound;
-    private bool canPlayReloadSound;
+    protected bool canPlayReloadSound;
+    protected bool isReloading;
+    private Coroutine _reloadCoroutine;
 
     protected LayerMask combinedLayer;
 
@@ -70,31 +71,40 @@ public abstract class RaycastShoot : MonoBehaviour
     {
         combinedLayer = playerLayer | wallLayer;       
         playerNet = GetComponentInParent<PlayerNetworkInitializer>();
+        InitializeWeapon();
     }
 
     protected virtual void OnEnable()
     {
-        currentAmmo = maxAmmo;
-        InitializeWeapon();
-    }
-
-    private void OnDisable()
-    {
-        ammoText = null;
+        CurrentAmmo = maxAmmo;
+        DelayWeaponUse();
     }
 
     public void OnDamage(InputAction.CallbackContext context)
     {
-        if (!this.isActiveAndEnabled || !context.performed || currentAmmo <= 0) return;
+        if (!playerNet || !playerNet.IsOwner)
+            return;
+        
+        if (!this.isActiveAndEnabled || !context.performed || !canShoot) return;
+
+        if (_reloadCoroutine != null)
+        {
+            StopCoroutine(_reloadCoroutine);
+            reloadAudioSource.Stop();
+            isReloading = false;
+        }
         
         HandleShootInput(context);
     }
 
     public void OnReload(InputAction.CallbackContext context)
     {
+        if (!playerNet || !playerNet.IsOwner)
+            return;
+        
         if (!this.isActiveAndEnabled) return;
 
-        if (context.performed && currentAmmo != maxAmmo)
+        if (context.performed && CurrentAmmo != maxAmmo && !isReloading)
         {
             Reload();
         }
@@ -102,21 +112,14 @@ public abstract class RaycastShoot : MonoBehaviour
 
     protected void Update()
     {
-        if (playerNet != null && !playerNet.IsOwner)
+        if (!playerNet || !playerNet.IsOwner)
             return;
 
-        if (ammoText == null)
-        {
-            ammoText = GameObject.Find("PlayerHUD").transform.Find("Player Ammo").transform.Find("Ammo Text").GetComponent<TMP_Text>();
-        }
-
-        ammoText.text = $"{currentAmmo}/{maxAmmo}";
+        ammoText.text = $"{CurrentAmmo}/{maxAmmo}";
     }
 
     protected virtual void Shoot()
     {
-        if (!canShoot) return;
-
         Vector3 origin = firePoint.position;
         Vector3 direction = -firePoint.up;
         Vector3 hitPosition = origin + direction * maxDistance;
@@ -155,21 +158,25 @@ public abstract class RaycastShoot : MonoBehaviour
 
     protected void Reload()
     {
-        StartCoroutine(ReloadClient());
+        _reloadCoroutine = StartCoroutine(ReloadClient());
         playerNet?.NotifyReloadServer(maxAmmo);
     }
 
     protected IEnumerator ReloadClient()
     {
+        isReloading = true;
+        
         if (canPlayReloadSound)
         {
-            reloadAudioSource.PlayOneShot(reloadAudioClip);
+            reloadAudioSource.Play();
         }
         yield return new WaitForSeconds(reloadTime);
-        currentAmmo = maxAmmo;
+        CurrentAmmo = maxAmmo;
+        
+        isReloading = false;
     }
 
-    protected IEnumerator WeaponChangeDelay(float delay)
+    protected IEnumerator LockWeaponUse(float delay)
     {
         canShoot = false;
         yield return new WaitForSeconds(delay);
@@ -178,17 +185,22 @@ public abstract class RaycastShoot : MonoBehaviour
 
     public void InitializeWeapon()
     {
-        if (ammoText == null)
-            ammoText = GameObject.Find("PlayerHUD").transform.Find("Player Ammo").transform.Find("Ammo Text").GetComponent<TMP_Text>();
+        ammoText = GameObject.Find("PlayerHUD").transform.Find("Player Ammo").transform.Find("Ammo Text").GetComponent<TMP_Text>();
 
-        canShoot = false;
         nextShootTime = 0f;
         canPlayShootSound = shootAudioSource && shootAudioClip;
-        canPlayReloadSound = reloadAudioSource && reloadAudioClip;
-        
-        reloadAudioSource.pitch = reloadAudioClip.length / reloadTime;
-        
-        StartCoroutine(WeaponChangeDelay(afterChangeDelay));
+        canPlayReloadSound = reloadAudioSource;
+
+        if (reloadAudioSource)
+        {
+            reloadAudioSource.pitch = reloadAudioSource.clip.length / reloadTime;
+        }
+    }
+
+    private void DelayWeaponUse()
+    {
+        StopCoroutine(LockWeaponUse(afterChangeDelay));
+        StartCoroutine(LockWeaponUse(afterChangeDelay));
     }
 
     protected abstract void HandleShootInput(InputAction.CallbackContext context);
