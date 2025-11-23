@@ -1,0 +1,685 @@
+fileFormatVersion: 2
+guid: 7dd0f2d37906a6543b424f4cde7def72
+TextureImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 0
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 64
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: PC UI Elements_0
+      rect:
+        serializedVersion: 2
+        x: 775
+        y: 1256
+        width: 1032
+        height: 106
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8b168da86d06c214ebd5694719cc663b
+      internalID: -1026419335
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PC UI Elements_1
+      rect:
+        serializedVersion: 2
+        x: 1896
+        y: 1103
+        width: 322
+        height: 326
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a0d0a35b3752b304b815954b464d9914
+      internalID: -68037926
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PC UI Elements_2
+      rect:
+        serializedVersion: 2
+        x: 2507
+        y: 1353
+        width: 106
+        height: 105
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1a4a13e2a5dbaf34ba03f5d8f33d62ce
+      internalID: -926590945
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PC UI Elements_18
+      rect:
+        serializedVersion: 2
+        x: 1064
+        y: 1081
+        width: 522
+        height: 80
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 73036f71af9176b4b9e86dd1e0d8fac0
+      internalID: -1550132832
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PC UI Elements_30
+      rect:
+        serializedVersion: 2
+        x: 2271
+        y: 1058
+        width: 304
+        height: 71
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2414a1c79d06abd4f865409b0b285da7
+      internalID: -1245033928
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PC UI Elements_47
+      rect:
+        serializedVersion: 2
+        x: 1897
+        y: 955
+        width: 107
+        height: 100
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: dc35abb023a66ab4cba471bd4192c7af
+      internalID: -741243821
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PC UI Elements_48
+      rect:
+        serializedVersion: 2
+        x: 2056
+        y: 1032
+        width: 15
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 06604772b7c32eb42a82679b7b29155b
+      internalID: -565994258
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PC UI Elements_49
+      rect:
+        serializedVersion: 2
+        x: 2117
+        y: 1033
+        width: 15
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: bbc83f9059b13fd40812a68624ae5ce3
+      internalID: 860626744
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PC UI Elements_50
+      rect:
+        serializedVersion: 2
+        x: 86
+        y: 537
+        width: 523
+        height: 58
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: eea405f0f9a8f3346b0bde9661c861d4
+      internalID: 200322929
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PC UI Elements_52
+      rect:
+        serializedVersion: 2
+        x: 963
+        y: 499
+        width: 733
+        height: 89
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e898cbdc308900643974436dc8b07192
+      internalID: 2018914486
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PC UI Elements_53
+      rect:
+        serializedVersion: 2
+        x: 2079
+        y: 579
+        width: 414
+        height: 54
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e04f21cd42c69544ba01e563c428ac2e
+      internalID: 1038364673
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PC UI Elements_54
+      rect:
+        serializedVersion: 2
+        x: 88
+        y: 463
+        width: 518
+        height: 55
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 01132bb127260a04589b3c04d8f1b51a
+      internalID: -358759234
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PC UI Elements_55
+      rect:
+        serializedVersion: 2
+        x: 2080
+        y: 504
+        width: 413
+        height: 41
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d4b77b5227f77684db8047d07fd365aa
+      internalID: -1880242163
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PC UI Elements_56
+      rect:
+        serializedVersion: 2
+        x: 86
+        y: 382
+        width: 523
+        height: 57
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d7691893107815d4e95d37d717915efc
+      internalID: 1398377567
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PC UI Elements_57
+      rect:
+        serializedVersion: 2
+        x: 963
+        y: 354
+        width: 319
+        height: 87
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 820f875b4373577489fbd5de1b81d774
+      internalID: -472086987
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PC UI Elements_58
+      rect:
+        serializedVersion: 2
+        x: 1213
+        y: 354
+        width: 483
+        height: 87
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d42f18a9e9d98b147bbebf9eeabeaf6d
+      internalID: -1205925854
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PC UI Elements_59
+      rect:
+        serializedVersion: 2
+        x: 2054
+        y: 336
+        width: 501
+        height: 138
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 146c533c59ab2374bb52faea85794367
+      internalID: -279730113
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PC UI Elements_60
+      rect:
+        serializedVersion: 2
+        x: 88
+        y: 308
+        width: 518
+        height: 54
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0f2a70d3fa447334bad69cf74643ee6e
+      internalID: 719139772
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PC UI Elements_61
+      rect:
+        serializedVersion: 2
+        x: 927
+        y: 226
+        width: 800
+        height: 105
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b8ef7f3dfcab195409b2d61de93bb16b
+      internalID: 978345998
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PC UI Elements_70
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 49
+        width: 469
+        height: 213
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8fa7256bc52e97442bec12fc74a8edb0
+      internalID: 2129372105
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PC UI Elements_78
+      rect:
+        serializedVersion: 2
+        x: 1989
+        y: 48
+        width: 624
+        height: 245
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c8fddb1fb3de7984fac9892613020158
+      internalID: 1682274805
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PC UI Elements_81
+      rect:
+        serializedVersion: 2
+        x: 937
+        y: 56
+        width: 780
+        height: 126
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d6f3b41ff74786b438f785db5a49d015
+      internalID: -175728004
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 6c0cb33d23cdc20409b59e72d3513222
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries:
+      - key: SpriteEditor.SliceSettings
+        value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":64.0,"y":64.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":0,"keepEmptyRects":false,"isAlternate":false}'
+    nameFileIdTable:
+      PC UI Elements_0: -1026419335
+      PC UI Elements_1: -68037926
+      PC UI Elements_10: -766681314
+      PC UI Elements_11: -279619667
+      PC UI Elements_12: -2102023731
+      PC UI Elements_13: -287502561
+      PC UI Elements_14: -2053760653
+      PC UI Elements_15: 337626429
+      PC UI Elements_16: -911018605
+      PC UI Elements_17: 1576004749
+      PC UI Elements_18: -1550132832
+      PC UI Elements_19: 86856834
+      PC UI Elements_2: -926590945
+      PC UI Elements_20: 1845933957
+      PC UI Elements_21: 1570016668
+      PC UI Elements_22: 227992477
+      PC UI Elements_23: -1746227537
+      PC UI Elements_24: -174978113
+      PC UI Elements_25: 2025738665
+      PC UI Elements_26: 1210525346
+      PC UI Elements_27: 1105619477
+      PC UI Elements_28: 2008246869
+      PC UI Elements_29: 1587826807
+      PC UI Elements_3: -1383120166
+      PC UI Elements_30: -1245033928
+      PC UI Elements_31: 137583125
+      PC UI Elements_32: 1239098443
+      PC UI Elements_33: -2050096664
+      PC UI Elements_34: 933409489
+      PC UI Elements_35: -67987677
+      PC UI Elements_36: -1290990940
+      PC UI Elements_37: -964257392
+      PC UI Elements_38: 402415933
+      PC UI Elements_39: 533085860
+      PC UI Elements_4: -292211003
+      PC UI Elements_40: 1676388819
+      PC UI Elements_41: 1937792541
+      PC UI Elements_42: -2084215165
+      PC UI Elements_43: -428239980
+      PC UI Elements_44: -622429288
+      PC UI Elements_45: 1417183173
+      PC UI Elements_46: 1901446651
+      PC UI Elements_47: -741243821
+      PC UI Elements_48: -565994258
+      PC UI Elements_49: 860626744
+      PC UI Elements_5: 1617775884
+      PC UI Elements_50: 200322929
+      PC UI Elements_51: -408039747
+      PC UI Elements_52: 2018914486
+      PC UI Elements_53: 1038364673
+      PC UI Elements_54: -358759234
+      PC UI Elements_55: -1880242163
+      PC UI Elements_56: 1398377567
+      PC UI Elements_57: -472086987
+      PC UI Elements_58: -1205925854
+      PC UI Elements_59: -279730113
+      PC UI Elements_6: 371932675
+      PC UI Elements_60: 719139772
+      PC UI Elements_61: 978345998
+      PC UI Elements_62: 1667559812
+      PC UI Elements_63: 1614838533
+      PC UI Elements_64: 1967490090
+      PC UI Elements_65: -536192630
+      PC UI Elements_66: -2065155701
+      PC UI Elements_67: 2135618735
+      PC UI Elements_68: -91009406
+      PC UI Elements_69: -1243615235
+      PC UI Elements_7: -340988166
+      PC UI Elements_70: 2129372105
+      PC UI Elements_71: 649460083
+      PC UI Elements_72: -1637020880
+      PC UI Elements_73: 1095934918
+      PC UI Elements_74: -958814226
+      PC UI Elements_75: -995765230
+      PC UI Elements_76: 325063533
+      PC UI Elements_77: -1618247300
+      PC UI Elements_78: 1682274805
+      PC UI Elements_79: 2008908660
+      PC UI Elements_8: -443905304
+      PC UI Elements_80: -986777979
+      PC UI Elements_81: -175728004
+      PC UI Elements_9: 144152427
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

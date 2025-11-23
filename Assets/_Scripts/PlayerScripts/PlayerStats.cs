@@ -18,6 +18,12 @@ public class PlayerStats : NetworkBehaviour
     [SerializeField] private AudioSource _hitAudioSource;
     [SerializeField] private AudioClip _hitAudioClip;
     [SerializeField] private GameObject _damageTakenVfx;
+    
+    [Header("UI stats")]
+    [SerializeField] private TMP_Text _killText; 
+    [SerializeField] private TMP_Text _deathText;
+    [SerializeField] private TMP_Text _healthText;
+    [SerializeField] private Slider _healthSlider;
     private TMP_Text healthText;
     private TMP_Text killText;
     private TMP_Text deathText;
@@ -169,11 +175,11 @@ public class PlayerStats : NetworkBehaviour
     private void InitUI()
     {
         var playerHealth = GameObject.Find("PlayerHUD").transform.Find("Player Health");
-        healthText = playerHealth.Find("Health Text").GetComponent<TMP_Text>();
-        healthSlider = playerHealth.Find("Health Bar").GetComponent<Slider>();
+        healthText = _healthText;
+        healthSlider = _healthSlider;
         healthSlider.maxValue = health.Value;
-        killText = GameObject.Find("PlayerHUD").transform.Find("Objective Bar").transform.Find("Kill Text").GetComponent<TMP_Text>();
-        deathText = GameObject.Find("PlayerHUD").transform.Find("Death Text").GetComponent<TMP_Text>();
+        killText = _killText;
+        deathText = _deathText;
     }
 
     private void OnHealthChanged(int previous, int current, bool asServer)
