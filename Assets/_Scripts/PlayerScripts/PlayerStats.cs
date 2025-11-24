@@ -100,7 +100,7 @@ public class PlayerStats : NetworkBehaviour
             killText.text = kills.Value.ToString();
 
         if (deathText != null)
-            deathText.text = "D:" + deaths.Value.ToString();
+            deathText.text = deaths.Value.ToString();
     }
 
     public void TakeDamage(int damage)
