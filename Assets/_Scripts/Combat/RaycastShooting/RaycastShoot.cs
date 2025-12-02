@@ -60,12 +60,6 @@ public class RaycastShoot : Weapon
         tempGO.GetComponent<LineProjectile>().Initialize(speed, start, end);
     }
 
-    protected void Reload()
-    {
-        StartCoroutine(ReloadClient());
-        playerNet?.NotifyReloadServer(maxAmmo);
-    }
-
     protected override void HandleShootInput(InputAction.CallbackContext context)
     {
         if (Time.time >= nextShootTime)

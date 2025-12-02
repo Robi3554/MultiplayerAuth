@@ -48,13 +48,12 @@ public abstract class Weapon : MonoBehaviour
     protected AudioClip shootAudioClip;
     [SerializeField]
     protected AudioSource reloadAudioSource;
-    [SerializeField]
-    protected AudioClip reloadAudioClip;
 
     protected bool canShoot = true;
     protected float nextShootTime = 0f;
     protected bool canPlayShootSound;
     protected bool canPlayReloadSound;
+    protected bool isReloading;
 
     protected LayerMask combinedLayer;
 
@@ -79,6 +78,9 @@ public abstract class Weapon : MonoBehaviour
     public void OnDamage(InputAction.CallbackContext context)
     {
         if (!this.isActiveAndEnabled || !context.performed || currentAmmo <= 0) return;
+        
+        StopCoroutine(ReloadClient());
+        isReloading = false;
 
         HandleShootInput(context);
     }
@@ -113,18 +115,24 @@ public abstract class Weapon : MonoBehaviour
 
     protected void Reload()
     {
+        if (isReloading) return;
+        
         StartCoroutine(ReloadClient());
         playerNet?.NotifyReloadServer(maxAmmo);
     }
 
     protected IEnumerator ReloadClient()
     {
+        isReloading = true;
+        
         if (canPlayReloadSound)
         {
-            reloadAudioSource.PlayOneShot(reloadAudioClip);
+            reloadAudioSource.Play();
         }
         yield return new WaitForSeconds(reloadTime);
         currentAmmo = maxAmmo;
+        
+        isReloading = false;
     }
 
     protected IEnumerator WeaponChangeDelay(float delay)
@@ -142,9 +150,9 @@ public abstract class Weapon : MonoBehaviour
         canShoot = false;
         nextShootTime = 0f;
         canPlayShootSound = shootAudioSource && shootAudioClip;
-        canPlayReloadSound = reloadAudioSource && reloadAudioClip;
+        canPlayReloadSound = reloadAudioSource;
 
-        reloadAudioSource.pitch = reloadAudioClip.length / reloadTime;
+        reloadAudioSource.pitch = reloadAudioSource.clip.length / reloadTime;
 
         StartCoroutine(WeaponChangeDelay(afterChangeDelay));
     }
