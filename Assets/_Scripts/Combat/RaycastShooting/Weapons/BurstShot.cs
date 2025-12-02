@@ -1,5 +1,6 @@
 using System.Collections;
 using FishNet.Object;
+using GameKit.Dependencies.Utilities;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -34,7 +35,10 @@ public class BurstShot : RaycastShoot
 
             yield return new WaitForSeconds(timeBetweenShots);
             
-            if (currentAmmo <= 0)
+            var colliders = Physics.OverlapBox(wallCheckCollider.bounds.center,
+                wallCheckCollider.size.Multiply(wallCheckCollider.transform.lossyScale) / 2,
+                wallCheckCollider.transform.rotation, wallCheckCollider.includeLayers);
+            if (colliders.Length > 0 || currentAmmo <= 0)
             {
                 _canCheckInput = true;
                 yield break;
