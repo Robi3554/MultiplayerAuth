@@ -16,7 +16,7 @@ public abstract class Weapon : MonoBehaviour
 
             if (currentAmmo <= 0)
             {
-                StartCoroutine(ReloadClient());
+                reloadCoroutine = StartCoroutine(ReloadClient());
                 playerNet?.NotifyReloadServer(maxAmmo);
             }
         }
@@ -48,6 +48,8 @@ public abstract class Weapon : MonoBehaviour
     protected AudioClip shootAudioClip;
     [SerializeField]
     protected AudioSource reloadAudioSource;
+    
+    protected Coroutine reloadCoroutine;
 
     protected bool canShoot = true;
     protected float nextShootTime = 0f;
@@ -77,9 +79,13 @@ public abstract class Weapon : MonoBehaviour
 
     public void OnDamage(InputAction.CallbackContext context)
     {
-        if (!this.isActiveAndEnabled || !context.performed || currentAmmo <= 0) return;
-        
-        StopCoroutine(ReloadClient());
+        if (!this.isActiveAndEnabled || !playerNet.IsOwner || !context.performed || currentAmmo <= 0) return;
+
+        if (reloadCoroutine != null)
+        {
+            StopCoroutine(reloadCoroutine);
+            reloadAudioSource.Stop();
+        }
         isReloading = false;
 
         HandleShootInput(context);
@@ -87,7 +93,7 @@ public abstract class Weapon : MonoBehaviour
 
     public void OnReload(InputAction.CallbackContext context)
     {
-        if (!this.isActiveAndEnabled) return;
+        if (!this.isActiveAndEnabled || !playerNet.IsOwner) return;
 
         if (context.performed && currentAmmo != maxAmmo)
         {
@@ -114,7 +120,7 @@ public abstract class Weapon : MonoBehaviour
     {
         if (isReloading) return;
         
-        StartCoroutine(ReloadClient());
+        reloadCoroutine = StartCoroutine(ReloadClient());
         playerNet?.NotifyReloadServer(maxAmmo);
     }
 

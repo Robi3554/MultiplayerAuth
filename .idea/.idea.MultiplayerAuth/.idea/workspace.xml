@@ -4,7 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a0eb1c48-2865-41a0-83f6-bbf548ef18a9" name="Changes" comment="" />
+    <list default="true" id="a0eb1c48-2865-41a0-83f6-bbf548ef18a9" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/Assets/_Scripts/Combat/Weapon.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/_Scripts/Combat/Weapon.cs" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -128,7 +130,7 @@
       <workItem from="1762205533473" duration="3669000" />
       <workItem from="1762686350962" duration="1141000" />
       <workItem from="1762719335859" duration="2005000" />
-      <workItem from="1764706240670" duration="1534000" />
+      <workItem from="1764706240670" duration="1860000" />
     </task>
     <servers />
   </component>
