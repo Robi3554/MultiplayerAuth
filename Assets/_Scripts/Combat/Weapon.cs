@@ -1,4 +1,5 @@
 using System.Collections;
+using GameKit.Dependencies.Utilities;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -49,6 +50,9 @@ public abstract class Weapon : MonoBehaviour
     [SerializeField]
     protected AudioSource reloadAudioSource;
     
+    [SerializeField]
+    protected BoxCollider wallCheckCollider;
+    
     protected Coroutine reloadCoroutine;
 
     protected bool canShoot = true;
@@ -80,6 +84,11 @@ public abstract class Weapon : MonoBehaviour
     public void OnDamage(InputAction.CallbackContext context)
     {
         if (!this.isActiveAndEnabled || !playerNet.IsOwner || !context.performed || currentAmmo <= 0) return;
+        
+        var colliders = Physics.OverlapBox(wallCheckCollider.bounds.center,
+            wallCheckCollider.size.Multiply(wallCheckCollider.transform.lossyScale) / 2,
+            wallCheckCollider.transform.rotation, wallCheckCollider.includeLayers);
+        if (colliders.Length > 0) return;
 
         if (reloadCoroutine != null)
         {
