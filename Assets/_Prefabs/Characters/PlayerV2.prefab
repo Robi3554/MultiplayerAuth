@@ -2745,6 +2745,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: RigLayer_SMG
       objectReference: {fileID: 0}
+    - target: {fileID: 2179823877494820151, guid: a615e5387b3d46042810f8d472623229, type: 3}
+      propertyPath: m_Resource
+      value: 
+      objectReference: {fileID: 8300000, guid: 08392cd69dbbb044abc76cb1348ef6f2, type: 3}
     - target: {fileID: 3963929329994855241, guid: a615e5387b3d46042810f8d472623229, type: 3}
       propertyPath: m_LocalScale.x
       value: 100
@@ -4380,6 +4384,10 @@ PrefabInstance:
       propertyPath: m_ConstrainProportionsScale
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5791500136311642115, guid: cdcf0eae94ed1dd438685bad63846dbf, type: 3}
+      propertyPath: m_Resource
+      value: 
+      objectReference: {fileID: 8300000, guid: 08392cd69dbbb044abc76cb1348ef6f2, type: 3}
     - target: {fileID: 6185355539522147739, guid: cdcf0eae94ed1dd438685bad63846dbf, type: 3}
       propertyPath: WasActiveDuringEdit
       value: 0
@@ -5086,6 +5094,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: -23.849
       objectReference: {fileID: 0}
+    - target: {fileID: 4943300222967389306, guid: 9e0837ead7a06c64b822b3a0a5cc1200, type: 3}
+      propertyPath: m_Resource
+      value: 
+      objectReference: {fileID: 8300000, guid: 08392cd69dbbb044abc76cb1348ef6f2, type: 3}
     - target: {fileID: 5163482106140866897, guid: 9e0837ead7a06c64b822b3a0a5cc1200, type: 3}
       propertyPath: m_Name
       value: Shotgun
