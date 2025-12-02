@@ -108,10 +108,7 @@ public abstract class Weapon : MonoBehaviour
         ammoText.text = $"{currentAmmo}/{maxAmmo}";
     }
 
-    protected virtual void Shoot()
-    {
-        
-    }
+    protected abstract void Shoot();
 
     protected void Reload()
     {
