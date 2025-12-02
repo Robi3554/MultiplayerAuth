@@ -16,7 +16,7 @@ public abstract class Weapon : MonoBehaviour
 
             if (currentAmmo <= 0)
             {
-                StartCoroutine(ReloadClient());
+                reloadCoroutine = StartCoroutine(ReloadClient());
                 playerNet?.NotifyReloadServer(maxAmmo);
             }
         }
@@ -48,13 +48,14 @@ public abstract class Weapon : MonoBehaviour
     protected AudioClip shootAudioClip;
     [SerializeField]
     protected AudioSource reloadAudioSource;
-    [SerializeField]
-    protected AudioClip reloadAudioClip;
+    
+    protected Coroutine reloadCoroutine;
 
     protected bool canShoot = true;
     protected float nextShootTime = 0f;
     protected bool canPlayShootSound;
     protected bool canPlayReloadSound;
+    protected bool isReloading;
 
     protected LayerMask combinedLayer;
 
@@ -78,14 +79,21 @@ public abstract class Weapon : MonoBehaviour
 
     public void OnDamage(InputAction.CallbackContext context)
     {
-        if (!this.isActiveAndEnabled || !context.performed || currentAmmo <= 0) return;
+        if (!this.isActiveAndEnabled || !playerNet.IsOwner || !context.performed || currentAmmo <= 0) return;
+
+        if (reloadCoroutine != null)
+        {
+            StopCoroutine(reloadCoroutine);
+            reloadAudioSource.Stop();
+        }
+        isReloading = false;
 
         HandleShootInput(context);
     }
 
     public void OnReload(InputAction.CallbackContext context)
     {
-        if (!this.isActiveAndEnabled) return;
+        if (!this.isActiveAndEnabled || !playerNet.IsOwner) return;
 
         if (context.performed && currentAmmo != maxAmmo)
         {
@@ -106,25 +114,28 @@ public abstract class Weapon : MonoBehaviour
         ammoText.text = $"{currentAmmo}/{maxAmmo}";
     }
 
-    protected virtual void Shoot()
-    {
-        
-    }
+    protected abstract void Shoot();
 
     protected void Reload()
     {
-        StartCoroutine(ReloadClient());
+        if (isReloading) return;
+        
+        reloadCoroutine = StartCoroutine(ReloadClient());
         playerNet?.NotifyReloadServer(maxAmmo);
     }
 
     protected IEnumerator ReloadClient()
     {
+        isReloading = true;
+        
         if (canPlayReloadSound)
         {
-            reloadAudioSource.PlayOneShot(reloadAudioClip);
+            reloadAudioSource.Play();
         }
         yield return new WaitForSeconds(reloadTime);
         currentAmmo = maxAmmo;
+        
+        isReloading = false;
     }
 
     protected IEnumerator WeaponChangeDelay(float delay)
@@ -142,9 +153,9 @@ public abstract class Weapon : MonoBehaviour
         canShoot = false;
         nextShootTime = 0f;
         canPlayShootSound = shootAudioSource && shootAudioClip;
-        canPlayReloadSound = reloadAudioSource && reloadAudioClip;
+        canPlayReloadSound = reloadAudioSource;
 
-        reloadAudioSource.pitch = reloadAudioClip.length / reloadTime;
+        reloadAudioSource.pitch = reloadAudioSource.clip.length / reloadTime;
 
         StartCoroutine(WeaponChangeDelay(afterChangeDelay));
     }

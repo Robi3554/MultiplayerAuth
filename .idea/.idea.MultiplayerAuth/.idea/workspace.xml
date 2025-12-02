@@ -5,7 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a0eb1c48-2865-41a0-83f6-bbf548ef18a9" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/Assets/_Scripts/PlayerScripts/PlayerStats.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/_Scripts/PlayerScripts/PlayerStats.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/_Scripts/Combat/Weapon.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/_Scripts/Combat/Weapon.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -49,21 +49,21 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;ASKED_SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;dave&quot;,
-    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "git-widget-placeholder": "bugfix/reload-sounds",
+    "ignore.virus.scanning.warn.message": "true",
+    "node.js.detected.package.eslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RunManager" selected="Attach to Unity Editor.Attach to Unity Editor">
     <configuration name="Standalone Player" type="RunUnityExe" factoryName="Unity Executable">
       <option name="EXE_PATH" value="$PROJECT_DIR$/../windows_client\MultiplayerAuth.exe" />
@@ -71,31 +71,22 @@
       <option name="WORKING_DIRECTORY" value="D:\_UnityDevelopment\windows_client" />
       <option name="PASS_PARENT_ENVS" value="1" />
       <option name="USE_EXTERNAL_CONSOLE" value="0" />
-      <option name="ENV_FILE_PATHS" value="" />
-      <option name="REDIRECT_INPUT_PATH" value="" />
-      <option name="PTY_MODE" value="Auto" />
       <method v="2" />
     </configuration>
     <configuration name="Start Unity" type="RunUnityExe" factoryName="Unity Executable">
-      <option name="EXE_PATH" value="G:\Unity\6000.2.9f1\Editor\Unity.exe" />
+      <option name="EXE_PATH" value="C:\Program Files\Unity\Hub\Editor\6000.2.9f1\Editor\Unity.exe" />
       <option name="PROGRAM_PARAMETERS" value="-projectPath C:\Users\Sularfy\Documents\MultiplayerAuth -debugCodeOptimization" />
       <option name="WORKING_DIRECTORY" value="C:\Users\Sularfy\Documents\MultiplayerAuth" />
       <option name="PASS_PARENT_ENVS" value="1" />
       <option name="USE_EXTERNAL_CONSOLE" value="0" />
-      <option name="ENV_FILE_PATHS" value="" />
-      <option name="REDIRECT_INPUT_PATH" value="" />
-      <option name="PTY_MODE" value="Auto" />
       <method v="2" />
     </configuration>
     <configuration name="Unit Tests (batch mode)" type="RunUnityExe" factoryName="Unity Executable">
-      <option name="EXE_PATH" value="G:\Unity\6000.2.9f1\Editor\Unity.exe" />
+      <option name="EXE_PATH" value="C:\Program Files\Unity\Hub\Editor\6000.2.9f1\Editor\Unity.exe" />
       <option name="PROGRAM_PARAMETERS" value="-runTests -batchmode -projectPath C:\Users\Sularfy\Documents\MultiplayerAuth -testResults Logs/results.xml -logFile Logs/Editor.log -testPlatform EditMode -debugCodeOptimization" />
       <option name="WORKING_DIRECTORY" value="C:\Users\Sularfy\Documents\MultiplayerAuth" />
       <option name="PASS_PARENT_ENVS" value="1" />
       <option name="USE_EXTERNAL_CONSOLE" value="0" />
-      <option name="ENV_FILE_PATHS" value="" />
-      <option name="REDIRECT_INPUT_PATH" value="" />
-      <option name="PTY_MODE" value="Auto" />
       <method v="2" />
     </configuration>
     <configuration name="Attach to Unity Editor &amp; Play" type="UNITY_DEBUG_RUN_CONFIGURATION" factoryName="UNITY_ATTACH_AND_PLAY" show_console_on_std_err="false" show_console_on_std_out="false" port="50000" address="localhost">
@@ -109,7 +100,6 @@
       <option name="selectedOptions">
         <list />
       </option>
-      <option name="useMixedMode" value="false" />
       <method v="2" />
     </configuration>
     <configuration name="Attach to Unity Editor" type="UNITY_DEBUG_RUN_CONFIGURATION" factoryName="Unity Debug" show_console_on_std_err="false" show_console_on_std_out="false" port="50000" address="localhost">
@@ -123,7 +113,6 @@
       <option name="selectedOptions">
         <list />
       </option>
-      <option name="useMixedMode" value="false" />
       <method v="2" />
     </configuration>
   </component>
@@ -141,6 +130,7 @@
       <workItem from="1762205533473" duration="3669000" />
       <workItem from="1762686350962" duration="1141000" />
       <workItem from="1762719335859" duration="2005000" />
+      <workItem from="1764706240670" duration="1860000" />
     </task>
     <servers />
   </component>
@@ -155,6 +145,17 @@
     <option name="unityProjectFolder" value="true" />
   </component>
   <component name="UnityUnitTestConfiguration" currentTestLauncher="Both" />
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
   <component name="VcsManagerConfiguration">
     <option name="LAST_COMMIT_MESSAGE" value="" />
   </component>
