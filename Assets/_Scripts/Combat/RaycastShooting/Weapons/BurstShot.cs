@@ -36,7 +36,6 @@ public class BurstShot : RaycastShoot
             
             if (currentAmmo <= 0)
             {
-                Reload();
                 _canCheckInput = true;
                 yield break;
             }
@@ -53,10 +52,6 @@ public class BurstShot : RaycastShoot
                 StartCoroutine(Burst(action));
                 yield break;
             }
-        }
-        else
-        {
-            Reload();
         }
         
         _canCheckInput = true;
