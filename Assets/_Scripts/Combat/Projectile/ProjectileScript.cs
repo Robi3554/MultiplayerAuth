@@ -32,16 +32,6 @@ public class ProjectileScript : NetworkBehaviour
         InitializeObserversRpc(velocity, damage, maxDistance, attackerId);
     }
 
-    public void InitializeClientProjectile(Vector3 velocity, int damage, float maxDistance)
-    {
-        spawnPosition = transform.position;
-
-        this.damage = damage;
-        this.maxTravelDistance = maxDistance;
-
-        rb.linearVelocity = velocity;
-    }
-
     [ObserversRpc(BufferLast = true)]
     private void InitializeObserversRpc(Vector3 velocity, int damage, float maxDistance, int attackerId)
     {
@@ -57,8 +47,7 @@ public class ProjectileScript : NetworkBehaviour
 
     private void Update()
     {
-        if (!IsServerInitialized)
-            return;
+        
 
         float distance = Vector3.Distance(spawnPosition, transform.position);
 
@@ -80,7 +69,7 @@ public class ProjectileScript : NetworkBehaviour
             var targetPlayer = col.GetComponent<NetworkObject>();
             var targetId = (int)targetPlayer.Owner.ClientId;
 
-            PlayerManager.Instance.DamagePlayer(targetId, damage, attackerId);
+            PlayerManager.Instance.DamagePlayer(targetId, finalDamage, attackerId);
             DespawnProjectile();
         }
         else if (col.gameObject.CompareTag("Wall"))
