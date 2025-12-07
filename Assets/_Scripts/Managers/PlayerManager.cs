@@ -9,18 +9,9 @@ public class PlayerManager : NetworkBehaviour
 {
     public static PlayerManager Instance;
 
-    //private TMP_Text healthText;
-    //private TMP_Text killText;
-    //private TMP_Text deathText;
-
     private void Awake()
     {
         Instance = this;
-    }
-
-    private void Start()
-    {
-        //InstantiateTexts();
     }
 
     public Dictionary<int, Player> players = new Dictionary<int, Player>();
@@ -83,6 +74,7 @@ public class PlayerManager : NetworkBehaviour
         }
 
         int spawnIndex = Random.Range(0, spawnPoints.Count);
+        ReloadPlayerGuns(victim.connection, victim.playerObject);
         RespawnPlayer(victim.connection, victim.playerObject, spawnIndex);
 
         StartCoroutine(ClearRespawningFlag(victimStats));
@@ -94,12 +86,16 @@ public class PlayerManager : NetworkBehaviour
         player.transform.position = spawnPoints[spawn].position;
     }
 
-    //private void InstantiateTexts()
-    //{
-    //    healthText = GameObject.Find("PlayerHUD").transform.Find("Health Text").GetComponent<TMP_Text>();
-    //    killText = GameObject.Find("PlayerHUD").transform.Find("Kill Text").GetComponent<TMP_Text>();
-    //    deathText = GameObject.Find("PlayerHUD").transform.Find("Death Text").GetComponent<TMP_Text>();
-    //}
+    [TargetRpc]
+    void ReloadPlayerGuns(NetworkConnection conn, GameObject player)
+    {
+        var weapons = player.GetComponentsInChildren<Weapon>(true);
+        Debug.Log("Weapons : " +  weapons.Length);
+        foreach (var weapon in weapons)
+        {
+            weapon.OnDeathReload();
+        }
+    }
 
     IEnumerator ClearRespawningFlag(PlayerStats stats)
     {

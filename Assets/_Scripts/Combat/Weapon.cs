@@ -169,5 +169,11 @@ public abstract class Weapon : MonoBehaviour
         StartCoroutine(WeaponChangeDelay(afterChangeDelay));
     }
 
+    public void OnDeathReload()
+    {
+        Debug.Log("Start reload after death");
+        currentAmmo = maxAmmo;
+    }
+
     protected abstract void HandleShootInput(InputAction.CallbackContext context);
 }
