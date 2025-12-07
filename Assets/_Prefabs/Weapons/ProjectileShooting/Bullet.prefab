@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 3929796017227441637}
   - component: {fileID: 1108368680746482203}
   - component: {fileID: 2737851581900287445}
+  - component: {fileID: 1377143057966210699}
   m_Layer: 0
   m_Name: Bullet
   m_TagString: Untagged
@@ -211,3 +212,20 @@ MonoBehaviour:
     Rotation: {x: 0, y: 0, z: 0, w: 1}
     Scale: {x: 0.25, y: 0.25, z: 0.25}
     IsValid: 1
+--- !u!114 &1377143057966210699
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 72838035728811199}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e2b597e1828355a4d994a69cbb11ef85, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: FishNet.Runtime::FishNet.Component.Ownership.PredictedSpawn
+  _componentIndexCache: 255
+  _addedNetworkObject: {fileID: 2737851581900287445}
+  _networkObjectCache: {fileID: 0}
+  _allowSpawning: 1
+  _allowDespawning: 1
