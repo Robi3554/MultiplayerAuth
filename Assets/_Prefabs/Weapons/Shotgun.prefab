@@ -160,6 +160,59 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1267558020200924156}
   m_LocalEulerAnglesHint: {x: 178.997, y: 71.13, z: 1.9100037}
+--- !u!1 &2121843095767856830
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5361761739272683328}
+  - component: {fileID: 902364445378924649}
+  m_Layer: 0
+  m_Name: WallCheckCollider
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5361761739272683328
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2121843095767856830}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1267558020200924156}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &902364445378924649
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2121843095767856830}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 128
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.9735402, y: 10.927133, z: 2.8863256}
+  m_Center: {x: -2.4078832, y: 1.0217031, z: -9.154287}
 --- !u!1 &2895904655181343882
 GameObject:
   m_ObjectHideFlags: 0
@@ -301,6 +354,7 @@ Transform:
   - {fileID: 8618280175570269345}
   - {fileID: 4205152626695354624}
   - {fileID: 4697427536515930634}
+  - {fileID: 5361761739272683328}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: -90, y: 0, z: 540}
 --- !u!114 &8598559443094501375
@@ -326,7 +380,7 @@ MonoBehaviour:
   shootAudioSource: {fileID: 6150143733585687789}
   shootAudioClip: {fileID: 8300000, guid: acce5e47e57cd2f4fbede04e73a12e5b, type: 3}
   reloadAudioSource: {fileID: 4943300222967389306}
-  reloadAudioClip: {fileID: 8300000, guid: 08392cd69dbbb044abc76cb1348ef6f2, type: 3}
+  wallCheckCollider: {fileID: 0}
   playerLayer:
     serializedVersion: 2
     m_Bits: 64
@@ -359,7 +413,7 @@ MonoBehaviour:
   shootAudioSource: {fileID: 6150143733585687789}
   shootAudioClip: {fileID: 8300000, guid: acce5e47e57cd2f4fbede04e73a12e5b, type: 3}
   reloadAudioSource: {fileID: 4943300222967389306}
-  reloadAudioClip: {fileID: 8300000, guid: 08392cd69dbbb044abc76cb1348ef6f2, type: 3}
+  wallCheckCollider: {fileID: 0}
   projectilePrefab: {fileID: 72838035728811199, guid: 962a47bbe2fb0b646b8895cdf8b44160, type: 3}
   pelletCount: 8
   spreadAngle: 10

@@ -31,7 +31,7 @@ public class ProjectileShotgun : ProjectileShooting
             }
         }
 
-        currentAmmo--;
+        CurrentAmmo--;
     }
 
 

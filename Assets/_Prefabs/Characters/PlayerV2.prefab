@@ -2096,8 +2096,8 @@ MonoBehaviour:
     m_ActionName: 'Gameplay/Emote[/Keyboard/f1,/Keyboard/f2,/Keyboard/f3]'
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 8021581412489060544}
-        m_TargetAssemblyTypeName: RaycastShoot, Assembly-CSharp
+      - m_Target: {fileID: 5309686409406704968}
+        m_TargetAssemblyTypeName: ProjectileShooting, Assembly-CSharp
         m_MethodName: OnReload
         m_Mode: 0
         m_Arguments:
@@ -2120,8 +2120,8 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 990796205943166328}
-        m_TargetAssemblyTypeName: ShotgunShoot, Assembly-CSharp
+      - m_Target: {fileID: 304074390354016392}
+        m_TargetAssemblyTypeName: ProjectileShotgun, Assembly-CSharp
         m_MethodName: OnReload
         m_Mode: 0
         m_Arguments:
@@ -2283,59 +2283,6 @@ MonoBehaviour:
   _pauseMenuCanvas: {fileID: 1050285742563706005}
   _menuSceneName: WelcomeScreen
   _playerInput: {fileID: 4214152988996548071}
---- !u!1 &7486801904239760441
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 3529966976146775495}
-  - component: {fileID: 8507840696046498542}
-  m_Layer: 0
-  m_Name: WallCheckCollider
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &3529966976146775495
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7486801904239760441}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 7711146531749912955}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!65 &8507840696046498542
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7486801904239760441}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 128
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 0.9735402, y: 10.927133, z: 2.8863256}
-  m_Center: {x: -2.4078832, y: 1.0217031, z: -9.154287}
 --- !u!1 &7820529778285852255
 GameObject:
   m_ObjectHideFlags: 0
@@ -4446,6 +4393,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 7005966477742677644}
     m_Modifications:
+    - target: {fileID: 1280794750252728180, guid: cdcf0eae94ed1dd438685bad63846dbf, type: 3}
+      propertyPath: wallCheckCollider
+      value: 
+      objectReference: {fileID: 8094045661960886143}
     - target: {fileID: 3921394422504756363, guid: cdcf0eae94ed1dd438685bad63846dbf, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0.01
@@ -5377,10 +5328,7 @@ PrefabInstance:
       objectReference: {fileID: 8507840696046498542}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects:
-    - targetCorrespondingSourceObject: {fileID: 1267558020200924156, guid: 9e0837ead7a06c64b822b3a0a5cc1200, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 3529966976146775495}
+    m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9e0837ead7a06c64b822b3a0a5cc1200, type: 3}
 --- !u!114 &304074390354016392 stripped
@@ -5436,6 +5384,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 70b342d8ce5c2fd48b8fa3147d48d1d1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!65 &8507840696046498542 stripped
+BoxCollider:
+  m_CorrespondingSourceObject: {fileID: 902364445378924649, guid: 9e0837ead7a06c64b822b3a0a5cc1200, type: 3}
+  m_PrefabInstance: {fileID: 8832750361882550919}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &8840289239587869887
 PrefabInstance:
   m_ObjectHideFlags: 0
