@@ -1,4 +1,4 @@
-  using FishNet.CodeGenerating;
+using FishNet.CodeGenerating;
 using FishNet.Component.Animating;
 using FishNet.Object;
 using FishNet.Object.Synchronizing;
@@ -25,6 +25,7 @@ public class PredictionMelee : NetworkBehaviour
 	[Header("Animation")]
 	[SerializeField] private Animator animator;
 	[SerializeField] private NetworkAnimator netAnimator;
+	[SerializeField] private MeshCollider meshCollider;
 	private static readonly int SlashTriggerHash = Animator.StringToHash("SlashTrigger");
 
 	private static readonly int IsSlashingHash = Animator.StringToHash("IsSlashing");
@@ -33,12 +34,10 @@ public class PredictionMelee : NetworkBehaviour
 	[AllowMutableSyncType]
 	private SyncVar<bool> _isOnCooldown = new SyncVar<bool>(false);
 	private float _cooldownTimer;
-	private Vector3 debugDirectionToTarget = new Vector3(0, 0, 0);
-	private Vector3 debugHitPosition = new Vector3(0, 0, 0);
+	private bool _isAnimating = false;
 	private bool Slash;
-	private Vector3 Direction;
-	private Vector3 Position;
 
+	
 
 	public override void OnStartNetwork()
 	{
@@ -51,7 +50,7 @@ public class PredictionMelee : NetworkBehaviour
 		if (!this.isActiveAndEnabled) return;
 
 		Debug.Log("Melee: left click pressed");
-		if (context.performed && !_isOnCooldown.Value)
+		if (context.performed && !_isOnCooldown.Value && !_isAnimating)
 		{
 			_meleePressed = true;
 		}
@@ -83,28 +82,32 @@ public class PredictionMelee : NetworkBehaviour
 			}
 		}
 
-		if (IsOwner && _meleePressed && !_isOnCooldown.Value && !animator.GetBool(IsSlashingHash))
+		// Check if animation has finished and reset the flag
+		if (_isAnimating && !animator.GetBool(IsSlashingHash))
 		{
-			Direction = -slashPoint.up;
-			Position = slashPoint.position;
-			PerformSlashRequestServerRpc(Direction, Position);
+			Debug.Log("Melee: Animation finished, resetting _isAnimating");
+			_isAnimating = false;
+		}
+
+		if (IsOwner && _meleePressed && !_isOnCooldown.Value && !_isAnimating && !animator.GetBool(IsSlashingHash))
+		{
+			PerformSlashRequestServerRpc();
 			netAnimator.SetTrigger(SlashTriggerHash);
+			_isAnimating = true; 
 			_meleePressed = false;
 		}
 	}
 	void OnDrawGizmosSelected()
 	{
-		Gizmos.color = Color.blue;
-		Gizmos.DrawSphere(slashPoint.position, attackRange.Value);
-		Gizmos.color = Color.yellow;
-		Gizmos.DrawLine(debugHitPosition, debugDirectionToTarget);
+		// Gizmos.color = Color.blue;
+		// Gizmos.DrawSphere(slashPoint.position, attackRange.Value);
+		// Gizmos.color = Color.yellow;
+		// Gizmos.DrawLine(debugHitPosition, debugDirectionToTarget);
 	}
 
 	[ServerRpc(RequireOwnership = false)]
-	private void PerformSlashRequestServerRpc(Vector3 direction, Vector3 position)
+	private void PerformSlashRequestServerRpc()
 	{
-		Direction = direction;
-		Position = position;
 		Slash = true;	
 	}
 
@@ -116,83 +119,43 @@ public class PredictionMelee : NetworkBehaviour
 	// }
 
 	[ObserversRpc]
-	private void PlayObserverWeaponVfx()
+	public void PlayObserverWeaponVfx()
 	{
 		if (VFX_SLASH != null && !VFX_SLASH.isPlaying)
 		{
+			VFX_SLASH.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
 			VFX_SLASH.Play();
 		}
 	}
 
-	public void PerformSlash()
+	public void DealDamage(Collider enemyCollider)
 	{
 		if (Slash)
 		{
 			Debug.Log("Melee: Attack pressed");
-			PlayObserverWeaponVfx();
-			//get what we can hit, check if the enemy is in front of the player, call dmg function on server and start cooldown timer after hit
-			Collider[] hits = Physics.OverlapSphere(slashPoint.position, attackRange.Value);
-			// we could add more stuff here. if we want to apply damage the closest enemy only for e.g. 
-			// currently, it damages every enemy in area technically (did not test yet, only 1 target)
-			foreach (var hit in hits)
+			if (enemyCollider.CompareTag("Player") && enemyCollider != playerCollider)
 			{
-
-
-                if (hit.CompareTag("Player") && hit != playerCollider)
-				{
-                    float angle = FindAngle(hit);
-
-                    if (angle <= coneAngle * 0.5f) // half the cone angle 
-					{
-						Debug.Log("Melee: Hit a player");
-						int targetId = hit.transform.GetComponent<NetworkObject>().Owner.ClientId;
-						int attackerId = transform.GetComponent<NetworkObject>().Owner.ClientId;
-						PlayerManager.Instance.DamagePlayer(targetId, damage.Value, attackerId);
-					}
-				}
-                else if (hit.CompareTag("Robot"))
-                {
-                    float angle = FindAngle(hit);
-
-                    if (angle <= coneAngle * 0.5f) // half the cone angle 
-                    {
-                        Debug.Log("Melee: Hit robot!");
-
-						hit.GetComponent<LittleRobot>().DestroyRobot(playerCollider);
-                    }
-                }
-            }
+				Debug.Log("Melee: Hit a player");
+				int targetId = enemyCollider.transform.GetComponent<NetworkObject>().Owner.ClientId;
+				int attackerId = transform.GetComponent<NetworkObject>().Owner.ClientId;
+				PlayerManager.Instance.DamagePlayer(targetId, damage.Value, attackerId);
+			}
+			else if (enemyCollider.CompareTag("Robot"))
+			{
+				Debug.Log("Melee: Hit robot!");
+				enemyCollider.GetComponent<LittleRobot>().DestroyRobot(playerCollider);   
+			}
+            
 			StartCooldownServerRpc();
 			_cooldownTimer = 0f;
 			_meleePressed = false;
 			Slash = false;
 		}
 	}
-
-	public float FindAngle(Collider hit)
-	{
-        debugDirectionToTarget = Position;
-        debugHitPosition = hit.transform.position;
-        // get the horizontal direction to the target
-        Vector3 directionToTarget = hit.transform.position - Position;
-        directionToTarget.y = 0; // zero out the vertical component
-        directionToTarget.Normalize(); // normalize the direction
-
-        // get the horizontal forward direction of the slash point
-        Vector3 forwardDirection = Direction;
-        forwardDirection.y = 0;
-        forwardDirection.Normalize();
-
-        Debug.Log($"Direction to target: {directionToTarget}");
-
-        float angle = Mathf.Atan2(directionToTarget.x, directionToTarget.z) - Mathf.Atan2(forwardDirection.x, forwardDirection.z);
-        angle = Mathf.Abs(angle * Mathf.Rad2Deg);
-        if (angle > 180) // there s sometimes a bug that return angle between 320 and 350 ish. happened a few times
-        {
-            angle = 360 - angle;
-        }
-        Debug.Log($"Angle: {angle}");
-
-		return angle;
+	// Add this method to handle animation completion
+    public void OnAnimationComplete()
+    {
+        Debug.Log("Melee: Animation completed");
+        _isAnimating = false;
     }
 }
