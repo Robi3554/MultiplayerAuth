@@ -2824,6 +2824,7 @@ PrefabInstance:
     - {fileID: 8688168970017551482, guid: 950c997c80c3f8a42956a570dbe956ce, type: 3}
     - {fileID: 6134763170643833720, guid: 950c997c80c3f8a42956a570dbe956ce, type: 3}
     - {fileID: 7430376051981977917, guid: 950c997c80c3f8a42956a570dbe956ce, type: 3}
+    - {fileID: 6674919292769972225, guid: 950c997c80c3f8a42956a570dbe956ce, type: 3}
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: 1381899205929497574, guid: 950c997c80c3f8a42956a570dbe956ce, type: 3}
       insertIndex: -1
@@ -3506,6 +3507,7 @@ PrefabInstance:
     - {fileID: 6134763170643833720, guid: 950c997c80c3f8a42956a570dbe956ce, type: 3}
     - {fileID: 7698299182707414592, guid: 950c997c80c3f8a42956a570dbe956ce, type: 3}
     - {fileID: 7430376051981977917, guid: 950c997c80c3f8a42956a570dbe956ce, type: 3}
+    - {fileID: 6674919292769972225, guid: 950c997c80c3f8a42956a570dbe956ce, type: 3}
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: 1381899205929497574, guid: 950c997c80c3f8a42956a570dbe956ce, type: 3}
       insertIndex: -1
@@ -5523,10 +5525,7 @@ PrefabInstance:
       objectReference: {fileID: 8507840696046498542}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects:
-    - targetCorrespondingSourceObject: {fileID: 1267558020200924156, guid: 9e0837ead7a06c64b822b3a0a5cc1200, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 3529966976146775495}
+    m_AddedGameObjects: []
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 5163482106140866897, guid: 9e0837ead7a06c64b822b3a0a5cc1200, type: 3}
       insertIndex: -1
