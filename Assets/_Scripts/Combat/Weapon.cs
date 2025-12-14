@@ -68,11 +68,11 @@ public abstract class Weapon : MonoBehaviour
     protected virtual void Start()
     {
         playerNet = GetComponentInParent<PlayerNetworkInitializer>();
+        currentAmmo = maxAmmo;
     }
 
     protected virtual void OnEnable()
     {
-        currentAmmo = maxAmmo;
         InitializeWeapon();
     }
 
@@ -167,6 +167,12 @@ public abstract class Weapon : MonoBehaviour
         reloadAudioSource.pitch = reloadAudioSource.clip.length / reloadTime;
 
         StartCoroutine(WeaponChangeDelay(afterChangeDelay));
+    }
+
+    public void OnDeathReload()
+    {
+        Debug.Log("Start reload after death");
+        currentAmmo = maxAmmo;
     }
 
     protected abstract void HandleShootInput(InputAction.CallbackContext context);
