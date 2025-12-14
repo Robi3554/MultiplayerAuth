@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using FishNet.Object;
@@ -7,13 +6,14 @@ using FishNet.Object.Synchronizing;
 using UnityEngine;
 using UnityEngine.Animations.Rigging;
 using UnityEngine.InputSystem;
-using UnityEngine.Serialization;
 
 public class ChangeWeapons : NetworkBehaviour
 {
     [SerializeField] private List<GameObject> weapons = new List<GameObject>();
     [SerializeField] private RigBuilder modelRigBuilder;
     
+    public static event Action<Sprite> OnLocalWeaponChanged;
+
     private readonly SyncVar<int> _currentWeaponIndex = new SyncVar<int>(1);
     private int _newWeaponIndex;
 
@@ -28,6 +28,15 @@ public class ChangeWeapons : NetworkBehaviour
         }
     }
     
+    public override void OnStartClient()
+    {
+        base.OnStartClient();
+        if (IsOwner)
+        {
+            SwitchWeapon(-1, _currentWeaponIndex.Value, false);
+        }
+    }
+
     private void GetWeapons(GameObject parent)
     {
         foreach(Transform weapon in parent.transform)
@@ -40,8 +49,9 @@ public class ChangeWeapons : NetworkBehaviour
         {
             w.SetActive(false);
         }
-
-        weapons[_currentWeaponIndex.Value].SetActive(true);
+        
+        if(weapons.Count > 0 && _currentWeaponIndex.Value < weapons.Count)
+             weapons[_currentWeaponIndex.Value].SetActive(true);
     }
 
     public void OnChangeWeaponSlot(InputAction.CallbackContext context)
@@ -54,26 +64,19 @@ public class ChangeWeapons : NetworkBehaviour
         
         if (int.TryParse(keyName, out int weaponNumber))
         {
-            _newWeaponIndex = weaponNumber;
+            _newWeaponIndex = weaponNumber - 1; 
         }
         else
         {
-            if (scrollValue > 0f)
-            {
-                _newWeaponIndex++;
-            }
-            else if (scrollValue < 0f)
-            {
-                _newWeaponIndex--;
-            }
-
-            if (_newWeaponIndex > weapons.Count - 1)
-                _newWeaponIndex = 0;
-            else if (_newWeaponIndex < 0)
-                _newWeaponIndex = weapons.Count - 1;
-
+            if (scrollValue > 0f) _newWeaponIndex++;
+            else if (scrollValue < 0f) _newWeaponIndex--;
+            
+            if (_newWeaponIndex > weapons.Count - 1) _newWeaponIndex = 0;
+            else if (_newWeaponIndex < 0) _newWeaponIndex = weapons.Count - 1;
         }
         
+        _newWeaponIndex = Mathf.Clamp(_newWeaponIndex, 0, weapons.Count - 1);
+
         if (_newWeaponIndex == _currentWeaponIndex.Value)
             return;
         
@@ -86,40 +89,39 @@ public class ChangeWeapons : NetworkBehaviour
         _currentWeaponIndex.Value = index;
     }
     
-    /*
-    [ObserversRpc]
-    private void OnWeaponChangeClient()
-    {
-        var activeWeaponIndex = _currentWeaponIndex.Value;
-        
-        SwitchActiveWeaponPrefab(activeWeaponIndex);
-        UpdateRigLayers(activeWeaponIndex);
-    }
-    */
-    
     private void SwitchWeapon(int prev, int newActiveIndex, bool asServer)
     {
+        // Safety check
+        if (newActiveIndex < 0 || newActiveIndex >= weapons.Count) return;
+
         SwitchActiveWeaponPrefab(newActiveIndex);
         UpdateRigLayers(newActiveIndex);
+        
+        if (IsOwner)
+        {
+            if (weapons[newActiveIndex].TryGetComponent<WeaponInfo>(out var info))
+            {
+                OnLocalWeaponChanged?.Invoke(info.HUDIcon);
+            }
+            else
+            {
+                OnLocalWeaponChanged?.Invoke(null); 
+            }
+        }
     }
 
     private void SwitchActiveWeaponPrefab(int activeWeaponIndex)
     {
         for (int i = 0; i < weapons.Count; i++)
         {
-            if (i == activeWeaponIndex)
-            {
-                weapons[i].SetActive(true);
-            }
-            else
-            {
-                weapons[i].SetActive(false);
-            }
+            weapons[i].SetActive(i == activeWeaponIndex);
         }
     }
     
-    private void UpdateRigLayers(int activeWeaponIndex)      //tine cont ca RigLayer-ul sa fie de format "RigLayer_<Weapon name>"
-    {                                   //se poate imbunatati cu dictionare daca vrem sa facem mai eficient. pt 3 arme/player e ok
+    private void UpdateRigLayers(int activeWeaponIndex)
+    {
+        if (activeWeaponIndex < 0 || activeWeaponIndex >= weapons.Count) return;
+
         var currentWeaponRigName = "RigLayer_" + weapons[activeWeaponIndex].name;
         
         foreach (var layer in modelRigBuilder.layers.Where(layer => layer.rig))
@@ -129,29 +131,4 @@ public class ChangeWeapons : NetworkBehaviour
         
         modelRigBuilder.Build();
     }
-
-    /*
-    [ServerRpc]
-    private void RequestWeaponOwnershipServerRpc(int newWeaponIndex)
-    {
-        var newWeaponObj = weapons[newWeaponIndex].GetComponent<NetworkObject>();
-        if (newWeaponObj == null)
-        {
-            Debug.Log("No Netwrok Object Found!");
-            return;
-        }
-
-        newWeaponObj.GiveOwnership(Owner);
-    }
-    
-    private void UpdateWeaponModelVisual(int activeWeaponIndex) // this gets called for items that are fused to the hand for animation purposes(e.g. sword)
-    {
-        var currentWeaponModelName = weapons[activeWeaponIndex].name + "_Model"; // tineti formatul <WeaponsModelName>_Model (e.g. Sword_Model)
-        
-        foreach (var weapon in weaponsInHand)
-        {
-            weapon.SetActive(weapon.name.Equals(currentWeaponModelName));
-        }
-    }
-    */
 }
