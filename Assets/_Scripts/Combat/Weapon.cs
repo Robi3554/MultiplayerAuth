@@ -68,11 +68,11 @@ public abstract class Weapon : MonoBehaviour
     protected virtual void Start()
     {
         playerNet = GetComponentInParent<PlayerNetworkInitializer>();
+        currentAmmo = maxAmmo;
     }
 
     protected virtual void OnEnable()
     {
-        currentAmmo = maxAmmo;
         InitializeWeapon();
     }
 
