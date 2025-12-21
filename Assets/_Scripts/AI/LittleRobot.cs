@@ -162,7 +162,9 @@ public class LittleRobot : NetworkBehaviour
     public void DestroyRobot(Collider player)
     {
         StartCoroutine(ChangeSpeed(player));
-        Destroy(gameObject);
+        
+        NetworkObject netObj = GetComponent<NetworkObject>();
+        ServerManager.Despawn(netObj);
     }
 
     private IEnumerator ChangeSpeed(Collider player)
