@@ -42,6 +42,7 @@ public class RaycastShoot : Weapon
 
         // tell the server to show the tracer for others
         playerNet?.NotifyShotServer(origin, hitPosition);
+        StartCoroutine(FlashMuzzle());
 
         CurrentAmmo--;
     }

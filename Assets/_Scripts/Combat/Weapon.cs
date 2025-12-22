@@ -52,6 +52,8 @@ public abstract class Weapon : MonoBehaviour
     
     [SerializeField]
     protected BoxCollider wallCheckCollider;
+    [SerializeField]
+    protected GameObject muzzleFlash;
     
     protected Coroutine reloadCoroutine;
 
@@ -173,6 +175,15 @@ public abstract class Weapon : MonoBehaviour
     {
         Debug.Log("Start reload after death");
         currentAmmo = maxAmmo;
+    }
+    
+    protected IEnumerator FlashMuzzle()
+    {
+        if (!muzzleFlash) yield break;
+        
+        muzzleFlash.SetActive(true);
+        yield return new WaitForEndOfFrame();
+        muzzleFlash.SetActive(false);
     }
 
     protected abstract void HandleShootInput(InputAction.CallbackContext context);
