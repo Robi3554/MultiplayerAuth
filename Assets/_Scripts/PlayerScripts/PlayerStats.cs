@@ -190,4 +190,34 @@ public class PlayerStats : NetworkBehaviour
             healthSlider.value = health.Value;
         }
     }
+
+    //Player head size code
+    #region Head Size Change
+    public void HeadSizeChange(NetworkObject obj, float multiplier)
+    {
+        ObserverHeadSizeChange(obj, multiplier);
+    }
+
+    [ObserversRpc]
+    private void ObserverHeadSizeChange(NetworkObject obj, float multiplier)
+    {
+        Transform head = FindChild(obj.transform, "mixamorig:Head");
+
+        head.localScale *= multiplier;
+    }
+
+    private Transform FindChild(Transform parent, string name)
+    {
+        foreach (Transform child in parent)
+        {
+            if (child.name == name)
+                return child;
+
+            Transform result = FindChild(child, name);
+            if (result != null)
+                return result;
+        }
+        return null;
+    }
+    #endregion
 }

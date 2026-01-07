@@ -1,5 +1,6 @@
 using System.Collections;
 using FishNet.Object;
+using FishNet.Serializing.Helping;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -25,6 +26,9 @@ public class LittleRobot : NetworkBehaviour
     private int currIndex;
     private int prevIndex;
     private bool dirClockwise = true;
+
+    [Header("PowerupEffects")]
+    public PowerupEffect powerup;
 
     private NavMeshAgent agent;
     private Transform targetPlayer;
@@ -159,21 +163,24 @@ public class LittleRobot : NetworkBehaviour
         agent.ResetPath();
     }
 
-    public void DestroyRobot(Collider player)
+    public void DestroyRobot(NetworkObject player)
     {
-        StartCoroutine(ChangeSpeed(player));
-        
-        NetworkObject netObj = GetComponent<NetworkObject>();
-        ServerManager.Despawn(netObj);
+        DestroyRobotServer(player);
     }
 
-    private IEnumerator ChangeSpeed(Collider player)
+    [ServerRpc(RequireOwnership = false)]
+    private void DestroyRobotServer(NetworkObject player)
     {
-        player.GetComponent<PredictionMoving>().moveRate += 5;
+        StartCoroutine(TriggerEffect(player));
+
+        ServerManager.Despawn(base.NetworkObject.gameObject);
+    }
+
+    private IEnumerator TriggerEffect(NetworkObject player)
+    {
+        powerup.TriggerEffect(player);
 
         yield return new WaitForSeconds(5f);
-
-        player.GetComponent<PredictionMoving>().moveRate -= 5;
     }
 
     private void OnTriggerEnter(Collider col)
