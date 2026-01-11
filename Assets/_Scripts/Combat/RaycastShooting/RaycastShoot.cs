@@ -37,7 +37,7 @@ public class RaycastShoot : Weapon
 
             var hitNetObj = hit.transform.GetComponent<FishNet.Object.NetworkObject>();
             if (hitNetObj != null)
-                playerNet?.NotifyHitServer(hitNetObj, damage);
+                playerNet?.NotifyHitServer(hitNetObj, Damage);
         }
 
         // tell the server to show the tracer for others

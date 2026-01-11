@@ -28,6 +28,8 @@ public abstract class Weapon : MonoBehaviour
     [SerializeField]
     protected Transform firePoint;
 
+    protected PlayerStats playerStats;
+
     [SerializeField]
     protected float speed;
     [SerializeField]
@@ -69,6 +71,7 @@ public abstract class Weapon : MonoBehaviour
     {
         playerNet = GetComponentInParent<PlayerNetworkInitializer>();
         currentAmmo = maxAmmo;
+        playerStats = GetComponentInParent<PlayerStats>();
     }
 
     protected virtual void OnEnable()
@@ -176,4 +179,6 @@ public abstract class Weapon : MonoBehaviour
     }
 
     protected abstract void HandleShootInput(InputAction.CallbackContext context);
+
+    protected int Damage => damage * playerStats.damageMult.Value;
 }

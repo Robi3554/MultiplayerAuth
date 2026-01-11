@@ -748,13 +748,14 @@ MonoBehaviour:
   maxDistance: 20
   fireRate: 1.2
   damage: 20
+  damageMult: 1
   maxAmmo: 30
   reloadTime: 0.75
   afterChangeDelay: 0.5
   shootAudioSource: {fileID: 2472542210249486467}
   shootAudioClip: {fileID: 8300000, guid: b18bab8db6b4fa74f88f40f9e947d55f, type: 3}
   reloadAudioSource: {fileID: 2179823877494820151}
-  reloadAudioClip: {fileID: 8300000, guid: 08392cd69dbbb044abc76cb1348ef6f2, type: 3}
+  wallCheckCollider: {fileID: 0}
   playerLayer:
     serializedVersion: 2
     m_Bits: 64

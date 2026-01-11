@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f07baf7aefd1cfa42a4e94b3b4150124, type: 3}
   m_Name: Big Head Buff
   m_EditorClassIdentifier: Assembly-CSharp::BigHeadBuff
-  damage: 0
+  damageMultiplier: 2
   headSizeMultiplier: 2

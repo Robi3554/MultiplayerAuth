@@ -374,6 +374,7 @@ MonoBehaviour:
   maxDistance: 7
   fireRate: 0.5
   damage: 5
+  damageMult: 0
   maxAmmo: 12
   reloadTime: 1.25
   afterChangeDelay: 1
@@ -407,13 +408,14 @@ MonoBehaviour:
   maxDistance: 10
   fireRate: 0.5
   damage: 5
+  damageMult: 1
   maxAmmo: 12
   reloadTime: 1.25
   afterChangeDelay: 1
   shootAudioSource: {fileID: 6150143733585687789}
   shootAudioClip: {fileID: 8300000, guid: acce5e47e57cd2f4fbede04e73a12e5b, type: 3}
   reloadAudioSource: {fileID: 4943300222967389306}
-  wallCheckCollider: {fileID: 0}
+  wallCheckCollider: {fileID: 902364445378924649}
   projectilePrefab: {fileID: 72838035728811199, guid: 962a47bbe2fb0b646b8895cdf8b44160, type: 3}
   pelletCount: 8
   spreadAngle: 10

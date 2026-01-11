@@ -32,7 +32,6 @@ public class BurstShot : RaycastShoot
         for (int i = 0; i < burstCount; i++)
         {
             Shoot();
-
             yield return new WaitForSeconds(timeBetweenShots);
             
             var colliders = Physics.OverlapBox(wallCheckCollider.bounds.center,

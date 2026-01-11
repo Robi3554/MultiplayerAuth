@@ -319,6 +319,8 @@ MeshRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -340,6 +342,7 @@ MeshRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
@@ -356,22 +359,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 15808dafdf0472b4788f35e47d5973b8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerLayer:
-    serializedVersion: 2
-    m_Bits: 64
-  wallLayer:
-    serializedVersion: 2
-    m_Bits: 128
   firePoint: {fileID: 2360925681279893178}
-  shotLinePrefab: {fileID: 7133602437278059814, guid: 0e3e214fbff67c642a1f4f61c1361237, type: 3}
   speed: 250
   maxDistance: 100
   fireRate: 0.25
   damage: 3
+  damageMult: 1
   maxAmmo: 30
   reloadTime: 1
   afterChangeDelay: 0.75
   shootAudioSource: {fileID: 0}
   shootAudioClip: {fileID: 0}
   reloadAudioSource: {fileID: 0}
-  reloadAudioClip: {fileID: 0}
+  wallCheckCollider: {fileID: 0}
+  playerLayer:
+    serializedVersion: 2
+    m_Bits: 64
+  wallLayer:
+    serializedVersion: 2
+    m_Bits: 128
+  shotLinePrefab: {fileID: 7133602437278059814, guid: 0e3e214fbff67c642a1f4f61c1361237, type: 3}
