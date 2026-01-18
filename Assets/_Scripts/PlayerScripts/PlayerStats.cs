@@ -132,9 +132,16 @@ public class PlayerStats : NetworkBehaviour
         }
     }
 
+    [Server]
     public void AddKill()
     {
         kills.Value++;
+        
+        // Notify game mode manager
+        if (GameModeManager.Instance != null)
+        {
+            GameModeManager.Instance.OnPlayerKill(this);
+        }
     }
 
     public void AddDeath()

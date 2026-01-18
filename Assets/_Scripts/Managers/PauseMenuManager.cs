@@ -1,62 +1,89 @@
-using System;
-using FishNet.Managing;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 
-public class PauseMenuManager : MonoBehaviour
+public class PauseMenuManager : MonoBehaviour 
 {
     [SerializeField] private Canvas _pauseMenuCanvas;
     [SerializeField] private string _menuSceneName = "WelcomeScreen";
-    [SerializeField] private PlayerInput _playerInput;
     
     private PredictionMoving _playerMovement;
+    private PlayerInput _playerInput;
+    private bool _isPaused = false;
 
     private void Start()
     {
-        _pauseMenuCanvas.gameObject.SetActive(false);
-        
-        StartCoroutine(FindLocalPlayerDelayed());
+        if (_pauseMenuCanvas != null)
+            _pauseMenuCanvas.gameObject.SetActive(false);
     }
 
-    private System.Collections.IEnumerator FindLocalPlayerDelayed()
+    private void Update()
+    {
+        if (Keyboard.current != null && Keyboard.current.escapeKey.wasPressedThisFrame)
+        {
+            if (_isPaused)
+                Resume();
+            else
+                Pause();
+        }
+    }
+
+    private IEnumerator FindLocalPlayerDelayed()
     {
         yield return new WaitForSeconds(0.5f);
         
         PredictionMoving[] allPlayers = FindObjectsByType<PredictionMoving>(FindObjectsSortMode.None);
         foreach (var player in allPlayers)
         {
-            if (!player.IsOwner) continue;
-            
-            _playerMovement = player;
-            Debug.Log("Local player found for input switching!");
-            break;
+            if (player.IsOwner) 
+            {
+                _playerMovement = player;
+                _playerInput = player.GetComponent<PlayerInput>();
+                Debug.Log("Local player found for pause menu!");
+                break;
+            }
         }
         
         if (_playerMovement == null)
         {
-            Debug.LogWarning("Local player not found! Input switching will not work.");
-        }
-    }
-    
-    private void OnEnable()
-    {
-        if (_playerMovement == null)
-        {
-            StartCoroutine(FindLocalPlayerDelayed());
+            Debug.LogWarning("Local player not found!");
         }
     }
 
     public void Pause()
     {
+        // Find player if not found yet
+        if (_playerMovement == null || _playerInput == null)
+        {
+            StartCoroutine(FindLocalPlayerAndPause());
+            return;
+        }
+
+        _isPaused = true;
         _pauseMenuCanvas.gameObject.SetActive(true);
         _playerInput.SwitchCurrentActionMap("UI");
+        Time.timeScale = 0f; // Optional: freeze game
+    }
+
+    private IEnumerator FindLocalPlayerAndPause()
+    {
+        yield return FindLocalPlayerDelayed();
+        
+        if (_playerMovement != null && _playerInput != null)
+        {
+            Pause();
+        }
     }
 
     public void Resume()
     {
+        if (_playerInput == null) return;
+
+        _isPaused = false;
         _pauseMenuCanvas.gameObject.SetActive(false);
         _playerInput.SwitchCurrentActionMap("Gameplay");
+        Time.timeScale = 1f; // Optional: unfreeze game
     }
 
     public void ChangeInput()
@@ -75,6 +102,7 @@ public class PauseMenuManager : MonoBehaviour
 
     public void LeaveMatch()
     {
+        Time.timeScale = 1f; // Reset time scale before leaving
         SceneManager.LoadScene(_menuSceneName);
     }
     
