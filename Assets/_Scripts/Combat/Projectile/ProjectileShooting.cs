@@ -23,7 +23,7 @@ public class ProjectileShooting : Weapon
             return;
         }
 
-        playerNet.NotifyProjectileShotServer(projectilePrefab, firePoint.position, -firePoint.up * speed, damage, maxDistance);
+        playerNet.NotifyProjectileShotServer(projectilePrefab, firePoint.position, -firePoint.up * speed, Damage, maxDistance);
 
         if (canPlayShootSound)
         {

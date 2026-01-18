@@ -4616,6 +4616,14 @@ PrefabInstance:
       propertyPath: wallCheckCollider
       value: 
       objectReference: {fileID: 8094045661960886143}
+    - target: {fileID: 3403562702567576854, guid: cdcf0eae94ed1dd438685bad63846dbf, type: 3}
+      propertyPath: _ownerSmoothedProperties
+      value: 4294967295
+      objectReference: {fileID: 0}
+    - target: {fileID: 3403562702567576854, guid: cdcf0eae94ed1dd438685bad63846dbf, type: 3}
+      propertyPath: _spectatorSmoothedProperties
+      value: 4294967295
+      objectReference: {fileID: 0}
     - target: {fileID: 3921394422504756363, guid: cdcf0eae94ed1dd438685bad63846dbf, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0.01
@@ -4975,15 +4983,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -3321919801592875672, guid: 66e0ef251cc7b2143ad5f1b36eeedcf1, type: 3}
       propertyPath: m_LocalScale.x
-      value: 2.2602963
+      value: 2.26
       objectReference: {fileID: 0}
     - target: {fileID: -3321919801592875672, guid: 66e0ef251cc7b2143ad5f1b36eeedcf1, type: 3}
       propertyPath: m_LocalScale.y
-      value: 1.7810755
+      value: 1.78
       objectReference: {fileID: 0}
     - target: {fileID: -3321919801592875672, guid: 66e0ef251cc7b2143ad5f1b36eeedcf1, type: 3}
       propertyPath: m_LocalScale.z
-      value: 1.3394
+      value: 1.34
       objectReference: {fileID: 0}
     - target: {fileID: 818776254368054820, guid: 66e0ef251cc7b2143ad5f1b36eeedcf1, type: 3}
       propertyPath: m_Enabled
@@ -5516,10 +5524,6 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8598559443094501375, guid: 9e0837ead7a06c64b822b3a0a5cc1200, type: 3}
-      propertyPath: wallCheckCollider
-      value: 
-      objectReference: {fileID: 8507840696046498542}
-    - target: {fileID: 9127795528253200911, guid: 9e0837ead7a06c64b822b3a0a5cc1200, type: 3}
       propertyPath: wallCheckCollider
       value: 
       objectReference: {fileID: 8507840696046498542}

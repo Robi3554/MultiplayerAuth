@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 2449924674472018490}
   - component: {fileID: 5242468857166722336}
   - component: {fileID: 4983882301100394205}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Animator + visuals
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -48,7 +48,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e8cac635f24954048aad3a6ff9110beb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _componentIndexCache: 3
+  _componentIndexCache: 4
   _addedNetworkObject: {fileID: 5388096707036169814}
   _networkObjectCache: {fileID: 5388096707036169814}
   IgnoredParameters: []
@@ -91,7 +91,7 @@ GameObject:
   - component: {fileID: 2023670744798859396}
   - component: {fileID: 3124947355449673766}
   - component: {fileID: 1681217096336818772}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: medkit_low
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -180,7 +180,7 @@ GameObject:
   - component: {fileID: 4057872970397745045}
   - component: {fileID: 6528914538416390805}
   - component: {fileID: 7851315980534115221}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: handle_low_1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -269,7 +269,7 @@ GameObject:
   - component: {fileID: 6773411430916582438}
   - component: {fileID: 5737852991336478901}
   - component: {fileID: 591776674047004611}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: handle_low_2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -362,7 +362,7 @@ GameObject:
   - component: {fileID: 4297683254458283122}
   - component: {fileID: 5240636864935270614}
   - component: {fileID: -1519296466912973805}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Medkit
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -424,6 +424,7 @@ MonoBehaviour:
   - {fileID: 2960659720246470344}
   - {fileID: 4961023987807242301}
   - {fileID: 5240636864935270614}
+  - {fileID: -1519296466912973805}
   - {fileID: 5242468857166722336}
   InitializedParentNetworkBehaviour: {fileID: 0}
   InitializedNestedNetworkObjects: []
@@ -536,8 +537,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e2b597e1828355a4d994a69cbb11ef85, type: 3}
   m_Name: 
   m_EditorClassIdentifier: FishNet.Runtime::FishNet.Component.Ownership.PredictedSpawn
-  _componentIndexCache: 255
+  _componentIndexCache: 3
   _addedNetworkObject: {fileID: 5388096707036169814}
-  _networkObjectCache: {fileID: 0}
+  _networkObjectCache: {fileID: 5388096707036169814}
   _allowSpawning: 1
   _allowDespawning: 1

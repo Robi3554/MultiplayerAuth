@@ -1,4 +1,6 @@
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using FishNet.Connection;
 using FishNet.Object;
 using FishNet.Object.Synchronizing;
@@ -13,6 +15,7 @@ public class PlayerStats : NetworkBehaviour
     public readonly SyncVar<int> health = new SyncVar<int>(100);
     public readonly SyncVar<int> kills = new SyncVar<int>(0);
     public readonly SyncVar<int> deaths = new SyncVar<int>(0);
+    public readonly SyncVar<int> damageMult = new SyncVar<int>(1);
     
     [SerializeField] private TMP_Text _usernameTextOnBillboard;
     [SerializeField] private AudioSource _hitAudioSource;
@@ -190,4 +193,69 @@ public class PlayerStats : NetworkBehaviour
             healthSlider.value = health.Value;
         }
     }
+
+    //Player head size code
+    #region Head Size Change
+    public void HeadSizeChange(NetworkObject obj, float multiplier)
+    {
+        ObserverHeadSizeChange(obj, multiplier);
+    }
+
+    [ObserversRpc]
+    private void ObserverHeadSizeChange(NetworkObject obj, float multiplier)
+    {
+        Transform head = FindChild(obj.transform, "mixamorig:Head");
+
+        StartCoroutine(ChangeHeadCo(head, multiplier));
+    }
+
+    private Transform FindChild(Transform parent, string name)
+    {
+        foreach (Transform child in parent)
+        {
+            if (child.name == name)
+                return child;
+
+            Transform result = FindChild(child, name);
+            if (result != null)
+                return result;
+        }
+        return null;
+    }
+
+    private IEnumerator ChangeHeadCo(Transform head, float multiplier)
+    {
+        var originalScale = head.localScale;
+
+        head.localScale *= multiplier;
+
+        yield return new WaitForSeconds(10f);
+
+        head.localScale = originalScale;
+    }
+    #endregion
+
+    //Player damage multiplier change
+    #region Damage Mult
+    public void ChangeMult(int multiplier)
+    {
+        ServerChangeMult(multiplier);
+    }
+
+    [ServerRpc]
+    private void ServerChangeMult(int multiplier)
+    {
+        StartCoroutine(ChangeMultCo(multiplier));
+    }
+
+    private IEnumerator ChangeMultCo(int multiplier)
+    {
+        int oldMultiplier = damageMult.Value;
+        damageMult.Value = multiplier;
+
+        yield return new WaitForSeconds(10f);
+
+        damageMult.Value = oldMultiplier;
+    }
+    #endregion
 }

@@ -1,5 +1,6 @@
 using System.Collections;
 using FishNet.Object;
+using FishNet.Serializing.Helping;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -10,7 +11,7 @@ public class LittleRobot : NetworkBehaviour
     public LayerMask playerMask;
 
     [Header("Flee Settings")]
-    public float safeDistance = 20f;
+    public float safeDistance = 15f;
     public float fleeDistanceStep = 10f;
     public int maxFleeAttempts = 8;
     public float repathDelay = 0.5f;
@@ -19,16 +20,28 @@ public class LittleRobot : NetworkBehaviour
     public float minSpeed = 3.5f;
     public float maxSpeed = 6f;
 
+    [Header("Patroling")]
+    public Transform[] patrolPoints;
+    private Vector3 currentPoint;
+    private int currIndex;
+    private int prevIndex;
+    private bool dirClockwise = true;
+
+    [Header("PowerupEffects")]
+    public PowerupEffect powerup;
+
     private NavMeshAgent agent;
     private Transform targetPlayer;
     private float nextPathUpdateTime = 0f;
 
-    private enum State { Idle, Fleeing }
-    private State currentState = State.Idle;
+    private enum State { Patroling, Fleeing }
+    private State currentState = State.Patroling;
 
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();
+        agent.SetDestination(patrolPoints[0].transform.position);
+        currIndex = 0;
     }
 
     void Update()
@@ -40,9 +53,11 @@ public class LittleRobot : NetworkBehaviour
 
         switch (currentState)
         {
-            case State.Idle:
+            case State.Patroling:
                 if (closestDist < detectionRadius)
                     currentState = State.Fleeing;
+                else
+                    Patrol();
                 break;
 
             case State.Fleeing:
@@ -54,8 +69,8 @@ public class LittleRobot : NetworkBehaviour
 
                 if (targetPlayer == null || closestDist > safeDistance)
                 {
-                    currentState = State.Idle;
-                    agent.ResetPath();
+                    currentState = State.Patroling;
+                    SwitchDirection();
                 }
                 break;
         }
@@ -84,6 +99,37 @@ public class LittleRobot : NetworkBehaviour
         }
 
         return closestDist;
+    }
+
+    private void Patrol()
+    {
+        if (currentPoint == agent.destination)
+        {
+            prevIndex = currIndex;
+            if (dirClockwise)
+            {
+                currIndex++;
+                if (currIndex >= patrolPoints.Length)
+                    currIndex = 0;
+                agent.SetDestination(patrolPoints[currIndex].transform.position);
+            }
+            else
+            {
+                currIndex--;
+                if (currIndex <= 0)
+                    currIndex = patrolPoints.Length - 1;
+                agent.SetDestination(patrolPoints[currIndex].transform.position);
+            }
+        }
+    }
+
+    private void SwitchDirection()
+    {
+        dirClockwise = !dirClockwise;
+
+        int aux = currIndex;
+        currIndex = prevIndex;
+        prevIndex = aux;
     }
 
     private void FleeFromPlayer()
@@ -117,19 +163,32 @@ public class LittleRobot : NetworkBehaviour
         agent.ResetPath();
     }
 
-    public void DestroyRobot(Collider player)
+    public void DestroyRobot(NetworkObject player)
     {
-        StartCoroutine(ChangeSpeed(player));
-        Destroy(gameObject);
+        DestroyRobotServer(player);
     }
 
-    private IEnumerator ChangeSpeed(Collider player)
+    [ServerRpc(RequireOwnership = false)]
+    private void DestroyRobotServer(NetworkObject player)
     {
-        player.GetComponent<PredictionMoving>().moveRate += 5;
+        StartCoroutine(TriggerEffect(player));
+
+        ServerManager.Despawn(base.NetworkObject.gameObject);
+    }
+
+    private IEnumerator TriggerEffect(NetworkObject player)
+    {
+        powerup.TriggerEffect(player);
 
         yield return new WaitForSeconds(5f);
+    }
 
-        player.GetComponent<PredictionMoving>().moveRate -= 5;
+    private void OnTriggerEnter(Collider col)
+    {
+        if (col.CompareTag("PatrolPoint"))
+        {
+            currentPoint = agent.destination;
+        }
     }
 
     private void OnDrawGizmosSelected()

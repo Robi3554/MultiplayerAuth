@@ -143,7 +143,7 @@ public class PredictionMelee : NetworkBehaviour
 			else if (enemyCollider.CompareTag("Robot"))
 			{
 				Debug.Log("Melee: Hit robot!");
-				enemyCollider.GetComponent<LittleRobot>().DestroyRobot(playerCollider);   
+				enemyCollider.GetComponent<LittleRobot>().DestroyRobot(playerCollider.GetComponent<NetworkObject>());   
 			}
             
 			StartCooldownServerRpc();
