@@ -21,7 +21,7 @@ public class LittleRobot : NetworkBehaviour
     public float maxSpeed = 6f;
 
     [Header("Patroling")]
-    public GameObject[] spawnPoints;
+    public Transform[] patrolPoints;
     private Vector3 currentPoint;
     private int currIndex;
     private int prevIndex;
@@ -40,7 +40,7 @@ public class LittleRobot : NetworkBehaviour
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();
-        agent.SetDestination(spawnPoints[0].transform.position);
+        agent.SetDestination(patrolPoints[0].transform.position);
         currIndex = 0;
     }
 
@@ -109,16 +109,16 @@ public class LittleRobot : NetworkBehaviour
             if (dirClockwise)
             {
                 currIndex++;
-                if (currIndex >= spawnPoints.Length)
+                if (currIndex >= patrolPoints.Length)
                     currIndex = 0;
-                agent.SetDestination(spawnPoints[currIndex].transform.position);
+                agent.SetDestination(patrolPoints[currIndex].transform.position);
             }
             else
             {
                 currIndex--;
                 if (currIndex <= 0)
-                    currIndex = spawnPoints.Length - 1;
-                agent.SetDestination(spawnPoints[currIndex].transform.position);
+                    currIndex = patrolPoints.Length - 1;
+                agent.SetDestination(patrolPoints[currIndex].transform.position);
             }
         }
     }
