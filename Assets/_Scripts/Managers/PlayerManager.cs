@@ -64,7 +64,6 @@ public class PlayerManager : NetworkBehaviour
         var victimStats = victim.stats;
 
         victimStats.AddDeath();
-
         victimStats.isRespawning = true;
         victimStats.ResetHealth();
 

@@ -1,4 +1,5 @@
 using System;
+using FishNet;
 using FishNet.Connection;
 using FishNet.Object;
 using FishNet.Object.Synchronizing;
@@ -14,10 +15,15 @@ public class PlayerStats : NetworkBehaviour
     public readonly SyncVar<int> kills = new SyncVar<int>(0);
     public readonly SyncVar<int> deaths = new SyncVar<int>(0);
     
+    [SerializeField] private Animator animator;
     [SerializeField] private TMP_Text _usernameTextOnBillboard;
     [SerializeField] private AudioSource _hitAudioSource;
     [SerializeField] private AudioClip _hitAudioClip;
     [SerializeField] private GameObject _damageTakenVfx;
+    [SerializeField] private GameObject deathScreenUI;
+    [SerializeField] private TMP_Text respawnTimerText; // optional: assign in inspector (child text that shows time)
+    [SerializeField] private float respawnDuration = 5f; // default countdown length
+    private Coroutine _respawnCoroutine;
     
     [Header("UI stats")]
     [SerializeField] private TMP_Text _killText; 
@@ -59,6 +65,7 @@ public class PlayerStats : NetworkBehaviour
             {
                 CmdSetUsername("Player " + OwnerId); 
             }
+            animator = gameObject.GetComponentInChildren<Animator>();
         }
     }
 
@@ -109,11 +116,58 @@ public class PlayerStats : NetworkBehaviour
         
         SetHealth(damage);
         
+        if (health.Value <= 0)
+        {
+            OnPlayerDeath();
+        }
+        
         TargetHitSound(Owner);
         TargetShakeCamera(Owner, 0.5f, 0.1f);
         TargetDamagedVFX();
     }
 
+    private void OnPlayerDeath()
+    {
+        isRespawning = true;
+        ShowDeathScreen();
+        PlayDeathAnimation();
+    }
+    private void PlayDeathAnimation()
+    {
+        if(animator == null)
+        {
+            Debug.LogError("No animator in PlayerStats::PlayDeatAnimation");
+            return;
+        }
+        animator.SetTrigger("isDying");
+        Debug.Log("Death animation triggered on server");
+    }
+    
+    private void ShowDeathScreen()
+    {
+        if (deathScreenUI == null) return;
+        deathScreenUI.SetActive(true);
+
+        // start countdown (stop previous if any)
+        if (_respawnCoroutine != null) StopCoroutine(_respawnCoroutine);
+        _respawnCoroutine = StartCoroutine(RespawnCountdown(respawnDuration));
+    }
+    
+    public void HideDeathScreen()
+    {
+        if (deathScreenUI != null)
+        {
+            deathScreenUI.SetActive(false);
+           if (_respawnCoroutine != null)
+           {
+               StopCoroutine(_respawnCoroutine);
+               _respawnCoroutine = null;
+           }
+           // optional: reset text
+           if (respawnTimerText != null) respawnTimerText.text = "";
+        }
+    }
+    
     [Server]
     public void HealPlayer(int healAmount)
     {
@@ -141,6 +195,7 @@ public class PlayerStats : NetworkBehaviour
     public void ResetHealth()
     {
         health.Value = 100;
+        HideDeathScreen();
     }
 
     private void SetHealth(int value)
@@ -189,5 +244,20 @@ public class PlayerStats : NetworkBehaviour
             healthText.text = current.ToString();
             healthSlider.value = health.Value;
         }
+    }
+
+    private System.Collections.IEnumerator RespawnCountdown(float seconds)
+    {
+        float t = seconds;
+        while (t > 0f)
+        {
+            if (respawnTimerText != null)
+                respawnTimerText.text = $"Respawning in {Mathf.CeilToInt(t)}";
+            yield return new WaitForSeconds(1f);
+            t -= 1f;
+        }
+        if (respawnTimerText != null)
+            respawnTimerText.text = "Respawning";
+        _respawnCoroutine = null;
     }
 }
