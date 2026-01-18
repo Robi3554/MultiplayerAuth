@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 
-public class PauseMenuManager : MonoBehaviour // Regular MonoBehaviour, not NetworkBehaviour
+public class PauseMenuManager : MonoBehaviour 
 {
     [SerializeField] private Canvas _pauseMenuCanvas;
     [SerializeField] private string _menuSceneName = "WelcomeScreen";
@@ -20,7 +20,6 @@ public class PauseMenuManager : MonoBehaviour // Regular MonoBehaviour, not Netw
 
     private void Update()
     {
-        // Listen for ESC key globally
         if (Keyboard.current != null && Keyboard.current.escapeKey.wasPressedThisFrame)
         {
             if (_isPaused)
@@ -37,7 +36,7 @@ public class PauseMenuManager : MonoBehaviour // Regular MonoBehaviour, not Netw
         PredictionMoving[] allPlayers = FindObjectsByType<PredictionMoving>(FindObjectsSortMode.None);
         foreach (var player in allPlayers)
         {
-            if (player.IsOwner) // Safe to use here because we're not in Start()
+            if (player.IsOwner) 
             {
                 _playerMovement = player;
                 _playerInput = player.GetComponent<PlayerInput>();

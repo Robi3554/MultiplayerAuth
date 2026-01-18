@@ -33,7 +33,6 @@ public class PlayerManager : NetworkBehaviour
         if (playerStats == null) return;
 
         playerStats.HealPlayer(healAmount);
-
     }
 
     public void DamagePlayer(int victimClientId, int damage, int attackerClientId)
@@ -68,9 +67,14 @@ public class PlayerManager : NetworkBehaviour
         victimStats.isRespawning = true;
         victimStats.ResetHealth();
 
+        // ADD KILL TO ATTACKER AND CHECK WIN CONDITION
         if (players.ContainsKey(attackerClientId))
         {
-            players[attackerClientId].stats?.AddKill();
+            var attackerStats = players[attackerClientId].stats;
+            if (attackerStats != null)
+            {
+                attackerStats.AddKill(); // This triggers GameModeManager.OnPlayerKill()
+            }
         }
 
         int spawnIndex = Random.Range(0, spawnPoints.Count);
@@ -84,13 +88,22 @@ public class PlayerManager : NetworkBehaviour
     void RespawnPlayer(NetworkConnection conn, GameObject player, int spawn)
     {
         player.transform.position = spawnPoints[spawn].position;
+        player.transform.rotation = spawnPoints[spawn].rotation;
+        
+        // Reset velocity
+        var rb = player.GetComponent<Rigidbody>();
+        if (rb != null)
+        {
+            rb.linearVelocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
+        }
     }
 
     [TargetRpc]
     void ReloadPlayerGuns(NetworkConnection conn, GameObject player)
     {
         var weapons = player.GetComponentsInChildren<Weapon>(true);
-        Debug.Log("Weapons : " +  weapons.Length);
+        Debug.Log("Weapons : " + weapons.Length);
         foreach (var weapon in weapons)
         {
             weapon.OnDeathReload();
@@ -101,6 +114,43 @@ public class PlayerManager : NetworkBehaviour
     {
         yield return new WaitForSeconds(1f);
         stats.isRespawning = false;
+    }
+
+    // NEW METHOD: Called by GameModeManager to reset all players
+    [Server]
+    public void ResetAllPlayers()
+    {
+        Debug.Log("[PlayerManager] Resetting all players...");
+
+        foreach (var kvp in players)
+        {
+            var player = kvp.Value;
+            if (player.stats != null)
+            {
+                // Reset stats
+                player.stats.kills.Value = 0;
+                player.stats.deaths.Value = 0;
+                player.stats.health.Value = 100;
+                player.stats.isRespawning = false;
+
+                // Respawn at random location
+                int spawnIndex = Random.Range(0, spawnPoints.Count);
+                RespawnPlayer(player.connection, player.playerObject, spawnIndex);
+                ReloadPlayerGuns(player.connection, player.playerObject);
+            }
+        }
+    }
+
+    // NEW METHOD: Get random spawn point (for GameModeManager)
+    public Transform GetRandomSpawnPoint()
+    {
+        if (spawnPoints == null || spawnPoints.Count == 0)
+        {
+            Debug.LogWarning("[PlayerManager] No spawn points configured!");
+            return null;
+        }
+
+        return spawnPoints[Random.Range(0, spawnPoints.Count)];
     }
 
     public class Player
