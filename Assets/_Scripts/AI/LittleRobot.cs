@@ -163,17 +163,12 @@ public class LittleRobot : NetworkBehaviour
         agent.ResetPath();
     }
 
-    public void DestroyRobot(NetworkObject player)
-    {
-        DestroyRobotServer(player);
-    }
-
     [ServerRpc(RequireOwnership = false)]
-    private void DestroyRobotServer(NetworkObject player)
+    public void DestroyRobot(NetworkObject player)
     {
         StartCoroutine(TriggerEffect(player));
 
-        ServerManager.Despawn(base.NetworkObject.gameObject);
+        ServerManager.Despawn(NetworkObject);
     }
 
     private IEnumerator TriggerEffect(NetworkObject player)
