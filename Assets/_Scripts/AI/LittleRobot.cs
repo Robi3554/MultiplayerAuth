@@ -49,30 +49,47 @@ public class LittleRobot : NetworkBehaviour
         if (!IsServerInitialized)
             return;
 
-        float closestDist = DetectClosestPlayer();
-
         switch (currentState)
         {
             case State.Patroling:
-                if (closestDist < detectionRadius)
-                    currentState = State.Fleeing;
-                else
-                    Patrol();
-                break;
+                {
+                    float closestDist = DetectClosestPlayer();
+
+                    if (targetPlayer != null && closestDist < detectionRadius)
+                    {
+                        currentState = State.Fleeing;
+                        nextPathUpdateTime = 0f;
+                    }
+                    else
+                    {
+                        Patrol();
+                    }
+                    break;
+                }
 
             case State.Fleeing:
-                if (Time.time >= nextPathUpdateTime)
                 {
-                    FleeFromPlayer();
-                    nextPathUpdateTime = Time.time + repathDelay;
-                }
+                    if (targetPlayer == null)
+                    {
+                        ExitFlee();
+                        break;
+                    }
 
-                if (targetPlayer == null || closestDist > safeDistance)
-                {
-                    currentState = State.Patroling;
-                    SwitchDirection();
+                    float dist = Vector3.Distance(transform.position, targetPlayer.position);
+
+                    if (dist > safeDistance)
+                    {
+                        ExitFlee();
+                        break;
+                    }
+
+                    if (Time.time >= nextPathUpdateTime)
+                    {
+                        FleeFromPlayer();
+                        nextPathUpdateTime = Time.time + repathDelay;
+                    }
+                    break;
                 }
-                break;
         }
 
         if (agent.velocity.sqrMagnitude > 0.1f)
@@ -163,19 +180,18 @@ public class LittleRobot : NetworkBehaviour
         agent.ResetPath();
     }
 
-    [ServerRpc(RequireOwnership = false)]
-    public void DestroyRobot(NetworkObject player)
+    private void ExitFlee()
     {
-        StartCoroutine(TriggerEffect(player));
-
-        ServerManager.Despawn(NetworkObject);
+        currentState = State.Patroling;
+        targetPlayer = null;
+        agent.speed = minSpeed;
+        agent.ResetPath();
+        SwitchDirection();
     }
 
-    private IEnumerator TriggerEffect(NetworkObject player)
+    public void DestroyRobot(NetworkObject player)
     {
         powerup.TriggerEffect(player);
-
-        yield return new WaitForSeconds(5f);
     }
 
     private void OnTriggerEnter(Collider col)

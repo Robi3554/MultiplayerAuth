@@ -143,8 +143,10 @@ public class PredictionMelee : NetworkBehaviour
 			else if (enemyCollider.CompareTag("Robot"))
 			{
 				Debug.Log("Melee: Hit robot!");
-				enemyCollider.GetComponent<LittleRobot>().DestroyRobot(playerCollider.GetComponent<NetworkObject>());   
-			}
+				var robot = enemyCollider.GetComponent<LittleRobot>();
+                robot.DestroyRobot(playerCollider.GetComponent<NetworkObject>());
+                DespawnRobot(robot.NetworkObject);
+            }
             
 			StartCooldownServerRpc();
 			_cooldownTimer = 0f;
@@ -152,7 +154,15 @@ public class PredictionMelee : NetworkBehaviour
 			Slash = false;
 		}
 	}
-	// Add this method to handle animation completion
+
+    [ServerRpc(RequireOwnership = false)]
+	private void DespawnRobot(NetworkObject robot)
+	{
+        ServerManager.Despawn(robot);
+    }
+
+
+    // Add this method to handle animation completion
     public void OnAnimationComplete()
     {
         Debug.Log("Melee: Animation completed");
