@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class RobotSpawnManager : NetworkBehaviour
 {
+    public static RobotSpawnManager Instance;
+
     [SerializeField]
     private Transform[] spawnPoints;
     [SerializeField]
@@ -13,6 +15,11 @@ public class RobotSpawnManager : NetworkBehaviour
     private float _timer;
 
     private GameObject _currentRobot;
+
+    private void Awake()
+    {
+        Instance = this;
+    }
 
     public override void OnStartServer()
     {
@@ -51,6 +58,19 @@ public class RobotSpawnManager : NetworkBehaviour
         robotScript.OnRobotKilled += HandleRobotKilled;
 
         ServerManager.Spawn(instance);
+    }
+
+    public void DespawnRobot(NetworkObject robot)
+    {
+        if (!IsServerInitialized)
+            return;
+
+        if (robot != null && robot.IsSpawned)
+        {
+            ServerManager.Despawn(robot);
+            Debug.Log($"SERVER: Robot {robot.name} despawned");
+            _currentRobot = null;
+        }
     }
 
     private void HandleRobotKilled(LittleRobot robot)

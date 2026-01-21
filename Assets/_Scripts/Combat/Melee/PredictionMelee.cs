@@ -162,7 +162,7 @@ public class PredictionMelee : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
 	private void DespawnRobot(NetworkObject robot)
 	{
-        ServerManager.Despawn(robot);
+		RobotSpawnManager.Instance.DespawnRobot(robot);
     }
 
 
