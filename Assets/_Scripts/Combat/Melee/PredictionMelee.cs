@@ -19,7 +19,7 @@ public class PredictionMelee : NetworkBehaviour
 
     protected PlayerStats playerStats;
 
-    protected int Damage => damage.Value * playerStats.damageMult.Value;
+    protected int Damage => damage.Value * playerStats.damageMult;
 
     [Header("References")]
 	[SerializeField] private Transform slashPoint;
@@ -47,6 +47,7 @@ public class PredictionMelee : NetworkBehaviour
 	{
 		base.OnStartNetwork();
 		playerCollider = GetComponentInParent<CapsuleCollider>();
+		playerStats = GetComponentInParent<PlayerStats>();
 	}
 
 	public void OnDamage(InputAction.CallbackContext context)
@@ -142,7 +143,9 @@ public class PredictionMelee : NetworkBehaviour
 				Debug.Log("Melee: Hit a player");
 				int targetId = enemyCollider.transform.GetComponent<NetworkObject>().Owner.ClientId;
 				int attackerId = transform.GetComponent<NetworkObject>().Owner.ClientId;
+				Debug.Log($"DAVEEEEEEE: target: {targetId} aaaand attacker: {attackerId}");
 				PlayerManager.Instance.DamagePlayer(targetId, Damage, attackerId);
+				
 			}
 			else if (enemyCollider.CompareTag("Robot"))
 			{
@@ -150,7 +153,7 @@ public class PredictionMelee : NetworkBehaviour
 				var robot = enemyCollider.GetComponent<LittleRobot>();
                 robot.DestroyRobot(playerCollider.GetComponent<NetworkObject>());
                 DespawnRobot(robot.NetworkObject);
-            }
+			}
             
 			StartCooldownServerRpc();
 			_cooldownTimer = 0f;

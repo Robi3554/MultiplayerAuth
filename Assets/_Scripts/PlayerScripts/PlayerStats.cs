@@ -15,7 +15,7 @@ public class PlayerStats : NetworkBehaviour
     public readonly SyncVar<int> health = new SyncVar<int>(100);
     public readonly SyncVar<int> kills = new SyncVar<int>(0);
     public readonly SyncVar<int> deaths = new SyncVar<int>(0);
-    public readonly SyncVar<int> damageMult = new SyncVar<int>(1);
+    public int damageMult = 1;
     
     [SerializeField] private TMP_Text _usernameTextOnBillboard;
     [SerializeField] private AudioSource _hitAudioSource;
@@ -257,12 +257,12 @@ public class PlayerStats : NetworkBehaviour
 
     private IEnumerator ChangeMultCo(int multiplier)
     {
-        int oldMultiplier = damageMult.Value;
-        damageMult.Value = multiplier;
+        int oldMultiplier = damageMult;
+        damageMult = multiplier;
 
         yield return new WaitForSeconds(10f);
 
-        damageMult.Value = oldMultiplier;
+        damageMult = oldMultiplier;
     }
     #endregion
 }

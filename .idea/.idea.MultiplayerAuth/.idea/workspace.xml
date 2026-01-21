@@ -6,10 +6,13 @@
   <component name="ChangeListManager">
     <list default="true" id="a0eb1c48-2865-41a0-83f6-bbf548ef18a9" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.MultiplayerAuth/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.MultiplayerAuth/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/_Scripts/AI/LittleRobot.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/_Scripts/AI/LittleRobot.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/_Scripts/AI/RobotSpawnManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/_Scripts/AI/RobotSpawnManager.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scenes/SampleScene.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/SampleScene.unity" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/_Scripts/Combat/Melee/PredictionMelee.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/_Scripts/Combat/Melee/PredictionMelee.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ProjectSettings/EditorBuildSettings.asset" beforeDir="false" afterPath="$PROJECT_DIR$/ProjectSettings/EditorBuildSettings.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/_Scripts/Combat/Weapon.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/_Scripts/Combat/Weapon.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/_Scripts/Managers/GameBootstrap.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/_Scripts/Managers/GameBootstrap.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/_Scripts/Managers/PlayerManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/_Scripts/Managers/PlayerManager.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/_Scripts/PlayerScripts/PlayerStats.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/_Scripts/PlayerScripts/PlayerStats.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ProjectSettings/TagManager.asset" beforeDir="false" afterPath="$PROJECT_DIR$/ProjectSettings/TagManager.asset" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -55,7 +58,7 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "git-widget-placeholder": "features-robi/robot-improvements",
+    "git-widget-placeholder": "main",
     "ignore.virus.scanning.warn.message": "true",
     "node.js.detected.package.eslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -145,7 +148,7 @@
       <workItem from="1765212085551" duration="1066000" />
       <workItem from="1768759764629" duration="397000" />
       <workItem from="1768765614638" duration="311000" />
-      <workItem from="1769020753413" duration="1136000" />
+      <workItem from="1769020753413" duration="4910000" />
     </task>
     <servers />
   </component>

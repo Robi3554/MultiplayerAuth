@@ -180,5 +180,5 @@ public abstract class Weapon : MonoBehaviour
 
     protected abstract void HandleShootInput(InputAction.CallbackContext context);
 
-    protected int Damage => damage * playerStats.damageMult.Value;
+    protected int Damage => damage * playerStats.damageMult;
 }

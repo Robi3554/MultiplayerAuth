@@ -79,8 +79,8 @@ public class NetworkBootstrap : MonoBehaviour
 #else
         // --- BUILD MODE: Default Host (no defines) ---
         Console.WriteLine("-----------------------------------------");
-        Console.WriteLine($"This is the dedicated server. The IP will be: 193.226.15.26");
-        string serverAddress = "193.226.15.26";
+        Console.WriteLine($"Enter the server IP address to bind to:");
+        string serverAddress = Console.ReadLine();
 
         if (string.IsNullOrWhiteSpace(serverAddress))
         {

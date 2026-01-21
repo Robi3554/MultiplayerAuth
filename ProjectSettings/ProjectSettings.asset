@@ -761,7 +761,7 @@ PlayerSettings:
   webEnableSubmoduleStrippingCompatibility: 0
   scriptingDefineSymbols:
     Android: FISHNET;FISHNET_V4;CLIENT
-    Server: FISHNET;FISHNET_V4
+    Server: FISHNET;FISHNET_V4;DEDICATED_SERVER
     Standalone: FISHNET;FISHNET_V4;FISHNET_DISABLE_V3TOV4_HELPERS;CLIENT
   additionalCompilerArguments: {}
   platformArchitecture: {}

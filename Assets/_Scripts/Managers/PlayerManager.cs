@@ -37,17 +37,24 @@ public class PlayerManager : NetworkBehaviour
 
     public void DamagePlayer(int victimClientId, int damage, int attackerClientId)
     {
+        Debug.Log("DAVEEE: DamagePlayer entered!");
         if (!IsServerInitialized)
             return;
+        
+        Debug.Log("DAVEEE: continai");
 
         if (!players.ContainsKey(victimClientId))
         {
             return;
         }
+        Debug.Log("DAVEEE: Am ajuns aici?");
 
         var victim = players[victimClientId];
+        Debug.Log("DAVEEE: vicky {}");
         var victimStats = victim.stats;
         if (victimStats == null) return;
+        
+        Debug.Log("DAVEEE: de aici incolo dam damage!!!!");
 
         victimStats.TakeDamage(damage);
 
