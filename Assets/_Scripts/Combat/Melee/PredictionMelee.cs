@@ -17,7 +17,11 @@ public class PredictionMelee : NetworkBehaviour
 	[AllowMutableSyncType]
 	[SerializeField] private SyncVar<int> damage = new SyncVar<int>(10);
 
-	[Header("References")]
+    protected PlayerStats playerStats;
+
+    protected int Damage => damage.Value * playerStats.damageMult.Value;
+
+    [Header("References")]
 	[SerializeField] private Transform slashPoint;
 	[SerializeField] private float coneAngle = 60f;
 	[SerializeField] private ParticleSystem VFX_SLASH;
@@ -138,7 +142,7 @@ public class PredictionMelee : NetworkBehaviour
 				Debug.Log("Melee: Hit a player");
 				int targetId = enemyCollider.transform.GetComponent<NetworkObject>().Owner.ClientId;
 				int attackerId = transform.GetComponent<NetworkObject>().Owner.ClientId;
-				PlayerManager.Instance.DamagePlayer(targetId, damage.Value, attackerId);
+				PlayerManager.Instance.DamagePlayer(targetId, Damage, attackerId);
 			}
 			else if (enemyCollider.CompareTag("Robot"))
 			{

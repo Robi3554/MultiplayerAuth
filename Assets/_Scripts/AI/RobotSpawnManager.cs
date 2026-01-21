@@ -12,6 +12,8 @@ public class RobotSpawnManager : NetworkBehaviour
     private int timeBetweenSpawns;
     private float _timer;
 
+    private GameObject _currentRobot;
+
     public override void OnStartServer()
     {
         base.OnStartServer();
@@ -21,6 +23,9 @@ public class RobotSpawnManager : NetworkBehaviour
     private void Update()
     {
         if (!IsServerInitialized)
+            return;
+
+        if (_currentRobot != null)
             return;
 
         _timer -= Time.deltaTime;
@@ -37,11 +42,20 @@ public class RobotSpawnManager : NetworkBehaviour
         Transform spawnPoint = spawnPoints[UnityEngine.Random.Range(0, spawnPoints.Length)];
 
         GameObject instance = Instantiate(robot, spawnPoint.position, spawnPoint.rotation);
+        _currentRobot = instance;
         LittleRobot robotScript = instance.GetComponent<LittleRobot>();
         robotScript.patrolPoints = new Transform[spawnPoints.Length];
 
         Array.Copy(spawnPoints, robotScript.patrolPoints, spawnPoints.Length);
 
+        robotScript.OnRobotKilled += HandleRobotKilled;
+
         ServerManager.Spawn(instance);
+    }
+
+    private void HandleRobotKilled(LittleRobot robot)
+    {
+        robot.OnRobotKilled -= HandleRobotKilled;
+        _currentRobot = null;
     }
 }

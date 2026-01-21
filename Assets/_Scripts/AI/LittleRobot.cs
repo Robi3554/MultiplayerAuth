@@ -1,6 +1,5 @@
-using System.Collections;
+using System;
 using FishNet.Object;
-using FishNet.Serializing.Helping;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -36,6 +35,8 @@ public class LittleRobot : NetworkBehaviour
 
     private enum State { Patroling, Fleeing }
     private State currentState = State.Patroling;
+
+    public event Action<LittleRobot> OnRobotKilled;
 
     void Start()
     {
@@ -160,7 +161,7 @@ public class LittleRobot : NetworkBehaviour
         {
             Vector3 fleeDir = (transform.position - targetPlayer.position).normalized;
 
-            float angleOffset = Random.Range(-45f, 45f);
+            float angleOffset = UnityEngine.Random.Range(-45f, 45f);
             fleeDir = Quaternion.Euler(0, angleOffset, 0) * fleeDir;
             fleeDir.Normalize();
 
@@ -182,15 +183,31 @@ public class LittleRobot : NetworkBehaviour
 
     private void ExitFlee()
     {
-        currentState = State.Patroling;
-        targetPlayer = null;
-        agent.speed = minSpeed;
-        agent.ResetPath();
-        SwitchDirection();
+        if (!agent.pathPending &&
+        agent.remainingDistance <= agent.stoppingDistance &&
+        (!agent.hasPath || agent.velocity.sqrMagnitude < 0.01f))
+        {
+            prevIndex = currIndex;
+
+            if (dirClockwise)
+            {
+                currIndex = (currIndex + 1) % patrolPoints.Length;
+            }
+            else
+            {
+                currIndex--;
+                if (currIndex < 0)
+                    currIndex = patrolPoints.Length - 1;
+            }
+
+            agent.SetDestination(patrolPoints[currIndex].position);
+        }
     }
 
     public void DestroyRobot(NetworkObject player)
     {
+        OnRobotKilled?.Invoke(this);
+
         powerup.TriggerEffect(player);
     }
 
