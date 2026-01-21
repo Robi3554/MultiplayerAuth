@@ -17,7 +17,11 @@ public class PredictionMelee : NetworkBehaviour
 	[AllowMutableSyncType]
 	[SerializeField] private SyncVar<int> damage = new SyncVar<int>(10);
 
-	[Header("References")]
+    protected PlayerStats playerStats;
+
+    protected int Damage => damage.Value * playerStats.damageMult.Value;
+
+    [Header("References")]
 	[SerializeField] private Transform slashPoint;
 	[SerializeField] private float coneAngle = 60f;
 	[SerializeField] private ParticleSystem VFX_SLASH;
@@ -138,13 +142,15 @@ public class PredictionMelee : NetworkBehaviour
 				Debug.Log("Melee: Hit a player");
 				int targetId = enemyCollider.transform.GetComponent<NetworkObject>().Owner.ClientId;
 				int attackerId = transform.GetComponent<NetworkObject>().Owner.ClientId;
-				PlayerManager.Instance.DamagePlayer(targetId, damage.Value, attackerId);
+				PlayerManager.Instance.DamagePlayer(targetId, Damage, attackerId);
 			}
 			else if (enemyCollider.CompareTag("Robot"))
 			{
 				Debug.Log("Melee: Hit robot!");
-				enemyCollider.GetComponent<LittleRobot>().DestroyRobot(playerCollider.GetComponent<NetworkObject>());   
-			}
+				var robot = enemyCollider.GetComponent<LittleRobot>();
+                robot.DestroyRobot(playerCollider.GetComponent<NetworkObject>());
+                DespawnRobot(robot.NetworkObject);
+            }
             
 			StartCooldownServerRpc();
 			_cooldownTimer = 0f;
@@ -152,7 +158,17 @@ public class PredictionMelee : NetworkBehaviour
 			Slash = false;
 		}
 	}
-	// Add this method to handle animation completion
+
+    //[ServerRpc(RequireOwnership = false)]
+	private void DespawnRobot(NetworkObject robot)
+	{
+		Debug.Log("DAVIDDDDDDDDDDDDDDDDDDDD: Despawned robot");
+		RobotSpawnManager.Instance.DespawnRobot(robot);
+		Debug.Log("DAVIDDDDDDDDDDDDDDDDDDDD: OUT");
+    }
+
+
+    // Add this method to handle animation completion
     public void OnAnimationComplete()
     {
         Debug.Log("Melee: Animation completed");

@@ -73,14 +73,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: facb0a8d0a2ae0648a5a0514205ab520, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LittleRobot
-  _componentIndexCache: 255
+  _componentIndexCache: 0
   _addedNetworkObject: {fileID: 5021843577325446240}
-  _networkObjectCache: {fileID: 0}
-  detectionRadius: 12
+  _networkObjectCache: {fileID: 5021843577325446240}
+  detectionRadius: 10
   playerMask:
     serializedVersion: 2
     m_Bits: 64
-  safeDistance: 10
+  safeDistance: 9
   fleeDistanceStep: 7
   maxFleeAttempts: 8
   repathDelay: 0.5
@@ -100,9 +100,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 40bcde17fa5e03f44b87f9963ac281b3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: FishNet.Runtime::FishNet.Component.Prediction.NetworkCollision
-  _componentIndexCache: 255
+  _componentIndexCache: 1
   _addedNetworkObject: {fileID: 5021843577325446240}
-  _networkObjectCache: {fileID: 0}
+  _networkObjectCache: {fileID: 5021843577325446240}
   MaximumSimultaneousHits: 16
   AdditionalSize: 0.1
   Layers:
@@ -126,7 +126,10 @@ MonoBehaviour:
   <ComponentIndex>k__BackingField: 0
   <PredictedSpawn>k__BackingField: {fileID: 0}
   <PredictedOwner>k__BackingField: {fileID: 0}
-  NetworkBehaviours: []
+  NetworkBehaviours:
+  - {fileID: 8272609484497269027}
+  - {fileID: -9128634061133948564}
+  - {fileID: 8318660718515258173}
   InitializedParentNetworkBehaviour: {fileID: 0}
   InitializedNestedNetworkObjects: []
   RuntimeParentNetworkBehaviour: {fileID: 0}
@@ -151,15 +154,15 @@ MonoBehaviour:
   _spectatorInterpolation: 2
   _enableTeleport: 0
   _teleportThreshold: 1
-  <PrefabId>k__BackingField: 65535
+  <PrefabId>k__BackingField: 17
   <SpawnableCollectionId>k__BackingField: 0
   <AssetPathHash>k__BackingField: 14313415261445896477
   <SceneId>k__BackingField: 0
   SerializedTransformProperties:
-    Position: {x: 0, y: 0, z: 0}
-    Rotation: {x: 0, y: 0, z: 0, w: 0}
-    Scale: {x: 0, y: 0, z: 0}
-    IsValid: 0
+    Position: {x: 23.5, y: 2.32, z: 22.4}
+    Rotation: {x: 0, y: 0, z: 0, w: 1}
+    Scale: {x: 1, y: 1, z: 1}
+    IsValid: 1
 --- !u!114 &8318660718515258173
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -172,9 +175,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a2836e36774ca1c4bbbee976e17b649c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: FishNet.Runtime::FishNet.Component.Transforming.NetworkTransform
-  _componentIndexCache: 255
+  _componentIndexCache: 2
   _addedNetworkObject: {fileID: 5021843577325446240}
-  _networkObjectCache: {fileID: 0}
+  _networkObjectCache: {fileID: 5021843577325446240}
   _componentConfiguration: 0
   _synchronizeParent: 0
   _packing:

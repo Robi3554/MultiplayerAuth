@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class RobotSpawnManager : NetworkBehaviour
 {
+    public static RobotSpawnManager Instance;
+
     [SerializeField]
     private Transform[] spawnPoints;
     [SerializeField]
@@ -11,6 +13,13 @@ public class RobotSpawnManager : NetworkBehaviour
     [SerializeField]
     private int timeBetweenSpawns;
     private float _timer;
+
+    private GameObject _currentRobot;
+
+    private void Awake()
+    {
+        Instance = this;
+    }
 
     public override void OnStartServer()
     {
@@ -21,6 +30,9 @@ public class RobotSpawnManager : NetworkBehaviour
     private void Update()
     {
         if (!IsServerInitialized)
+            return;
+
+        if (_currentRobot != null)
             return;
 
         _timer -= Time.deltaTime;
@@ -37,11 +49,38 @@ public class RobotSpawnManager : NetworkBehaviour
         Transform spawnPoint = spawnPoints[UnityEngine.Random.Range(0, spawnPoints.Length)];
 
         GameObject instance = Instantiate(robot, spawnPoint.position, spawnPoint.rotation);
+        _currentRobot = instance;
         LittleRobot robotScript = instance.GetComponent<LittleRobot>();
         robotScript.patrolPoints = new Transform[spawnPoints.Length];
 
         Array.Copy(spawnPoints, robotScript.patrolPoints, spawnPoints.Length);
 
+        robotScript.OnRobotKilled += HandleRobotKilled;
+
         ServerManager.Spawn(instance);
+    }
+
+    public void DespawnRobot(NetworkObject robot)
+    {
+        Debug.Log($"Am I Server? {IsServerInitialized}. Is Object Spawned? {robot.IsSpawned}");
+        
+        if (!IsServerInitialized)
+            return;
+        
+        Debug.Log($"SERVER: Prima conditie {robot != null} - a doua : {robot.IsSpawned}");
+
+        if (robot != null && robot.IsSpawned)
+        {
+            Debug.Log("Am intrat si aici");
+            ServerManager.Despawn(robot);
+            Debug.Log($"SERVER: Robot {robot.name} despawned");
+            _currentRobot = null;
+        }
+    }
+
+    private void HandleRobotKilled(LittleRobot robot)
+    {
+        robot.OnRobotKilled -= HandleRobotKilled;
+        _currentRobot = null;
     }
 }

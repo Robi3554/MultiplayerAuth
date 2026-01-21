@@ -1,6 +1,5 @@
-using System.Collections;
+using System;
 using FishNet.Object;
-using FishNet.Serializing.Helping;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -37,6 +36,8 @@ public class LittleRobot : NetworkBehaviour
     private enum State { Patroling, Fleeing }
     private State currentState = State.Patroling;
 
+    public event Action<LittleRobot> OnRobotKilled;
+
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();
@@ -49,30 +50,47 @@ public class LittleRobot : NetworkBehaviour
         if (!IsServerInitialized)
             return;
 
-        float closestDist = DetectClosestPlayer();
-
         switch (currentState)
         {
             case State.Patroling:
-                if (closestDist < detectionRadius)
-                    currentState = State.Fleeing;
-                else
-                    Patrol();
-                break;
+                {
+                    float closestDist = DetectClosestPlayer();
+
+                    if (targetPlayer != null && closestDist < detectionRadius)
+                    {
+                        currentState = State.Fleeing;
+                        nextPathUpdateTime = 0f;
+                    }
+                    else
+                    {
+                        Patrol();
+                    }
+                    break;
+                }
 
             case State.Fleeing:
-                if (Time.time >= nextPathUpdateTime)
                 {
-                    FleeFromPlayer();
-                    nextPathUpdateTime = Time.time + repathDelay;
-                }
+                    if (targetPlayer == null)
+                    {
+                        ExitFlee();
+                        break;
+                    }
 
-                if (targetPlayer == null || closestDist > safeDistance)
-                {
-                    currentState = State.Patroling;
-                    SwitchDirection();
+                    float dist = Vector3.Distance(transform.position, targetPlayer.position);
+
+                    if (dist > safeDistance)
+                    {
+                        ExitFlee();
+                        break;
+                    }
+
+                    if (Time.time >= nextPathUpdateTime)
+                    {
+                        FleeFromPlayer();
+                        nextPathUpdateTime = Time.time + repathDelay;
+                    }
+                    break;
                 }
-                break;
         }
 
         if (agent.velocity.sqrMagnitude > 0.1f)
@@ -143,7 +161,7 @@ public class LittleRobot : NetworkBehaviour
         {
             Vector3 fleeDir = (transform.position - targetPlayer.position).normalized;
 
-            float angleOffset = Random.Range(-45f, 45f);
+            float angleOffset = UnityEngine.Random.Range(-45f, 45f);
             fleeDir = Quaternion.Euler(0, angleOffset, 0) * fleeDir;
             fleeDir.Normalize();
 
@@ -163,24 +181,36 @@ public class LittleRobot : NetworkBehaviour
         agent.ResetPath();
     }
 
+    private void ExitFlee()
+    {
+        if (!agent.pathPending &&
+        agent.remainingDistance <= agent.stoppingDistance &&
+        (!agent.hasPath || agent.velocity.sqrMagnitude < 0.01f))
+        {
+            prevIndex = currIndex;
+
+            if (dirClockwise)
+            {
+                currIndex = (currIndex + 1) % patrolPoints.Length;
+            }
+            else
+            {
+                currIndex--;
+                if (currIndex < 0)
+                    currIndex = patrolPoints.Length - 1;
+            }
+
+            agent.SetDestination(patrolPoints[currIndex].position);
+        }
+    }
+
     public void DestroyRobot(NetworkObject player)
     {
-        DestroyRobotServer(player);
-    }
+        Debug.Log($"[Robot Log] LittleRobot {gameObject.name} was destroyed. Killer: {(player != null ? player.name : "Unknown")}");
+        
+        OnRobotKilled?.Invoke(this);
 
-    [ServerRpc(RequireOwnership = false)]
-    private void DestroyRobotServer(NetworkObject player)
-    {
-        StartCoroutine(TriggerEffect(player));
-
-        ServerManager.Despawn(base.NetworkObject.gameObject);
-    }
-
-    private IEnumerator TriggerEffect(NetworkObject player)
-    {
         powerup.TriggerEffect(player);
-
-        yield return new WaitForSeconds(5f);
     }
 
     private void OnTriggerEnter(Collider col)
@@ -188,6 +218,12 @@ public class LittleRobot : NetworkBehaviour
         if (col.CompareTag("PatrolPoint"))
         {
             currentPoint = agent.destination;
+        }
+
+        // Logic for taking damage/being killed via collision (e.g., projectiles or player melee)
+        if (col.CompareTag("Projectile") || col.CompareTag("PlayerAttack"))
+        {
+            Debug.Log($"[Robot Log] LittleRobot {gameObject.name} took damage from {col.gameObject.name} via Trigger.");
         }
     }
 

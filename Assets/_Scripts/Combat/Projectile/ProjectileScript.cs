@@ -26,6 +26,7 @@ public class ProjectileScript : NetworkBehaviour
 
         this.damage = damage;
         this.maxTravelDistance = maxDistance;
+        this.attackerId = attackerId;
 
         rb.linearVelocity = velocity;
 
@@ -47,8 +48,6 @@ public class ProjectileScript : NetworkBehaviour
 
     private void Update()
     {
-        
-
         float distance = Vector3.Distance(spawnPosition, transform.position);
 
         float t = distance / maxTravelDistance;
@@ -63,6 +62,8 @@ public class ProjectileScript : NetworkBehaviour
     {
         if (!IsServerInitialized)
             return;
+
+        Debug.Log($"Hit attacker={attackerId}");
 
         if (col.gameObject.CompareTag("Player"))
         {

@@ -74,6 +74,7 @@ public class PlayerNetworkInitializer : NetworkBehaviour
         ServerManager.Spawn(go);
 
         int attackerId = (int)Owner.ClientId;
+        Debug.Log("Attacker ID: " +  attackerId);
 
         if (go.TryGetComponent(out ProjectileScript p))
         {
