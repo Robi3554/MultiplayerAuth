@@ -159,10 +159,12 @@ public class PredictionMelee : NetworkBehaviour
 		}
 	}
 
-    [ServerRpc(RequireOwnership = false)]
+    //[ServerRpc(RequireOwnership = false)]
 	private void DespawnRobot(NetworkObject robot)
 	{
+		Debug.Log("DAVIDDDDDDDDDDDDDDDDDDDD: Despawned robot");
 		RobotSpawnManager.Instance.DespawnRobot(robot);
+		Debug.Log("DAVIDDDDDDDDDDDDDDDDDDDD: OUT");
     }
 
 

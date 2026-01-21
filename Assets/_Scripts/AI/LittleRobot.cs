@@ -206,6 +206,8 @@ public class LittleRobot : NetworkBehaviour
 
     public void DestroyRobot(NetworkObject player)
     {
+        Debug.Log($"[Robot Log] LittleRobot {gameObject.name} was destroyed. Killer: {(player != null ? player.name : "Unknown")}");
+        
         OnRobotKilled?.Invoke(this);
 
         powerup.TriggerEffect(player);
@@ -216,6 +218,12 @@ public class LittleRobot : NetworkBehaviour
         if (col.CompareTag("PatrolPoint"))
         {
             currentPoint = agent.destination;
+        }
+
+        // Logic for taking damage/being killed via collision (e.g., projectiles or player melee)
+        if (col.CompareTag("Projectile") || col.CompareTag("PlayerAttack"))
+        {
+            Debug.Log($"[Robot Log] LittleRobot {gameObject.name} took damage from {col.gameObject.name} via Trigger.");
         }
     }
 

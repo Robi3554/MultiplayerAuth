@@ -62,11 +62,16 @@ public class RobotSpawnManager : NetworkBehaviour
 
     public void DespawnRobot(NetworkObject robot)
     {
+        Debug.Log($"Am I Server? {IsServerInitialized}. Is Object Spawned? {robot.IsSpawned}");
+        
         if (!IsServerInitialized)
             return;
+        
+        Debug.Log($"SERVER: Prima conditie {robot != null} - a doua : {robot.IsSpawned}");
 
         if (robot != null && robot.IsSpawned)
         {
+            Debug.Log("Am intrat si aici");
             ServerManager.Despawn(robot);
             Debug.Log($"SERVER: Robot {robot.name} despawned");
             _currentRobot = null;
