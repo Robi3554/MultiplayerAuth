@@ -9,7 +9,7 @@ public class RobotSpawnManager : NetworkBehaviour
     [SerializeField]
     private Transform[] spawnPoints;
     [SerializeField]
-    private GameObject robot;
+    private GameObject[] robots;
     [SerializeField]
     private int timeBetweenSpawns;
     private float _timer;
@@ -46,6 +46,8 @@ public class RobotSpawnManager : NetworkBehaviour
 
     private void SpawnRobot()
     {
+        GameObject robot = robots[UnityEngine.Random.Range(0, robots.Length-1)]; // spawn a random robot
+
         Transform spawnPoint = spawnPoints[UnityEngine.Random.Range(0, spawnPoints.Length)];
 
         GameObject instance = Instantiate(robot, spawnPoint.position, spawnPoint.rotation);
