@@ -1724,7 +1724,9 @@ MonoBehaviour:
   - {fileID: 1868551907}
   - {fileID: 135461744}
   - {fileID: 121316378}
-  robot: {fileID: 2423027033985324458, guid: d4a9b03dcbfdd4743a1a8fd84d446c0c, type: 3}
+  robots:
+  - {fileID: 2423027033985324458, guid: d4a9b03dcbfdd4743a1a8fd84d446c0c, type: 3}
+  - {fileID: 2423027033985324458, guid: d976bb77ee87d2b46a3d6bac33512678, type: 3}
   timeBetweenSpawns: 5
 --- !u!4 &730639685
 Transform:
