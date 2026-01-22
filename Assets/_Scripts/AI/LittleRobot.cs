@@ -42,6 +42,7 @@ public class LittleRobot : NetworkBehaviour
     {
         agent = GetComponent<NavMeshAgent>();
         agent.SetDestination(patrolPoints[0].transform.position);
+        currentPoint = patrolPoints[0].transform.position;
         currIndex = 0;
     }
 
@@ -121,22 +122,27 @@ public class LittleRobot : NetworkBehaviour
 
     private void Patrol()
     {
-        if (currentPoint == agent.destination)
+        if (!agent.pathPending && agent.remainingDistance <= agent.stoppingDistance)
         {
-            prevIndex = currIndex;
-            if (dirClockwise)
+            if (!agent.hasPath || agent.velocity.sqrMagnitude == 0f)
             {
-                currIndex++;
-                if (currIndex >= patrolPoints.Length)
-                    currIndex = 0;
-                agent.SetDestination(patrolPoints[currIndex].transform.position);
-            }
-            else
-            {
-                currIndex--;
-                if (currIndex <= 0)
-                    currIndex = patrolPoints.Length - 1;
-                agent.SetDestination(patrolPoints[currIndex].transform.position);
+                prevIndex = currIndex;
+                if (dirClockwise)
+                {
+                    currIndex++;
+                    if (currIndex >= patrolPoints.Length)
+                        currIndex = 0;
+                    currentPoint = patrolPoints[currIndex].transform.position;
+                    agent.SetDestination(currentPoint);
+                }
+                else
+                {
+                    currIndex--;
+                    if (currIndex <= 0)
+                        currIndex = patrolPoints.Length - 1;
+                    currentPoint = patrolPoints[currIndex].transform.position;
+                    agent.SetDestination(currentPoint);
+                }
             }
         }
     }
