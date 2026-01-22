@@ -1459,6 +1459,79 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!1001 &596239831
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 2221253801289522451, guid: a5c4f2a4fa2555c4eaf9afe9db31cdd4, type: 3}
+      propertyPath: WasActiveDuringEdit
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2221253801289522451, guid: a5c4f2a4fa2555c4eaf9afe9db31cdd4, type: 3}
+      propertyPath: <SceneId>k__BackingField
+      value: 3019363642
+      objectReference: {fileID: 0}
+    - target: {fileID: 4115225118300540139, guid: a5c4f2a4fa2555c4eaf9afe9db31cdd4, type: 3}
+      propertyPath: fireRate
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4115225118300540139, guid: a5c4f2a4fa2555c4eaf9afe9db31cdd4, type: 3}
+      propertyPath: projectileSpeed
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 6981576966671338274, guid: a5c4f2a4fa2555c4eaf9afe9db31cdd4, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -12.08048
+      objectReference: {fileID: 0}
+    - target: {fileID: 6981576966671338274, guid: a5c4f2a4fa2555c4eaf9afe9db31cdd4, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 4.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6981576966671338274, guid: a5c4f2a4fa2555c4eaf9afe9db31cdd4, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 13.32
+      objectReference: {fileID: 0}
+    - target: {fileID: 6981576966671338274, guid: a5c4f2a4fa2555c4eaf9afe9db31cdd4, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6981576966671338274, guid: a5c4f2a4fa2555c4eaf9afe9db31cdd4, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6981576966671338274, guid: a5c4f2a4fa2555c4eaf9afe9db31cdd4, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6981576966671338274, guid: a5c4f2a4fa2555c4eaf9afe9db31cdd4, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6981576966671338274, guid: a5c4f2a4fa2555c4eaf9afe9db31cdd4, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6981576966671338274, guid: a5c4f2a4fa2555c4eaf9afe9db31cdd4, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6981576966671338274, guid: a5c4f2a4fa2555c4eaf9afe9db31cdd4, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8527239864163124732, guid: a5c4f2a4fa2555c4eaf9afe9db31cdd4, type: 3}
+      propertyPath: m_Name
+      value: Turret
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: a5c4f2a4fa2555c4eaf9afe9db31cdd4, type: 3}
 --- !u!1 &596848667
 GameObject:
   m_ObjectHideFlags: 0
@@ -3064,13 +3137,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 899646953}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.51977986, y: 0.014862843, z: 0.0021292085, w: 0.8541683}
+  m_LocalRotation: {x: 0.55774194, y: 0.014902349, z: 0.0014848616, w: 0.82987934}
   m_LocalPosition: {x: 1058.01, y: 4082.42, z: -6016.85}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 62.61, y: 3.44, z: 2.378}
+  m_LocalEulerAnglesHint: {x: 67.77, y: 4, z: 2.892}
 --- !u!114 &899646956
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3089,7 +3162,7 @@ MonoBehaviour:
     AngularDampingMode: 0
     RotationDamping: {x: 1, y: 1, z: 1}
     QuaternionDamping: 1
-  FollowOffset: {x: 0, y: 13.9, z: -5.51}
+  FollowOffset: {x: 0, y: 14.1, z: -4.9}
 --- !u!114 &899646957
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7291,3 +7364,4 @@ SceneRoots:
   - {fileID: 700391454}
   - {fileID: 2017649850}
   - {fileID: 726296486}
+  - {fileID: 596239831}
