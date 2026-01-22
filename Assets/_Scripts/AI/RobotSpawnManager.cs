@@ -9,7 +9,7 @@ public class RobotSpawnManager : NetworkBehaviour
     [SerializeField]
     private Transform[] spawnPoints;
     [SerializeField]
-    private GameObject robot;
+    private GameObject[] robots;
     [SerializeField]
     private int timeBetweenSpawns;
     private float _timer;
@@ -46,17 +46,30 @@ public class RobotSpawnManager : NetworkBehaviour
 
     private void SpawnRobot()
     {
+        GameObject robot = robots[0]; // spawn a random robot
+
         Transform spawnPoint = spawnPoints[UnityEngine.Random.Range(0, spawnPoints.Length)];
 
         GameObject instance = Instantiate(robot, spawnPoint.position, spawnPoint.rotation);
         _currentRobot = instance;
-        LittleRobot robotScript = instance.GetComponent<LittleRobot>();
-        robotScript.patrolPoints = new Transform[spawnPoints.Length];
+        if (robot.GetComponent<LittleRobot>() != null)
+        {
+            LittleRobot robotScript = instance.GetComponent<LittleRobot>();
+            robotScript.patrolPoints = new Transform[spawnPoints.Length];
 
-        Array.Copy(spawnPoints, robotScript.patrolPoints, spawnPoints.Length);
+            Array.Copy(spawnPoints, robotScript.patrolPoints, spawnPoints.Length);
 
-        robotScript.OnRobotKilled += HandleRobotKilled;
+            robotScript.OnRobotKilled += HandleRobotKilled;
+        }
+        if (robot.GetComponent<KamikazeRobot>() != null)
+        {
+            KamikazeRobot robotScript = instance.GetComponent<KamikazeRobot>();
+            robotScript.patrolPoints = new Transform[spawnPoints.Length];
 
+            Array.Copy(spawnPoints, robotScript.patrolPoints, spawnPoints.Length);
+
+            robotScript.OnRobotKilled += HandleRobotKilled;
+        }
         ServerManager.Spawn(instance);
     }
 
@@ -79,6 +92,11 @@ public class RobotSpawnManager : NetworkBehaviour
     }
 
     private void HandleRobotKilled(LittleRobot robot)
+    {
+        robot.OnRobotKilled -= HandleRobotKilled;
+        _currentRobot = null;
+    }
+    private void HandleRobotKilled(KamikazeRobot robot)
     {
         robot.OnRobotKilled -= HandleRobotKilled;
         _currentRobot = null;

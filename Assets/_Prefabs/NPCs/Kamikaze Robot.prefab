@@ -11,13 +11,13 @@ GameObject:
   - component: {fileID: 6075456339536091445}
   - component: {fileID: 2730028473347351357}
   - component: {fileID: -9128634061133948564}
-  - component: {fileID: 8272609484497269027}
+  - component: {fileID: -5841004505374946859}
   - component: {fileID: 5021843577325446240}
   - component: {fileID: 8318660718515258173}
   - component: {fileID: 2451632696206732982}
   - component: {fileID: 6061947709278305280}
   m_Layer: 8
-  m_Name: Lil' Robot
+  m_Name: Kamikaze Robot
   m_TagString: Robot
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -81,7 +81,7 @@ MonoBehaviour:
   Layers:
     serializedVersion: 2
     m_Bits: 64
---- !u!114 &8272609484497269027
+--- !u!114 &-5841004505374946859
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -90,24 +90,25 @@ MonoBehaviour:
   m_GameObject: {fileID: 2423027033985324458}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: facb0a8d0a2ae0648a5a0514205ab520, type: 3}
+  m_Script: {fileID: 11500000, guid: 46c19d345305c5e4eb96579b58b49f0f, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::LittleRobot
-  _componentIndexCache: 0
+  m_EditorClassIdentifier: Assembly-CSharp::KamikazeRobot
+  _componentIndexCache: 255
   _addedNetworkObject: {fileID: 5021843577325446240}
-  _networkObjectCache: {fileID: 5021843577325446240}
-  detectionRadius: 10
+  _networkObjectCache: {fileID: 0}
+  detectionRadius: 12
   playerMask:
     serializedVersion: 2
     m_Bits: 64
-  safeDistance: 9
-  fleeDistanceStep: 7
-  maxFleeAttempts: 8
+  safeDistance: 15
+  chaseDistanceStep: 10
+  maxChaseAttempts: 8
   repathDelay: 0.5
   minSpeed: 3.5
   maxSpeed: 6
+  Damage: 50
   patrolPoints: []
-  powerup: {fileID: 11400000, guid: 84fc32796637d634dbdd2d39e898a010, type: 2}
+  powerup: {fileID: 0}
 --- !u!114 &5021843577325446240
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -127,7 +128,7 @@ MonoBehaviour:
   <PredictedSpawn>k__BackingField: {fileID: 0}
   <PredictedOwner>k__BackingField: {fileID: 0}
   NetworkBehaviours:
-  - {fileID: 8272609484497269027}
+  - {fileID: 0}
   - {fileID: -9128634061133948564}
   - {fileID: 8318660718515258173}
   InitializedParentNetworkBehaviour: {fileID: 0}
@@ -154,9 +155,9 @@ MonoBehaviour:
   _spectatorInterpolation: 2
   _enableTeleport: 0
   _teleportThreshold: 1
-  <PrefabId>k__BackingField: 18
+  <PrefabId>k__BackingField: 1
   <SpawnableCollectionId>k__BackingField: 0
-  <AssetPathHash>k__BackingField: 14313415261445896477
+  <AssetPathHash>k__BackingField: 1677180708327957127
   <SceneId>k__BackingField: 0
   SerializedTransformProperties:
     Position: {x: 23.5, y: 2.32, z: 22.4}
@@ -323,6 +324,10 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 8
       objectReference: {fileID: 0}
+    - target: {fileID: -7388894396013007978, guid: 307f44a724847e84ead7dd8cbe1dc2d1, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: ad33dad900d0d604f8cf1e02de60525b, type: 2}
     - target: {fileID: -7146521406498821007, guid: 307f44a724847e84ead7dd8cbe1dc2d1, type: 3}
       propertyPath: m_Layer
       value: 8
@@ -359,6 +364,10 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 8
       objectReference: {fileID: 0}
+    - target: {fileID: -4683669308469848369, guid: 307f44a724847e84ead7dd8cbe1dc2d1, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: ad33dad900d0d604f8cf1e02de60525b, type: 2}
     - target: {fileID: -4636300777304409883, guid: 307f44a724847e84ead7dd8cbe1dc2d1, type: 3}
       propertyPath: m_Layer
       value: 8
@@ -391,6 +400,10 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 8
       objectReference: {fileID: 0}
+    - target: {fileID: -1806680513116206669, guid: 307f44a724847e84ead7dd8cbe1dc2d1, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: bd839866dde44bc4c914f066ae303847, type: 2}
     - target: {fileID: -1727348531506677991, guid: 307f44a724847e84ead7dd8cbe1dc2d1, type: 3}
       propertyPath: m_Layer
       value: 8
@@ -399,6 +412,10 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 8
       objectReference: {fileID: 0}
+    - target: {fileID: -1439730007547781893, guid: 307f44a724847e84ead7dd8cbe1dc2d1, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: bd839866dde44bc4c914f066ae303847, type: 2}
     - target: {fileID: -1018664272722485354, guid: 307f44a724847e84ead7dd8cbe1dc2d1, type: 3}
       propertyPath: m_Layer
       value: 8
@@ -459,6 +476,10 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 8
       objectReference: {fileID: 0}
+    - target: {fileID: 6317578925029434746, guid: 307f44a724847e84ead7dd8cbe1dc2d1, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: ad33dad900d0d604f8cf1e02de60525b, type: 2}
     - target: {fileID: 6512510688612296998, guid: 307f44a724847e84ead7dd8cbe1dc2d1, type: 3}
       propertyPath: m_Layer
       value: 8
@@ -467,6 +488,10 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 8
       objectReference: {fileID: 0}
+    - target: {fileID: 6979220930480056898, guid: 307f44a724847e84ead7dd8cbe1dc2d1, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: ad33dad900d0d604f8cf1e02de60525b, type: 2}
     - target: {fileID: 7833249854982934595, guid: 307f44a724847e84ead7dd8cbe1dc2d1, type: 3}
       propertyPath: m_Layer
       value: 8
@@ -487,6 +512,10 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 8
       objectReference: {fileID: 0}
+    - target: {fileID: 8730303016566787287, guid: 307f44a724847e84ead7dd8cbe1dc2d1, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: ad33dad900d0d604f8cf1e02de60525b, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

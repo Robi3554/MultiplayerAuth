@@ -3,21 +3,22 @@ using FishNet.Object;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class LittleRobot : NetworkBehaviour
+public class KamikazeRobot : NetworkBehaviour
 {
     [Header("Detection")]
     public float detectionRadius = 12f;
     public LayerMask playerMask;
 
-    [Header("Flee Settings")]
+    [Header("Chase Settings")]
     public float safeDistance = 15f;
-    public float fleeDistanceStep = 10f;
-    public int maxFleeAttempts = 8;
+    public float chaseDistanceStep = 10f;
+    public int maxChaseAttempts = 8;
     public float repathDelay = 0.5f;
 
-    [Header("Agent Speed")]
+    [Header("Agent Stats")]
     public float minSpeed = 3.5f;
-    public float maxSpeed = 6f;
+    public float maxSpeed = 5f;
+    public int Damage = 50;
 
     [Header("Patroling")]
     public Transform[] patrolPoints;
@@ -26,26 +27,22 @@ public class LittleRobot : NetworkBehaviour
     private int prevIndex;
     private bool dirClockwise = true;
 
-    [Header("PowerupEffects")]
-    public PowerupEffect powerup;
-
     private NavMeshAgent agent;
     private Transform targetPlayer;
     private float nextPathUpdateTime = 0f;
 
-    private enum State { Patroling, Fleeing }
+    private enum State { Patroling, Chasing }
     private State currentState = State.Patroling;
 
-    public event Action<LittleRobot> OnRobotKilled;
+    public event Action<KamikazeRobot> OnRobotKilled;
 
-    void Start()
+    public void Start()
     {
         agent = GetComponent<NavMeshAgent>();
         agent.SetDestination(patrolPoints[0].transform.position);
         currentPoint = patrolPoints[0].transform.position;
         currIndex = 0;
     }
-
     void Update()
     {
         if (!IsServerInitialized)
@@ -59,7 +56,7 @@ public class LittleRobot : NetworkBehaviour
 
                     if (targetPlayer != null && closestDist < detectionRadius)
                     {
-                        currentState = State.Fleeing;
+                        currentState = State.Chasing;
                         nextPathUpdateTime = 0f;
                     }
                     else
@@ -68,26 +65,23 @@ public class LittleRobot : NetworkBehaviour
                     }
                     break;
                 }
-
-            case State.Fleeing:
+            case State.Chasing:
                 {
                     if (targetPlayer == null)
                     {
-                        ExitFlee();
+                        ExitChase();
                         break;
                     }
-
                     float dist = Vector3.Distance(transform.position, targetPlayer.position);
-
-                    if (dist > safeDistance)
+                    if (dist > detectionRadius)
                     {
-                        ExitFlee();
+                        ExitChase();
                         break;
-                    }
 
+                    }
                     if (Time.time >= nextPathUpdateTime)
                     {
-                        FleeFromPlayer();
+                        ChasePlayer();
                         nextPathUpdateTime = Time.time + repathDelay;
                     }
                     break;
@@ -100,7 +94,6 @@ public class LittleRobot : NetworkBehaviour
             transform.rotation = Quaternion.Slerp(transform.rotation, lookRot, Time.deltaTime * 5f);
         }
     }
-
     private float DetectClosestPlayer()
     {
         Collider[] players = Physics.OverlapSphere(transform.position, detectionRadius, playerMask);
@@ -147,47 +140,33 @@ public class LittleRobot : NetworkBehaviour
         }
     }
 
-    private void SwitchDirection()
-    {
-        dirClockwise = !dirClockwise;
-
-        int aux = currIndex;
-        currIndex = prevIndex;
-        prevIndex = aux;
-    }
-
-    private void FleeFromPlayer()
+    private void ChasePlayer()
     {
         if (targetPlayer == null) return;
 
         float dist = Vector3.Distance(transform.position, targetPlayer.position);
-        agent.speed = Mathf.Lerp(maxSpeed, minSpeed, dist / detectionRadius);
+        agent.speed = Mathf.Lerp(minSpeed, maxSpeed, dist / detectionRadius);
 
-        for (int i = 0; i < maxFleeAttempts; i++)
+        for (int i = 0; i < maxChaseAttempts; i++)
         {
-            Vector3 fleeDir = (transform.position - targetPlayer.position).normalized;
+            Vector3 chaseDir = (targetPlayer.position - transform.position).normalized;
 
-            float angleOffset = UnityEngine.Random.Range(-45f, 45f);
-            fleeDir = Quaternion.Euler(0, angleOffset, 0) * fleeDir;
-            fleeDir.Normalize();
-
-            Vector3 candidatePos = transform.position + fleeDir * fleeDistanceStep;
-
+            Vector3 candidatePos = transform.position + chaseDir * chaseDistanceStep;
             if (NavMesh.SamplePosition(candidatePos, out NavMeshHit hit, 5f, NavMesh.AllAreas))
             {
-                NavMeshPath path = new NavMeshPath();
-                if (agent.CalculatePath(hit.position, path) && path.status == NavMeshPathStatus.PathComplete)
+                agent.SetDestination(hit.position);
+            } else {
+                //if navmesh sampling fails, try to go directly to player
+                if (NavMesh.SamplePosition(targetPlayer.position, out NavMeshHit playerHit, 2f, NavMesh.AllAreas))
                 {
-                    agent.SetDestination(hit.position);
-                    return;
+                    agent.SetDestination(playerHit.position);
                 }
             }
         }
 
-        agent.ResetPath();
     }
 
-    private void ExitFlee()
+    private void ExitChase()
     {
         if (!agent.pathPending &&
         agent.remainingDistance <= agent.stoppingDistance &&
@@ -212,11 +191,11 @@ public class LittleRobot : NetworkBehaviour
 
     public void DestroyRobot(NetworkObject player)
     {
-        Debug.Log($"[Robot Log] LittleRobot {gameObject.name} was destroyed. Killer: {(player != null ? player.name : "Unknown")}");
+        Debug.Log($"[Robot Log] KamikazeRobot {gameObject.name} was destroyed. Killer: {(player != null ? player.name : "Unknown")}");
         
         OnRobotKilled?.Invoke(this);
 
-        powerup.TriggerEffect(player);
+        // powerup.TriggerEffect(player);
     }
 
     private void OnTriggerEnter(Collider col)
@@ -230,6 +209,17 @@ public class LittleRobot : NetworkBehaviour
         if (col.CompareTag("Projectile") || col.CompareTag("PlayerAttack"))
         {
             Debug.Log($"[Robot Log] LittleRobot {gameObject.name} took damage from {col.gameObject.name} via Trigger.");
+        }
+        
+        if(col.CompareTag("Player"))
+        {
+            Debug.Log($"[Robot Log] KamikazeRobot {gameObject.name} exploded on {col.gameObject.name}.");
+            int targetId = col.GetComponent<NetworkObject>().Owner.ClientId;
+            int attackerId = transform.GetComponent<NetworkObject>().Owner.ClientId;
+            Debug.Log($"Kamikaze robot exploded: target: {targetId}");
+            PlayerManager.Instance.DamagePlayer(targetId, Damage, attackerId);
+            //playvfx explosion 
+            Despawn(this.NetworkObject);
         }
     }
 
