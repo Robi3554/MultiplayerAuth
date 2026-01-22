@@ -46,7 +46,7 @@ public class RobotSpawnManager : NetworkBehaviour
 
     private void SpawnRobot()
     {
-        GameObject robot = robots[UnityEngine.Random.Range(0, robots.Length-1)]; // spawn a random robot
+        GameObject robot = robots[0]; // spawn a random robot
 
         Transform spawnPoint = spawnPoints[UnityEngine.Random.Range(0, spawnPoints.Length)];
 
