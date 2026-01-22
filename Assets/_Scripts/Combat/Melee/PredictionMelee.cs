@@ -150,9 +150,18 @@ public class PredictionMelee : NetworkBehaviour
 			else if (enemyCollider.CompareTag("Robot"))
 			{
 				Debug.Log("Melee: Hit robot!");
-				var robot = enemyCollider.GetComponent<LittleRobot>();
-                robot.DestroyRobot(playerCollider.GetComponent<NetworkObject>());
-                DespawnRobot(robot.NetworkObject);
+				if(enemyCollider.GetComponent<KamikazeRobot>() != null)
+				{
+					var robot = enemyCollider.GetComponent<KamikazeRobot>();
+					robot.DestroyRobot(playerCollider.GetComponent<NetworkObject>());
+					DespawnRobot(robot.NetworkObject);
+				}
+				else if(enemyCollider.GetComponent<LittleRobot>() != null)
+				{
+					var robot = enemyCollider.GetComponent<LittleRobot>();
+					robot.DestroyRobot(playerCollider.GetComponent<NetworkObject>());
+					DespawnRobot(robot.NetworkObject);
+				}
 			}
             
 			StartCooldownServerRpc();

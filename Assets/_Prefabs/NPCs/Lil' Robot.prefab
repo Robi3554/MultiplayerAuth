@@ -10,8 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 6075456339536091445}
   - component: {fileID: 2730028473347351357}
-  - component: {fileID: 8272609484497269027}
   - component: {fileID: -9128634061133948564}
+  - component: {fileID: 8272609484497269027}
   - component: {fileID: 5021843577325446240}
   - component: {fileID: 8318660718515258173}
   - component: {fileID: 2451632696206732982}
@@ -61,6 +61,26 @@ NavMeshAgent:
   m_BaseOffset: 0.01
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!114 &-9128634061133948564
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2423027033985324458}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 40bcde17fa5e03f44b87f9963ac281b3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: FishNet.Runtime::FishNet.Component.Prediction.NetworkCollision
+  _componentIndexCache: 1
+  _addedNetworkObject: {fileID: 5021843577325446240}
+  _networkObjectCache: {fileID: 5021843577325446240}
+  MaximumSimultaneousHits: 16
+  AdditionalSize: 0.1
+  Layers:
+    serializedVersion: 2
+    m_Bits: 64
 --- !u!114 &8272609484497269027
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -88,26 +108,6 @@ MonoBehaviour:
   maxSpeed: 6
   patrolPoints: []
   powerup: {fileID: 11400000, guid: 84fc32796637d634dbdd2d39e898a010, type: 2}
---- !u!114 &-9128634061133948564
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2423027033985324458}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 40bcde17fa5e03f44b87f9963ac281b3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: FishNet.Runtime::FishNet.Component.Prediction.NetworkCollision
-  _componentIndexCache: 1
-  _addedNetworkObject: {fileID: 5021843577325446240}
-  _networkObjectCache: {fileID: 5021843577325446240}
-  MaximumSimultaneousHits: 16
-  AdditionalSize: 0.1
-  Layers:
-    serializedVersion: 2
-    m_Bits: 64
 --- !u!114 &5021843577325446240
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -154,7 +154,7 @@ MonoBehaviour:
   _spectatorInterpolation: 2
   _enableTeleport: 0
   _teleportThreshold: 1
-  <PrefabId>k__BackingField: 17
+  <PrefabId>k__BackingField: 18
   <SpawnableCollectionId>k__BackingField: 0
   <AssetPathHash>k__BackingField: 14313415261445896477
   <SceneId>k__BackingField: 0

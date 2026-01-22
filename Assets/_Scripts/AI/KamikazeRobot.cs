@@ -17,7 +17,7 @@ public class KamikazeRobot : NetworkBehaviour
 
     [Header("Agent Stats")]
     public float minSpeed = 3.5f;
-    public float maxSpeed = 6f;
+    public float maxSpeed = 5f;
     public int Damage = 50;
 
     [Header("Patroling")]
@@ -26,9 +26,6 @@ public class KamikazeRobot : NetworkBehaviour
     private int currIndex;
     private int prevIndex;
     private bool dirClockwise = true;
-
-    [Header("PowerupEffects")]
-    public PowerupEffect powerup;
 
     private NavMeshAgent agent;
     private Transform targetPlayer;
@@ -43,6 +40,7 @@ public class KamikazeRobot : NetworkBehaviour
     {
         agent = GetComponent<NavMeshAgent>();
         agent.SetDestination(patrolPoints[0].transform.position);
+        currentPoint = patrolPoints[0].transform.position;
         currIndex = 0;
     }
     void Update()
