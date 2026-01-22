@@ -157,9 +157,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a2836e36774ca1c4bbbee976e17b649c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: FishNet.Runtime::FishNet.Component.Transforming.NetworkTransform
-  _componentIndexCache: 255
+  _componentIndexCache: 1
   _addedNetworkObject: {fileID: 2221253801289522451}
-  _networkObjectCache: {fileID: 0}
+  _networkObjectCache: {fileID: 2221253801289522451}
   _componentConfiguration: 0
   _synchronizeParent: 0
   _packing:
@@ -544,7 +544,7 @@ BoxCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7151328462936807056}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: afe2ec4c104786a4f8ed42358f1cdc62, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -612,7 +612,9 @@ MonoBehaviour:
   <ComponentIndex>k__BackingField: 0
   <PredictedSpawn>k__BackingField: {fileID: 0}
   <PredictedOwner>k__BackingField: {fileID: 0}
-  NetworkBehaviours: []
+  NetworkBehaviours:
+  - {fileID: 4115225118300540139}
+  - {fileID: 8391206505026418197}
   InitializedParentNetworkBehaviour: {fileID: 0}
   InitializedNestedNetworkObjects: []
   RuntimeParentNetworkBehaviour: {fileID: 0}
@@ -637,15 +639,15 @@ MonoBehaviour:
   _spectatorInterpolation: 2
   _enableTeleport: 0
   _teleportThreshold: 1
-  <PrefabId>k__BackingField: 65535
+  <PrefabId>k__BackingField: 10
   <SpawnableCollectionId>k__BackingField: 0
   <AssetPathHash>k__BackingField: 8520029880372497657
   <SceneId>k__BackingField: 0
   SerializedTransformProperties:
-    Position: {x: 0, y: 0, z: 0}
-    Rotation: {x: 0, y: 0, z: 0, w: 0}
-    Scale: {x: 0, y: 0, z: 0}
-    IsValid: 0
+    Position: {x: -13.75781, y: 4.5, z: 12.64878}
+    Rotation: {x: 0, y: 0, z: 0, w: 1}
+    Scale: {x: 1, y: 1, z: 1}
+    IsValid: 1
 --- !u!114 &4115225118300540139
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -658,9 +660,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 817fb2b0ca16dbc42b7f365035fe2f62, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Turret
-  _componentIndexCache: 255
+  _componentIndexCache: 0
   _addedNetworkObject: {fileID: 2221253801289522451}
-  _networkObjectCache: {fileID: 0}
+  _networkObjectCache: {fileID: 2221253801289522451}
   detectionRadius: 15
   playerMask:
     serializedVersion: 2
@@ -673,8 +675,8 @@ MonoBehaviour:
     m_Bits: 0
   firePoint: {fileID: 4077499883363609567}
   projectilePrefab: {fileID: 72838035728811199, guid: 962a47bbe2fb0b646b8895cdf8b44160, type: 3}
-  fireRate: 1
-  projectileSpeed: 30
+  fireRate: 10
+  projectileSpeed: 100
   damage: 10
   maxProjectileDistance: 50
   audioSource: {fileID: 0}
