@@ -2,6 +2,7 @@ using UnityEngine;
 using FishNet.Managing;
 using FishNet.Transporting.Tugboat;
 using System;
+using System.Collections;
 using FishNet.Transporting;
 
 public class NetworkBootstrap : MonoBehaviour
@@ -17,6 +18,39 @@ public class NetworkBootstrap : MonoBehaviour
     }
 
     private void Start()
+    {
+        // Check if there's already a NetworkManager from a previous session (shouldn't happen now, but safety check)
+        if (networkManager == null)
+        {
+            Debug.LogError("NetworkManager not found!");
+            return;
+        }
+        
+        // If already connected (stale state), stop connections first
+        if (networkManager.IsClientStarted || networkManager.IsServerStarted)
+        {
+            Debug.LogWarning("[Bootstrap] Found stale connections. Restarting...");
+            StartCoroutine(RestartConnectionsCoroutine());
+            return;
+        }
+        
+        InitializeConnection();
+    }
+
+    private IEnumerator RestartConnectionsCoroutine()
+    {
+        if (networkManager.IsClientStarted)
+            networkManager.ClientManager.StopConnection();
+        if (networkManager.IsServerStarted)
+            networkManager.ServerManager.StopConnection(true);
+            
+        // Wait for cleanup
+        yield return new WaitForSeconds(0.3f);
+        
+        InitializeConnection();
+    }
+
+    private void InitializeConnection()
     {
         // Transport
         Tugboat tugboat = networkManager.GetComponent<Tugboat>();
