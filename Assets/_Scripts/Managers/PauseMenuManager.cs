@@ -2,6 +2,8 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
+using FishNet;
+using FishNet.Managing;
 
 public class PauseMenuManager : MonoBehaviour 
 {
@@ -103,6 +105,28 @@ public class PauseMenuManager : MonoBehaviour
     public void LeaveMatch()
     {
         Time.timeScale = 1f; // Reset time scale before leaving
+        
+        NetworkManager networkManager = InstanceFinder.NetworkManager;
+        
+        if (networkManager != null)
+        {
+            // Stop server if we're hosting
+            if (networkManager.IsServerStarted)
+            {
+                networkManager.ServerManager.StopConnection(true);
+            }
+            
+            // Stop client connection
+            if (networkManager.IsClientStarted)
+            {
+                networkManager.ClientManager.StopConnection();
+            }
+            
+            // Destroy the persistent NetworkManager so a fresh one is created when rejoining
+            Destroy(networkManager.gameObject);
+        }
+        
+        // Load scene immediately - the NetworkManager destruction will complete
         SceneManager.LoadScene(_menuSceneName);
     }
     

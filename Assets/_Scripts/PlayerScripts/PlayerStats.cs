@@ -82,8 +82,29 @@ public class PlayerStats : NetworkBehaviour
     [ServerRpc]
     private void CmdSetUsername(string username)
     {
-        this.username.Value = username;
-        RpcSetUsername(username);
+        // Server-side validation - never trust client input
+        string sanitized = SanitizeUsername(username);
+        this.username.Value = sanitized;
+        RpcSetUsername(sanitized);
+    }
+
+    /// <summary>
+    /// Sanitizes a username to only allow alphanumeric characters, max 20 chars.
+    /// </summary>
+    private static string SanitizeUsername(string input)
+    {
+        if (string.IsNullOrEmpty(input))
+            return string.Empty;
+
+        // Remove all non-alphanumeric characters (letters and digits only)
+        string sanitized = System.Text.RegularExpressions.Regex.Replace(input, @"[^a-zA-Z0-9]", "");
+
+        // Limit to max length
+        const int MaxUsernameLength = 20;
+        if (sanitized.Length > MaxUsernameLength)
+            sanitized = sanitized.Substring(0, MaxUsernameLength);
+
+        return sanitized;
     }
     
     [ObserversRpc(BufferLast = true)]
