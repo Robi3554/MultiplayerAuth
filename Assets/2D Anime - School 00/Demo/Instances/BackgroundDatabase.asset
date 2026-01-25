@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3962987dc0cd88941b6561c00c5687d7, type: 3}
+  m_Name: BackgroundDatabase
+  m_EditorClassIdentifier: 
+  _sprites:
+  - {fileID: -940810048081779572, guid: 9eff6dc583aa8724daf3515c20683ce3, type: 3}
+  - {fileID: -8026959640266869289, guid: b50503c87d093674fbcf341253ab338c, type: 3}
+  - {fileID: 486674732395151411, guid: 1a16d47b060ffaf41a0e93bb8ddcf49e, type: 3}
+  - {fileID: -5208655823145817118, guid: 37f3a26ecd6c3fb41b1c5bdaacb3b4dd, type: 3}
+  - {fileID: 1922917591698004947, guid: 40c32e7702b10c24eacbf10098eb10cc, type: 3}
+  - {fileID: -7132250860992498561, guid: e789757906e55d347b614a18f1b57090, type: 3}

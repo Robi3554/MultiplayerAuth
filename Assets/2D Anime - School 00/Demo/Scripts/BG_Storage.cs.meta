@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 3962987dc0cd88941b6561c00c5687d7
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 338164
+  packageName: 2D Anime - School 00 (FREE)
+  packageVersion: 1.0
+  assetPath: Assets/2D Anime - School 00/Demo/Scripts/BG_Storage.cs
+  uploadId: 800398
