@@ -93,8 +93,8 @@ public class PlayerManager : NetworkBehaviour
 
     private IEnumerator RespawnAfterDelay(Player victim, PlayerStats victimStats)
     {
-        //wait for death screen countdown
-        yield return new WaitForSeconds(5f);
+        //wait for death screen countdown (5 seconds) + UI cleanup time (0.5 seconds)
+        yield return new WaitForSeconds(5.5f);
         victimStats.ResetHealth(); // reset
         int spawnIndex = Random.Range(0, spawnPoints.Count);
         RespawnPlayer(victim.connection, victim.playerObject, spawnIndex);
@@ -106,20 +106,19 @@ public class PlayerManager : NetworkBehaviour
     [TargetRpc]
     void RespawnPlayer(NetworkConnection conn, GameObject player, int spawn)
     {
-        // Disable rigidbody during teleport to prevent physics glitches
+        //disable rigidbody during teleport to prevent physics glitches
         Rigidbody rb = player.GetComponent<Rigidbody>();
         if (rb != null)
         {
-            rb.isKinematic = true;
             rb.linearVelocity = Vector3.zero;
             rb.angularVelocity = Vector3.zero;
+            rb.isKinematic = true;
         }
 
-        // Teleport player to spawn point
         player.transform.position = spawnPoints[spawn].position;
         player.transform.rotation = spawnPoints[spawn].rotation;
         
-        // Re-enable rigidbody after teleport
+        //re-enable rigidbody after teleport
         if (rb != null)
         {
             rb.isKinematic = false;

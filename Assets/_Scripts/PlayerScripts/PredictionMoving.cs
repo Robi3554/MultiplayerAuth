@@ -60,17 +60,32 @@ public class PredictionMoving : NetworkBehaviour
     // new input system
     public void OnMove(InputAction.CallbackContext context)
     {
+        //don't process movement input while respawning
+        if (_playerStats != null && _playerStats.isRespawning)
+        {
+            _moveInput = Vector2.zero;
+            return;
+        }
+
         _moveInput = context.ReadValue<Vector2>();
         _isAnalogMovement = context.control.device is not Keyboard;
     }
 
     public void OnMouseLook(InputAction.CallbackContext context)
     {
+        //don't process look input while respawning
+        if (_playerStats != null && _playerStats.isRespawning)
+            return;
+
         _mouseLook = context.ReadValue<Vector2>();
     }
 
     public void OnJoystickLook(InputAction.CallbackContext context)
     {
+        //don't process look input while respawning
+        if (_playerStats != null && _playerStats.isRespawning)
+            return;
+
         _joystickLook = context.ReadValue<Vector2>();
     }
 
