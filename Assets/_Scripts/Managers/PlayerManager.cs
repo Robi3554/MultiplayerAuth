@@ -69,10 +69,12 @@ public class PlayerManager : NetworkBehaviour
         var victim = players[victimClientId];
         var victimStats = victim.stats;
 
-        victimStats.AddDeath();
+        // Prevent multiple respawns for the same player
+        if (victimStats.isRespawning)
+            return;
 
+        victimStats.AddDeath();
         victimStats.isRespawning = true;
-        victimStats.ResetHealth();
 
         // ADD KILL TO ATTACKER AND CHECK WIN CONDITION
         if (players.ContainsKey(attackerClientId))
@@ -84,25 +86,43 @@ public class PlayerManager : NetworkBehaviour
             }
         }
 
-        int spawnIndex = Random.Range(0, spawnPoints.Count);
-        ReloadPlayerGuns(victim.connection, victim.playerObject);
-        RespawnPlayer(victim.connection, victim.playerObject, spawnIndex);
+        //show death screen on client and wait before respawning
+        DeathScreenManager.Instance.ShowDeathScreen(victim.connection);
+        StartCoroutine(RespawnAfterDelay(victim, victimStats));
+    }
 
-        StartCoroutine(ClearRespawningFlag(victimStats));
+    private IEnumerator RespawnAfterDelay(Player victim, PlayerStats victimStats)
+    {
+        //wait for death screen countdown
+        yield return new WaitForSeconds(5f);
+        victimStats.ResetHealth(); // reset
+        int spawnIndex = Random.Range(0, spawnPoints.Count);
+        RespawnPlayer(victim.connection, victim.playerObject, spawnIndex);
+        ReloadPlayerGuns(victim.connection, victim.playerObject);
+
+        victimStats.isRespawning = false;
     }
 
     [TargetRpc]
     void RespawnPlayer(NetworkConnection conn, GameObject player, int spawn)
     {
+        // Disable rigidbody during teleport to prevent physics glitches
+        Rigidbody rb = player.GetComponent<Rigidbody>();
+        if (rb != null)
+        {
+            rb.isKinematic = true;
+            rb.linearVelocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
+        }
+
+        // Teleport player to spawn point
         player.transform.position = spawnPoints[spawn].position;
         player.transform.rotation = spawnPoints[spawn].rotation;
         
-        // Reset velocity
-        var rb = player.GetComponent<Rigidbody>();
+        // Re-enable rigidbody after teleport
         if (rb != null)
         {
-            rb.linearVelocity = Vector3.zero;
-            rb.angularVelocity = Vector3.zero;
+            rb.isKinematic = false;
         }
     }
 

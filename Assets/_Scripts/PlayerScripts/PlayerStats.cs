@@ -17,6 +17,7 @@ public class PlayerStats : NetworkBehaviour
     public readonly SyncVar<int> deaths = new SyncVar<int>(0);
     public int damageMult = 1;
     
+    [SerializeField] private Animator animator;
     [SerializeField] private TMP_Text _usernameTextOnBillboard;
     [SerializeField] private AudioSource _hitAudioSource;
     [SerializeField] private AudioClip _hitAudioClip;
@@ -62,6 +63,7 @@ public class PlayerStats : NetworkBehaviour
             {
                 CmdSetUsername("Player " + OwnerId); 
             }
+            animator = gameObject.GetComponentInChildren<Animator>();
         }
     }
 

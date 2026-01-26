@@ -43,6 +43,11 @@ public class PredictionShooting : NetworkBehaviour
     {
         if (IsOwner)
         {
+            //don't allow shooting while respawning
+            PlayerStats playerStats = GetComponent<PlayerStats>();
+            if (playerStats != null && playerStats.isRespawning)
+                return;
+
             if (Input.GetMouseButton(0) && !_processedFire)
             {
                 Debug.Log("[Shooting] Fire button pressed");

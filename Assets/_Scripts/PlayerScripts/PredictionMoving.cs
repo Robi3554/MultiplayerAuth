@@ -43,9 +43,11 @@ public class PredictionMoving : NetworkBehaviour
     private bool _isDashing;
     private bool _canDash = true;
     private bool _isMovingBackwards;
+    private PlayerStats _playerStats;
     private void Awake()
     {
         _rb = GetComponent<Rigidbody>();
+        _playerStats = GetComponent<PlayerStats>();
     }
 
     public override void OnStartClient()
@@ -92,6 +94,14 @@ public class PredictionMoving : NetworkBehaviour
     {
         if (!IsOwner) return;
         
+        // Don't allow movement while dead
+        if (_playerStats != null && _playerStats.isRespawning)
+        {
+            _rb.linearVelocity = Vector3.zero;
+            animator.SetFloat("Velocity", 0f);
+            return;
+        }
+        
         _isGrounded = Physics.CheckSphere(
             groundCheck.position, groundCheckRadius, groundLayer, QueryTriggerInteraction.Ignore);
 
@@ -130,6 +140,10 @@ public class PredictionMoving : NetworkBehaviour
     private void Update()
     {
         if (!IsOwner || !_playerInput.currentActionMap.name.Equals("Gameplay")) return;
+
+        //don't allow rotation while dead
+        if (_playerStats != null && _playerStats.isRespawning)
+            return;
 
         float targetYaw = !isJoystick
             ? GetYawFromMouse()
