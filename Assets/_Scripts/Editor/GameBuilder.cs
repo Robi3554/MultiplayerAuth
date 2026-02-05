@@ -11,6 +11,7 @@ public class GameBuilder
         buildPlayerOptions.scenes = new string[]
         {
             "Assets/Scenes/WelcomeScreen.unity",
+            "Assets/Scenes/LobbyScene.unity",
             "Assets/Scenes/SampleScene.unity"
         };
         buildPlayerOptions.locationPathName = "Builds/Windows/MultiplayerAuth.exe";
@@ -44,6 +45,7 @@ public class GameBuilder
         buildPlayerOptions.scenes = new string[]
         {
             "Assets/Scenes/WelcomeScreen.unity",
+            "Assets/Scenes/LobbyScene.unity",
             "Assets/Scenes/SampleScene.unity"
         };
         buildPlayerOptions.locationPathName = "Builds/Windows_Release/MultiplayerAuth.exe";

@@ -25,6 +25,13 @@ public class NetworkBootstrap : MonoBehaviour
             Debug.LogError("NetworkManager not found!");
             return;
         }
+
+        // If arriving from lobby (already connected via FishNet scene transition), skip connection setup
+        if (networkManager.IsClientStarted || networkManager.IsServerStarted)
+        {
+            Debug.Log("[Bootstrap] Already connected (from lobby). Skipping connection setup.");
+            return;
+        }
         
         // If already connected (stale state), stop connections first
         if (networkManager.IsClientStarted || networkManager.IsServerStarted)

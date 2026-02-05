@@ -11,7 +11,7 @@ public class MainMenuController : MonoBehaviour
     
     [SerializeField] private TMP_InputField _addressInput;
     [SerializeField] private TMP_InputField _usernameInput;
-    [SerializeField] private string _gameSceneName = "SampleScene";
+    [SerializeField] private string _gameSceneName = "LobbyScene";
 
     private void Start()
     {

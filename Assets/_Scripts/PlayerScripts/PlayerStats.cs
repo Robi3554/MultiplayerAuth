@@ -15,6 +15,7 @@ public class PlayerStats : NetworkBehaviour
     public readonly SyncVar<int> health = new SyncVar<int>(100);
     public readonly SyncVar<int> kills = new SyncVar<int>(0);
     public readonly SyncVar<int> deaths = new SyncVar<int>(0);
+    public readonly SyncVar<Team> team = new SyncVar<Team>(Team.None);
     public int damageMult = 1;
     
     [SerializeField] private TMP_Text _usernameTextOnBillboard;

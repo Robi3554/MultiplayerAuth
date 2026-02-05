@@ -752,7 +752,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _addressInput: {fileID: 1132472549}
   _usernameInput: {fileID: 1478604982}
-  _gameSceneName: SampleScene
+  _gameSceneName: LobbyScene
 --- !u!4 &396106110
 Transform:
   m_ObjectHideFlags: 0
