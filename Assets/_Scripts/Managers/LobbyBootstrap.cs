@@ -1,16 +1,21 @@
 using UnityEngine;
 using FishNet.Managing;
+using FishNet.Object;
 using FishNet.Transporting.Tugboat;
 using FishNet.Transporting;
 
 /// <summary>
 /// Handles network connection setup in the Lobby scene.
-/// Mirrors the logic from GameBootstrap but for the lobby flow.
+/// Spawns the LobbyManager at runtime so FishNet properly replicates it to clients.
 /// </summary>
 public class LobbyBootstrap : MonoBehaviour
 {
     [SerializeField] private NetworkManager networkManager;
     [SerializeField] private ushort defaultPort = 7777;
+
+    [Header("Lobby Manager (Prefab)")]
+    [Tooltip("Drag the LobbyManager prefab here. It will be spawned on the server at runtime.")]
+    [SerializeField] private NetworkObject lobbyManagerPrefab;
 
     private void Awake()
     {
@@ -33,7 +38,45 @@ public class LobbyBootstrap : MonoBehaviour
             return;
         }
 
+        // Listen for server start so we can spawn the LobbyManager
+        networkManager.ServerManager.OnServerConnectionState += OnServerConnectionState;
+
+        // Listen for client connection state
+        networkManager.ClientManager.OnClientConnectionState += OnClientConnectionState;
+
         InitializeConnection();
+    }
+
+    private void OnDestroy()
+    {
+        if (networkManager != null)
+        {
+            networkManager.ServerManager.OnServerConnectionState -= OnServerConnectionState;
+            networkManager.ClientManager.OnClientConnectionState -= OnClientConnectionState;
+        }
+    }
+
+    private void OnServerConnectionState(ServerConnectionStateArgs args)
+    {
+        if (args.ConnectionState == LocalConnectionState.Started)
+        {
+            // Server just started — spawn the LobbyManager
+            if (lobbyManagerPrefab != null)
+            {
+                NetworkObject instance = Instantiate(lobbyManagerPrefab);
+                networkManager.ServerManager.Spawn(instance);
+                Debug.Log("[LobbyBootstrap] Spawned LobbyManager on server.");
+            }
+            else
+            {
+                Debug.LogError("[LobbyBootstrap] LobbyManager prefab is not assigned!");
+            }
+        }
+    }
+
+    private void OnClientConnectionState(ClientConnectionStateArgs args)
+    {
+        Debug.Log($"[LobbyBootstrap] Client connection state: {args.ConnectionState}");
     }
 
     private void InitializeConnection()
@@ -46,12 +89,12 @@ public class LobbyBootstrap : MonoBehaviour
         }
 
         string address = string.IsNullOrWhiteSpace(ConnectionInfo.IpAddress) ? "localhost" : ConnectionInfo.IpAddress;
-        tugboat.SetClientAddress(address);
         tugboat.SetPort(defaultPort);
 
         Debug.Log($"[LobbyBootstrap] Address={address}, Port={defaultPort}");
 
 #if UNITY_EDITOR
+        tugboat.SetClientAddress(address);
         if (ParrelSync.ClonesManager.IsClone())
         {
             Debug.Log("[LobbyBootstrap] ParrelSync clone → CLIENT.");
@@ -59,22 +102,33 @@ public class LobbyBootstrap : MonoBehaviour
         }
         else
         {
-            Debug.Log("[LobbyBootstrap] ParrelSync original → HOST.");
-            if (address == "localhost")
+            // If address is NOT localhost, connect as client only (remote dedicated server)
+            if (address != "localhost")
+            {
+                Debug.Log($"[LobbyBootstrap] ParrelSync original → CLIENT (remote server: {address}).");
+                networkManager.ClientManager.StartConnection();
+            }
+            else
+            {
+                Debug.Log("[LobbyBootstrap] ParrelSync original → HOST (localhost).");
                 networkManager.ServerManager.StartConnection();
-            networkManager.ClientManager.StartConnection();
+                networkManager.ClientManager.StartConnection();
+            }
         }
 
 #elif DEDICATED_SERVER
-        tugboat.SetServerBindAddress("193.226.15.26", IPAddressType.IPv4);
-        Debug.Log("[LobbyBootstrap] Starting Dedicated Server.");
+        // Bind to all interfaces so external clients can connect
+        tugboat.SetServerBindAddress("0.0.0.0", IPAddressType.IPv4);
+        Debug.Log("[LobbyBootstrap] Starting Dedicated Server on 0.0.0.0:" + defaultPort);
         networkManager.ServerManager.StartConnection();
 
 #elif CLIENT
+        tugboat.SetClientAddress(address);
         Debug.Log($"[LobbyBootstrap] Starting Client → {address}:{defaultPort}");
         networkManager.ClientManager.StartConnection();
 
 #else
+        tugboat.SetClientAddress(address);
         if (address == "localhost")
             networkManager.ServerManager.StartConnection();
         networkManager.ClientManager.StartConnection();

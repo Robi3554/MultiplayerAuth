@@ -2918,6 +2918,53 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4481949333202216, guid: 8430fd56cfcb15941a1f31ea7f8f1915, type: 3}
   m_PrefabInstance: {fileID: 1837802659}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &209733460
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 209733462}
+  - component: {fileID: 209733461}
+  m_Layer: 0
+  m_Name: GameBootstrap
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &209733461
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 209733460}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a992c2da639e46145b70b089681eb50c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameBootstrap
+  networkManager: {fileID: 7443408887111934077}
+  defaultAddress: localhost
+  defaultPort: 7777
+--- !u!4 &209733462
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 209733460}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1137.8643, y: -0.00006, z: 7366.6865}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &210553297
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -35008,27 +35055,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2d7570fb35dec9f4b86d4b9ec90773bb, type: 3}
---- !u!114 &7443408887111934067
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7443408887111934076}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 211a9f6ec51ddc14f908f5acc0cd0423, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _playerPrefab: {fileID: 7709259699627967468, guid: 7a7c894e7536ad84a9f30d8db34a03cd, type: 3}
-  _addToDefaultScene: 1
-  Spawns:
-  - {fileID: 374221881}
-  - {fileID: 179873250}
-  - {fileID: 2011041366}
-  - {fileID: 319994280}
-  - {fileID: 1215783466}
-  - {fileID: 1996512447}
 --- !u!1 &7443408887111934076
 GameObject:
   m_ObjectHideFlags: 0
@@ -35040,11 +35066,9 @@ GameObject:
   - component: {fileID: 7443408887111934078}
   - component: {fileID: 7443408887111934077}
   - component: {fileID: 1239613787}
-  - component: {fileID: 7443408887111934067}
   - component: {fileID: 7443408887111934079}
   - component: {fileID: 7443408887111934080}
   - component: {fileID: 7443408887111934081}
-  - component: {fileID: 7443408887111934083}
   - component: {fileID: 7443408887111934084}
   - component: {fileID: 7443408887111934085}
   - component: {fileID: 7443408887111934087}
@@ -35157,21 +35181,6 @@ MonoBehaviour:
   _port: 7777
   _maximumClients: 4095
   _clientAddress: localhost
---- !u!114 &7443408887111934083
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7443408887111934076}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a992c2da639e46145b70b089681eb50c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  networkManager: {fileID: 7443408887111934077}
-  defaultAddress: localhost
-  defaultPort: 7777
 --- !u!82 &7443408887111934084
 AudioSource:
   m_ObjectHideFlags: 0
@@ -35388,3 +35397,4 @@ SceneRoots:
   - {fileID: 726296486}
   - {fileID: 596239831}
   - {fileID: 754822617}
+  - {fileID: 209733462}

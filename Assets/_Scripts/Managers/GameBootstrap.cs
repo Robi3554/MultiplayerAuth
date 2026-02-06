@@ -5,7 +5,7 @@ using System;
 using System.Collections;
 using FishNet.Transporting;
 
-public class NetworkBootstrap : MonoBehaviour
+public class GameBootstrap : MonoBehaviour
 {
     [SerializeField] private NetworkManager networkManager;
     [SerializeField] private string defaultAddress = "localhost";
@@ -96,20 +96,8 @@ public class NetworkBootstrap : MonoBehaviour
 
 #elif DEDICATED_SERVER
         // --- BUILD MODE: Dedicated Server ---
-
-        Console.WriteLine("-----------------------------------------");
-        Console.WriteLine($"This is the dedicated server. The IP will be: 193.226.15.26");
-        string serverAddress = "193.226.15.26";
-
-        if (string.IsNullOrWhiteSpace(serverAddress))
-        {
-            Console.WriteLine("-----------------------------------------");
-            Console.WriteLine($"Renter the server IP address to bind to:");
-        }
-
-        tugboat.SetServerBindAddress(serverAddress, IPAddressType.IPv4);
-
-        Debug.Log("[Bootstrap] Starting Dedicated Server.");
+        tugboat.SetServerBindAddress("0.0.0.0", IPAddressType.IPv4);
+        Debug.Log("[Bootstrap] Starting Dedicated Server on 0.0.0.0:" + defaultPort);
         networkManager.ServerManager.StartConnection();
 
 #elif CLIENT
