@@ -31,6 +31,12 @@ public class LobbyManager : NetworkBehaviour
         Instance = this;
     }
 
+    public override void OnStartClient()
+    {
+        base.OnStartClient();
+        Debug.Log($"[Lobby] OnStartClient — IsSpawned={IsSpawned}, IsOwner={IsOwner}, ObjectId={ObjectId}");
+    }
+
     public override void OnStartServer()
     {
         base.OnStartServer();
@@ -90,6 +96,7 @@ public class LobbyManager : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     public void CmdSetTeam(Team team, NetworkConnection sender = null)
     {
+        Debug.Log($"[Lobby] CmdSetTeam called: ClientId={sender.ClientId}, Team={team}");
         UpdatePlayer(sender.ClientId, p =>
         {
             p.Team = team;
@@ -129,9 +136,11 @@ public class LobbyManager : NetworkBehaviour
             if (Players[i].ClientId == clientId)
             {
                 Players[i] = modifier(Players[i]);
+                Debug.Log($"[Lobby] UpdatePlayer: ClientId={clientId} updated. Team={Players[i].Team}, Ready={Players[i].IsReady}");
                 return;
             }
         }
+        Debug.LogWarning($"[Lobby] UpdatePlayer: ClientId={clientId} NOT FOUND in Players list (count={Players.Count})!");
     }
 
     [Server]
@@ -184,6 +193,9 @@ public class LobbyManager : NetworkBehaviour
         // Load the game scene globally for all connected clients
         SceneLoadData sld = new SceneLoadData(gameSceneName);
         NetworkManager.SceneManager.LoadGlobalScenes(sld);
+
+        // Clean up: despawn the LobbyManager so it doesn't persist into the game scene
+        ServerManager.Despawn(gameObject);
     }
 
     [ObserversRpc]

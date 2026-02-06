@@ -25,18 +25,25 @@ public class LobbyPlayerEntry : MonoBehaviour
         {
             case Team.Rebels:
                 teamText.text = "Rebels";
-                teamColorBar.color = RebelsColor;
+                if (teamColorBar != null) teamColorBar.color = RebelsColor;
                 break;
             case Team.AI:
                 teamText.text = "AI";
-                teamColorBar.color = AIColor;
+                if (teamColorBar != null) teamColorBar.color = AIColor;
                 break;
             default:
                 teamText.text = "-";
-                teamColorBar.color = NoneColor;
+                if (teamColorBar != null) teamColorBar.color = NoneColor;
                 break;
         }
 
-        readyCheckmark.SetActive(data.IsReady);
+        // Show/hide ready indicator — also update text if it has TMP
+        if (readyCheckmark != null)
+        {
+            readyCheckmark.SetActive(data.IsReady);
+            var checkText = readyCheckmark.GetComponent<TMP_Text>();
+            if (checkText != null)
+                checkText.text = data.IsReady ? "R" : "";
+        }
     }
 }

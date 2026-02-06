@@ -41,12 +41,14 @@ public class LobbyUI : MonoBehaviour
 
     private void Start()
     {
-        rebelsButton.onClick.AddListener(() => SelectTeam(Team.Rebels));
-        aiButton.onClick.AddListener(() => SelectTeam(Team.AI));
-        noTeamButton.onClick.AddListener(() => SelectTeam(Team.None));
+        Debug.Log($"[LobbyUI] Start() — rebels={rebelsButton != null}, ai={aiButton != null}, noTeam={noTeamButton != null}, ffa={ffaButton != null}, tdm={tdmButton != null}, ready={readyButton != null}");
 
-        ffaButton.onClick.AddListener(() => SelectGameMode(GameMode.FreeForAll));
-        tdmButton.onClick.AddListener(() => SelectGameMode(GameMode.TeamDeathmatch));
+        rebelsButton.onClick.AddListener(() => { Debug.Log("[LobbyUI] Rebels clicked"); SelectTeam(Team.Rebels); });
+        aiButton.onClick.AddListener(() => { Debug.Log("[LobbyUI] AI clicked"); SelectTeam(Team.AI); });
+        noTeamButton.onClick.AddListener(() => { Debug.Log("[LobbyUI] NoTeam clicked"); SelectTeam(Team.None); });
+
+        ffaButton.onClick.AddListener(() => { Debug.Log("[LobbyUI] FFA clicked"); SelectGameMode(GameMode.FreeForAll); });
+        tdmButton.onClick.AddListener(() => { Debug.Log("[LobbyUI] TDM clicked"); SelectGameMode(GameMode.TeamDeathmatch); });
 
         readyButton.onClick.AddListener(ToggleReady);
 
@@ -61,15 +63,30 @@ public class LobbyUI : MonoBehaviour
         if (lobbyManager == null)
         {
             lobbyManager = LobbyManager.Instance;
-            if (lobbyManager == null) return;
+            if (lobbyManager == null)
+            {
+                if (Time.frameCount % 120 == 0)
+                    Debug.LogWarning($"[LobbyUI] Waiting for LobbyManager.Instance... (frame {Time.frameCount})");
+                return;
+            }
+            Debug.Log("[LobbyUI] Found LobbyManager!");
         }
 
         // Send username to server once after connecting
         if (!hasJoined)
         {
+            // Must wait until LobbyManager is spawned (networked) before calling ServerRpcs
+            if (!lobbyManager.IsSpawned)
+            {
+                if (Time.frameCount % 120 == 0)
+                    Debug.LogWarning($"[LobbyUI] LobbyManager found but NOT spawned yet (IsSpawned=false, frame {Time.frameCount})");
+                return;
+            }
+
             string username = string.IsNullOrEmpty(ConnectionInfo.username)
                 ? "Player"
                 : ConnectionInfo.username;
+            Debug.Log($"[LobbyUI] Calling CmdJoinLobby('{username}'), IsSpawned={lobbyManager.IsSpawned}, Players.Count={lobbyManager.Players.Count}");
             lobbyManager.CmdJoinLobby(username);
             hasJoined = true;
         }
@@ -118,6 +135,7 @@ public class LobbyUI : MonoBehaviour
             var player = lobbyManager.Players[i];
 
             var go = Instantiate(playerEntryPrefab, playerListContent);
+            go.SetActive(true); // Prefab may be inactive — force active
             var entry = go.GetComponent<LobbyPlayerEntry>();
             entry.Setup(player);
             entryObjects.Add(go);
@@ -141,6 +159,7 @@ public class LobbyUI : MonoBehaviour
         lobbyManager.CmdSetTeam(team);
         isReady = false;
         UpdateReadyButton();
+        HighlightTeamButton(team);
     }
 
     private void SelectGameMode(GameMode mode)
@@ -149,6 +168,22 @@ public class LobbyUI : MonoBehaviour
         lobbyManager.CmdSetGameMode(mode);
         isReady = false;
         UpdateReadyButton();
+        HighlightModeButton(mode);
+    }
+
+    private void HighlightTeamButton(Team team)
+    {
+        SetButtonColor(rebelsButton, team == Team.Rebels ? RebelsColor : RebelsColor * 0.5f);
+        SetButtonColor(aiButton, team == Team.AI ? AIColor : AIColor * 0.5f);
+        SetButtonColor(noTeamButton, team == Team.None ? new Color(0.45f, 0.45f, 0.5f) : new Color(0.25f, 0.25f, 0.3f));
+    }
+
+    private void HighlightModeButton(GameMode mode)
+    {
+        Color ffaCol = new Color(0.9f, 0.65f, 0.2f);
+        Color tdmCol = new Color(0.2f, 0.75f, 0.5f);
+        SetButtonColor(ffaButton, mode == GameMode.FreeForAll ? ffaCol : ffaCol * 0.5f);
+        SetButtonColor(tdmButton, mode == GameMode.TeamDeathmatch ? tdmCol : tdmCol * 0.5f);
     }
 
     private void ToggleReady()
@@ -160,7 +195,7 @@ public class LobbyUI : MonoBehaviour
 
     private void UpdateReadyButton()
     {
-        readyButtonText.text = isReady ? "READY ✓" : "Ready Up";
+        readyButtonText.text = isReady ? "READY!" : "Ready Up";
         if (readyButtonImage != null)
             readyButtonImage.color = isReady ? Color.green : Color.white;
     }
