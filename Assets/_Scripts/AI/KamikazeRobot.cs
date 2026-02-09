@@ -13,7 +13,7 @@ public class KamikazeRobot : NetworkBehaviour
     public float safeDistance = 15f;
     public float chaseDistanceStep = 10f;
     public int maxChaseAttempts = 8;
-    public float repathDelay = 1f;
+    public float repathDelay = 0.1f;
 
     [Header("Agent Stats")]
     public float minSpeed = 3.5f;
@@ -29,7 +29,7 @@ public class KamikazeRobot : NetworkBehaviour
 
     private NavMeshAgent agent;
     private Transform targetPlayer;
-    private float nextPathUpdateTime = 1.5f;
+    private float nextPathUpdateTime = 0.1f;
 
     private enum State { Patroling, Chasing }
     private State currentState = State.Patroling;
@@ -72,7 +72,6 @@ public class KamikazeRobot : NetworkBehaviour
                         ExitChase();
                         break;
                     }
-                    float closestDist = DetectClosestPlayer();
                     float dist = Vector3.Distance(transform.position, targetPlayer.position);
                     if (dist > detectionRadius)
                     {
