@@ -72,7 +72,6 @@ public class KamikazeRobot : NetworkBehaviour
                         ExitChase();
                         break;
                     }
-                    float closestDist = DetectClosestPlayer();
                     float dist = Vector3.Distance(transform.position, targetPlayer.position);
                     if (dist > detectionRadius)
                     {
