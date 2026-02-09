@@ -29,7 +29,7 @@ public class KamikazeRobot : NetworkBehaviour
 
     private NavMeshAgent agent;
     private Transform targetPlayer;
-    private float nextPathUpdateTime = 0f;
+    private float nextPathUpdateTime = 1.5f;
 
     private enum State { Patroling, Chasing }
     private State currentState = State.Patroling;
@@ -72,12 +72,18 @@ public class KamikazeRobot : NetworkBehaviour
                         ExitChase();
                         break;
                     }
+                    float closestDist = DetectClosestPlayer();
                     float dist = Vector3.Distance(transform.position, targetPlayer.position);
                     if (dist > detectionRadius)
                     {
                         ExitChase();
                         break;
 
+                    }
+                    if(closestDist < dist) // daca cel mai apropiat inamic e mai aproape decat cel deja detectat, schimba
+                    {
+                        dist = closestDist;
+                        nextPathUpdateTime = 0;
                     }
                     if (Time.time >= nextPathUpdateTime)
                     {
