@@ -35,6 +35,8 @@ public class PlayerStats : NetworkBehaviour
 
     private Slider healthSlider;
 
+    private bool isHeadBig;
+
     public bool isRespawning = false;
 
     public override void OnStartClient()
@@ -255,13 +257,20 @@ public class PlayerStats : NetworkBehaviour
 
     private IEnumerator ChangeHeadCo(Transform head, float multiplier)
     {
-        var originalScale = head.localScale;
+        if (!isHeadBig)
+        {
+            var originalScale = head.localScale;
 
-        head.localScale *= multiplier;
+            head.localScale *= multiplier;
+            
+            isHeadBig = true;
 
-        yield return new WaitForSeconds(10f);
+            yield return new WaitForSeconds(10f);
 
-        head.localScale = originalScale;
+            head.localScale = originalScale;
+
+            isHeadBig = false;
+        }
     }
     #endregion
 
@@ -280,12 +289,15 @@ public class PlayerStats : NetworkBehaviour
 
     private IEnumerator ChangeMultCo(int multiplier)
     {
-        int oldMultiplier = damageMult;
-        damageMult = multiplier;
+        if (isHeadBig)
+        {
+            int oldMultiplier = damageMult;
+            damageMult = multiplier;
 
-        yield return new WaitForSeconds(10f);
+            yield return new WaitForSeconds(10f);
 
-        damageMult = oldMultiplier;
+            damageMult = oldMultiplier;
+        }
     }
     #endregion
 }
