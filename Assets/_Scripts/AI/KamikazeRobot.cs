@@ -13,7 +13,7 @@ public class KamikazeRobot : NetworkBehaviour
     public float safeDistance = 15f;
     public float chaseDistanceStep = 10f;
     public int maxChaseAttempts = 8;
-    public float repathDelay = 0.5f;
+    public float repathDelay = 1f;
 
     [Header("Agent Stats")]
     public float minSpeed = 3.5f;
@@ -80,6 +80,7 @@ public class KamikazeRobot : NetworkBehaviour
                         break;
 
                     }
+                    float closestDist = DetectClosestPlayer();
                     if(closestDist < dist) // daca cel mai apropiat inamic e mai aproape decat cel deja detectat, schimba
                     {
                         dist = closestDist;
@@ -157,8 +158,8 @@ public class KamikazeRobot : NetworkBehaviour
         {
             Vector3 chaseDir = (targetPlayer.position - transform.position).normalized;
 
-            Vector3 candidatePos = transform.position + chaseDir * chaseDistanceStep;
-            if (NavMesh.SamplePosition(candidatePos, out NavMeshHit hit, 5f, NavMesh.AllAreas))
+            // Vector3 candidatePos = transform.position + chaseDir * chaseDistanceStep;
+            if (NavMesh.SamplePosition(chaseDir, out NavMeshHit hit, 5f, NavMesh.AllAreas))
             {
                 agent.SetDestination(hit.position);
             } else {
