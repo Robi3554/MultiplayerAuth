@@ -276,18 +276,12 @@ public class PlayerStats : NetworkBehaviour
     #region Damage Mult
     public void ChangeMult(int multiplier)
     {
-        ServerChangeMult(multiplier);
-    }
-
-    [ServerRpc]
-    private void ServerChangeMult(int multiplier)
-    {
         StartCoroutine(ChangeMultCo(multiplier));
     }
 
     private IEnumerator ChangeMultCo(int multiplier)
     {
-        if (isHeadBig)
+        if(damageMult < 2)
         {
             int oldMultiplier = damageMult;
             damageMult = multiplier;
@@ -295,7 +289,7 @@ public class PlayerStats : NetworkBehaviour
             yield return new WaitForSeconds(10f);
 
             damageMult = oldMultiplier;
-        }
+        }    
     }
     #endregion
 }
