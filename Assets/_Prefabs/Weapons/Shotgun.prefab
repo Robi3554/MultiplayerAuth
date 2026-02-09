@@ -372,11 +372,10 @@ MonoBehaviour:
   firePoint: {fileID: 8618280175570269345}
   speed: 30
   maxDistance: 7
-  fireRate: 0.5
+  fireRate: 1
   damage: 5
-  damageMult: 0
   maxAmmo: 12
-  reloadTime: 1.25
+  reloadTime: 0.8
   afterChangeDelay: 1
   shootAudioSource: {fileID: 6150143733585687789}
   shootAudioClip: {fileID: 8300000, guid: acce5e47e57cd2f4fbede04e73a12e5b, type: 3}
@@ -406,11 +405,10 @@ MonoBehaviour:
   firePoint: {fileID: 8618280175570269345}
   speed: 25
   maxDistance: 10
-  fireRate: 0.5
+  fireRate: 0.75
   damage: 5
-  damageMult: 1
   maxAmmo: 12
-  reloadTime: 1.25
+  reloadTime: 1
   afterChangeDelay: 1
   shootAudioSource: {fileID: 6150143733585687789}
   shootAudioClip: {fileID: 8300000, guid: acce5e47e57cd2f4fbede04e73a12e5b, type: 3}
