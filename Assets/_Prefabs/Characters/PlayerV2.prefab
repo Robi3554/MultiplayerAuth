@@ -258,8 +258,8 @@ Transform:
   - {fileID: 1275917294917927079}
   - {fileID: 1249782783666185828}
   - {fileID: 1016739391521403168}
-  - {fileID: 4267883078208940410}
   - {fileID: 4655495916798533202}
+  - {fileID: 4267883078208940410}
   - {fileID: 7711146531749912955}
   m_Father: {fileID: 6453949374715315972}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -855,6 +855,7 @@ MonoBehaviour:
   _componentIndexCache: 5
   _addedNetworkObject: {fileID: 7709259699627967468}
   _networkObjectCache: {fileID: 7709259699627967468}
+  damageMult: 1
   _usernameTextOnBillboard: {fileID: 462438261620293116}
   _hitAudioSource: {fileID: 6368002052658960838}
   _hitAudioClip: {fileID: 8300000, guid: 920fd5498c3b21b4eadefe5f6dc29c0b, type: 3}
@@ -1055,6 +1056,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 6076619815294623304}
+        m_TargetAssemblyTypeName: RailGunShoot, Assembly-CSharp
+        m_MethodName: OnDamage
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_ActionId: 2e5fcd95-77fe-4bb6-8215-bf4d732aef82
     m_ActionName: 'Gameplay/Damage[/Keyboard/tab]'
   - m_PersistentCalls:
@@ -1231,6 +1244,7 @@ MonoBehaviour:
   - {fileID: 319315277333349243}
   - {fileID: 1879072507561131230}
   - {fileID: 4412511933998750678}
+  - {fileID: 5132235103992956341}
   modelRigBuilder: {fileID: 723741321999798882}
 --- !u!114 &3719605036728346066
 MonoBehaviour:
@@ -1261,7 +1275,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: '::'
   _pauseMenuCanvas: {fileID: 0}
   _menuSceneName: WelcomeScreen
-  _playerInput: {fileID: 4214152988996548071}
 --- !u!1 &7820529778285852255
 GameObject:
   m_ObjectHideFlags: 0
@@ -3002,6 +3015,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Railgun
       objectReference: {fileID: 0}
+    - target: {fileID: 1162888931658450792, guid: d5fbe6d1ba744e441bcc2dbe30e99ae8, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1693794561756290191, guid: d5fbe6d1ba744e441bcc2dbe30e99ae8, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -3078,6 +3095,22 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 1693794561756290191, guid: d5fbe6d1ba744e441bcc2dbe30e99ae8, type: 3}
   m_PrefabInstance: {fileID: 6276388339125191389}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &5132235103992956341 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1162888931658450792, guid: d5fbe6d1ba744e441bcc2dbe30e99ae8, type: 3}
+  m_PrefabInstance: {fileID: 6276388339125191389}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &6076619815294623304 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 238207502012538005, guid: d5fbe6d1ba744e441bcc2dbe30e99ae8, type: 3}
+  m_PrefabInstance: {fileID: 6276388339125191389}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5132235103992956341}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: de95aeb0530a04e449c0545a29b9b5b4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &6370772279283438140
 PrefabInstance:
   m_ObjectHideFlags: 0

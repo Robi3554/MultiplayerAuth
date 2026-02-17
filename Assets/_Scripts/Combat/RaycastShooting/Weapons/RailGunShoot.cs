@@ -11,9 +11,16 @@ public class RailGunShoot : RaycastShoot
         stopTime,
         shootTime;
 
+    [SerializeField]
+    protected AudioSource loadAudioSource;
+    [SerializeField]
+    protected AudioClip loadAudioClip;
+
+    private bool isShooting;
+
     protected override void HandleShootInput(InputAction.CallbackContext context)
     {
-        if (Time.time >= nextShootTime)
+        if (Time.time >= nextShootTime && !isShooting)
         {
             nextShootTime = Time.time + 1/fireRate;
             StartCoroutine(StopAndShoot());
@@ -28,7 +35,12 @@ public class RailGunShoot : RaycastShoot
     private IEnumerator StopAndShoot()
     {
         pm.canMove = false;
+        pm.canDash = false;
+        isShooting = true;
+        
+        pm.SetRunAnimFalse();
 
+        loadAudioSource.PlayOneShot(loadAudioClip);
         yield return new WaitForSeconds(shootTime);
 
         Shoot();
@@ -36,5 +48,7 @@ public class RailGunShoot : RaycastShoot
         yield return new WaitForSeconds(stopTime);
 
         pm.canMove = true;
+        pm.canDash = true;
+        isShooting = false;
     }
 }

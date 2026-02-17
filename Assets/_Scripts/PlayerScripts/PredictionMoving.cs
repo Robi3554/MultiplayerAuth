@@ -35,13 +35,13 @@ public class PredictionMoving : NetworkBehaviour
     private bool _isAnalogMovement;
     private Vector2 _mouseLook, _joystickLook;
     internal bool canMove = true;
+    internal bool canDash = true;
 
     private Rigidbody _rb;
     private Camera _camera;
     private bool _isGrounded;
     private bool _jumpPressed;
     private bool _isDashing;
-    private bool _canDash = true;
     private bool _isMovingBackwards;
     private void Awake()
     {
@@ -74,7 +74,7 @@ public class PredictionMoving : NetworkBehaviour
 
     public void OnDash(InputAction.CallbackContext context)
     {
-        if (context.performed && _canDash && !_isDashing)
+        if (context.performed && canDash && !_isDashing)
             StartCoroutine(PerformDash());
     }
 
@@ -96,6 +96,8 @@ public class PredictionMoving : NetworkBehaviour
             groundCheck.position, groundCheckRadius, groundLayer, QueryTriggerInteraction.Ignore);
 
         if (_isDashing) return;
+
+        if (!canMove) return;
 
         Vector3 direction = new Vector3(_moveInput.x, 0f, _moveInput.y).normalized;
         float speed = moveRate;
@@ -172,7 +174,7 @@ public class PredictionMoving : NetworkBehaviour
 
     private IEnumerator PerformDash()
     {
-        _canDash = false;
+        canDash = false;
         _isDashing = true;
 
         Vector3 dashDir = new Vector3(_moveInput.x, 0, _moveInput.y).normalized;
@@ -192,7 +194,7 @@ public class PredictionMoving : NetworkBehaviour
 
         yield return new WaitForSeconds(dashCooldown);
 
-        _canDash = true;
+        canDash = true;
     }
 
     private float GetYawFromJoystickOrMovement()
@@ -210,6 +212,10 @@ public class PredictionMoving : NetworkBehaviour
         return transform.eulerAngles.y;
     }
 
+    public void SetRunAnimFalse()
+    {
+        animator.SetFloat("Velocity", 0);
+    }
     private void OnDrawGizmosSelected()
     {
         if (groundCheck != null)
