@@ -108,7 +108,7 @@ public class PlayerManager : NetworkBehaviour
     [TargetRpc]
     void RespawnPlayer(NetworkConnection conn, GameObject player, int spawn)
     {
-        var playerMovement = player.GetComponent<PredictionMovement>;
+        var playerMovement = player.GetComponent<PredictionMoving>();
         playerMovement.canMove = false;
 
         //disable rigidbody during teleport to prevent physics glitches
