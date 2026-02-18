@@ -53,6 +53,9 @@ public abstract class Weapon : MonoBehaviour
     protected AudioSource reloadAudioSource;
     
     [SerializeField]
+    protected ParticleSystem muzzleFlash;
+    
+    [SerializeField]
     protected BoxCollider wallCheckCollider;
     
     protected Coroutine reloadCoroutine;
@@ -181,4 +184,12 @@ public abstract class Weapon : MonoBehaviour
     protected abstract void HandleShootInput(InputAction.CallbackContext context);
 
     protected int Damage => damage * playerStats.damageMult;
+    
+    public void PlayMuzzleFlash()
+    {
+        if (muzzleFlash != null)
+        {
+            muzzleFlash.Play();
+        }
+    }
 }

@@ -24,7 +24,8 @@ public class ProjectileShooting : Weapon
         }
 
         playerNet.NotifyProjectileShotServer(projectilePrefab, firePoint.position, -firePoint.up * speed, Damage, maxDistance);
-
+        playerNet.NotifyMuzzleFlashServer();
+        
         if (canPlayShootSound)
         {
             playerNet.ProjectileWeaponSound();
