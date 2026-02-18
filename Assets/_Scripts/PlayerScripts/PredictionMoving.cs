@@ -1,6 +1,7 @@
 using System.Collections;
 using FishNet.Component.Animating;
 using FishNet.Object;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -30,6 +31,8 @@ public class PredictionMoving : NetworkBehaviour
     [SerializeField] private float dashForce = 20f;
     [SerializeField] private float dashDuration = 0.2f;
     [SerializeField] private float dashCooldown = 1f;
+
+    [SerializeField] private float decelSpeed = 5f;
 
     private Vector2 _moveInput;
     private bool _isAnalogMovement;
@@ -74,7 +77,7 @@ public class PredictionMoving : NetworkBehaviour
 
     public void OnDash(InputAction.CallbackContext context)
     {
-        if (context.performed && _canDash && !_isDashing)
+        if (context.performed && _canDash && !_isDashing && canMove)
             StartCoroutine(PerformDash());
     }
 
@@ -96,6 +99,8 @@ public class PredictionMoving : NetworkBehaviour
             groundCheck.position, groundCheckRadius, groundLayer, QueryTriggerInteraction.Ignore);
 
         if (_isDashing) return;
+
+        if (!canMove) return;
 
         Vector3 direction = new Vector3(_moveInput.x, 0f, _moveInput.y).normalized;
         float speed = moveRate;
@@ -210,6 +215,11 @@ public class PredictionMoving : NetworkBehaviour
         return transform.eulerAngles.y;
     }
 
+    public void SetRunAnimFalse()
+    {
+        animator.SetFloat("Velocity", 0);
+        _rb.linearVelocity = new Vector3(Mathf.Lerp(_rb.linearVelocity.x, 0, decelSpeed + Time.deltaTime), _rb.linearVelocity.y, Mathf.Lerp(_rb.linearVelocity.z, 0, decelSpeed + Time.deltaTime));
+    }
     private void OnDrawGizmosSelected()
     {
         if (groundCheck != null)
