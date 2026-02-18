@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 7d27b4813684e59498ca3cb4b88faef7
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 188585
+  packageName: Sci-Fi Sniper Rifle
+  packageVersion: 1.0
+  assetPath: Assets/MAC_SciFiSniperRifle/Materials/backgroundMaterial.mat
+  uploadId: 415603

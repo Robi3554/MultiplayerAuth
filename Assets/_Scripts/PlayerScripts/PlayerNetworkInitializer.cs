@@ -85,8 +85,28 @@ public class PlayerNetworkInitializer : NetworkBehaviour
     [ServerRpc]
     public void ProjectileWeaponSound()
     {
+        PlayProjectileWeaponSoundObserversRpc();
+    }
+    
+    [ObserversRpc]
+    private void PlayProjectileWeaponSoundObserversRpc()
+    {
         var weapon = GetComponentInChildren<ProjectileShooting>();
         if (weapon != null)
             weapon.PlaySound();
+    }
+    
+    [ServerRpc]
+    public void NotifyMuzzleFlashServer()
+    {
+        ShowMuzzleFlashObserversRpc();
+    }
+
+    [ObserversRpc]
+    private void ShowMuzzleFlashObserversRpc()
+    {
+        var weapon = GetComponentInChildren<Weapon>();
+        if (weapon != null)
+            weapon.PlayMuzzleFlash();
     }
 }

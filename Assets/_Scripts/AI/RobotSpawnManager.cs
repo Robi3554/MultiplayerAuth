@@ -7,7 +7,7 @@ public class RobotSpawnManager : NetworkBehaviour
     public static RobotSpawnManager Instance;
 
     [SerializeField]
-    private Transform[] spawnPoints;
+    private Transform[] spawnPoints = new Transform[0];
     [SerializeField]
     private GameObject[] robots;
     [SerializeField]

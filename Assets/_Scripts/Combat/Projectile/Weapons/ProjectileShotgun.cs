@@ -30,6 +30,8 @@ public class ProjectileShotgun : ProjectileShooting
                 playerNet.ProjectileWeaponSound();
             }
         }
+        
+        playerNet.NotifyMuzzleFlashServer();
 
         CurrentAmmo--;
     }

@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: 8318660718515258173}
   - component: {fileID: 2451632696206732982}
   - component: {fileID: 6061947709278305280}
+  - component: {fileID: 304595788701073079}
   m_Layer: 8
   m_Name: Lil' Robot
   m_TagString: Robot
@@ -141,7 +142,7 @@ MonoBehaviour:
   _preventDespawnOnDisconnect: 0
   _defaultDespawnType: 0
   NetworkObserver: {fileID: 0}
-  _enablePrediction: 0
+  _enablePrediction: 1
   _predictionType: 0
   _graphicalObject: {fileID: 0}
   _detachGraphicalObject: 0
@@ -259,6 +260,23 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &304595788701073079
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2423027033985324458}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e2b597e1828355a4d994a69cbb11ef85, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: FishNet.Runtime::FishNet.Component.Ownership.PredictedSpawn
+  _componentIndexCache: 255
+  _addedNetworkObject: {fileID: 5021843577325446240}
+  _networkObjectCache: {fileID: 0}
+  _allowSpawning: 1
+  _allowDespawning: 1
 --- !u!1001 &7010048478259694882
 PrefabInstance:
   m_ObjectHideFlags: 0

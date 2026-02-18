@@ -17,6 +17,8 @@ public class ChangeWeapons : NetworkBehaviour
     private readonly SyncVar<int> _currentWeaponIndex = new SyncVar<int>(1);
     private int _newWeaponIndex;
 
+    internal bool canChange = true;
+
     void Start()
     {
         GetWeapons(gameObject);
@@ -91,6 +93,9 @@ public class ChangeWeapons : NetworkBehaviour
     
     private void SwitchWeapon(int prev, int newActiveIndex, bool asServer)
     {
+        if (!canChange)
+            return;
+
         // Safety check
         if (newActiveIndex < 0 || newActiveIndex >= weapons.Count) return;
 
