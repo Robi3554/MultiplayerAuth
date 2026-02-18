@@ -75,6 +75,8 @@ public class PlayerManager : NetworkBehaviour
 
         victimStats.AddDeath();
         victimStats.isRespawning = true;
+        var playerMovement = victim.playerObject.GetComponent<PredictionMoving>();
+        playerMovement.canMove = false;
 
         // ADD KILL TO ATTACKER AND CHECK WIN CONDITION
         if (players.ContainsKey(attackerClientId))
@@ -106,6 +108,9 @@ public class PlayerManager : NetworkBehaviour
     [TargetRpc]
     void RespawnPlayer(NetworkConnection conn, GameObject player, int spawn)
     {
+        var playerMovement = player.GetComponent<PredictionMovement>;
+        playerMovement.canMove = false;
+
         //disable rigidbody during teleport to prevent physics glitches
         Rigidbody rb = player.GetComponent<Rigidbody>();
         if (rb != null)
@@ -118,11 +123,6 @@ public class PlayerManager : NetworkBehaviour
         player.transform.position = spawnPoints[spawn].position;
         player.transform.rotation = spawnPoints[spawn].rotation;
         
-        //re-enable rigidbody after teleport
-        if (rb != null)
-        {
-            rb.isKinematic = false;
-        }
     }
 
     [TargetRpc]
