@@ -5,6 +5,7 @@ using UnityEngine.InputSystem;
 public class RailGunShoot : RaycastShoot
 {
     private PredictionMoving pm;
+    private ChangeWeapons cw;
 
     [SerializeField]
     private float
@@ -30,12 +31,14 @@ public class RailGunShoot : RaycastShoot
     private void Awake()
     {
         pm = GetComponentInParent<PredictionMoving>();
+        cw = GetComponentInParent<ChangeWeapons>();
     }
 
     private IEnumerator StopAndShoot()
     {
         pm.canMove = false;
         isShooting = true;
+        cw.canChange = false;
         
         pm.SetRunAnimFalse();
 
@@ -48,5 +51,6 @@ public class RailGunShoot : RaycastShoot
 
         pm.canMove = true;
         isShooting = false;
+        cw.canChange = true;
     }
 }
