@@ -824,6 +824,7 @@ MonoBehaviour:
   dashForce: 20
   dashDuration: 0.2
   dashCooldown: 1
+  decelSpeed: 0.75
 --- !u!114 &1930605675685772441
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3013,7 +3014,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1162888931658450792, guid: d5fbe6d1ba744e441bcc2dbe30e99ae8, type: 3}
       propertyPath: m_Name
-      value: Railgun
+      value: Sniper
       objectReference: {fileID: 0}
     - target: {fileID: 1162888931658450792, guid: d5fbe6d1ba744e441bcc2dbe30e99ae8, type: 3}
       propertyPath: m_IsActive

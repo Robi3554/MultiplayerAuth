@@ -1,6 +1,7 @@
 using System.Collections;
 using FishNet.Component.Animating;
 using FishNet.Object;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -31,17 +32,19 @@ public class PredictionMoving : NetworkBehaviour
     [SerializeField] private float dashDuration = 0.2f;
     [SerializeField] private float dashCooldown = 1f;
 
+    [SerializeField] private float decelSpeed = 5f;
+
     private Vector2 _moveInput;
     private bool _isAnalogMovement;
     private Vector2 _mouseLook, _joystickLook;
     internal bool canMove = true;
-    internal bool canDash = true;
 
     private Rigidbody _rb;
     private Camera _camera;
     private bool _isGrounded;
     private bool _jumpPressed;
     private bool _isDashing;
+    private bool _canDash = true;
     private bool _isMovingBackwards;
     private void Awake()
     {
@@ -74,7 +77,7 @@ public class PredictionMoving : NetworkBehaviour
 
     public void OnDash(InputAction.CallbackContext context)
     {
-        if (context.performed && canDash && !_isDashing)
+        if (context.performed && _canDash && !_isDashing && canMove)
             StartCoroutine(PerformDash());
     }
 
@@ -174,7 +177,7 @@ public class PredictionMoving : NetworkBehaviour
 
     private IEnumerator PerformDash()
     {
-        canDash = false;
+        _canDash = false;
         _isDashing = true;
 
         Vector3 dashDir = new Vector3(_moveInput.x, 0, _moveInput.y).normalized;
@@ -194,7 +197,7 @@ public class PredictionMoving : NetworkBehaviour
 
         yield return new WaitForSeconds(dashCooldown);
 
-        canDash = true;
+        _canDash = true;
     }
 
     private float GetYawFromJoystickOrMovement()
@@ -215,6 +218,7 @@ public class PredictionMoving : NetworkBehaviour
     public void SetRunAnimFalse()
     {
         animator.SetFloat("Velocity", 0);
+        _rb.linearVelocity = new Vector3(Mathf.Lerp(_rb.linearVelocity.x, 0, decelSpeed + Time.deltaTime), _rb.linearVelocity.y, Mathf.Lerp(_rb.linearVelocity.z, 0, decelSpeed + Time.deltaTime));
     }
     private void OnDrawGizmosSelected()
     {
