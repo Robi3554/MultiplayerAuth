@@ -64,8 +64,9 @@ public class LobbyBootstrap : MonoBehaviour
             if (lobbyManagerPrefab != null)
             {
                 NetworkObject instance = Instantiate(lobbyManagerPrefab);
+                instance.SetIsGlobal(true);
                 networkManager.ServerManager.Spawn(instance);
-                Debug.Log("[LobbyBootstrap] Spawned LobbyManager on server.");
+                Debug.Log("[LobbyBootstrap] Spawned LobbyManager on server (global).");
             }
             else
             {
