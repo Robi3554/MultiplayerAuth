@@ -3,6 +3,7 @@ using FishNet.Managing.Scened;
 using FishNet.Object;
 using FishNet.Object.Synchronizing;
 using FishNet.Transporting;
+using System.Collections;
 using UnityEngine;
 
 public class LobbyManager : NetworkBehaviour
@@ -190,12 +191,21 @@ public class LobbyManager : NetworkBehaviour
         // Notify all clients
         RpcNotifyGameStarting(resolvedMode);
 
-        // Load the game scene globally for all connected clients
+        // Load the game scene globally for all connected clients, replacing LobbyScene
         SceneLoadData sld = new SceneLoadData(gameSceneName);
+        sld.ReplaceScenes = ReplaceOption.All;
         NetworkManager.SceneManager.LoadGlobalScenes(sld);
 
-        // Clean up: despawn the LobbyManager so it doesn't persist into the game scene
-        ServerManager.Despawn(gameObject);
+        // Wait a frame for the scene load to be queued, then despawn
+        StartCoroutine(DespawnAfterDelay());
+    }
+
+    private IEnumerator DespawnAfterDelay()
+    {
+        // Wait for scene load to be fully processed before despawning
+        yield return new WaitForSeconds(1f);
+        if (IsServerInitialized)
+            ServerManager.Despawn(gameObject);
     }
 
     [ObserversRpc]
