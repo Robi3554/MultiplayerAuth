@@ -29,13 +29,38 @@ public class PlayerSpawnerCustom : NetworkBehaviour
     {
         base.OnStartServer();
         base.NetworkManager.SceneManager.OnClientLoadedStartScenes += SceneManager_OnClientLoadedStartScenes;
+        base.NetworkManager.SceneManager.OnLoadEnd += SceneManager_OnLoadEnd;
     }
 
     public override void OnStopServer()
     {
         base.OnStopServer();
         if (base.NetworkManager != null)
+        {
             base.NetworkManager.SceneManager.OnClientLoadedStartScenes -= SceneManager_OnClientLoadedStartScenes;
+            base.NetworkManager.SceneManager.OnLoadEnd -= SceneManager_OnLoadEnd;
+        }
+    }
+
+    /// <summary>
+    /// Called when FishNet finishes loading a scene (e.g. lobby → game transition).
+    /// Spawns players for all connected clients who don't already have a player object.
+    /// </summary>
+    private void SceneManager_OnLoadEnd(SceneLoadEndEventArgs args)
+    {
+        if (!args.QueueData.AsServer)
+            return;
+
+        Debug.Log($"[Spawner] OnLoadEnd fired. Spawning players for all {ServerManager.Clients.Count} connected clients.");
+        foreach (var kvp in ServerManager.Clients)
+        {
+            NetworkConnection conn = kvp.Value;
+            // Skip if this client already has spawned objects (player)
+            if (conn.Objects != null && conn.Objects.Count > 0)
+                continue;
+
+            SpawnPlayer(conn);
+        }
     }
 
     private void SceneManager_OnClientLoadedStartScenes(NetworkConnection conn, bool asServer)
@@ -44,6 +69,11 @@ public class PlayerSpawnerCustom : NetworkBehaviour
         if (!asServer)
             return;
 
+        SpawnPlayer(conn);
+    }
+
+    private void SpawnPlayer(NetworkConnection conn)
+    {
         // Check if a player prefab is assigned.
         if (_playerPrefab == null)
         {
