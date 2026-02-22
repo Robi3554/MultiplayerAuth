@@ -1069,6 +1069,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 1127438476837218079}
+        m_TargetAssemblyTypeName: ProjectileBurst, Assembly-CSharp
+        m_MethodName: OnDamage
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_ActionId: 2e5fcd95-77fe-4bb6-8215-bf4d732aef82
     m_ActionName: 'Gameplay/Damage[/Keyboard/tab]'
   - m_PersistentCalls:
@@ -1536,6 +1548,14 @@ PrefabInstance:
       propertyPath: m_PlayOnAwake
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3026380717978776114, guid: a615e5387b3d46042810f8d472623229, type: 3}
+      propertyPath: muzzleFlash
+      value: 
+      objectReference: {fileID: 6677982973337983031}
+    - target: {fileID: 3026380717978776114, guid: a615e5387b3d46042810f8d472623229, type: 3}
+      propertyPath: wallCheckCollider
+      value: 
+      objectReference: {fileID: 1651934804612620351}
     - target: {fileID: 3963929329994855241, guid: a615e5387b3d46042810f8d472623229, type: 3}
       propertyPath: m_LocalScale.x
       value: 100
@@ -1630,6 +1650,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4344113360550767091, guid: a615e5387b3d46042810f8d472623229, type: 3}
       propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4849217169773376924, guid: a615e5387b3d46042810f8d472623229, type: 3}
+      propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4849217169773376924, guid: a615e5387b3d46042810f8d472623229, type: 3}
@@ -1811,6 +1835,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 70b342d8ce5c2fd48b8fa3147d48d1d1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1127438476837218079 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3026380717978776114, guid: a615e5387b3d46042810f8d472623229, type: 3}
+  m_PrefabInstance: {fileID: 2763708688216233261}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1879072507561131230}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: df438a810f8e6e641a9dea0142893387, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ProjectileBurst
 --- !u!4 &1249782783666185828 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3963929329994855241, guid: a615e5387b3d46042810f8d472623229, type: 3}
@@ -1850,7 +1885,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 2763708688216233261}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1879072507561131230}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: cf40e658b9ac8ef489b5333048eb7d42, type: 3}
   m_Name: 
