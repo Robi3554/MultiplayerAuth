@@ -30,6 +30,10 @@ public class PlayerSpawnerCustom : NetworkBehaviour
         base.OnStartServer();
         base.NetworkManager.SceneManager.OnClientLoadedStartScenes += SceneManager_OnClientLoadedStartScenes;
         base.NetworkManager.SceneManager.OnLoadEnd += SceneManager_OnLoadEnd;
+
+        // If players are already connected (lobby → game transition),
+        // spawn them now since OnLoadEnd/OnClientLoadedStartScenes won't fire again.
+        SpawnAllConnectedPlayers();
     }
 
     public override void OnStopServer()
@@ -51,7 +55,18 @@ public class PlayerSpawnerCustom : NetworkBehaviour
         if (!args.QueueData.AsServer)
             return;
 
-        Debug.Log($"[Spawner] OnLoadEnd fired. Spawning players for all {ServerManager.Clients.Count} connected clients.");
+        SpawnAllConnectedPlayers();
+    }
+
+    /// <summary>
+    /// Iterates all connected clients and spawns a player for anyone who doesn't have one yet.
+    /// </summary>
+    private void SpawnAllConnectedPlayers()
+    {
+        if (ServerManager == null || ServerManager.Clients == null)
+            return;
+
+        Debug.Log($"[Spawner] SpawnAllConnectedPlayers: {ServerManager.Clients.Count} clients connected.");
         foreach (var kvp in ServerManager.Clients)
         {
             NetworkConnection conn = kvp.Value;
