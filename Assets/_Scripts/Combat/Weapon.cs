@@ -30,6 +30,8 @@ public abstract class Weapon : MonoBehaviour
 
     protected PlayerStats playerStats;
 
+    protected ChangeWeapons cw;
+
     [SerializeField]
     protected float speed;
     [SerializeField]
@@ -75,6 +77,7 @@ public abstract class Weapon : MonoBehaviour
         playerNet = GetComponentInParent<PlayerNetworkInitializer>();
         currentAmmo = maxAmmo;
         playerStats = GetComponentInParent<PlayerStats>();
+        cw = GetComponentInParent<ChangeWeapons>();
     }
 
     protected virtual void OnEnable()
@@ -116,7 +119,7 @@ public abstract class Weapon : MonoBehaviour
         }
     }
 
-    protected void Update()
+    protected virtual void Update()
     {
         if (playerNet != null && !playerNet.IsOwner)
             return;
@@ -175,7 +178,7 @@ public abstract class Weapon : MonoBehaviour
         StartCoroutine(WeaponChangeDelay(afterChangeDelay));
     }
 
-    public void OnDeathReload()
+    public virtual void OnDeathReload()
     {
         Debug.Log("Start reload after death");
         currentAmmo = maxAmmo;
