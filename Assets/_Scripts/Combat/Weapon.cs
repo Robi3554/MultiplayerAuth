@@ -62,7 +62,7 @@ public abstract class Weapon : MonoBehaviour
     
     protected Coroutine reloadCoroutine;
 
-    protected bool canShoot = true;
+    protected bool isOnSwapCooldown = true;
     protected float nextShootTime = 0f;
     protected bool canPlayShootSound;
     protected bool canPlayReloadSound;
@@ -92,7 +92,7 @@ public abstract class Weapon : MonoBehaviour
 
     public void OnDamage(InputAction.CallbackContext context)
     {
-        if (!this.isActiveAndEnabled || !playerNet.IsOwner || !context.performed || currentAmmo <= 0) return;
+        if (!this.isActiveAndEnabled || !playerNet.IsOwner || isOnSwapCooldown || !context.performed || currentAmmo <= 0) return;
         
         var colliders = Physics.OverlapBox(wallCheckCollider.bounds.center,
             wallCheckCollider.size.Multiply(wallCheckCollider.transform.lossyScale) / 2,
@@ -156,26 +156,26 @@ public abstract class Weapon : MonoBehaviour
         isReloading = false;
     }
 
-    protected IEnumerator WeaponChangeDelay(float delay)
+    protected IEnumerator WeaponSwapCooldown(float delay)
     {
-        canShoot = false;
         yield return new WaitForSeconds(delay);
-        canShoot = true;
+        isOnSwapCooldown = false;
     }
 
     public void InitializeWeapon()
     {
+        isOnSwapCooldown = true;
+        
         if (ammoText == null)
             ammoText = GameObject.Find("PlayerHUD").transform.Find("Player Ammo").transform.Find("Ammo Text").GetComponent<TMP_Text>();
 
-        canShoot = false;
         nextShootTime = 0f;
         canPlayShootSound = shootAudioSource && shootAudioClip;
         canPlayReloadSound = reloadAudioSource;
 
         reloadAudioSource.pitch = reloadAudioSource.clip.length / reloadTime;
 
-        StartCoroutine(WeaponChangeDelay(afterChangeDelay));
+        StartCoroutine(WeaponSwapCooldown(afterChangeDelay));
     }
 
     public virtual void OnDeathReload()

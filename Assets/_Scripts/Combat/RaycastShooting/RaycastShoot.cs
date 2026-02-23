@@ -25,8 +25,6 @@ public class RaycastShoot : Weapon
 
     protected override void Shoot()
     {
-        if (!canShoot) return;
-
         Vector3 origin = firePoint.position;
         Vector3 direction = -firePoint.up;
         Vector3 hitPosition = origin + direction * maxDistance;
