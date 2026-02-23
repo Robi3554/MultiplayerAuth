@@ -69,6 +69,8 @@ public class ProjectileBurst : ProjectileShooting
     {
         base.OnDeathReload();
 
+        if (!isActiveAndEnabled)
+            return;
 
         if (burstRoutine != null)
         {

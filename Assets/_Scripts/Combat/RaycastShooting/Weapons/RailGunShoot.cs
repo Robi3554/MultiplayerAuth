@@ -58,6 +58,8 @@ public class RailGunShoot : RaycastShoot
     {
         base.OnDeathReload();
 
+        if (!isActiveAndEnabled)
+            return;
 
         if (stopAndShootRoutine != null)
         {
