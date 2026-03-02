@@ -33,6 +33,10 @@ public class PredictionMoving : NetworkBehaviour
     [SerializeField] private float dashCooldown = 1f;
 
     [SerializeField] private float decelSpeed = 5f;
+    
+    [SerializeField] private AudioSource footstepAudioSource;
+    [SerializeField] private AudioSource dashAudioSource;
+    [SerializeField] private AudioClip dashAudioClip;
 
     private Vector2 _moveInput;
     private bool _isAnalogMovement;
@@ -63,6 +67,8 @@ public class PredictionMoving : NetworkBehaviour
     {
         _moveInput = context.ReadValue<Vector2>();
         _isAnalogMovement = context.control.device is not Keyboard;
+        
+        ControlFootstepSounds(_moveInput.magnitude);
     }
 
     public void OnMouseLook(InputAction.CallbackContext context)
@@ -77,8 +83,11 @@ public class PredictionMoving : NetworkBehaviour
 
     public void OnDash(InputAction.CallbackContext context)
     {
-        if (context.performed && _canDash && !_isDashing && canMove)
-            StartCoroutine(PerformDash());
+        if (!context.performed || !_canDash || _isDashing || !canMove)
+            return;
+        
+        StartCoroutine(PerformDash());
+        PlayDashSound();
     }
 
     public void OnJump(InputAction.CallbackContext context)
@@ -226,6 +235,31 @@ public class PredictionMoving : NetworkBehaviour
         {
             Gizmos.color = Color.red;
             Gizmos.DrawWireSphere(groundCheck.position, groundCheckRadius);
+        }
+    }
+    
+    [ObserversRpc]
+    private void ControlFootstepSounds(float speed)
+    {
+        if (footstepAudioSource)
+        {
+            if (speed > 0.05f)
+            {
+                footstepAudioSource.Play();
+            }
+            else
+            {
+                footstepAudioSource.Stop();
+            }
+        }
+    }
+
+    [ObserversRpc]
+    private void PlayDashSound()
+    {
+        if (dashAudioSource && dashAudioClip)
+        {
+            dashAudioSource.PlayOneShot(dashAudioClip);
         }
     }
 }
