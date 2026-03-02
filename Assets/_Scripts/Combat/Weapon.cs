@@ -59,6 +59,9 @@ public abstract class Weapon : MonoBehaviour
     
     [SerializeField]
     protected BoxCollider wallCheckCollider;
+
+    [SerializeField]
+    protected WeaponHUD weaponHUD;
     
     protected Coroutine reloadCoroutine;
 
@@ -137,7 +140,8 @@ public abstract class Weapon : MonoBehaviour
     protected void Reload()
     {
         if (isReloading) return;
-        
+
+        weaponHUD.StartCooldown(reloadTime);
         reloadCoroutine = StartCoroutine(ReloadClient());
         playerNet?.NotifyReloadServer(maxAmmo);
     }
@@ -174,6 +178,8 @@ public abstract class Weapon : MonoBehaviour
         canPlayReloadSound = reloadAudioSource;
 
         reloadAudioSource.pitch = reloadAudioSource.clip.length / reloadTime;
+
+        weaponHUD.StartCooldown(afterChangeDelay);
 
         StartCoroutine(WeaponSwapCooldown(afterChangeDelay));
     }

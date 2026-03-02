@@ -32,6 +32,8 @@ public class ProjectileBurst : ProjectileShooting
     {
         cw.canChange = false;
 
+        weaponHUD.StartCooldown(reloadTime);
+
         for (int i = 0; i < burstCount; i++)
         {
             Shoot();

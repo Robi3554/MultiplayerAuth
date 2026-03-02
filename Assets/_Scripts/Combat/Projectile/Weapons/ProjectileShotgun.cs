@@ -14,6 +14,8 @@ public class ProjectileShotgun : ProjectileShooting
 
         var playerNet = GetComponentInParent<PlayerNetworkInitializer>();
 
+        weaponHUD.StartCooldown(reloadTime);
+
         for (int i = 0; i < pelletCount; i++)
         {
             Vector3 dir = GetSpreadDirection(-firePoint.up, spreadAngle);

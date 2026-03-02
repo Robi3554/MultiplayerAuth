@@ -63,6 +63,7 @@ public class RaycastShoot : Weapon
     {
         if (Time.time >= nextShootTime)
         {
+            weaponHUD.StartCooldown(reloadTime);
             nextShootTime = Time.time + 1 / fireRate;
             Shoot();
         }
