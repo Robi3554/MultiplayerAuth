@@ -42,6 +42,7 @@ public class PredictionMoving : NetworkBehaviour
     private bool _isAnalogMovement;
     private Vector2 _mouseLook, _joystickLook;
     internal bool canMove = true;
+    private PlayerNetworkInitializer _playerNet;
 
     private Rigidbody _rb;
     private Camera _camera;
@@ -58,8 +59,11 @@ public class PredictionMoving : NetworkBehaviour
     public override void OnStartClient()
     {
         base.OnStartClient();
-        if (IsOwner)
-            _camera = Camera.main;
+        if (!IsOwner)
+            return;
+        
+        _camera = Camera.main;
+        _playerNet = GetComponentInParent<PlayerNetworkInitializer>();
     }
     
     // new input system
@@ -68,7 +72,7 @@ public class PredictionMoving : NetworkBehaviour
         _moveInput = context.ReadValue<Vector2>();
         _isAnalogMovement = context.control.device is not Keyboard;
         
-        ControlFootstepSounds(_moveInput.magnitude);
+        _playerNet.ControlFootstepSoundsServer(this, _moveInput.magnitude);
     }
 
     public void OnMouseLook(InputAction.CallbackContext context)
@@ -85,9 +89,9 @@ public class PredictionMoving : NetworkBehaviour
     {
         if (!context.performed || !_canDash || _isDashing || !canMove)
             return;
-        
+
+        _playerNet.PlayDashSoundServer(this);
         StartCoroutine(PerformDash());
-        PlayDashSound();
     }
 
     public void OnJump(InputAction.CallbackContext context)
@@ -239,7 +243,7 @@ public class PredictionMoving : NetworkBehaviour
     }
     
     [ObserversRpc]
-    private void ControlFootstepSounds(float speed)
+    public void ControlFootstepSounds(float speed)
     {
         if (footstepAudioSource)
         {
@@ -255,7 +259,7 @@ public class PredictionMoving : NetworkBehaviour
     }
 
     [ObserversRpc]
-    private void PlayDashSound()
+    public void PlayDashSound()
     {
         if (dashAudioSource && dashAudioClip)
         {
