@@ -24,6 +24,7 @@ public class RailGunShoot : RaycastShoot
     {
         if (Time.time >= nextShootTime && !isShooting)
         {
+            weaponHUD.StartCooldown(reloadTime);
             nextShootTime = Time.time + 1/fireRate;
             stopAndShootRoutine = StartCoroutine(StopAndShoot());
         }
