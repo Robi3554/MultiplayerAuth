@@ -109,4 +109,16 @@ public class PlayerNetworkInitializer : NetworkBehaviour
         if (weapon != null)
             weapon.PlayMuzzleFlash();
     }
+    
+    [ServerRpc]
+    public void ControlFootstepSoundsServer(PredictionMoving playerMovement, float speed)
+    {
+        playerMovement.ControlFootstepSounds(speed);
+    }
+    
+    [ServerRpc]
+    public void PlayDashSoundServer(PredictionMoving playerMovement)
+    {
+        playerMovement.PlayDashSound();
+    }
 }
