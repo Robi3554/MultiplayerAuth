@@ -946,29 +946,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 26b716c41e9b56b4baafaf13a523ba2e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  NetworkObserver: {fileID: 0}
-  _enablePrediction: 1
-  _predictionType: 1
-  _graphicalObject: {fileID: 0}
-  _detachGraphicalObject: 0
-  _enableStateForwarding: 1
-  _networkTransform: {fileID: 0}
-  _ownerInterpolation: 1
-  _ownerSmoothedProperties: 4294967295
-  _adaptiveInterpolation: 3
-  _spectatorSmoothedProperties: 4294967295
-  _spectatorInterpolation: 2
-  _enableTeleport: 1
-  _teleportThreshold: 1
-  <PrefabId>k__BackingField: 7
-  <SpawnableCollectionId>k__BackingField: 0
-  <AssetPathHash>k__BackingField: 6455136535530309705
-  <SceneId>k__BackingField: 0
-  SerializedTransformProperties:
-    Position: {x: 0, y: 0, z: 0}
-    Rotation: {x: 0, y: 0, z: 0, w: 1}
-    Scale: {x: 1, y: 1, z: 1}
-    IsValid: 1
   <IsNested>k__BackingField: 0
   WasActiveDuringEdit: 0
   WasActiveDuringEdit_Set1: 1
@@ -998,6 +975,29 @@ MonoBehaviour:
   _initializeOrder: 0
   _preventDespawnOnDisconnect: 0
   _defaultDespawnType: 0
+  NetworkObserver: {fileID: 0}
+  _enablePrediction: 1
+  _predictionType: 1
+  _graphicalObject: {fileID: 0}
+  _detachGraphicalObject: 0
+  _enableStateForwarding: 1
+  _networkTransform: {fileID: 0}
+  _ownerInterpolation: 1
+  _ownerSmoothedProperties: 4294967295
+  _adaptiveInterpolation: 3
+  _spectatorSmoothedProperties: 4294967295
+  _spectatorInterpolation: 2
+  _enableTeleport: 1
+  _teleportThreshold: 1
+  <PrefabId>k__BackingField: 7
+  <SpawnableCollectionId>k__BackingField: 0
+  <AssetPathHash>k__BackingField: 6455136535530309705
+  <SceneId>k__BackingField: 0
+  SerializedTransformProperties:
+    Position: {x: 0, y: 0, z: 0}
+    Rotation: {x: 0, y: 0, z: 0, w: 1}
+    Scale: {x: 1, y: 1, z: 1}
+    IsValid: 1
 --- !u!114 &6766728125162970839
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1085,6 +1085,9 @@ MonoBehaviour:
   dashDuration: 0.2
   dashCooldown: 1
   decelSpeed: 0.75
+  refreshRate: 0.05
+  model: {fileID: 7320724419068350513}
+  afterImageMaterial: {fileID: 2100000, guid: 79f9c939bfb56c747b0008c890408507, type: 2}
   footstepAudioSource: {fileID: 8334887629866977742}
   dashAudioSource: {fileID: 1394282261585985349}
   dashAudioClip: {fileID: 8300000, guid: 31db1f4bffaa765519c1d5a690e0abc4, type: 3}
@@ -4397,6 +4400,11 @@ MonoBehaviour:
 --- !u!4 &6453949374715315972 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 66e0ef251cc7b2143ad5f1b36eeedcf1, type: 3}
+  m_PrefabInstance: {fileID: 6781209095568335087}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &7320724419068350513 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4288484218858074334, guid: 66e0ef251cc7b2143ad5f1b36eeedcf1, type: 3}
   m_PrefabInstance: {fileID: 6781209095568335087}
   m_PrefabAsset: {fileID: 0}
 --- !u!4 &9045743008680498503 stripped

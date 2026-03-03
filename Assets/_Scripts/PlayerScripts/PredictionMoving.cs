@@ -33,6 +33,11 @@ public class PredictionMoving : NetworkBehaviour
     [SerializeField] private float dashCooldown = 1f;
 
     [SerializeField] private float decelSpeed = 5f;
+
+    [Header("Dash AfterImage")]
+    [SerializeField] private float refreshRate = 0.2f;
+    [SerializeField] private GameObject model;
+    [SerializeField] private Material afterImageMaterial;
     
     [SerializeField] private AudioSource footstepAudioSource;
     [SerializeField] private AudioSource dashAudioSource;
@@ -203,6 +208,8 @@ public class PredictionMoving : NetworkBehaviour
 
         _rb.AddForce(dashDir * dashForce, ForceMode.VelocityChange);
 
+        StartCoroutine(SpawnAfterImages());
+
         yield return new WaitForSeconds(dashDuration);
 
         _rb.linearDamping = originalDamping;
@@ -211,6 +218,54 @@ public class PredictionMoving : NetworkBehaviour
         yield return new WaitForSeconds(dashCooldown);
 
         _canDash = true;
+    }
+
+    private IEnumerator SpawnAfterImages()
+    {
+        while (_isDashing)
+        {
+            CreateAfterImage();
+
+            yield return new WaitForSeconds(refreshRate);
+        }
+    }
+
+    private void CreateAfterImage()
+    {
+        GameObject afterImageRoot = new GameObject("AfterImage");
+        afterImageRoot.transform.position = transform.position;
+        afterImageRoot.transform.rotation = transform.rotation;
+
+        SkinnedMeshRenderer[] skinnedMeshes = GetComponentsInChildren<SkinnedMeshRenderer>();
+
+        foreach (var smr in skinnedMeshes)
+        {
+            Mesh bakedMesh = new Mesh();
+            smr.BakeMesh(bakedMesh);
+
+            GameObject meshObj = new GameObject(smr.name);
+            meshObj.transform.SetParent(afterImageRoot.transform);
+
+            meshObj.transform.position = smr.transform.position;
+            meshObj.transform.rotation = smr.transform.rotation;
+            meshObj.transform.localScale = smr.transform.lossyScale;
+
+            MeshFilter mf = meshObj.AddComponent<MeshFilter>();
+            MeshRenderer mr = meshObj.AddComponent<MeshRenderer>();
+            mf.mesh = bakedMesh;
+
+            Material ghostMat = new Material(afterImageMaterial);
+
+            if (smr.material.HasProperty("_BaseMap"))
+                ghostMat.SetTexture("_BaseMap", smr.material.GetTexture("_BaseMap"));
+
+            if (smr.material.HasProperty("_BaseColor"))
+                ghostMat.SetColor("_BaseColor", new Color(1f, 1f, 1f, 0.5f));
+
+            mr.material = ghostMat;
+        }
+
+        afterImageRoot.AddComponent<AfterImageFade>();
     }
 
     private float GetYawFromJoystickOrMovement()
