@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using FishNet.Component.Animating;
 using FishNet.Object;
 using Unity.VisualScripting;
@@ -38,6 +39,9 @@ public class PredictionMoving : NetworkBehaviour
     [SerializeField] private float refreshRate = 0.2f;
     [SerializeField] private GameObject model;
     [SerializeField] private Material afterImageMaterial;
+    [SerializeField] private int poolSize = 10;
+    private Queue<AfterImageInstance> afterImagePool = new Queue<AfterImageInstance>();
+    private SkinnedMeshRenderer[] characterMeshes;
     
     [SerializeField] private AudioSource footstepAudioSource;
     [SerializeField] private AudioSource dashAudioSource;
@@ -59,6 +63,12 @@ public class PredictionMoving : NetworkBehaviour
     private void Awake()
     {
         _rb = GetComponent<Rigidbody>();
+    }
+
+    private void Start()
+    {
+        characterMeshes = GetComponentsInChildren<SkinnedMeshRenderer>();
+        InitializePool();
     }
 
     public override void OnStartClient()
@@ -230,43 +240,80 @@ public class PredictionMoving : NetworkBehaviour
         }
     }
 
+    #region AfterImageGeneration
     private void CreateAfterImage()
     {
-        GameObject afterImageRoot = new GameObject("AfterImage");
-        afterImageRoot.transform.position = transform.position;
-        afterImageRoot.transform.rotation = transform.rotation;
+        if (afterImagePool.Count == 0)
+            return;
 
-        SkinnedMeshRenderer[] skinnedMeshes = GetComponentsInChildren<SkinnedMeshRenderer>();
+        AfterImageInstance instance = afterImagePool.Dequeue();
 
-        foreach (var smr in skinnedMeshes)
+        instance.root.transform.position = transform.position;
+        instance.root.transform.rotation = transform.rotation;
+
+        for (int i = 0; i < characterMeshes.Length; i++)
         {
-            Mesh bakedMesh = new Mesh();
-            smr.BakeMesh(bakedMesh);
+            characterMeshes[i].BakeMesh(instance.meshes[i]);
 
-            GameObject meshObj = new GameObject(smr.name);
-            meshObj.transform.SetParent(afterImageRoot.transform);
+            instance.meshRenderers[i].transform.position =
+                characterMeshes[i].transform.position;
 
-            meshObj.transform.position = smr.transform.position;
-            meshObj.transform.rotation = smr.transform.rotation;
-            meshObj.transform.localScale = smr.transform.lossyScale;
+            instance.meshRenderers[i].transform.rotation =
+                characterMeshes[i].transform.rotation;
 
-            MeshFilter mf = meshObj.AddComponent<MeshFilter>();
-            MeshRenderer mr = meshObj.AddComponent<MeshRenderer>();
-            mf.mesh = bakedMesh;
-
-            Material ghostMat = new Material(afterImageMaterial);
-
-            if (smr.material.HasProperty("_BaseMap"))
-                ghostMat.SetTexture("_BaseMap", smr.material.GetTexture("_BaseMap"));
-
-            if (smr.material.HasProperty("_BaseColor"))
-                ghostMat.SetColor("_BaseColor", new Color(1f, 1f, 1f, 0.5f));
-
-            mr.material = ghostMat;
+            instance.meshRenderers[i].transform.localScale =
+                characterMeshes[i].transform.lossyScale;
         }
 
-        afterImageRoot.AddComponent<AfterImageFade>();
+        instance.root.SetActive(true);
     }
+
+    private void InitializePool()
+    {
+        for (int i = 0; i < poolSize; i++)
+        {
+            AfterImageInstance instance = new AfterImageInstance();
+
+            instance.root = new GameObject("AfterImage_Pooled");
+            instance.root.SetActive(false);
+
+            int meshCount = characterMeshes.Length;
+            instance.meshes = new Mesh[meshCount];
+            instance.meshRenderers = new MeshRenderer[meshCount];
+
+            for (int j = 0; j < meshCount; j++)
+            {
+                GameObject child = new GameObject(characterMeshes[j].name);
+                child.transform.SetParent(instance.root.transform);
+
+                MeshFilter mf = child.AddComponent<MeshFilter>();
+                MeshRenderer mr = child.AddComponent<MeshRenderer>();
+
+                Mesh mesh = new Mesh();
+                mf.mesh = mesh;
+
+                Material mat = new Material(afterImageMaterial);
+                if (characterMeshes[j].material.HasProperty("_BaseMap"))
+                    mat.SetTexture("_BaseMap", characterMeshes[j].material.GetTexture("_BaseMap"));
+                mr.material = mat;
+
+                instance.meshes[j] = mesh;
+                instance.meshRenderers[j] = mr;
+            }
+
+            var fade = instance.root.AddComponent<AfterImageFade>();
+            fade.Initialize(this, instance);
+            instance.fadeScript = fade;
+
+            afterImagePool.Enqueue(instance);
+        }
+    }
+
+    public void ReturnToPool(AfterImageInstance instance)
+    {
+        afterImagePool.Enqueue(instance);
+    }
+    #endregion
 
     private float GetYawFromJoystickOrMovement()
     {

@@ -2,35 +2,42 @@ using UnityEngine;
 
 public class AfterImageFade : MonoBehaviour
 {
-    public float fadeTime = 0.2f;
+    private float fadeTime = 0.15f;
     private float timer;
-    private Material[] materials;
+    private MeshRenderer[] renderers;
+    private PredictionMoving poolOwner;
+    private AfterImageInstance instance;
 
-    void Start()
+    public void Initialize(PredictionMoving owner, AfterImageInstance inst)
     {
-        MeshRenderer[] renderers = GetComponentsInChildren<MeshRenderer>();
-        materials = new Material[renderers.Length];
-
-        for (int i = 0; i < renderers.Length; i++)
-            materials[i] = renderers[i].material;
+        poolOwner = owner;
+        instance = inst;
+        renderers = inst.meshRenderers;
     }
 
-    void Update()
+    private void OnEnable()
+    {
+        timer = 0f;
+    }
+
+    private void Update()
     {
         timer += Time.deltaTime;
         float alpha = Mathf.Lerp(0.5f, 0f, timer / fadeTime);
 
-        foreach (var mat in materials)
+        foreach (var r in renderers)
         {
-            if (mat.HasProperty("_BaseColor"))
+            if (r.material.HasProperty("_BaseColor"))
             {
-                Color c = mat.GetColor("_BaseColor");
-                c.a = alpha;
-                mat.SetColor("_BaseColor", c);
+                Color c = r.material.GetColor("_BaseColor");
+                r.material.SetColor("_BaseColor", new Color(c.r, c.g, c.b, alpha));
             }
         }
 
         if (timer >= fadeTime)
-            Destroy(gameObject);
+        {
+            gameObject.SetActive(false);
+            poolOwner.ReturnToPool(instance);
+        }
     }
 }

@@ -1088,6 +1088,7 @@ MonoBehaviour:
   refreshRate: 0.05
   model: {fileID: 7320724419068350513}
   afterImageMaterial: {fileID: 2100000, guid: 79f9c939bfb56c747b0008c890408507, type: 2}
+  poolSize: 8
   footstepAudioSource: {fileID: 8334887629866977742}
   dashAudioSource: {fileID: 1394282261585985349}
   dashAudioClip: {fileID: 8300000, guid: 31db1f4bffaa765519c1d5a690e0abc4, type: 3}
