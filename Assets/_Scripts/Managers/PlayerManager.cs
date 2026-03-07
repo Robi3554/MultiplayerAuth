@@ -76,7 +76,7 @@ public class PlayerManager : NetworkBehaviour
         victimStats.AddDeath();
         victimStats.isRespawning = true;
         var playerMovement = victim.playerObject.GetComponent<PredictionMoving>();
-        playerMovement.canMove = false;
+        SetPlayerMovement(victim.connection, playerMovement, false);
 
         // ADD KILL TO ATTACKER AND CHECK WIN CONDITION
         if (players.ContainsKey(attackerClientId))
@@ -96,7 +96,6 @@ public class PlayerManager : NetworkBehaviour
     private IEnumerator RespawnAfterDelay(Player victim, PlayerStats victimStats)
     {
         var playerMovement = victim.playerObject.GetComponent<PredictionMoving>();
-        playerMovement.canMove = false;
 
         //wait for death screen countdown (5 seconds) + UI cleanup time (0.5 seconds)
         yield return new WaitForSeconds(5.5f);
@@ -121,6 +120,9 @@ public class PlayerManager : NetworkBehaviour
         if(playerMovement)
             playerMovement.canMove = true;
     }
+
+    [TargetRpc]
+    void SetPlayerMovement(NetworkConnection conn, PredictionMoving playerMovement, bool enabled) => playerMovement.canMove = enabled;
 
     [TargetRpc]
     void ReloadPlayerGuns(NetworkConnection conn, GameObject player)

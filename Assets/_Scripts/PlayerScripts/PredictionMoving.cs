@@ -162,8 +162,7 @@ public class PredictionMoving : NetworkBehaviour
         if (!IsOwner || !_playerInput.currentActionMap.name.Equals("Gameplay")) return;
 
         //don't allow rotation while dead
-        if (_playerStats != null && _playerStats.isRespawning)
-            return;
+        if (!canMove) return;
 
         float targetYaw = !isJoystick
             ? GetYawFromMouse()
