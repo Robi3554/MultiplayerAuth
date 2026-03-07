@@ -95,34 +95,31 @@ public class PlayerManager : NetworkBehaviour
 
     private IEnumerator RespawnAfterDelay(Player victim, PlayerStats victimStats)
     {
+        var playerMovement = victim.playerObject.GetComponent<PredictionMoving>();
+        playerMovement.canMove = false;
+
         //wait for death screen countdown (5 seconds) + UI cleanup time (0.5 seconds)
         yield return new WaitForSeconds(5.5f);
         victimStats.ResetHealth(); // reset
         int spawnIndex = Random.Range(0, spawnPoints.Count);
-        RespawnPlayer(victim.connection, victim.playerObject, spawnIndex);
+        RespawnPlayer(victim.connection, victim.playerObject, spawnIndex, playerMovement);
         ReloadPlayerGuns(victim.connection, victim.playerObject);
 
         victimStats.isRespawning = false;
     }
 
     [TargetRpc]
-    void RespawnPlayer(NetworkConnection conn, GameObject player, int spawn)
+    void RespawnPlayer(NetworkConnection conn, GameObject player, int spawn, PredictionMoving playerMovement = null)
     {
-        var playerMovement = player.GetComponent<PredictionMoving>();
-        playerMovement.canMove = false;
-
-        //disable rigidbody during teleport to prevent physics glitches
         Rigidbody rb = player.GetComponent<Rigidbody>();
-        if (rb != null)
-        {
+        if (rb)
             rb.linearVelocity = Vector3.zero;
-            rb.angularVelocity = Vector3.zero;
-            rb.isKinematic = true;
-        }
 
         player.transform.position = spawnPoints[spawn].position;
         player.transform.rotation = spawnPoints[spawn].rotation;
-        
+
+        if(playerMovement)
+            playerMovement.canMove = true;
     }
 
     [TargetRpc]
