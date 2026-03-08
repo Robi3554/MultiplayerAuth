@@ -33,11 +33,16 @@ public class PredictionMoving : NetworkBehaviour
     [SerializeField] private float dashCooldown = 1f;
 
     [SerializeField] private float decelSpeed = 5f;
+    
+    [SerializeField] private AudioSource footstepAudioSource;
+    [SerializeField] private AudioSource dashAudioSource;
+    [SerializeField] private AudioClip dashAudioClip;
 
     private Vector2 _moveInput;
     private bool _isAnalogMovement;
     private Vector2 _mouseLook, _joystickLook;
     internal bool canMove = true;
+    private PlayerNetworkInitializer _playerNet;
 
     private Rigidbody _rb;
     private Camera _camera;
@@ -56,8 +61,11 @@ public class PredictionMoving : NetworkBehaviour
     public override void OnStartClient()
     {
         base.OnStartClient();
-        if (IsOwner)
-            _camera = Camera.main;
+        if (!IsOwner)
+            return;
+        
+        _camera = Camera.main;
+        _playerNet = GetComponentInParent<PlayerNetworkInitializer>();
     }
     
     // new input system
@@ -72,6 +80,8 @@ public class PredictionMoving : NetworkBehaviour
 
         _moveInput = context.ReadValue<Vector2>();
         _isAnalogMovement = context.control.device is not Keyboard;
+        
+        _playerNet.ControlFootstepSoundsServer(this, _moveInput.magnitude);
     }
 
     //Why do we have the OnMouseLook and OnJoystickLook if we don't use them?
@@ -98,8 +108,11 @@ public class PredictionMoving : NetworkBehaviour
         if (_playerStats != null && _playerStats.isRespawning.Value)
             return;
 
-        if (context.performed && _canDash && !_isDashing && canMove)
-            StartCoroutine(PerformDash());
+        if (!context.performed || !_canDash || _isDashing || !canMove)
+            return;
+
+        _playerNet.PlayDashSoundServer(this);
+        StartCoroutine(PerformDash());
     }
 
     public void OnJump(InputAction.CallbackContext context)
@@ -264,6 +277,31 @@ public class PredictionMoving : NetworkBehaviour
         {
             Gizmos.color = Color.red;
             Gizmos.DrawWireSphere(groundCheck.position, groundCheckRadius);
+        }
+    }
+    
+    [ObserversRpc]
+    public void ControlFootstepSounds(float speed)
+    {
+        if (footstepAudioSource)
+        {
+            if (speed > 0.05f)
+            {
+                footstepAudioSource.Play();
+            }
+            else
+            {
+                footstepAudioSource.Stop();
+            }
+        }
+    }
+
+    [ObserversRpc]
+    public void PlayDashSound()
+    {
+        if (dashAudioSource && dashAudioClip)
+        {
+            dashAudioSource.PlayOneShot(dashAudioClip);
         }
     }
 }

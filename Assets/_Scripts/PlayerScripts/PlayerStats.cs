@@ -137,7 +137,7 @@ public class PlayerStats : NetworkBehaviour
         
         SetHealth(damage);
         
-        TargetHitSound(Owner);
+        TargetHitSound();
         TargetShakeCamera(Owner, 0.5f, 0.1f);
         TargetDamagedVFX();
     }
@@ -183,8 +183,8 @@ public class PlayerStats : NetworkBehaviour
         health.Value = Mathf.Clamp(health.Value - value, 0, 100);
     }
     
-    [TargetRpc]
-    private void TargetHitSound(NetworkConnection target)
+    [ObserversRpc]
+    private void TargetHitSound()
     {
         if (_canPlayHitSound)
         {

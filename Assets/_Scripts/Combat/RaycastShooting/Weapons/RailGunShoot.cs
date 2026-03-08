@@ -5,7 +5,6 @@ using UnityEngine.InputSystem;
 public class RailGunShoot : RaycastShoot
 {
     private PredictionMoving pm;
-    private ChangeWeapons cw;
 
     [SerializeField]
     private float
@@ -19,19 +18,21 @@ public class RailGunShoot : RaycastShoot
 
     private bool isShooting;
 
+    private Coroutine stopAndShootRoutine;
+
     protected override void HandleShootInput(InputAction.CallbackContext context)
     {
         if (Time.time >= nextShootTime && !isShooting)
         {
+            weaponHUD.StartCooldown(reloadTime);
             nextShootTime = Time.time + 1/fireRate;
-            StartCoroutine(StopAndShoot());
+            stopAndShootRoutine = StartCoroutine(StopAndShoot());
         }
     }
 
     private void Awake()
     {
         pm = GetComponentInParent<PredictionMoving>();
-        cw = GetComponentInParent<ChangeWeapons>();
     }
 
     private IEnumerator StopAndShoot()
@@ -48,6 +49,24 @@ public class RailGunShoot : RaycastShoot
         Shoot();
 
         yield return new WaitForSeconds(stopTime);
+
+        pm.canMove = true;
+        isShooting = false;
+        cw.canChange = true;
+    }
+
+    public override void OnDeathReload()
+    {
+        base.OnDeathReload();
+
+        if (!isActiveAndEnabled)
+            return;
+
+        if (stopAndShootRoutine != null)
+        {
+            StopCoroutine(stopAndShootRoutine);
+            stopAndShootRoutine = null;
+        }
 
         pm.canMove = true;
         isShooting = false;

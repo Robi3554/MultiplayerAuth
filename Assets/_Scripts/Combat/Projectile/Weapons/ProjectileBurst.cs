@@ -1,17 +1,18 @@
 using System.Collections;
-using FishNet.Object;
 using GameKit.Dependencies.Utilities;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class BurstShot : RaycastShoot
+public class ProjectileBurst : ProjectileShooting
 {
     [SerializeField]
     private float timeBetweenShots;
     [SerializeField]
     private int burstCount;
-    
+
     private bool _canCheckInput = true;
+
+    private Coroutine burstRoutine;
 
     protected override void OnEnable()
     {
@@ -23,7 +24,7 @@ public class BurstShot : RaycastShoot
         if (_canCheckInput)
         {
             _canCheckInput = false;
-            StartCoroutine(Burst(context.action));
+            burstRoutine = StartCoroutine(Burst(context.action));
         }
     }
 
@@ -31,11 +32,13 @@ public class BurstShot : RaycastShoot
     {
         cw.canChange = false;
 
+        weaponHUD.StartCooldown(reloadTime);
+
         for (int i = 0; i < burstCount; i++)
         {
             Shoot();
             yield return new WaitForSeconds(timeBetweenShots);
-            
+
             var colliders = Physics.OverlapBox(wallCheckCollider.bounds.center,
                 wallCheckCollider.size.Multiply(wallCheckCollider.transform.lossyScale) / 2,
                 wallCheckCollider.transform.rotation, wallCheckCollider.includeLayers);
@@ -48,7 +51,7 @@ public class BurstShot : RaycastShoot
 
         cw.canChange = true;
 
-        yield return new WaitForSeconds(1/fireRate);
+        yield return new WaitForSeconds(1 / fireRate);
 
         if (currentAmmo > 0)
         {
@@ -60,7 +63,24 @@ public class BurstShot : RaycastShoot
                 yield break;
             }
         }
-        
+
+        _canCheckInput = true;
+    }
+
+    public override void OnDeathReload()
+    {
+        base.OnDeathReload();
+
+        if (!isActiveAndEnabled)
+            return;
+
+        if (burstRoutine != null)
+        {
+            StopCoroutine(burstRoutine);
+            burstRoutine = null;
+        }
+
+        cw.canChange = true;
         _canCheckInput = true;
     }
 }
