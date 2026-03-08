@@ -64,7 +64,7 @@ public class PredictionMoving : NetworkBehaviour
     public void OnMove(InputAction.CallbackContext context)
     {
         //don't process movement input while respawning
-        if (_playerStats != null && _playerStats.isRespawning)
+        if (_playerStats != null && _playerStats.isRespawning.Value)
         {
             _moveInput = Vector2.zero;
             return;
@@ -74,10 +74,11 @@ public class PredictionMoving : NetworkBehaviour
         _isAnalogMovement = context.control.device is not Keyboard;
     }
 
+    //Why do we have the OnMouseLook and OnJoystickLook if we don't use them?
     public void OnMouseLook(InputAction.CallbackContext context)
     {
         //don't process look input while respawning
-        if (_playerStats != null && _playerStats.isRespawning)
+        if (_playerStats != null && _playerStats.isRespawning.Value)
             return;
 
         _mouseLook = context.ReadValue<Vector2>();
@@ -86,7 +87,7 @@ public class PredictionMoving : NetworkBehaviour
     public void OnJoystickLook(InputAction.CallbackContext context)
     {
         //don't process look input while respawning
-        if (_playerStats != null && _playerStats.isRespawning)
+        if (_playerStats != null && _playerStats.isRespawning.Value)
             return;
 
         _joystickLook = context.ReadValue<Vector2>();
@@ -94,12 +95,18 @@ public class PredictionMoving : NetworkBehaviour
 
     public void OnDash(InputAction.CallbackContext context)
     {
+        if (_playerStats != null && _playerStats.isRespawning.Value)
+            return;
+
         if (context.performed && _canDash && !_isDashing && canMove)
             StartCoroutine(PerformDash());
     }
 
     public void OnJump(InputAction.CallbackContext context)
     {
+        if (_playerStats != null && _playerStats.isRespawning.Value)
+            return;
+
         if (context.performed && _isGrounded && !_jumpPressed)
         {
             _jumpPressed = true;
@@ -113,7 +120,7 @@ public class PredictionMoving : NetworkBehaviour
         if (!IsOwner) return;
         
         // Don't allow movement while dead
-        if (_playerStats != null && _playerStats.isRespawning)
+        if (_playerStats != null && _playerStats.isRespawning.Value)
         {
             _rb.linearVelocity = Vector3.zero;
             animator.SetFloat("Velocity", 0f);
@@ -162,6 +169,9 @@ public class PredictionMoving : NetworkBehaviour
         if (!IsOwner || !_playerInput.currentActionMap.name.Equals("Gameplay")) return;
 
         //don't allow rotation while dead
+        if (_playerStats != null && _playerStats.isRespawning.Value)
+            return;
+
         if (!canMove) return;
 
         float targetYaw = !isJoystick

@@ -70,13 +70,12 @@ public class PlayerManager : NetworkBehaviour
         var victimStats = victim.stats;
 
         // Prevent multiple respawns for the same player
-        if (victimStats.isRespawning)
+        if (victimStats.isRespawning.Value)
             return;
 
         victimStats.AddDeath();
-        victimStats.isRespawning = true;
+        victimStats.isRespawning.Value = true;
         var playerMovement = victim.playerObject.GetComponent<PredictionMoving>();
-        SetPlayerMovement(victim.connection, playerMovement, false);
 
         // ADD KILL TO ATTACKER AND CHECK WIN CONDITION
         if (players.ContainsKey(attackerClientId))
@@ -95,20 +94,18 @@ public class PlayerManager : NetworkBehaviour
 
     private IEnumerator RespawnAfterDelay(Player victim, PlayerStats victimStats)
     {
-        var playerMovement = victim.playerObject.GetComponent<PredictionMoving>();
-
-        //wait for death screen countdown (5 seconds) + UI cleanup time (0.5 seconds)
-        yield return new WaitForSeconds(5.5f);
+        //wait for death screen countdown (5 seconds) + UI cleanup time (.75 seconds)
+        yield return new WaitForSeconds(5.75f);
         victimStats.ResetHealth(); // reset
         int spawnIndex = Random.Range(0, spawnPoints.Count);
-        RespawnPlayer(victim.connection, victim.playerObject, spawnIndex, playerMovement);
+        RespawnPlayer(victim.connection, victim.playerObject, spawnIndex);
         ReloadPlayerGuns(victim.connection, victim.playerObject);
 
-        victimStats.isRespawning = false;
+        victimStats.isRespawning.Value = false;
     }
 
     [TargetRpc]
-    void RespawnPlayer(NetworkConnection conn, GameObject player, int spawn, PredictionMoving playerMovement = null)
+    void RespawnPlayer(NetworkConnection conn, GameObject player, int spawn)
     {
         Rigidbody rb = player.GetComponent<Rigidbody>();
         if (rb)
@@ -116,13 +113,7 @@ public class PlayerManager : NetworkBehaviour
 
         player.transform.position = spawnPoints[spawn].position;
         player.transform.rotation = spawnPoints[spawn].rotation;
-
-        if(playerMovement)
-            playerMovement.canMove = true;
     }
-
-    [TargetRpc]
-    void SetPlayerMovement(NetworkConnection conn, PredictionMoving playerMovement, bool enabled) => playerMovement.canMove = enabled;
 
     [TargetRpc]
     void ReloadPlayerGuns(NetworkConnection conn, GameObject player)
@@ -133,12 +124,6 @@ public class PlayerManager : NetworkBehaviour
         {
             weapon.OnDeathReload();
         }
-    }
-
-    IEnumerator ClearRespawningFlag(PlayerStats stats)
-    {
-        yield return new WaitForSeconds(1f);
-        stats.isRespawning = false;
     }
 
     // NEW METHOD: Called by GameModeManager to reset all players
@@ -156,7 +141,7 @@ public class PlayerManager : NetworkBehaviour
                 player.stats.kills.Value = 0;
                 player.stats.deaths.Value = 0;
                 player.stats.health.Value = 100;
-                player.stats.isRespawning = false;
+                player.stats.isRespawning.Value = false;
 
                 // Respawn at random location
                 int spawnIndex = Random.Range(0, spawnPoints.Count);

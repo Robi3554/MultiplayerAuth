@@ -33,7 +33,7 @@ public class PickUpObject : NetworkBehaviour
 
         // Don't allow pickup while respawning
         PlayerStats playerStats = player.GetComponent<PlayerStats>();
-        if (playerStats != null && playerStats.isRespawning)
+        if (playerStats != null && playerStats.isRespawning.Value)
             return;
 
         if (itemPickedUp){ 
