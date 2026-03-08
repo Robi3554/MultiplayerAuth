@@ -75,7 +75,9 @@ public class PlayerManager : NetworkBehaviour
 
         victimStats.AddDeath();
         victimStats.isRespawning.Value = true;
-        var playerMovement = victim.playerObject.GetComponent<PredictionMoving>();
+
+        victim.playerObject.GetComponent<CapsuleCollider>().enabled = false;
+        SetPlayersColliders(victim.playerObject, false);
 
         // ADD KILL TO ATTACKER AND CHECK WIN CONDITION
         if (players.ContainsKey(attackerClientId))
@@ -111,6 +113,9 @@ public class PlayerManager : NetworkBehaviour
         if (rb)
             rb.linearVelocity = Vector3.zero;
 
+        player.GetComponent<CapsuleCollider>().enabled = true;
+        SetPlayersColliders(player, true);
+
         player.transform.position = spawnPoints[spawn].position;
         player.transform.rotation = spawnPoints[spawn].rotation;
     }
@@ -125,6 +130,9 @@ public class PlayerManager : NetworkBehaviour
             weapon.OnDeathReload();
         }
     }
+
+    [ObserversRpc]
+    void SetPlayersColliders(GameObject player, bool enabled) => player.GetComponent<CapsuleCollider>().enabled = enabled;
 
     // NEW METHOD: Called by GameModeManager to reset all players
     [Server]
