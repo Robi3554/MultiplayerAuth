@@ -855,6 +855,7 @@ MonoBehaviour:
   _componentIndexCache: 5
   _addedNetworkObject: {fileID: 7709259699627967468}
   _networkObjectCache: {fileID: 7709259699627967468}
+  damageMult: 1
   _usernameTextOnBillboard: {fileID: 462438261620293116}
   _hitAudioSource: {fileID: 6368002052658960838}
   _hitAudioClip: {fileID: 8300000, guid: 920fd5498c3b21b4eadefe5f6dc29c0b, type: 3}
@@ -1261,7 +1262,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: '::'
   _pauseMenuCanvas: {fileID: 0}
   _menuSceneName: WelcomeScreen
-  _playerInput: {fileID: 4214152988996548071}
 --- !u!1 &7820529778285852255
 GameObject:
   m_ObjectHideFlags: 0
@@ -2281,6 +2281,10 @@ PrefabInstance:
     - target: {fileID: 1305148260922259572, guid: d50dc5a3dd2728e419a45401c51ea688, type: 3}
       propertyPath: attackRange._value
       value: 0.9
+      objectReference: {fileID: 0}
+    - target: {fileID: 1305148260922259572, guid: d50dc5a3dd2728e419a45401c51ea688, type: 3}
+      propertyPath: cooldownTime._value
+      value: 0.25
       objectReference: {fileID: 0}
     - target: {fileID: 2077536159360935046, guid: d50dc5a3dd2728e419a45401c51ea688, type: 3}
       propertyPath: m_Data.m_Mid
