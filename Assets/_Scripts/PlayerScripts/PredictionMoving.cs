@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using FishNet.Component.Animating;
 using FishNet.Object;
 using Unity.VisualScripting;
@@ -33,6 +34,14 @@ public class PredictionMoving : NetworkBehaviour
     [SerializeField] private float dashCooldown = 1f;
 
     [SerializeField] private float decelSpeed = 5f;
+
+    [Header("Dash AfterImage")]
+    [SerializeField] private float refreshRate = 0.2f;
+    [SerializeField] private GameObject model;
+    [SerializeField] private Material afterImageMaterial;
+    [SerializeField] private int poolSize = 10;
+    private Queue<AfterImageInstance> afterImagePool = new Queue<AfterImageInstance>();
+    private SkinnedMeshRenderer[] characterMeshes;
     
     [SerializeField] private AudioSource footstepAudioSource;
     [SerializeField] private AudioSource dashAudioSource;
@@ -56,6 +65,12 @@ public class PredictionMoving : NetworkBehaviour
     {
         _rb = GetComponent<Rigidbody>();
         _playerStats = GetComponent<PlayerStats>();
+    }
+
+    private void Start()
+    {
+        characterMeshes = GetComponentsInChildren<SkinnedMeshRenderer>();
+        InitializePool();
     }
 
     public override void OnStartClient()
@@ -241,6 +256,8 @@ public class PredictionMoving : NetworkBehaviour
 
         _rb.AddForce(dashDir * dashForce, ForceMode.VelocityChange);
 
+        StartCoroutine(SpawnAfterImages());
+
         yield return new WaitForSeconds(dashDuration);
 
         _rb.linearDamping = originalDamping;
@@ -250,6 +267,91 @@ public class PredictionMoving : NetworkBehaviour
 
         _canDash = true;
     }
+
+    private IEnumerator SpawnAfterImages()
+    {
+        while (_isDashing)
+        {
+            CreateAfterImage();
+
+            yield return new WaitForSeconds(refreshRate);
+        }
+    }
+
+    #region AfterImageGeneration
+    private void CreateAfterImage()
+    {
+        if (afterImagePool.Count == 0)
+            return;
+
+        AfterImageInstance instance = afterImagePool.Dequeue();
+
+        instance.root.transform.position = transform.position;
+        instance.root.transform.rotation = transform.rotation;
+
+        for (int i = 0; i < characterMeshes.Length; i++)
+        {
+            characterMeshes[i].BakeMesh(instance.meshes[i]);
+
+            instance.meshRenderers[i].transform.position =
+                characterMeshes[i].transform.position;
+
+            instance.meshRenderers[i].transform.rotation =
+                characterMeshes[i].transform.rotation;
+
+            instance.meshRenderers[i].transform.localScale =
+                characterMeshes[i].transform.lossyScale;
+        }
+
+        instance.root.SetActive(true);
+    }
+
+    private void InitializePool()
+    {
+        for (int i = 0; i < poolSize; i++)
+        {
+            AfterImageInstance instance = new AfterImageInstance();
+
+            instance.root = new GameObject("AfterImage_Pooled");
+            instance.root.SetActive(false);
+
+            int meshCount = characterMeshes.Length;
+            instance.meshes = new Mesh[meshCount];
+            instance.meshRenderers = new MeshRenderer[meshCount];
+
+            for (int j = 0; j < meshCount; j++)
+            {
+                GameObject child = new GameObject(characterMeshes[j].name);
+                child.transform.SetParent(instance.root.transform);
+
+                MeshFilter mf = child.AddComponent<MeshFilter>();
+                MeshRenderer mr = child.AddComponent<MeshRenderer>();
+
+                Mesh mesh = new Mesh();
+                mf.mesh = mesh;
+
+                Material mat = new Material(afterImageMaterial);
+                if (characterMeshes[j].material.HasProperty("_BaseMap"))
+                    mat.SetTexture("_BaseMap", characterMeshes[j].material.GetTexture("_BaseMap"));
+                mr.material = mat;
+
+                instance.meshes[j] = mesh;
+                instance.meshRenderers[j] = mr;
+            }
+
+            var fade = instance.root.AddComponent<AfterImageFade>();
+            fade.Initialize(this, instance);
+            instance.fadeScript = fade;
+
+            afterImagePool.Enqueue(instance);
+        }
+    }
+
+    public void ReturnToPool(AfterImageInstance instance)
+    {
+        afterImagePool.Enqueue(instance);
+    }
+    #endregion
 
     private float GetYawFromJoystickOrMovement()
     {
