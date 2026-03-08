@@ -2,10 +2,9 @@ using UnityEngine;
 using FishNet.Managing;
 using FishNet.Transporting.Tugboat;
 using System;
-using System.Collections;
 using FishNet.Transporting;
 
-public class NetworkBootstrap : MonoBehaviour
+public class GameBootstrap : MonoBehaviour
 {
     [SerializeField] private NetworkManager networkManager;
     [SerializeField] private string defaultAddress = "localhost";
@@ -19,34 +18,20 @@ public class NetworkBootstrap : MonoBehaviour
 
     private void Start()
     {
-        // Check if there's already a NetworkManager from a previous session (shouldn't happen now, but safety check)
         if (networkManager == null)
         {
             Debug.LogError("NetworkManager not found!");
             return;
         }
-        
-        // If already connected (stale state), stop connections first
+
+        // If already connected (e.g. arriving from LobbyScene via FishNet scene management),
+        // do NOT restart connections — the lobby already established them.
         if (networkManager.IsClientStarted || networkManager.IsServerStarted)
         {
-            Debug.LogWarning("[Bootstrap] Found stale connections. Restarting...");
-            StartCoroutine(RestartConnectionsCoroutine());
+            Debug.Log("[Bootstrap] Connections already active (from lobby). Skipping bootstrap.");
             return;
         }
-        
-        InitializeConnection();
-    }
 
-    private IEnumerator RestartConnectionsCoroutine()
-    {
-        if (networkManager.IsClientStarted)
-            networkManager.ClientManager.StopConnection();
-        if (networkManager.IsServerStarted)
-            networkManager.ServerManager.StopConnection(true);
-            
-        // Wait for cleanup
-        yield return new WaitForSeconds(0.3f);
-        
         InitializeConnection();
     }
 
@@ -59,15 +44,15 @@ public class NetworkBootstrap : MonoBehaviour
             Debug.LogError("No Tugboat transport found on NetworkManager!");
             return;
         }
-        
+
         string address = string.IsNullOrWhiteSpace(ConnectionInfo.IpAddress) ? "localhost" : ConnectionInfo.IpAddress;
 
         tugboat.SetClientAddress(address);
         tugboat.SetPort(defaultPort);
 
         Debug.Log($"[Bootstrap] Using Address={address}, Port={defaultPort}");
-        
-        
+
+
 
 #if UNITY_EDITOR
         // --- EDITOR MODE (ParrelSync) ---
@@ -81,28 +66,16 @@ public class NetworkBootstrap : MonoBehaviour
             Debug.Log("[ParrelSync] Starting as HOST (original).");
             if (address == "localhost")
             {
-                networkManager.ServerManager.StartConnection();    
+                networkManager.ServerManager.StartConnection();
             }
-            
+
             networkManager.ClientManager.StartConnection();
         }
 
 #elif DEDICATED_SERVER
         // --- BUILD MODE: Dedicated Server ---
-
-        Console.WriteLine("-----------------------------------------");
-        Console.WriteLine($"This is the dedicated server. The IP will be: 193.226.15.26");
-        string serverAddress = "193.226.15.26";
-
-        if (string.IsNullOrWhiteSpace(serverAddress))
-        {
-            Console.WriteLine("-----------------------------------------");
-            Console.WriteLine($"Renter the server IP address to bind to:");
-        }
-
-        tugboat.SetServerBindAddress(serverAddress, IPAddressType.IPv4);
-
-        Debug.Log("[Bootstrap] Starting Dedicated Server.");
+        tugboat.SetServerBindAddress("0.0.0.0", IPAddressType.IPv4);
+        Debug.Log("[Bootstrap] Starting Dedicated Server on 0.0.0.0:" + defaultPort);
         networkManager.ServerManager.StartConnection();
 
 #elif CLIENT

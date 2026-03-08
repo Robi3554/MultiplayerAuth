@@ -10,6 +10,12 @@ public class PlayerNetworkInitializer : NetworkBehaviour
     {
         base.OnStartServer();
 
+        if (PlayerManager.Instance == null)
+        {
+            Debug.LogWarning("[PlayerNetworkInitializer] PlayerManager not found — player spawned outside game scene?");
+            return;
+        }
+
         int clientId = (int)Owner.ClientId;
         var stats = GetComponent<PlayerStats>();
 

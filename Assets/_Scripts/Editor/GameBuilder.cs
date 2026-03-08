@@ -4,63 +4,101 @@ using UnityEngine;
 
 public class GameBuilder
 {
+    // ─── Server Scenes (no WelcomeScreen) ────────────────────────
+    private static readonly string[] ServerScenes = new string[]
+    {
+        "Assets/Scenes/LobbyScene.unity",
+        "Assets/Scenes/SampleScene.unity"
+    };
+
+    // ─── Client Scenes (all three) ──────────────────────────────
+    private static readonly string[] ClientScenes = new string[]
+    {
+        "Assets/Scenes/WelcomeScreen.unity",
+        "Assets/Scenes/LobbyScene.unity",
+        "Assets/Scenes/SampleScene.unity"
+    };
+
+    // ═════════════════════════════════════════════════════════════
+    //  DEDICATED SERVER BUILDS
+    // ═════════════════════════════════════════════════════════════
+
+    [MenuItem("Build/Build Dedicated Server (Windows)")]
+    public static void BuildWindowsServer()
+    {
+        BuildPlayerOptions options = new BuildPlayerOptions();
+        options.scenes = ServerScenes;
+        options.locationPathName = "Builds/Server_Windows/MultiplayerAuthServer.exe";
+        options.target = BuildTarget.StandaloneWindows64;
+        options.subtarget = (int)StandaloneBuildSubtarget.Server;
+        options.options = BuildOptions.None;
+
+        // IL2CPP for server performance
+        PlayerSettings.SetScriptingBackend(BuildTargetGroup.Standalone, ScriptingImplementation.IL2CPP);
+        PlayerSettings.SetIl2CppCompilerConfiguration(BuildTargetGroup.Standalone, Il2CppCompilerConfiguration.Release);
+
+        RunBuild(options, "Windows Server");
+    }
+
+    [MenuItem("Build/Build Dedicated Server (Linux)")]
+    public static void BuildLinuxServer()
+    {
+        BuildPlayerOptions options = new BuildPlayerOptions();
+        options.scenes = ServerScenes;
+        options.locationPathName = "Builds/Server_Linux/MultiplayerAuthServer";
+        options.target = BuildTarget.StandaloneLinux64;
+        options.subtarget = (int)StandaloneBuildSubtarget.Server;
+        options.options = BuildOptions.None;
+
+        PlayerSettings.SetScriptingBackend(BuildTargetGroup.Standalone, ScriptingImplementation.IL2CPP);
+        PlayerSettings.SetIl2CppCompilerConfiguration(BuildTargetGroup.Standalone, Il2CppCompilerConfiguration.Release);
+
+        RunBuild(options, "Linux Server");
+    }
+
+    // ═════════════════════════════════════════════════════════════
+    //  CLIENT BUILDS
+    // ═════════════════════════════════════════════════════════════
+
     [MenuItem("Build/Build Windows Client (Development)")]
     public static void BuildWindowsDev()
     {
-        BuildPlayerOptions buildPlayerOptions = new BuildPlayerOptions();
-        buildPlayerOptions.scenes = new string[]
-        {
-            "Assets/Scenes/WelcomeScreen.unity",
-            "Assets/Scenes/SampleScene.unity"
-        };
-        buildPlayerOptions.locationPathName = "Builds/Windows/MultiplayerAuth.exe";
-        buildPlayerOptions.target = BuildTarget.StandaloneWindows64;
-        buildPlayerOptions.options = BuildOptions.Development;
+        BuildPlayerOptions options = new BuildPlayerOptions();
+        options.scenes = ClientScenes;
+        options.locationPathName = "Builds/Windows/MultiplayerAuth.exe";
+        options.target = BuildTarget.StandaloneWindows64;
+        options.options = BuildOptions.Development;
 
-        BuildReport report = BuildPipeline.BuildPlayer(buildPlayerOptions);
-        BuildSummary summary = report.summary;
-
-        if (summary.result == BuildResult.Succeeded)
-        {
-            Debug.Log("Build succeeded: " + summary.totalSize + " bytes");
-        }
-
-        if (summary.result == BuildResult.Failed)
-        {
-            Debug.Log("Build failed");
-        }
+        RunBuild(options, "Windows Client (Dev)");
     }
 
     [MenuItem("Build/Build Windows Client (Release)")]
     public static void BuildWindowsRelease()
     {
-        // Switch to IL2CPP for Release (Cleaner, Faster, Secure)
         PlayerSettings.SetScriptingBackend(BuildTargetGroup.Standalone, ScriptingImplementation.IL2CPP);
-        
-        // Optional: Compiler Configuration to Master (optimized)
         PlayerSettings.SetIl2CppCompilerConfiguration(BuildTargetGroup.Standalone, Il2CppCompilerConfiguration.Release);
 
-        BuildPlayerOptions buildPlayerOptions = new BuildPlayerOptions();
-        buildPlayerOptions.scenes = new string[]
-        {
-            "Assets/Scenes/WelcomeScreen.unity",
-            "Assets/Scenes/SampleScene.unity"
-        };
-        buildPlayerOptions.locationPathName = "Builds/Windows_Release/MultiplayerAuth.exe";
-        buildPlayerOptions.target = BuildTarget.StandaloneWindows64;
-        buildPlayerOptions.options = BuildOptions.None;
+        BuildPlayerOptions options = new BuildPlayerOptions();
+        options.scenes = ClientScenes;
+        options.locationPathName = "Builds/Windows_Release/MultiplayerAuth.exe";
+        options.target = BuildTarget.StandaloneWindows64;
+        options.options = BuildOptions.None;
 
-        BuildReport report = BuildPipeline.BuildPlayer(buildPlayerOptions);
+        RunBuild(options, "Windows Client (Release)");
+    }
+
+    // ═════════════════════════════════════════════════════════════
+    //  SHARED
+    // ═════════════════════════════════════════════════════════════
+
+    private static void RunBuild(BuildPlayerOptions options, string label)
+    {
+        BuildReport report = BuildPipeline.BuildPlayer(options);
         BuildSummary summary = report.summary;
 
         if (summary.result == BuildResult.Succeeded)
-        {
-            Debug.Log("Build succeeded: " + summary.totalSize + " bytes");
-        }
-
-        if (summary.result == BuildResult.Failed)
-        {
-            Debug.Log("Build failed");
-        }
+            Debug.Log($"<color=green>[Build]</color> {label} succeeded — {summary.totalSize / (1024 * 1024)} MB");
+        else
+            Debug.LogError($"<color=red>[Build]</color> {label} failed!");
     }
 }

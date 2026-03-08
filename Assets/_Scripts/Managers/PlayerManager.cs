@@ -47,6 +47,21 @@ public class PlayerManager : NetworkBehaviour
         {
             return;
         }
+
+        // Friendly fire check: in TDM, skip damage if attacker and victim are on the same team.
+        // attackerClientId == -1 means environmental damage (turret), always applies.
+        if (LobbyData.ResolvedGameMode == GameMode.TeamDeathmatch && attackerClientId >= 0
+            && players.ContainsKey(attackerClientId))
+        {
+            Team victimTeam = players[victimClientId].stats.team.Value;
+            Team attackerTeam = players[attackerClientId].stats.team.Value;
+            if (victimTeam == attackerTeam && victimTeam != Team.None)
+            {
+                Debug.Log($"[PlayerManager] Friendly fire blocked: {attackerClientId} → {victimClientId} (same team: {victimTeam})");
+                return;
+            }
+        }
+
         Debug.Log("DAVEEE: Am ajuns aici?");
 
         var victim = players[victimClientId];

@@ -76,11 +76,8 @@ public class PredictionMoving : NetworkBehaviour
     public override void OnStartClient()
     {
         base.OnStartClient();
-        if (!IsOwner)
-            return;
-        
-        _camera = Camera.main;
-        _playerNet = GetComponentInParent<PlayerNetworkInitializer>();
+        if (IsOwner)
+            _camera = Camera.main; // May be null during scene transition; Update will retry
     }
     
     // new input system
@@ -196,11 +193,12 @@ public class PredictionMoving : NetworkBehaviour
     {
         if (!IsOwner || !_playerInput.currentActionMap.name.Equals("Gameplay")) return;
 
-        //don't allow rotation while dead
-        if (_playerStats != null && _playerStats.isRespawning.Value)
-            return;
-
-        if (!canMove) return;
+        // Retry Camera.main if it wasn't ready during OnStartClient (FishNet scene transition)
+        if (_camera == null)
+        {
+            _camera = Camera.main;
+            if (_camera == null) return;
+        }
 
         float targetYaw = !isJoystick
             ? GetYawFromMouse()
