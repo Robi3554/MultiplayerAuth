@@ -275,7 +275,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8a6a39c46bf52104ba8efe3100bce3f7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _componentIndexCache: 10
+  _componentIndexCache: 9
   _addedNetworkObject: {fileID: 7709259699627967468}
   _networkObjectCache: {fileID: 7709259699627967468}
 --- !u!1 &3759074979915206942
@@ -544,7 +544,6 @@ GameObject:
   - component: {fileID: 3454017095707031339}
   - component: {fileID: 7709259699627967468}
   - component: {fileID: 6766728125162970839}
-  - component: {fileID: 7814021009919722798}
   - component: {fileID: 1386059482944544269}
   - component: {fileID: 1930605675685772441}
   - component: {fileID: 9182203847071727739}
@@ -695,7 +694,6 @@ MonoBehaviour:
   NetworkBehaviours:
   - {fileID: 3454017095707031339}
   - {fileID: 6766728125162970839}
-  - {fileID: 7814021009919722798}
   - {fileID: 1386059482944544269}
   - {fileID: 1930605675685772441}
   - {fileID: 9182203847071727739}
@@ -760,39 +758,6 @@ MonoBehaviour:
   _interpolation: 2
   _clientAuthoritative: 1
   _sendToOwner: 0
---- !u!114 &7814021009919722798
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7292517268953296916}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 453481867b26f7c43b5bf38802a5f50e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _componentIndexCache: 2
-  _addedNetworkObject: {fileID: 7709259699627967468}
-  _networkObjectCache: {fileID: 7709259699627967468}
-  _initializationSettings:
-    TargetTransform: {fileID: 3104677860057701586}
-    DetachOnStart: 0
-    AttachOnStop: 0
-  _controllerMovementSettings:
-    EnableTeleport: 1
-    TeleportThreshold: 795
-    AdaptiveInterpolationValue: 4
-    InterpolationValue: 2
-    SmoothedProperties: 4294967295
-    SnapNonSmoothedProperties: 0
-  _spectatorMovementSettings:
-    EnableTeleport: 1
-    TeleportThreshold: 994
-    AdaptiveInterpolationValue: 4
-    InterpolationValue: 2
-    SmoothedProperties: 4294967295
-    SnapNonSmoothedProperties: 0
 --- !u!114 &1386059482944544269
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -805,7 +770,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c2bfb5dc1ea3b1441bb14e4a76445405, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _componentIndexCache: 3
+  _componentIndexCache: 2
   _addedNetworkObject: {fileID: 4321920308961391652, guid: f1b59ab8e2618a64f89923fa93ae63db, type: 3}
   _networkObjectCache: {fileID: 7709259699627967468}
   moveRate: 5
@@ -836,7 +801,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b71a4c9e9a757a941bf5ee3b085f0e8d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _componentIndexCache: 4
+  _componentIndexCache: 3
   _addedNetworkObject: {fileID: 4321920308961391652, guid: f1b59ab8e2618a64f89923fa93ae63db, type: 3}
   _networkObjectCache: {fileID: 7709259699627967468}
   playerHUD: {fileID: 4584507489508830465}
@@ -852,7 +817,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 28361f258dec9fb40a04101afb802138, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _componentIndexCache: 5
+  _componentIndexCache: 4
   _addedNetworkObject: {fileID: 7709259699627967468}
   _networkObjectCache: {fileID: 7709259699627967468}
   _usernameTextOnBillboard: {fileID: 462438261620293116}
@@ -1206,7 +1171,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c14dd25f55e10f442a4494507676abd4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _componentIndexCache: 6
+  _componentIndexCache: 5
   _addedNetworkObject: {fileID: 7709259699627967468}
   _networkObjectCache: {fileID: 7709259699627967468}
   animator: {fileID: 1112710266342022526}
@@ -1223,7 +1188,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e8f8a2b30dc037743bc10ea0de941ee8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _componentIndexCache: 7
+  _componentIndexCache: 6
   _addedNetworkObject: {fileID: 7709259699627967468}
   _networkObjectCache: {fileID: 7709259699627967468}
   weapons:
@@ -1244,7 +1209,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 17496d320ec230a4c8b65b83f1b7d232, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _componentIndexCache: 8
+  _componentIndexCache: 7
   _addedNetworkObject: {fileID: 7709259699627967468}
   _networkObjectCache: {fileID: 7709259699627967468}
 --- !u!114 &8917676564020997444

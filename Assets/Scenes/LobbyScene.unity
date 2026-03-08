@@ -3539,6 +3539,7 @@ MonoBehaviour:
   readyButtonImage: {fileID: 1919071023}
   statusText: {fileID: 233330041}
   gameModeText: {fileID: 989392820}
+  lobbyContentRoot: {fileID: 2111570721}
 --- !u!4 &1330300593
 Transform:
   m_ObjectHideFlags: 0

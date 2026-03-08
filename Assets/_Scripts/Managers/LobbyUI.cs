@@ -5,6 +5,9 @@ using TMPro;
 
 /// <summary>
 /// Client-side lobby UI. Polls LobbyManager's SyncList for changes and refreshes the display.
+/// Hides all lobby content until the LobbyManager is confirmed available and the game is NOT
+/// already in progress. If a game is already underway (reconnect scenario), shows a
+/// "Joining game..." overlay and lets FishNet handle the scene transition.
 /// </summary>
 public class LobbyUI : MonoBehaviour
 {
@@ -30,9 +33,16 @@ public class LobbyUI : MonoBehaviour
     [SerializeField] private TMP_Text statusText;
     [SerializeField] private TMP_Text gameModeText;
 
+    [Header("Lobby Content Root (Optional)")]
+    [Tooltip("Optional: a CHILD panel that contains lobby panels (player list, buttons, etc.). " +
+             "If assigned, it will be hidden while connecting and during reconnect. " +
+             "Must NOT be the same GameObject that LobbyUI lives on.")]
+    [SerializeField] private GameObject lobbyContentRoot;
+
     private LobbyManager lobbyManager;
     private bool isReady;
     private bool hasJoined;
+    private bool lobbyRevealed;
     private int lastPlayerHash = -1;
     private readonly List<GameObject> entryObjects = new();
 
@@ -42,6 +52,17 @@ public class LobbyUI : MonoBehaviour
     private void Start()
     {
         Debug.Log($"[LobbyUI] Start() — rebels={rebelsButton != null}, ai={aiButton != null}, noTeam={noTeamButton != null}, ffa={ffaButton != null}, tdm={tdmButton != null}, ready={readyButton != null}");
+
+        // Safety: never let lobbyContentRoot point at our own GameObject (would kill Update)
+        if (lobbyContentRoot != null && lobbyContentRoot == gameObject)
+        {
+            Debug.LogError("[LobbyUI] lobbyContentRoot must NOT be the same GameObject as LobbyUI! Ignoring.");
+            lobbyContentRoot = null;
+        }
+
+        // Hide optional content root while we wait for the lobby to be ready
+        if (lobbyContentRoot != null)
+            lobbyContentRoot.SetActive(false);
 
         rebelsButton.onClick.AddListener(() => { Debug.Log("[LobbyUI] Rebels clicked"); SelectTeam(Team.Rebels); });
         aiButton.onClick.AddListener(() => { Debug.Log("[LobbyUI] AI clicked"); SelectTeam(Team.AI); });
@@ -59,7 +80,7 @@ public class LobbyUI : MonoBehaviour
 
     private void Update()
     {
-        // Wait for LobbyManager to be available (it's a scene NetworkObject, takes a frame to initialize)
+        // Wait for LobbyManager to be available (it's a global NetworkObject spawned at runtime)
         if (lobbyManager == null)
         {
             lobbyManager = LobbyManager.Instance;
@@ -70,6 +91,25 @@ public class LobbyUI : MonoBehaviour
                 return;
             }
             Debug.Log("[LobbyUI] Found LobbyManager!");
+        }
+
+        // If the game is already starting / in progress (reconnect scenario), keep lobby
+        // hidden and show a status message. FishNet will transition us to the game scene.
+        if (lobbyManager.IsGameStarting.Value)
+        {
+            if (lobbyContentRoot != null)
+                lobbyContentRoot.SetActive(false);
+            if (statusText != null)
+                statusText.text = "<color=yellow>Joining game in progress...</color>";
+            return;
+        }
+
+        // Reveal the lobby UI once we know the lobby is active
+        if (!lobbyRevealed)
+        {
+            if (lobbyContentRoot != null)
+                lobbyContentRoot.SetActive(true);
+            lobbyRevealed = true;
         }
 
         // Send username to server once after connecting
@@ -97,12 +137,6 @@ public class LobbyUI : MonoBehaviour
         {
             RefreshUI();
             lastPlayerHash = currentHash;
-        }
-
-        // Show game starting status
-        if (lobbyManager.IsGameStarting.Value)
-        {
-            statusText.text = "<color=yellow>Game starting...</color>";
         }
     }
 

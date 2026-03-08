@@ -25,6 +25,9 @@ public class LobbyBootstrap : MonoBehaviour
 
     private void Start()
     {
+        // Clear any stale lobby data from a previous game session
+        LobbyData.Clear();
+
         if (networkManager == null)
         {
             Debug.LogError("[LobbyBootstrap] NetworkManager not found!");

@@ -52,7 +52,7 @@ public class PredictionMoving : NetworkBehaviour
     {
         base.OnStartClient();
         if (IsOwner)
-            _camera = Camera.main;
+            _camera = Camera.main; // May be null during scene transition; Update will retry
     }
     
     // new input system
@@ -130,6 +130,13 @@ public class PredictionMoving : NetworkBehaviour
     private void Update()
     {
         if (!IsOwner || !_playerInput.currentActionMap.name.Equals("Gameplay")) return;
+
+        // Retry Camera.main if it wasn't ready during OnStartClient (FishNet scene transition)
+        if (_camera == null)
+        {
+            _camera = Camera.main;
+            if (_camera == null) return;
+        }
 
         float targetYaw = !isJoystick
             ? GetYawFromMouse()

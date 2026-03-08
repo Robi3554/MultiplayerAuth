@@ -19,9 +19,15 @@ public class Billboard : MonoBehaviour // No need for NetworkBehaviour
     // LateUpdate runs after all other updates, which is ideal for camera-related logic.
     void LateUpdate()
     {
-        // If the camera hasn't been found, do nothing.
+        // Retry finding the camera if it wasn't available at Start
+        // (e.g. during FishNet scene transitions Camera.main may not exist yet)
         if (_cameraTransform == null)
-            return;
+        {
+            if (Camera.main != null)
+                _cameraTransform = Camera.main.transform;
+            else
+                return;
+        }
 
         // This makes the object's rotation match the camera's rotation.
         // It's the simplest and most reliable method for a UI billboard.
