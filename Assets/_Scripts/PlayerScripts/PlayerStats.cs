@@ -15,8 +15,11 @@ public class PlayerStats : NetworkBehaviour
     public readonly SyncVar<int> health = new SyncVar<int>(100);
     public readonly SyncVar<int> kills = new SyncVar<int>(0);
     public readonly SyncVar<int> deaths = new SyncVar<int>(0);
+    public readonly SyncVar<bool> isRespawning = new SyncVar<bool>(false);
+
     public int damageMult = 1;
     
+    [SerializeField] private Animator animator;
     [SerializeField] private TMP_Text _usernameTextOnBillboard;
     [SerializeField] private AudioSource _hitAudioSource;
     [SerializeField] private AudioClip _hitAudioClip;
@@ -35,8 +38,6 @@ public class PlayerStats : NetworkBehaviour
     private Slider healthSlider;
 
     private bool isHeadBig;
-
-    public bool isRespawning = false;
 
     public override void OnStartClient()
     {
@@ -64,6 +65,7 @@ public class PlayerStats : NetworkBehaviour
             {
                 CmdSetUsername("Player " + OwnerId); 
             }
+            animator = gameObject.GetComponentInChildren<Animator>();
         }
     }
 
@@ -131,7 +133,7 @@ public class PlayerStats : NetworkBehaviour
 
     public void TakeDamage(int damage)
     {
-        if (isRespawning) return;
+        if (isRespawning.Value) return;
         
         SetHealth(damage);
         

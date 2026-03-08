@@ -63,7 +63,7 @@ public class Turret : NetworkBehaviour
             if (col == null) continue;
 
             // Skip dead or respawning players
-            if (col.TryGetComponent(out PlayerStats stats) && (stats.health.Value <= 0 || stats.isRespawning))
+            if (col.TryGetComponent(out PlayerStats stats) && (stats.health.Value <= 0 || stats.isRespawning.Value))
                 continue;
 
             Vector3 targetPosition = col.transform.position;

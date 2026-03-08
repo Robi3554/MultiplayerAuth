@@ -95,7 +95,7 @@ public abstract class Weapon : MonoBehaviour
 
     public void OnDamage(InputAction.CallbackContext context)
     {
-        if (!this.isActiveAndEnabled || !playerNet.IsOwner || isOnSwapCooldown || !context.performed || currentAmmo <= 0) return;
+        if (!this.isActiveAndEnabled || !playerNet.IsOwner || !context.performed || currentAmmo <= 0 || playerStats.isRespawning.Value) return;
         
         var colliders = Physics.OverlapBox(wallCheckCollider.bounds.center,
             wallCheckCollider.size.Multiply(wallCheckCollider.transform.lossyScale) / 2,
@@ -139,8 +139,8 @@ public abstract class Weapon : MonoBehaviour
 
     protected void Reload()
     {
-        if (isReloading) return;
-
+        if (isReloading || playerStats.isRespawning.Value) return;
+        
         weaponHUD.StartCooldown(reloadTime);
         reloadCoroutine = StartCoroutine(ReloadClient());
         playerNet?.NotifyReloadServer(maxAmmo);
