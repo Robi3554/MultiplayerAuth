@@ -30,6 +30,8 @@ public abstract class Weapon : MonoBehaviour
 
     protected PlayerStats playerStats;
 
+    protected ChangeWeapons cw;
+
     [SerializeField]
     protected float speed;
     [SerializeField]
@@ -53,11 +55,17 @@ public abstract class Weapon : MonoBehaviour
     protected AudioSource reloadAudioSource;
     
     [SerializeField]
+    protected ParticleSystem muzzleFlash;
+    
+    [SerializeField]
     protected BoxCollider wallCheckCollider;
+
+    [SerializeField]
+    protected WeaponHUD weaponHUD;
     
     protected Coroutine reloadCoroutine;
 
-    protected bool canShoot = true;
+    protected bool isOnSwapCooldown = true;
     protected float nextShootTime = 0f;
     protected bool canPlayShootSound;
     protected bool canPlayReloadSound;
@@ -72,6 +80,7 @@ public abstract class Weapon : MonoBehaviour
         playerNet = GetComponentInParent<PlayerNetworkInitializer>();
         currentAmmo = maxAmmo;
         playerStats = GetComponentInParent<PlayerStats>();
+        cw = GetComponentInParent<ChangeWeapons>();
     }
 
     protected virtual void OnEnable()
@@ -86,7 +95,7 @@ public abstract class Weapon : MonoBehaviour
 
     public void OnDamage(InputAction.CallbackContext context)
     {
-        if (!this.isActiveAndEnabled || !playerNet.IsOwner || !context.performed || currentAmmo <= 0) return;
+        if (!this.isActiveAndEnabled || !playerNet.IsOwner || !context.performed || currentAmmo <= 0 || playerStats.isRespawning.Value) return;
         
         var colliders = Physics.OverlapBox(wallCheckCollider.bounds.center,
             wallCheckCollider.size.Multiply(wallCheckCollider.transform.lossyScale) / 2,
@@ -113,7 +122,7 @@ public abstract class Weapon : MonoBehaviour
         }
     }
 
-    protected void Update()
+    protected virtual void Update()
     {
         if (playerNet != null && !playerNet.IsOwner)
             return;
@@ -130,8 +139,9 @@ public abstract class Weapon : MonoBehaviour
 
     protected void Reload()
     {
-        if (isReloading) return;
+        if (isReloading || playerStats.isRespawning.Value) return;
         
+        weaponHUD.StartCooldown(reloadTime);
         reloadCoroutine = StartCoroutine(ReloadClient());
         playerNet?.NotifyReloadServer(maxAmmo);
     }
@@ -150,29 +160,31 @@ public abstract class Weapon : MonoBehaviour
         isReloading = false;
     }
 
-    protected IEnumerator WeaponChangeDelay(float delay)
+    protected IEnumerator WeaponSwapCooldown(float delay)
     {
-        canShoot = false;
         yield return new WaitForSeconds(delay);
-        canShoot = true;
+        isOnSwapCooldown = false;
     }
 
     public void InitializeWeapon()
     {
+        isOnSwapCooldown = true;
+        
         if (ammoText == null)
             ammoText = GameObject.Find("PlayerHUD").transform.Find("Player Ammo").transform.Find("Ammo Text").GetComponent<TMP_Text>();
 
-        canShoot = false;
         nextShootTime = 0f;
         canPlayShootSound = shootAudioSource && shootAudioClip;
         canPlayReloadSound = reloadAudioSource;
 
         reloadAudioSource.pitch = reloadAudioSource.clip.length / reloadTime;
 
-        StartCoroutine(WeaponChangeDelay(afterChangeDelay));
+        weaponHUD.StartCooldown(afterChangeDelay);
+
+        StartCoroutine(WeaponSwapCooldown(afterChangeDelay));
     }
 
-    public void OnDeathReload()
+    public virtual void OnDeathReload()
     {
         Debug.Log("Start reload after death");
         currentAmmo = maxAmmo;
@@ -181,4 +193,12 @@ public abstract class Weapon : MonoBehaviour
     protected abstract void HandleShootInput(InputAction.CallbackContext context);
 
     protected int Damage => damage * playerStats.damageMult;
+    
+    public void PlayMuzzleFlash()
+    {
+        if (muzzleFlash != null)
+        {
+            muzzleFlash.Play();
+        }
+    }
 }

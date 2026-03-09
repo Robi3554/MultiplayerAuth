@@ -31,6 +31,11 @@ public class PickUpObject : NetworkBehaviour
     {
         Debug.Log("PickupObject: RequestPickupServerRpc");
 
+        // Don't allow pickup while respawning
+        PlayerStats playerStats = player.GetComponent<PlayerStats>();
+        if (playerStats != null && playerStats.isRespawning.Value)
+            return;
+
         if (itemPickedUp){ 
             // Debug.Log($"PickupObject: itemPickedUp: {itemPickedUp}");
             return;

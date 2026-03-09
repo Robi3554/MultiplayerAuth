@@ -25,8 +25,6 @@ public class RaycastShoot : Weapon
 
     protected override void Shoot()
     {
-        if (!canShoot) return;
-
         Vector3 origin = firePoint.position;
         Vector3 direction = -firePoint.up;
         Vector3 hitPosition = origin + direction * maxDistance;
@@ -42,6 +40,7 @@ public class RaycastShoot : Weapon
 
         // tell the server to show the tracer for others
         playerNet?.NotifyShotServer(origin, hitPosition);
+        playerNet?.NotifyMuzzleFlashServer();
 
         CurrentAmmo--;
     }
@@ -64,6 +63,7 @@ public class RaycastShoot : Weapon
     {
         if (Time.time >= nextShootTime)
         {
+            weaponHUD.StartCooldown(reloadTime);
             nextShootTime = Time.time + 1 / fireRate;
             Shoot();
         }

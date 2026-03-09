@@ -5,6 +5,7 @@ public class ProjectileShooting : Weapon
 {
     [SerializeField]
     protected GameObject projectilePrefab;
+    [SerializeField] protected AudioSource jamAudioSource;
     protected Vector3 direction;
 
     protected override void HandleShootInput(InputAction.CallbackContext context)
@@ -13,6 +14,13 @@ public class ProjectileShooting : Weapon
         {
             nextShootTime = Time.time + 1 / fireRate;
             Shoot();
+        }
+        else
+        {
+            if (jamAudioSource)
+            {
+                jamAudioSource.Play();
+            }
         }
     }
 
@@ -24,7 +32,8 @@ public class ProjectileShooting : Weapon
         }
 
         playerNet.NotifyProjectileShotServer(projectilePrefab, firePoint.position, -firePoint.up * speed, Damage, maxDistance);
-
+        playerNet.NotifyMuzzleFlashServer();
+        
         if (canPlayShootSound)
         {
             playerNet.ProjectileWeaponSound();

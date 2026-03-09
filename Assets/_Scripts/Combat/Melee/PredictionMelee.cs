@@ -55,6 +55,10 @@ public class PredictionMelee : NetworkBehaviour
 	{
 		if (!this.isActiveAndEnabled) return;
 
+		//don't allow melee attacks while respawning
+		if (playerStats != null && playerStats.isRespawning.Value)
+			return;
+
 		Debug.Log("Melee: left click pressed");
 		if (context.performed)
 		{

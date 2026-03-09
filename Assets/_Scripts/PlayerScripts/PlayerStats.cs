@@ -15,8 +15,12 @@ public class PlayerStats : NetworkBehaviour
     public readonly SyncVar<int> health = new SyncVar<int>(100);
     public readonly SyncVar<int> kills = new SyncVar<int>(0);
     public readonly SyncVar<int> deaths = new SyncVar<int>(0);
+    public readonly SyncVar<bool> isRespawning = new SyncVar<bool>(false);
+
+    public readonly SyncVar<Team> team = new SyncVar<Team>(Team.None);
     public int damageMult = 1;
     
+    [SerializeField] private Animator animator;
     [SerializeField] private TMP_Text _usernameTextOnBillboard;
     [SerializeField] private AudioSource _hitAudioSource;
     [SerializeField] private AudioClip _hitAudioClip;
@@ -36,11 +40,16 @@ public class PlayerStats : NetworkBehaviour
 
     private bool isHeadBig;
 
-    public bool isRespawning = false;
+    private static readonly Color RebelsColor = new Color(0.9f, 0.3f, 0.3f);
+    private static readonly Color AIColor = new Color(0.3f, 0.5f, 0.9f);
 
     public override void OnStartClient()
     {
         base.OnStartClient();
+
+        // Subscribe to team changes on all clients so billboard color stays in sync
+        team.OnChange += OnTeamChanged;
+        ApplyBillboardTeamColor(team.Value);
 
         // Notify scoreboard that this player spawned
         if (ScoreboardManager.Instance != null)
@@ -64,12 +73,15 @@ public class PlayerStats : NetworkBehaviour
             {
                 CmdSetUsername("Player " + OwnerId); 
             }
+            animator = gameObject.GetComponentInChildren<Animator>();
         }
     }
 
     public override void OnStopClient()
     {
         base.OnStopClient();
+
+        team.OnChange -= OnTeamChanged;
 
         // Notify scoreboard that this player despawned
         if (ScoreboardManager.Instance != null)
@@ -112,9 +124,25 @@ public class PlayerStats : NetworkBehaviour
     [ObserversRpc(BufferLast = true)]
     private void RpcSetUsername(string username)
     {
-        // This runs on all clients, including the host.
-        // It sets the text on the billboard for everyone to see.
         _usernameTextOnBillboard.text = username;
+        ApplyBillboardTeamColor(team.Value);
+    }
+
+    private void OnTeamChanged(Team previous, Team current, bool asServer)
+    {
+        ApplyBillboardTeamColor(current);
+    }
+
+    private void ApplyBillboardTeamColor(Team t)
+    {
+        if (_usernameTextOnBillboard == null) return;
+
+        _usernameTextOnBillboard.color = t switch
+        {
+            Team.Rebels => RebelsColor,
+            Team.AI     => AIColor,
+            _           => Color.white
+        };
     }
 
     void Update()
@@ -131,11 +159,11 @@ public class PlayerStats : NetworkBehaviour
 
     public void TakeDamage(int damage)
     {
-        if (isRespawning) return;
+        if (isRespawning.Value) return;
         
         SetHealth(damage);
         
-        TargetHitSound(Owner);
+        TargetHitSound();
         TargetShakeCamera(Owner, 0.5f, 0.1f);
         TargetDamagedVFX();
     }
@@ -181,8 +209,8 @@ public class PlayerStats : NetworkBehaviour
         health.Value = Mathf.Clamp(health.Value - value, 0, 100);
     }
     
-    [TargetRpc]
-    private void TargetHitSound(NetworkConnection target)
+    [ObserversRpc]
+    private void TargetHitSound()
     {
         if (_canPlayHitSound)
         {

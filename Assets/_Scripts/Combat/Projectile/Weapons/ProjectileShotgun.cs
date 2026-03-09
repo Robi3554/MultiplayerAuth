@@ -10,11 +10,11 @@ public class ProjectileShotgun : ProjectileShooting
 
     protected override void Shoot()
     {
-        if (!canShoot) return;
-
         Vector3 origin = firePoint.position;
 
         var playerNet = GetComponentInParent<PlayerNetworkInitializer>();
+
+        weaponHUD.StartCooldown(reloadTime);
 
         for (int i = 0; i < pelletCount; i++)
         {
@@ -30,6 +30,8 @@ public class ProjectileShotgun : ProjectileShooting
                 playerNet.ProjectileWeaponSound();
             }
         }
+        
+        playerNet.NotifyMuzzleFlashServer();
 
         CurrentAmmo--;
     }

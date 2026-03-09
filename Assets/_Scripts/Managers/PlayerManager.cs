@@ -47,6 +47,21 @@ public class PlayerManager : NetworkBehaviour
         {
             return;
         }
+
+        // Friendly fire check: in TDM, skip damage if attacker and victim are on the same team.
+        // attackerClientId == -1 means environmental damage (turret), always applies.
+        if (LobbyData.ResolvedGameMode == GameMode.TeamDeathmatch && attackerClientId >= 0
+            && players.ContainsKey(attackerClientId))
+        {
+            Team victimTeam = players[victimClientId].stats.team.Value;
+            Team attackerTeam = players[attackerClientId].stats.team.Value;
+            if (victimTeam == attackerTeam && victimTeam != Team.None)
+            {
+                Debug.Log($"[PlayerManager] Friendly fire blocked: {attackerClientId} → {victimClientId} (same team: {victimTeam})");
+                return;
+            }
+        }
+
         Debug.Log("DAVEEE: Am ajuns aici?");
 
         var victim = players[victimClientId];
@@ -69,10 +84,15 @@ public class PlayerManager : NetworkBehaviour
         var victim = players[victimClientId];
         var victimStats = victim.stats;
 
-        victimStats.AddDeath();
+        // Prevent multiple respawns for the same player
+        if (victimStats.isRespawning.Value)
+            return;
 
-        victimStats.isRespawning = true;
-        victimStats.ResetHealth();
+        victimStats.AddDeath();
+        victimStats.isRespawning.Value = true;
+
+        victim.playerObject.GetComponent<CapsuleCollider>().enabled = false;
+        SetPlayersColliders(victim.playerObject, false);
 
         // ADD KILL TO ATTACKER AND CHECK WIN CONDITION
         if (players.ContainsKey(attackerClientId))
@@ -84,26 +104,35 @@ public class PlayerManager : NetworkBehaviour
             }
         }
 
-        int spawnIndex = Random.Range(0, spawnPoints.Count);
-        ReloadPlayerGuns(victim.connection, victim.playerObject);
-        RespawnPlayer(victim.connection, victim.playerObject, spawnIndex);
+        //show death screen on client and wait before respawning
+        DeathScreenManager.Instance.ShowDeathScreen(victim.connection);
+        StartCoroutine(RespawnAfterDelay(victim, victimStats));
+    }
 
-        StartCoroutine(ClearRespawningFlag(victimStats));
+    private IEnumerator RespawnAfterDelay(Player victim, PlayerStats victimStats)
+    {
+        //wait for death screen countdown (5 seconds) + UI cleanup time (.75 seconds)
+        yield return new WaitForSeconds(5.75f);
+        victimStats.ResetHealth(); // reset
+        int spawnIndex = Random.Range(0, spawnPoints.Count);
+        RespawnPlayer(victim.connection, victim.playerObject, spawnIndex);
+        ReloadPlayerGuns(victim.connection, victim.playerObject);
+
+        victimStats.isRespawning.Value = false;
     }
 
     [TargetRpc]
     void RespawnPlayer(NetworkConnection conn, GameObject player, int spawn)
     {
+        Rigidbody rb = player.GetComponent<Rigidbody>();
+        if (rb)
+            rb.linearVelocity = Vector3.zero;
+
+        player.GetComponent<CapsuleCollider>().enabled = true;
+        SetPlayersColliders(player, true);
+
         player.transform.position = spawnPoints[spawn].position;
         player.transform.rotation = spawnPoints[spawn].rotation;
-        
-        // Reset velocity
-        var rb = player.GetComponent<Rigidbody>();
-        if (rb != null)
-        {
-            rb.linearVelocity = Vector3.zero;
-            rb.angularVelocity = Vector3.zero;
-        }
     }
 
     [TargetRpc]
@@ -117,11 +146,8 @@ public class PlayerManager : NetworkBehaviour
         }
     }
 
-    IEnumerator ClearRespawningFlag(PlayerStats stats)
-    {
-        yield return new WaitForSeconds(1f);
-        stats.isRespawning = false;
-    }
+    [ObserversRpc]
+    void SetPlayersColliders(GameObject player, bool enabled) => player.GetComponent<CapsuleCollider>().enabled = enabled;
 
     // NEW METHOD: Called by GameModeManager to reset all players
     [Server]
@@ -138,7 +164,7 @@ public class PlayerManager : NetworkBehaviour
                 player.stats.kills.Value = 0;
                 player.stats.deaths.Value = 0;
                 player.stats.health.Value = 100;
-                player.stats.isRespawning = false;
+                player.stats.isRespawning.Value = false;
 
                 // Respawn at random location
                 int spawnIndex = Random.Range(0, spawnPoints.Count);

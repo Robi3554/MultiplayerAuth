@@ -63,11 +63,48 @@ public class GameModeManager : NetworkBehaviour
 
         Debug.Log($"[GameMode] {player.username.Value} now has {player.kills.Value} kills");
 
-        // Check if player reached kill limit
-        if (player.kills.Value >= killsToWin)
+        if (LobbyData.ResolvedGameMode == GameMode.TeamDeathmatch)
         {
-            PlayerWon(player);
+            // TDM: check if the player's team total kills reached the limit
+            int teamKills = GetTeamKills(player.team.Value);
+            Debug.Log($"[GameMode] Team {player.team.Value} total kills: {teamKills}/{killsToWin}");
+            if (teamKills >= killsToWin)
+            {
+                TeamWon(player.team.Value);
+            }
         }
+        else
+        {
+            // FFA: check if individual player reached kill limit
+            if (player.kills.Value >= killsToWin)
+            {
+                PlayerWon(player);
+            }
+        }
+    }
+
+    [Server]
+    private int GetTeamKills(Team team)
+    {
+        int total = 0;
+        foreach (var kvp in PlayerManager.Instance.players)
+        {
+            if (kvp.Value.stats != null && kvp.Value.stats.team.Value == team)
+                total += kvp.Value.stats.kills.Value;
+        }
+        return total;
+    }
+
+    [Server]
+    private void TeamWon(Team winningTeam)
+    {
+        isGameActive.Value = false;
+        string teamName = winningTeam == Team.Rebels ? "Rebels" : "AI";
+        winnerName.Value = $"Team {teamName}";
+
+        Debug.Log($"[GameMode] {teamName} won the game!");
+        RpcAnnounceWinner($"Team {teamName}");
+        StartCoroutine(RestartCountdown());
     }
 
     [Server]

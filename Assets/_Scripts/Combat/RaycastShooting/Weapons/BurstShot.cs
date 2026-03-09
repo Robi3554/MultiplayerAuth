@@ -29,6 +29,8 @@ public class BurstShot : RaycastShoot
 
     private IEnumerator Burst(InputAction action)
     {
+        cw.canChange = false;
+
         for (int i = 0; i < burstCount; i++)
         {
             Shoot();
@@ -43,7 +45,9 @@ public class BurstShot : RaycastShoot
                 yield break;
             }
         }
-        
+
+        cw.canChange = true;
+
         yield return new WaitForSeconds(1/fireRate);
 
         if (currentAmmo > 0)

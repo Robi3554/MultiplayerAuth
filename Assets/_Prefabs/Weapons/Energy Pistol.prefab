@@ -734,7 +734,6 @@ MonoBehaviour:
   maxDistance: 150
   fireRate: 1
   damage: 15
-  damageMult: 0
   maxAmmo: 15
   reloadTime: 0.75
   afterChangeDelay: 0.5
@@ -819,14 +818,13 @@ MonoBehaviour:
   maxDistance: 35
   fireRate: 1
   damage: 15
-  damageMult: 1
   maxAmmo: 15
   reloadTime: 0.75
   afterChangeDelay: 0.5
   shootAudioSource: {fileID: 4142536059135947096}
   shootAudioClip: {fileID: 8300000, guid: b18bab8db6b4fa74f88f40f9e947d55f, type: 3}
   reloadAudioSource: {fileID: 5791500136311642115}
-  wallCheckCollider: {fileID: 0}
+  wallCheckCollider: {fileID: 395243978294020328}
   projectilePrefab: {fileID: 72838035728811199, guid: 962a47bbe2fb0b646b8895cdf8b44160, type: 3}
 --- !u!114 &7377442243642034537
 MonoBehaviour:

@@ -10,6 +10,12 @@ public class PlayerNetworkInitializer : NetworkBehaviour
     {
         base.OnStartServer();
 
+        if (PlayerManager.Instance == null)
+        {
+            Debug.LogWarning("[PlayerNetworkInitializer] PlayerManager not found — player spawned outside game scene?");
+            return;
+        }
+
         int clientId = (int)Owner.ClientId;
         var stats = GetComponent<PlayerStats>();
 
@@ -85,8 +91,40 @@ public class PlayerNetworkInitializer : NetworkBehaviour
     [ServerRpc]
     public void ProjectileWeaponSound()
     {
+        PlayProjectileWeaponSoundObserversRpc();
+    }
+    
+    [ObserversRpc]
+    private void PlayProjectileWeaponSoundObserversRpc()
+    {
         var weapon = GetComponentInChildren<ProjectileShooting>();
         if (weapon != null)
             weapon.PlaySound();
+    }
+    
+    [ServerRpc]
+    public void NotifyMuzzleFlashServer()
+    {
+        ShowMuzzleFlashObserversRpc();
+    }
+
+    [ObserversRpc]
+    private void ShowMuzzleFlashObserversRpc()
+    {
+        var weapon = GetComponentInChildren<Weapon>();
+        if (weapon != null)
+            weapon.PlayMuzzleFlash();
+    }
+    
+    [ServerRpc]
+    public void ControlFootstepSoundsServer(PredictionMoving playerMovement, float speed)
+    {
+        playerMovement.ControlFootstepSounds(speed);
+    }
+    
+    [ServerRpc]
+    public void PlayDashSoundServer(PredictionMoving playerMovement)
+    {
+        playerMovement.PlayDashSound();
     }
 }
