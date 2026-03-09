@@ -40,8 +40,6 @@ public class PlayerStats : NetworkBehaviour
 
     private bool isHeadBig;
 
-    public bool isRespawning = false;
-
     private static readonly Color RebelsColor = new Color(0.9f, 0.3f, 0.3f);
     private static readonly Color AIColor = new Color(0.3f, 0.5f, 0.9f);
 

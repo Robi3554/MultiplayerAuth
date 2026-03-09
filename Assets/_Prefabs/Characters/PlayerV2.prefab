@@ -945,34 +945,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 26b716c41e9b56b4baafaf13a523ba2e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <IsNested>k__BackingField: 0
-  WasActiveDuringEdit: 0
-  WasActiveDuringEdit_Set1: 1
-  <ComponentIndex>k__BackingField: 0
-  <PredictedSpawn>k__BackingField: {fileID: 0}
-  <PredictedOwner>k__BackingField: {fileID: 0}
-  NetworkBehaviours:
-  - {fileID: 3454017095707031339}
-  - {fileID: 6766728125162970839}
-  - {fileID: 1386059482944544269}
-  - {fileID: 1930605675685772441}
-  - {fileID: 9182203847071727739}
-  - {fileID: 3364373959102236544}
-  - {fileID: 3560973985284906898}
-  - {fileID: 3719605036728346066}
-  - {fileID: 5750443349139586259}
-  InitializedParentNetworkBehaviour: {fileID: 0}
-  InitializedNestedNetworkObjects:
-  - {fileID: 1954642814374175650}
-  - {fileID: 8598046361890801450}
-  RuntimeParentNetworkBehaviour: {fileID: 0}
-  RuntimeChildNetworkBehaviours: []
-  _isNetworked: 1
-  _isSpawnable: 1
-  _isGlobal: 0
-  _initializeOrder: 0
-  _preventDespawnOnDisconnect: 0
-  _defaultDespawnType: 0
   NetworkObserver: {fileID: 0}
   _enablePrediction: 1
   _predictionType: 1
@@ -996,6 +968,34 @@ MonoBehaviour:
     Rotation: {x: 0, y: 0, z: 0, w: 1}
     Scale: {x: 1, y: 1, z: 1}
     IsValid: 1
+  <IsNested>k__BackingField: 0
+  WasActiveDuringEdit: 0
+  WasActiveDuringEdit_Set1: 1
+  <ComponentIndex>k__BackingField: 0
+  <PredictedSpawn>k__BackingField: {fileID: 0}
+  <PredictedOwner>k__BackingField: {fileID: 0}
+  NetworkBehaviours:
+  - {fileID: 3454017095707031339}
+  - {fileID: 6766728125162970839}
+  - {fileID: 1386059482944544269}
+  - {fileID: 1930605675685772441}
+  - {fileID: 9182203847071727739}
+  - {fileID: 3364373959102236544}
+  - {fileID: 3560973985284906898}
+  - {fileID: 3719605036728346066}
+  - {fileID: 5750443349139586259}
+  InitializedParentNetworkBehaviour: {fileID: 0}
+  InitializedNestedNetworkObjects:
+  - {fileID: 1954642814374175650}
+  - {fileID: 0}
+  RuntimeParentNetworkBehaviour: {fileID: 0}
+  RuntimeChildNetworkBehaviours: []
+  _isNetworked: 1
+  _isSpawnable: 1
+  _isGlobal: 0
+  _initializeOrder: 0
+  _preventDespawnOnDisconnect: 0
+  _defaultDespawnType: 0
 --- !u!114 &6766728125162970839
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1089,6 +1089,7 @@ MonoBehaviour:
   _addedNetworkObject: {fileID: 7709259699627967468}
   _networkObjectCache: {fileID: 7709259699627967468}
   damageMult: 1
+  animator: {fileID: 0}
   _usernameTextOnBillboard: {fileID: 462438261620293116}
   _hitAudioSource: {fileID: 6368002052658960838}
   _hitAudioClip: {fileID: 8300000, guid: 920fd5498c3b21b4eadefe5f6dc29c0b, type: 3}
@@ -1097,7 +1098,6 @@ MonoBehaviour:
   _deathText: {fileID: 3931334673081709720}
   _healthText: {fileID: 6518951647710343010}
   _healthSlider: {fileID: 6447440057652095307}
-  isRespawning: 0
 --- !u!114 &4214152988996548071
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4073,6 +4073,7 @@ PrefabInstance:
     - {fileID: 6185355539522147739, guid: cdcf0eae94ed1dd438685bad63846dbf, type: 3}
     - {fileID: -8816568010276086457, guid: cdcf0eae94ed1dd438685bad63846dbf, type: 3}
     - {fileID: 7377442243642034537, guid: cdcf0eae94ed1dd438685bad63846dbf, type: 3}
+    - {fileID: 3403562702567576854, guid: cdcf0eae94ed1dd438685bad63846dbf, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: 5322550691431191195, guid: cdcf0eae94ed1dd438685bad63846dbf, type: 3}
@@ -4122,8 +4123,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: FishNet.Runtime::FishNet.Object.EmptyNetworkBehaviour
   _componentIndexCache: 0
-  _addedNetworkObject: {fileID: 8598046361890801450}
-  _networkObjectCache: {fileID: 8598046361890801450}
+  _addedNetworkObject: {fileID: 7709259699627967468}
+  _networkObjectCache: {fileID: 0}
 --- !u!114 &5247345835523512195 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 1205793299472401855, guid: cdcf0eae94ed1dd438685bad63846dbf, type: 3}
@@ -4157,17 +4158,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9843bf2612ed08e47acf8ea3bd7ce4dc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &8598046361890801450 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 3403562702567576854, guid: cdcf0eae94ed1dd438685bad63846dbf, type: 3}
-  m_PrefabInstance: {fileID: 6370772279283438140}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1945318272994646557}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 26b716c41e9b56b4baafaf13a523ba2e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: FishNet.Runtime::FishNet.Object.NetworkObject
 --- !u!1001 &6781209095568335087
 PrefabInstance:
   m_ObjectHideFlags: 0

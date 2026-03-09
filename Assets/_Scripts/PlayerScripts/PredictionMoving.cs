@@ -69,6 +69,7 @@ public class PredictionMoving : NetworkBehaviour
 
     private void Start()
     {
+        _playerNet = GetComponentInParent<PlayerNetworkInitializer>();
         characterMeshes = GetComponentsInChildren<SkinnedMeshRenderer>();
         InitializePool();
     }
