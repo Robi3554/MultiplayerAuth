@@ -5,6 +5,7 @@ using FishNet.Object.Synchronizing;
 using NUnit.Framework.Constraints;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.VFX;
 
 public class PredictionMelee : NetworkBehaviour
 {
@@ -24,7 +25,7 @@ public class PredictionMelee : NetworkBehaviour
     [Header("References")]
 	[SerializeField] private Transform slashPoint;
 	[SerializeField] private float coneAngle = 60f;
-	[SerializeField] private ParticleSystem VFX_SLASH;
+	[SerializeField] private VisualEffect VFX_SLASH;
 
 	[Header("Animation")]
 	[SerializeField] private Animator animator;
@@ -129,10 +130,9 @@ public class PredictionMelee : NetworkBehaviour
 	[ObserversRpc]
 	public void PlayObserverWeaponVfx()
 	{
-		if (VFX_SLASH != null && !VFX_SLASH.isPlaying)
+		if (VFX_SLASH != null)
 		{
-			VFX_SLASH.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
-			VFX_SLASH.Play();
+			VFX_SLASH.SendEvent("OnPlay");
 		}
 	}
 
