@@ -18,6 +18,16 @@ public class PlayerManager : NetworkBehaviour
 
     [SerializeField] List<Transform> spawnPoints = new List<Transform>();
 
+    private int 
+        deadLayer,
+        aliveLayer;
+
+    private void Start()
+    {
+        deadLayer = LayerMask.NameToLayer("Dead");
+        aliveLayer = LayerMask.NameToLayer("Player");
+    }
+
     public void HealPlayer(int playerId, int healAmount)
     {
         if (!IsServerInitialized)
@@ -91,8 +101,8 @@ public class PlayerManager : NetworkBehaviour
         victimStats.AddDeath();
         victimStats.isRespawning.Value = true;
 
-        victim.playerObject.GetComponent<CapsuleCollider>().enabled = false;
-        SetPlayersColliders(victim.playerObject, false);
+        victim.playerObject.layer = deadLayer;
+        SetPlayersLayer(victim.playerObject, deadLayer);
 
         // ADD KILL TO ATTACKER AND CHECK WIN CONDITION
         if (players.ContainsKey(attackerClientId))
@@ -128,8 +138,8 @@ public class PlayerManager : NetworkBehaviour
         if (rb)
             rb.linearVelocity = Vector3.zero;
 
-        player.GetComponent<CapsuleCollider>().enabled = true;
-        SetPlayersColliders(player, true);
+        player.layer = aliveLayer;
+        SetPlayersLayer(player, aliveLayer);
 
         player.transform.position = spawnPoints[spawn].position;
         player.transform.rotation = spawnPoints[spawn].rotation;
@@ -147,7 +157,7 @@ public class PlayerManager : NetworkBehaviour
     }
 
     [ObserversRpc]
-    void SetPlayersColliders(GameObject player, bool enabled) => player.GetComponent<CapsuleCollider>().enabled = enabled;
+    void SetPlayersLayer(GameObject player, int layer) => player.layer = layer;
 
     // NEW METHOD: Called by GameModeManager to reset all players
     [Server]

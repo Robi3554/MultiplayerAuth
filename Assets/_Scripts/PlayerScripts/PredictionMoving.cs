@@ -194,6 +194,9 @@ public class PredictionMoving : NetworkBehaviour
     {
         if (!IsOwner || !_playerInput.currentActionMap.name.Equals("Gameplay")) return;
 
+        if (_playerStats != null && _playerStats.isRespawning.Value)
+            return;
+
         // Retry Camera.main if it wasn't ready during OnStartClient (FishNet scene transition)
         if (_camera == null)
         {

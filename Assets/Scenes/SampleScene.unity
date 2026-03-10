@@ -13736,6 +13736,12 @@ MonoBehaviour:
   spawnPoints:
   - {fileID: 374221881}
   - {fileID: 179873250}
+  deadLayer:
+    serializedVersion: 2
+    m_Bits: 2048
+  aliveLayer:
+    serializedVersion: 2
+    m_Bits: 64
 --- !u!4 &767506192
 Transform:
   m_ObjectHideFlags: 0
@@ -30344,6 +30350,7 @@ MonoBehaviour:
   _addedNetworkObject: {fileID: 6096980}
   _networkObjectCache: {fileID: 0}
   deathScreenPrefab: {fileID: 7560031058731894917, guid: 53d01a14849ef124082c40d70f7ba916, type: 3}
+  respawnTime: 5
 --- !u!4 &1798724118 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4293850495013322, guid: 685803a48200879419cbf0f982932eb1, type: 3}
@@ -36419,6 +36426,7 @@ GameObject:
   - component: {fileID: 7443408887111934084}
   - component: {fileID: 7443408887111934085}
   - component: {fileID: 7443408887111934086}
+  - component: {fileID: 7443408887111934067}
   m_Layer: 0
   m_Name: NetworkManager
   m_TagString: Untagged
