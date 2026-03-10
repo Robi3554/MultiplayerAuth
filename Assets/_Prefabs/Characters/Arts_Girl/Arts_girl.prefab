@@ -2610,7 +2610,7 @@ MonoBehaviour:
   damageMult: 1
   animator: {fileID: 0}
   _usernameTextOnBillboard: {fileID: 6477073077516724718}
-  _hitAudioSource: {fileID: 0}
+  _hitAudioSource: {fileID: 8589712219374914030}
   _hitAudioClip: {fileID: 8300000, guid: 920fd5498c3b21b4eadefe5f6dc29c0b, type: 3}
   _damageTakenVfx: {fileID: 104809873158851211}
   _killText: {fileID: 6790597797403052028}
