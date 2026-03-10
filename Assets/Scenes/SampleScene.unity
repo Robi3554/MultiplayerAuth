@@ -28576,7 +28576,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerSpawnerCustom
   _componentIndexCache: 255
-  _addedNetworkObject: {fileID: 7443408887111934086}
+  _addedNetworkObject: {fileID: 1683349027}
   _networkObjectCache: {fileID: 0}
   _playerPrefab: {fileID: 7709259699627967468, guid: 7a7c894e7536ad84a9f30d8db34a03cd, type: 3}
   _spawnPoints:
@@ -30344,6 +30344,7 @@ MonoBehaviour:
   _addedNetworkObject: {fileID: 6096980}
   _networkObjectCache: {fileID: 0}
   deathScreenPrefab: {fileID: 7560031058731894917, guid: 53d01a14849ef124082c40d70f7ba916, type: 3}
+  respawnTime: 5
 --- !u!4 &1798724118 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4293850495013322, guid: 685803a48200879419cbf0f982932eb1, type: 3}
@@ -36418,7 +36419,7 @@ GameObject:
   - component: {fileID: 7443408887111934081}
   - component: {fileID: 7443408887111934084}
   - component: {fileID: 7443408887111934085}
-  - component: {fileID: 7443408887111934086}
+  - component: {fileID: 7443408887111934067}
   m_Layer: 0
   m_Name: NetworkManager
   m_TagString: Untagged
@@ -36636,58 +36637,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bbea0b6c51dfa0d47807e6ce0900981e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &7443408887111934086
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7443408887111934076}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 26b716c41e9b56b4baafaf13a523ba2e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: FishNet.Runtime::FishNet.Object.NetworkObject
-  <IsNested>k__BackingField: 0
-  WasActiveDuringEdit: 1
-  WasActiveDuringEdit_Set1: 1
-  <ComponentIndex>k__BackingField: 0
-  <PredictedSpawn>k__BackingField: {fileID: 0}
-  <PredictedOwner>k__BackingField: {fileID: 0}
-  NetworkBehaviours: []
-  InitializedParentNetworkBehaviour: {fileID: 0}
-  InitializedNestedNetworkObjects: []
-  RuntimeParentNetworkBehaviour: {fileID: 0}
-  RuntimeChildNetworkBehaviours: []
-  _isNetworked: 1
-  _isSpawnable: 1
-  _isGlobal: 0
-  _initializeOrder: 0
-  _preventDespawnOnDisconnect: 0
-  _defaultDespawnType: 0
-  NetworkObserver: {fileID: 0}
-  _enablePrediction: 0
-  _predictionType: 0
-  _graphicalObject: {fileID: 0}
-  _detachGraphicalObject: 0
-  _enableStateForwarding: 1
-  _networkTransform: {fileID: 0}
-  _ownerInterpolation: 1
-  _ownerSmoothedProperties: 255
-  _adaptiveInterpolation: 3
-  _spectatorSmoothedProperties: 255
-  _spectatorInterpolation: 2
-  _enableTeleport: 0
-  _teleportThreshold: 1
-  <PrefabId>k__BackingField: 65535
-  <SpawnableCollectionId>k__BackingField: 0
-  <AssetPathHash>k__BackingField: 0
-  <SceneId>k__BackingField: 4227585821
-  SerializedTransformProperties:
-    Position: {x: 0, y: 0, z: 0}
-    Rotation: {x: 0, y: 0, z: 0, w: 0}
-    Scale: {x: 0, y: 0, z: 0}
-    IsValid: 0
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

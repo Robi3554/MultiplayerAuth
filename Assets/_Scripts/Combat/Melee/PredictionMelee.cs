@@ -5,13 +5,14 @@ using FishNet.Object.Synchronizing;
 using NUnit.Framework.Constraints;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.VFX;
 
 public class PredictionMelee : NetworkBehaviour
 {
 	[Header("Weapon Settings")]
 
 	[AllowMutableSyncType]
-	[SerializeField] private SyncVar<float> cooldownTime = new SyncVar<float>(1f);
+	[SerializeField] private SyncVar<float> cooldownTime = new SyncVar<float>(1.25f);
 	[AllowMutableSyncType]
 	[SerializeField] private SyncVar<float> attackRange = new SyncVar<float>(3f);
 	[AllowMutableSyncType]
@@ -24,7 +25,7 @@ public class PredictionMelee : NetworkBehaviour
     [Header("References")]
 	[SerializeField] private Transform slashPoint;
 	[SerializeField] private float coneAngle = 60f;
-	[SerializeField] private ParticleSystem VFX_SLASH;
+	[SerializeField] private VisualEffect VFX_SLASH;
 
 	[Header("Animation")]
 	[SerializeField] private Animator animator;
@@ -59,7 +60,7 @@ public class PredictionMelee : NetworkBehaviour
 			return;
 
 		Debug.Log("Melee: left click pressed");
-		if (context.performed && !_isOnCooldown.Value && !_isAnimating)
+		if (context.performed)
 		{
 			_meleePressed = true;
 		}
@@ -74,7 +75,7 @@ public class PredictionMelee : NetworkBehaviour
 	{
 		_isOnCooldown.Value = false;
 	}
-	private void FixedUpdate()
+	private void Update()
 	{
 		if (!IsOwner)
 		{
@@ -96,10 +97,13 @@ public class PredictionMelee : NetworkBehaviour
 		{
 			Debug.Log("Melee: Animation finished, resetting _isAnimating");
 			_isAnimating = false;
+			StartCooldownServerRpc();
+			_cooldownTimer = 0f;
 		}
 
-		if (IsOwner && _meleePressed && !_isOnCooldown.Value && !_isAnimating && !animator.GetBool(IsSlashingHash))
+		if (_meleePressed && !_isOnCooldown.Value && !_isAnimating && !animator.GetBool(IsSlashingHash))
 		{
+			Slash = true;
 			PerformSlashRequestServerRpc();
 			netAnimator.SetTrigger(SlashTriggerHash);
 			_isAnimating = true; 
@@ -130,10 +134,9 @@ public class PredictionMelee : NetworkBehaviour
 	[ObserversRpc]
 	public void PlayObserverWeaponVfx()
 	{
-		if (VFX_SLASH != null && !VFX_SLASH.isPlaying)
+		if (VFX_SLASH != null)
 		{
-			VFX_SLASH.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
-			VFX_SLASH.Play();
+			VFX_SLASH.SendEvent("OnPlay");
 		}
 	}
 
@@ -168,8 +171,6 @@ public class PredictionMelee : NetworkBehaviour
 				}
 			}
             
-			StartCooldownServerRpc();
-			_cooldownTimer = 0f;
 			_meleePressed = false;
 			Slash = false;
 		}

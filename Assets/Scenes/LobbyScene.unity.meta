@@ -1,5 +1,10 @@
 fileFormatVersion: 2
+<<<<<<<< HEAD:Assets/Characters.meta
+guid: 266523bb5fb46b240a32409b63ff2d41
+folderAsset: yes
+========
 guid: bb66efcd7743b494daae6f51d4879756
+>>>>>>>> main:Assets/Scenes/LobbyScene.unity.meta
 DefaultImporter:
   externalObjects: {}
   userData: 

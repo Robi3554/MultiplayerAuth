@@ -1,5 +1,9 @@
 fileFormatVersion: 2
+<<<<<<<< HEAD:Assets/_Prefabs/Characters/Arts_Girl.meta
+guid: e895570b687442e4cbecf7af4e522691
+========
 guid: a4a5704a36cfd5e48ab8c127387234b0
+>>>>>>>> main:Assets/MAC_SciFiSniperRifle.meta
 folderAsset: yes
 DefaultImporter:
   externalObjects: {}
