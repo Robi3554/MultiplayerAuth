@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using FishNet.Component.Animating;
 using FishNet.Connection;
 using FishNet.Object;
 using TMPro;
@@ -98,11 +99,13 @@ public class PlayerManager : NetworkBehaviour
         if (victimStats.isRespawning.Value)
             return;
 
-        victimStats.AddDeath();
-        victimStats.isRespawning.Value = true;
+        victim.playerObject.GetComponentInChildren<NetworkAnimator>().SetTrigger("Death");
 
         victim.playerObject.layer = deadLayer;
         SetPlayersLayer(victim.playerObject, deadLayer);
+
+        victimStats.AddDeath();
+        victimStats.isRespawning.Value = true;
 
         // ADD KILL TO ATTACKER AND CHECK WIN CONDITION
         if (players.ContainsKey(attackerClientId))
@@ -140,6 +143,8 @@ public class PlayerManager : NetworkBehaviour
 
         player.layer = aliveLayer;
         SetPlayersLayer(player, aliveLayer);
+
+        player.GetComponentInChildren<NetworkAnimator>().SetTrigger("Idle");
 
         player.transform.position = spawnPoints[spawn].position;
         player.transform.rotation = spawnPoints[spawn].rotation;
