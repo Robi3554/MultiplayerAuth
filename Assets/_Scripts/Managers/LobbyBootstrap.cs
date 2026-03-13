@@ -92,6 +92,10 @@ public class LobbyBootstrap : MonoBehaviour
             return;
         }
 
+#if UNITY_WEBGL && !UNITY_EDITOR
+        Debug.LogError("[LobbyBootstrap] WebGL build detected but current transport is Tugboat (UDP). Browsers cannot use UDP sockets. Configure a WebSocket/WebRTC transport for WebGL clients.");
+#endif
+
         string address = string.IsNullOrWhiteSpace(ConnectionInfo.IpAddress) ? "localhost" : ConnectionInfo.IpAddress;
         tugboat.SetPort(defaultPort);
 

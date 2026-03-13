@@ -39,10 +39,15 @@ public class LobbyUI : MonoBehaviour
              "Must NOT be the same GameObject that LobbyUI lives on.")]
     [SerializeField] private GameObject lobbyContentRoot;
 
+    [Header("Connection")]
+    [SerializeField] private float managerWaitTimeoutSeconds = 10f;
+
     private LobbyManager lobbyManager;
     private bool isReady;
     private bool hasJoined;
     private bool lobbyRevealed;
+    private bool connectionProblemReported;
+    private float managerWaitElapsed;
     private int lastPlayerHash = -1;
     private readonly List<GameObject> entryObjects = new();
 
@@ -86,10 +91,41 @@ public class LobbyUI : MonoBehaviour
             lobbyManager = LobbyManager.Instance;
             if (lobbyManager == null)
             {
+                managerWaitElapsed += Time.unscaledDeltaTime;
+
+                if (statusText != null)
+                    statusText.text = "Connecting to lobby server...";
+
+                if (managerWaitElapsed >= managerWaitTimeoutSeconds)
+                {
+                    // If content was hidden during connect, reveal it so users can see status text.
+                    if (lobbyContentRoot != null)
+                        lobbyContentRoot.SetActive(true);
+
+#if UNITY_WEBGL && !UNITY_EDITOR
+                    string errorText = "<color=red>Could not connect.</color> Web builds require a browser-compatible transport (WebSocket/WebRTC).";
+#else
+                    string errorText = "<color=red>Could not connect to lobby server.</color> Check server address/port and server status.";
+#endif
+
+                    if (statusText != null)
+                        statusText.text = errorText;
+                    if (gameModeText != null)
+                        gameModeText.text = "";
+
+                    if (!connectionProblemReported)
+                    {
+                        Debug.LogError("[LobbyUI] Timed out waiting for LobbyManager.Instance. Client likely failed to connect or transport is incompatible.");
+                        connectionProblemReported = true;
+                    }
+                }
+
                 if (Time.frameCount % 120 == 0)
                     Debug.LogWarning($"[LobbyUI] Waiting for LobbyManager.Instance... (frame {Time.frameCount})");
                 return;
             }
+
+            managerWaitElapsed = 0f;
             Debug.Log("[LobbyUI] Found LobbyManager!");
         }
 

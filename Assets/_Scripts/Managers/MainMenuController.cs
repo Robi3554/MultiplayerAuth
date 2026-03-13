@@ -12,6 +12,7 @@ public class MainMenuController : MonoBehaviour
     [SerializeField] private TMP_InputField _addressInput;
     [SerializeField] private TMP_InputField _usernameInput;
     [SerializeField] private string _gameSceneName = "LobbyScene";
+    [SerializeField] private string _defaultAddress = "193.226.15.26";
 
     private void Start()
     {
@@ -62,7 +63,10 @@ public class MainMenuController : MonoBehaviour
     public void OnConnectClicked()
     {
         // Save the IP address to our persistent data holder.
-        ConnectionInfo.IpAddress = "193.226.15.26";
+        string enteredAddress = _addressInput != null ? _addressInput.text.Trim() : string.Empty;
+        ConnectionInfo.IpAddress = string.IsNullOrWhiteSpace(enteredAddress)
+            ? _defaultAddress
+            : enteredAddress;
         ConnectionInfo.username = SanitizeUsername(_usernameInput.text);
 
         // Load the game scene.
