@@ -23,9 +23,6 @@ public class PlayerCameraSetter : NetworkBehaviour
     {
         // Wait until both CinemachineBrain and CinemachineCamera are available in the scene.
         // During FishNet scene transitions they may not exist on the first frame.
-        float timeout = 5f;
-        float elapsed = 0f;
-
         while (m_Brain == null || m_Camera == null)
         {
             if (m_Brain == null)
@@ -35,13 +32,6 @@ public class PlayerCameraSetter : NetworkBehaviour
 
             if (m_Brain != null && m_Camera != null)
                 break;
-
-            elapsed += Time.deltaTime;
-            if (elapsed >= timeout)
-            {
-                Debug.LogWarning("[PlayerCamera] Timed out waiting for Cinemachine objects. Camera will not follow player.");
-                yield break;
-            }
 
             yield return null;
         }

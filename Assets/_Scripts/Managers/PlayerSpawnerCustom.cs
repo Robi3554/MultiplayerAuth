@@ -70,8 +70,10 @@ public class PlayerSpawnerCustom : NetworkBehaviour
         foreach (var kvp in ServerManager.Clients)
         {
             NetworkConnection conn = kvp.Value;
-            // Skip if this client already has spawned objects (player)
-            if (conn.Objects != null && conn.Objects.Count > 0)
+            // Skip only if this client already has a spawned player object.
+            // Connections may own other objects (eg. temporary/lobby/network objects),
+            // which should not prevent spawning their gameplay player.
+            if (HasSpawnedPlayer(conn))
                 continue;
 
             SpawnPlayer(conn);
@@ -84,7 +86,27 @@ public class PlayerSpawnerCustom : NetworkBehaviour
         if (!asServer)
             return;
 
+        if (HasSpawnedPlayer(conn))
+            return;
+
         SpawnPlayer(conn);
+    }
+
+    private static bool HasSpawnedPlayer(NetworkConnection conn)
+    {
+        if (conn == null || conn.Objects == null)
+            return false;
+
+        foreach (NetworkObject nobj in conn.Objects)
+        {
+            if (nobj == null)
+                continue;
+
+            if (nobj.GetComponent<PlayerStats>() != null)
+                return true;
+        }
+
+        return false;
     }
 
     private void SpawnPlayer(NetworkConnection conn)
