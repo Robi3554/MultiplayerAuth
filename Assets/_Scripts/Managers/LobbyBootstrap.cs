@@ -1,17 +1,26 @@
 using UnityEngine;
 using FishNet.Managing;
 using FishNet.Object;
-using FishNet.Transporting.Tugboat;
 using FishNet.Transporting;
+using FishNet.Transporting.Tugboat;
+using FishNet.Transporting.Bayou;
+using FishNet.Transporting.Multipass;
 
 /// <summary>
 /// Handles network connection setup in the Lobby scene.
 /// Spawns the LobbyManager at runtime so FishNet properly replicates it to clients.
+///
+/// Transport strategy:
+///   • Multipass (Tugboat + Bayou): server accepts both UDP and WebSocket clients.
+///   • Standalone Tugboat: desktop-only builds.
+///   • Standalone Bayou:   WebGL-only builds.
+/// WebGL clients automatically select Bayou when Multipass is active.
 /// </summary>
 public class LobbyBootstrap : MonoBehaviour
 {
     [SerializeField] private NetworkManager networkManager;
     [SerializeField] private ushort defaultPort = 7777;
+    [SerializeField] private ushort webSocketPort = 7770;
 
     [Header("Lobby Manager (Prefab)")]
     [Tooltip("Drag the LobbyManager prefab here. It will be spawned on the server at runtime.")]
@@ -83,26 +92,71 @@ public class LobbyBootstrap : MonoBehaviour
         Debug.Log($"[LobbyBootstrap] Client connection state: {args.ConnectionState}");
     }
 
+    /// <summary>
+    /// Configures transports and starts server/client connections based on build target.
+    /// Supports Multipass (Tugboat + Bayou), standalone Tugboat, or standalone Bayou.
+    /// </summary>
     private void InitializeConnection()
     {
+        string address = string.IsNullOrWhiteSpace(ConnectionInfo.IpAddress) ? "localhost" : ConnectionInfo.IpAddress;
+
+        // ── Detect available transports ──
+        Multipass multipass = networkManager.GetComponent<Multipass>();
         Tugboat tugboat = networkManager.GetComponent<Tugboat>();
-        if (tugboat == null)
+        Bayou bayou = networkManager.GetComponent<Bayou>();
+
+        if (multipass != null)
         {
-            Debug.LogError("[LobbyBootstrap] Tugboat transport not found!");
+            // Multipass: configure each child transport independently
+            if (tugboat != null)
+            {
+                tugboat.SetClientAddress(address);
+                tugboat.SetPort(defaultPort);
+            }
+            if (bayou != null)
+            {
+                bayou.SetClientAddress(address);
+                bayou.SetPort(webSocketPort);
+            }
+
+            // Tell Multipass which transport this client should use
+#if UNITY_WEBGL && !UNITY_EDITOR
+            multipass.SetClientTransport<Bayou>();
+            Debug.Log($"[LobbyBootstrap] Multipass → WebGL client using Bayou (ws) on port {webSocketPort}");
+#else
+            if (tugboat != null)
+                multipass.SetClientTransport<Tugboat>();
+            else if (bayou != null)
+                multipass.SetClientTransport<Bayou>();
+            Debug.Log($"[LobbyBootstrap] Multipass → Desktop client using Tugboat on port {defaultPort}");
+#endif
+        }
+        else if (bayou != null)
+        {
+            // Standalone Bayou (WebGL-only builds or WebSocket-only server)
+            bayou.SetClientAddress(address);
+            bayou.SetPort(webSocketPort);
+            Debug.Log($"[LobbyBootstrap] Standalone Bayou, Address={address}, Port={webSocketPort}");
+        }
+        else if (tugboat != null)
+        {
+            // Standalone Tugboat (desktop-only, original behaviour)
+#if UNITY_WEBGL && !UNITY_EDITOR
+            Debug.LogError("[LobbyBootstrap] WebGL build but only Tugboat (UDP) is available. " +
+                           "Add Bayou (+ Multipass) to the NetworkManager for browser support.");
+#endif
+            tugboat.SetClientAddress(address);
+            tugboat.SetPort(defaultPort);
+            Debug.Log($"[LobbyBootstrap] Standalone Tugboat, Address={address}, Port={defaultPort}");
+        }
+        else
+        {
+            Debug.LogError("[LobbyBootstrap] No supported transport found on NetworkManager!");
             return;
         }
 
-#if UNITY_WEBGL && !UNITY_EDITOR
-        Debug.LogError("[LobbyBootstrap] WebGL build detected but current transport is Tugboat (UDP). Browsers cannot use UDP sockets. Configure a WebSocket/WebRTC transport for WebGL clients.");
-#endif
-
-        string address = string.IsNullOrWhiteSpace(ConnectionInfo.IpAddress) ? "localhost" : ConnectionInfo.IpAddress;
-        tugboat.SetPort(defaultPort);
-
-        Debug.Log($"[LobbyBootstrap] Address={address}, Port={defaultPort}");
-
+        // ── Start connections based on build context ──
 #if UNITY_EDITOR
-        tugboat.SetClientAddress(address);
         if (ParrelSync.ClonesManager.IsClone())
         {
             Debug.Log("[LobbyBootstrap] ParrelSync clone → CLIENT.");
@@ -110,7 +164,6 @@ public class LobbyBootstrap : MonoBehaviour
         }
         else
         {
-            // If address is NOT localhost, connect as client only (remote dedicated server)
             if (address != "localhost")
             {
                 Debug.Log($"[LobbyBootstrap] ParrelSync original → CLIENT (remote server: {address}).");
@@ -125,18 +178,17 @@ public class LobbyBootstrap : MonoBehaviour
         }
 
 #elif DEDICATED_SERVER
-        // Bind to all interfaces so external clients can connect
-        tugboat.SetServerBindAddress("0.0.0.0", IPAddressType.IPv4);
-        Debug.Log("[LobbyBootstrap] Starting Dedicated Server on 0.0.0.0:" + defaultPort);
+        // Bind Tugboat to all interfaces; Bayou's SetServerBindAddress is a no-op (binds to all automatically)
+        if (tugboat != null)
+            tugboat.SetServerBindAddress("0.0.0.0", IPAddressType.IPv4);
+        Debug.Log($"[LobbyBootstrap] Starting Dedicated Server (UDP:{defaultPort} WS:{webSocketPort})");
         networkManager.ServerManager.StartConnection();
 
 #elif CLIENT
-        tugboat.SetClientAddress(address);
-        Debug.Log($"[LobbyBootstrap] Starting Client → {address}:{defaultPort}");
+        Debug.Log($"[LobbyBootstrap] Starting Client → {address}");
         networkManager.ClientManager.StartConnection();
 
 #else
-        tugboat.SetClientAddress(address);
         if (address == "localhost")
             networkManager.ServerManager.StartConnection();
         networkManager.ClientManager.StartConnection();

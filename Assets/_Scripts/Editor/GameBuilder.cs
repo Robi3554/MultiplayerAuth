@@ -88,6 +88,34 @@ public class GameBuilder
     }
 
     // ═════════════════════════════════════════════════════════════
+    //  WEBGL CLIENT BUILDS
+    // ═════════════════════════════════════════════════════════════
+
+    [MenuItem("Build/Build WebGL Client (Development)")]
+    public static void BuildWebGLDev()
+    {
+        BuildPlayerOptions options = new BuildPlayerOptions();
+        options.scenes = ClientScenes;
+        options.locationPathName = "Builds/WebGL_Dev";
+        options.target = BuildTarget.WebGL;
+        options.options = BuildOptions.Development;
+
+        RunBuild(options, "WebGL Client (Dev)");
+    }
+
+    [MenuItem("Build/Build WebGL Client (Release)")]
+    public static void BuildWebGLRelease()
+    {
+        BuildPlayerOptions options = new BuildPlayerOptions();
+        options.scenes = ClientScenes;
+        options.locationPathName = "Builds/WebGL_Release";
+        options.target = BuildTarget.WebGL;
+        options.options = BuildOptions.None;
+
+        RunBuild(options, "WebGL Client (Release)");
+    }
+
+    // ═════════════════════════════════════════════════════════════
     //  SHARED
     // ═════════════════════════════════════════════════════════════
 
