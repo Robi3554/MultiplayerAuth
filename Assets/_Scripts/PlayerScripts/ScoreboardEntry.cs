@@ -7,8 +7,18 @@ public class ScoreboardEntry : MonoBehaviour
     [SerializeField] private TMP_Text killsText;
     [SerializeField] private TMP_Text deathsText;
     [SerializeField] private TMP_Text healthText;
+
+    private RectTransform rt;
     
     private PlayerStats playerStats;
+
+    void Start()
+    {
+        rt = GetComponent<RectTransform>();
+        Vector2 size = rt.sizeDelta;
+        size.x = 1565;
+        rt.sizeDelta = size;
+    }
 
     public void Initialize(PlayerStats stats)
     {
