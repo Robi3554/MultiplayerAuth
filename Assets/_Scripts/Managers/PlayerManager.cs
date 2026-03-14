@@ -161,7 +161,7 @@ public class PlayerManager : NetworkBehaviour
         }
     }
 
-    [ObserversRpc]
+    //[ObserversRpc]
     void SetPlayersLayer(GameObject player, int layer) => player.layer = layer;
 
     // NEW METHOD: Called by GameModeManager to reset all players
