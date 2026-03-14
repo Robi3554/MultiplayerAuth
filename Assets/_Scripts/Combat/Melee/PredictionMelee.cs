@@ -134,9 +134,11 @@ public class PredictionMelee : NetworkBehaviour
 	[ObserversRpc]
 	public void PlayObserverWeaponVfx()
 	{
+		Debug.Log("trying to play vfx");
 		if (VFX_SLASH != null)
 		{
-			VFX_SLASH.SendEvent("OnPlay");
+			Debug.Log("playing vfx");
+			VFX_SLASH.Play();
 		}
 	}
 
