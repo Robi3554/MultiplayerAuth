@@ -31,7 +31,22 @@ public class PlayerNetworkInitializer : NetworkBehaviour
         base.OnStartClient();
 
         if (!IsOwner)
+        {
             playerHUD.SetActive(false);
+            return;
+        }
+
+        // Configure mobile input mode for the local player
+        var movement = GetComponent<PredictionMoving>();
+        if (MobileInputManager.Instance != null)
+        {
+            MobileInputManager.Instance.ConfigureLocalPlayer(movement);
+        }
+        else if (Application.isMobilePlatform)
+        {
+            // Fallback: MobileInputManager not in scene, set joystick mode directly
+            movement.SetInputMode(true);
+        }
     }
 
     // Called by RaycastShoot when a hit happens
@@ -90,7 +105,7 @@ public class PlayerNetworkInitializer : NetworkBehaviour
     {
         PlayProjectileWeaponSoundObserversRpc();
     }
-    
+
     [ObserversRpc]
     private void PlayProjectileWeaponSoundObserversRpc()
     {
@@ -98,7 +113,7 @@ public class PlayerNetworkInitializer : NetworkBehaviour
         if (weapon != null)
             weapon.PlaySound();
     }
-    
+
     [ServerRpc]
     public void NotifyMuzzleFlashServer()
     {
@@ -112,13 +127,13 @@ public class PlayerNetworkInitializer : NetworkBehaviour
         if (weapon != null)
             weapon.PlayMuzzleFlash();
     }
-    
+
     [ServerRpc]
     public void ControlFootstepSoundsServer(PredictionMoving playerMovement, float speed)
     {
         playerMovement.ControlFootstepSounds(speed);
     }
-    
+
     [ServerRpc]
     public void PlayDashSoundServer(PredictionMoving playerMovement)
     {

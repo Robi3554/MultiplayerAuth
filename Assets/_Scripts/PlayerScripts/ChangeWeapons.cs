@@ -11,7 +11,7 @@ public class ChangeWeapons : NetworkBehaviour
 {
     [SerializeField] private List<GameObject> weapons = new List<GameObject>();
     [SerializeField] private RigBuilder modelRigBuilder;
-    
+
     public static event Action<Sprite> OnLocalWeaponChanged;
 
     private readonly SyncVar<int> _currentWeaponIndex = new SyncVar<int>(1);
@@ -22,14 +22,14 @@ public class ChangeWeapons : NetworkBehaviour
     void Start()
     {
         GetWeapons(gameObject);
-        
+
         if (IsClientStarted)
         {
             _currentWeaponIndex.OnChange += SwitchWeapon;
             SwitchWeapon(-1, _currentWeaponIndex.Value, IsServerOnlyStarted);
         }
     }
-    
+
     public override void OnStartClient()
     {
         base.OnStartClient();
@@ -51,7 +51,7 @@ public class ChangeWeapons : NetworkBehaviour
         {
             w.SetActive(false);
         }
-        
+
         if(weapons.Count > 0 && _currentWeaponIndex.Value < weapons.Count)
              weapons[_currentWeaponIndex.Value].SetActive(true);
     }
@@ -63,34 +63,44 @@ public class ChangeWeapons : NetworkBehaviour
 
         var keyName = context.control.name;
         var scrollValue = context.ReadValue<float>();
-        
+
         if (int.TryParse(keyName, out int weaponNumber))
         {
-            _newWeaponIndex = weaponNumber - 1; 
+            _newWeaponIndex = weaponNumber - 1;
+        }
+        else if (keyName == "left")
+        {
+            _newWeaponIndex--;
+            if (_newWeaponIndex < 0) _newWeaponIndex = weapons.Count - 1;
+        }
+        else if (keyName == "right")
+        {
+            _newWeaponIndex++;
+            if (_newWeaponIndex > weapons.Count - 1) _newWeaponIndex = 0;
         }
         else
         {
             if (scrollValue > 0f) _newWeaponIndex++;
             else if (scrollValue < 0f) _newWeaponIndex--;
-            
+
             if (_newWeaponIndex > weapons.Count - 1) _newWeaponIndex = 0;
             else if (_newWeaponIndex < 0) _newWeaponIndex = weapons.Count - 1;
         }
-        
+
         _newWeaponIndex = Mathf.Clamp(_newWeaponIndex, 0, weapons.Count - 1);
 
         if (_newWeaponIndex == _currentWeaponIndex.Value)
             return;
-        
+
         OnWeaponChangeServer(_newWeaponIndex);
     }
-    
+
     [ServerRpc]
     private void OnWeaponChangeServer(int index)
     {
         _currentWeaponIndex.Value = index;
     }
-    
+
     private void SwitchWeapon(int prev, int newActiveIndex, bool asServer)
     {
         if (!canChange)
@@ -101,7 +111,7 @@ public class ChangeWeapons : NetworkBehaviour
 
         SwitchActiveWeaponPrefab(newActiveIndex);
         UpdateRigLayers(newActiveIndex);
-        
+
         if (IsOwner)
         {
             if (weapons[newActiveIndex].TryGetComponent<WeaponInfo>(out var info))
@@ -110,7 +120,7 @@ public class ChangeWeapons : NetworkBehaviour
             }
             else
             {
-                OnLocalWeaponChanged?.Invoke(null); 
+                OnLocalWeaponChanged?.Invoke(null);
             }
         }
     }
@@ -122,18 +132,18 @@ public class ChangeWeapons : NetworkBehaviour
             weapons[i].SetActive(i == activeWeaponIndex);
         }
     }
-    
+
     private void UpdateRigLayers(int activeWeaponIndex)
     {
         if (activeWeaponIndex < 0 || activeWeaponIndex >= weapons.Count) return;
 
         var currentWeaponRigName = "RigLayer_" + weapons[activeWeaponIndex].name;
-        
+
         foreach (var layer in modelRigBuilder.layers.Where(layer => layer.rig))
         {
             layer.active = layer.rig.name.Equals(currentWeaponRigName);
         }
-        
+
         modelRigBuilder.Build();
     }
 }
