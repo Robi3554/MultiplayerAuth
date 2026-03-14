@@ -305,11 +305,11 @@ public class PlayerStats : NetworkBehaviour
     #region Damage Mult
     public void ChangeMult(int multiplier)
     {
-        ServerChangeMult(multiplier);
+        ObserverChangeMult(multiplier);
     }
 
-    [ServerRpc]
-    private void ServerChangeMult(int multiplier)
+    [ObserversRpc]
+    private void ObserverChangeMult(int multiplier)
     {
         StartCoroutine(ChangeMultCo(multiplier));
     }
