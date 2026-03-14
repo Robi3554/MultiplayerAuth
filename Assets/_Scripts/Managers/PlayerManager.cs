@@ -130,6 +130,8 @@ public class PlayerManager : NetworkBehaviour
         int spawnIndex = Random.Range(0, spawnPoints.Count);
         RespawnPlayer(victim.connection, victim.playerObject, spawnIndex);
         ReloadPlayerGuns(victim.connection, victim.playerObject);
+        victim.playerObject.layer = aliveLayer;
+        SetPlayersLayer(victim.playerObject, aliveLayer);
 
         victimStats.isRespawning.Value = false;
     }
@@ -140,9 +142,6 @@ public class PlayerManager : NetworkBehaviour
         Rigidbody rb = player.GetComponent<Rigidbody>();
         if (rb)
             rb.linearVelocity = Vector3.zero;
-
-        player.layer = aliveLayer;
-        SetPlayersLayer(player, aliveLayer);
 
         player.GetComponentInChildren<NetworkAnimator>().SetTrigger("Idle");
 
@@ -161,7 +160,7 @@ public class PlayerManager : NetworkBehaviour
         }
     }
 
-    //[ObserversRpc]
+    [ObserversRpc]
     void SetPlayersLayer(GameObject player, int layer) => player.layer = layer;
 
     // NEW METHOD: Called by GameModeManager to reset all players
