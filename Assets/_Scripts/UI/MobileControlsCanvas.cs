@@ -181,9 +181,9 @@ public class MobileControlsCanvas : MonoBehaviour
         text.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
 
         // Unity Button component — wired to PauseMenuManager.TogglePause()
-        var button = rt.gameObject.AddComponent<Button>();
+        var button = rt.gameObject.AddComponent<OnScreenButton>();
         if (pauseMenuManager != null)
-            button.onClick.AddListener(pauseMenuManager.TogglePause);
+            button.controlPath = "<Gamepad>/start";
     }
 
     // ─────────────────────── Helpers ───────────────────────
