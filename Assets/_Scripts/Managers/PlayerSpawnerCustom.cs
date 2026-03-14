@@ -151,8 +151,6 @@ public class PlayerSpawnerCustom : NetworkBehaviour
         {
             base.SceneManager.AddOwnerToDefaultScene(playerInstance);
         }
-
-        Debug.Log($"[Spawner] Spawned player ClientId={conn.ClientId}, Team={playerTeam}, Mode={LobbyData.ResolvedGameMode}");
     }
 
     private Transform GetSpawnPoint(Team team)
@@ -175,7 +173,6 @@ public class PlayerSpawnerCustom : NetworkBehaviour
 
         if (points == null || points.Count == 0)
         {
-            Debug.LogWarning("[Spawner] No spawn points available! Using origin.");
             return transform;
         }
 

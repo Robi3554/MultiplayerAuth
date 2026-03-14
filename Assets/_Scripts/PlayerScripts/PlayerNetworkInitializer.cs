@@ -12,7 +12,6 @@ public class PlayerNetworkInitializer : NetworkBehaviour
 
         if (PlayerManager.Instance == null)
         {
-            Debug.LogWarning("[PlayerNetworkInitializer] PlayerManager not found — player spawned outside game scene?");
             return;
         }
 
@@ -45,7 +44,6 @@ public class PlayerNetworkInitializer : NetworkBehaviour
         int targetId = (int)targetPlayer.Owner.ClientId;
         int attackerId = (int)Owner.ClientId;
 
-        Debug.Log($"[Server] Player {attackerId} hit Player {targetId} for {damage} damage.");
         PlayerManager.Instance.DamagePlayer(targetId, damage, attackerId);
     }
 
@@ -80,7 +78,6 @@ public class PlayerNetworkInitializer : NetworkBehaviour
         ServerManager.Spawn(go);
 
         int attackerId = (int)Owner.ClientId;
-        Debug.Log("Attacker ID: " +  attackerId);
 
         if (go.TryGetComponent(out ProjectileScript p))
         {

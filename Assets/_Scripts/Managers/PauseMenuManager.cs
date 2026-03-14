@@ -42,7 +42,6 @@ public class PauseMenuManager : MonoBehaviour
             {
                 _playerMovement = player;
                 _playerInput = player.GetComponent<PlayerInput>();
-                Debug.Log("Local player found for pause menu!");
                 break;
             }
         }

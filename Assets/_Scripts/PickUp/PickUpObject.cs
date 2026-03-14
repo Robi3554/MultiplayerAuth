@@ -12,7 +12,6 @@ public class PickUpObject : NetworkBehaviour
     }
     private void OnTriggerStay(Collider other)
     {
-        Debug.Log($"PickupObject: IsServerInitialized:{IsServerInitialized}");
         TryPickUp(other);
     }
 
@@ -29,8 +28,6 @@ public class PickUpObject : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     private void RequestPickupServerRpc(GameObject player)
     {
-        Debug.Log("PickupObject: RequestPickupServerRpc");
-
         // Don't allow pickup while respawning
         PlayerStats playerStats = player.GetComponent<PlayerStats>();
         if (playerStats != null && playerStats.isRespawning.Value)
@@ -49,12 +46,11 @@ public class PickUpObject : NetworkBehaviour
     }
     protected virtual void ItemPickUp(Collider other)
     {
-        Debug.Log("PickupObject: Default item pickup does nothing");
+
     }
     
     protected void ResetPickupState()
     {
-        Debug.Log("PickupObject: ResetPickupState");
         itemPickedUp = false;
     }
 }

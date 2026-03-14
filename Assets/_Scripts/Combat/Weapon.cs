@@ -186,7 +186,6 @@ public abstract class Weapon : MonoBehaviour
 
     public virtual void OnDeathReload()
     {
-        Debug.Log("Start reload after death");
         currentAmmo = maxAmmo;
     }
 

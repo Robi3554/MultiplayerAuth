@@ -217,7 +217,6 @@ public class PredictionMoving : NetworkBehaviour
     public void ToggleInputMode()
     {
         isJoystick = !isJoystick;
-        Debug.Log($"[PredictionMoving] Input mode toggled to: {(isJoystick ? "Joystick" : "Mouse & Keyboard")}");
     }
     
     public void SetInputMode(bool useJoystick)

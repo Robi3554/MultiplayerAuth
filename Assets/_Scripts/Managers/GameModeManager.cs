@@ -42,15 +42,11 @@ public class GameModeManager : NetworkBehaviour
         
         if (gameOverPanel != null)
             gameOverPanel.SetActive(false);
-
-        // Subscribe to winner announcement
-        winnerName.OnChange += OnWinnerChanged;
     }
 
     public override void OnStopClient()
     {
         base.OnStopClient();
-        winnerName.OnChange -= OnWinnerChanged;
     }
 
     /// <summary>
@@ -61,13 +57,10 @@ public class GameModeManager : NetworkBehaviour
     {
         if (!isGameActive.Value) return;
 
-        Debug.Log($"[GameMode] {player.username.Value} now has {player.kills.Value} kills");
-
         if (LobbyData.ResolvedGameMode == GameMode.TeamDeathmatch)
         {
             // TDM: check if the player's team total kills reached the limit
             int teamKills = GetTeamKills(player.team.Value);
-            Debug.Log($"[GameMode] Team {player.team.Value} total kills: {teamKills}/{killsToWin}");
             if (teamKills >= killsToWin)
             {
                 TeamWon(player.team.Value);
@@ -102,7 +95,6 @@ public class GameModeManager : NetworkBehaviour
         string teamName = winningTeam == Team.Rebels ? "Rebels" : "AI";
         winnerName.Value = $"Team {teamName}";
 
-        Debug.Log($"[GameMode] {teamName} won the game!");
         RpcAnnounceWinner($"Team {teamName}");
         StartCoroutine(RestartCountdown());
     }
@@ -112,8 +104,6 @@ public class GameModeManager : NetworkBehaviour
     {
         isGameActive.Value = false;
         winnerName.Value = winner.username.Value;
-
-        Debug.Log($"[GameMode] {winner.username.Value} won the game!");
 
         // Announce winner to all clients
         RpcAnnounceWinner(winner.username.Value);
@@ -125,7 +115,6 @@ public class GameModeManager : NetworkBehaviour
     [ObserversRpc]
     private void RpcAnnounceWinner(string playerName)
     {
-        Debug.Log($"[GameMode] Winner announced: {playerName}");
         
         if (gameOverPanel != null)
         {
@@ -159,16 +148,11 @@ public class GameModeManager : NetworkBehaviour
     [Server]
     private void RestartGame()
     {
-        Debug.Log("[GameMode] Restarting game...");
 
         // Use PlayerManager to reset all players
         if (PlayerManager.Instance != null)
         {
             PlayerManager.Instance.ResetAllPlayers();
-        }
-        else
-        {
-            Debug.LogError("[GameMode] PlayerManager.Instance is null!");
         }
 
         // Reactivate game
@@ -184,11 +168,6 @@ public class GameModeManager : NetworkBehaviour
     {
         if (gameOverPanel != null)
             gameOverPanel.SetActive(false);
-    }
-
-    private void OnWinnerChanged(string previous, string current, bool asServer)
-    {
-        Debug.Log($"[GameMode] Winner changed: {current}");
     }
 
     // Public getter for game state

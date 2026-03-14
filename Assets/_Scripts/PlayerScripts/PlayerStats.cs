@@ -174,13 +174,11 @@ public class PlayerStats : NetworkBehaviour
     {
         if ((health.Value + healAmount) >= 100)
         {
-            Debug.Log("Player healed to 100Hp");
             health.Value = 100;
         }
         else
         {
             health.Value += healAmount;
-            Debug.Log($"Player healed to {health.Value}");
         }
     }
 
