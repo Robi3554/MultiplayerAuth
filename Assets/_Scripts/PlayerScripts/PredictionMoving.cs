@@ -70,8 +70,6 @@ public class PredictionMoving : NetworkBehaviour
     private void Start()
     {
         _playerNet = GetComponentInParent<PlayerNetworkInitializer>();
-        characterMeshes = GetComponentsInChildren<SkinnedMeshRenderer>();
-        InitializePool();
     }
 
     public override void OnStartClient()
@@ -79,6 +77,9 @@ public class PredictionMoving : NetworkBehaviour
         base.OnStartClient();
         if (IsOwner)
             _camera = Camera.main; // May be null during scene transition; Update will retry
+
+        characterMeshes = GetComponentsInChildren<SkinnedMeshRenderer>();
+        InitializePool();
     }
     
     // new input system
@@ -194,6 +195,9 @@ public class PredictionMoving : NetworkBehaviour
     {
         if (!IsOwner || !_playerInput.currentActionMap.name.Equals("Gameplay")) return;
 
+        if (_playerStats != null && _playerStats.isRespawning.Value)
+            return;
+
         // Retry Camera.main if it wasn't ready during OnStartClient (FishNet scene transition)
         if (_camera == null)
         {
@@ -257,6 +261,8 @@ public class PredictionMoving : NetworkBehaviour
 
         StartCoroutine(SpawnAfterImages());
 
+        PlayDashAfterImageServer();
+
         yield return new WaitForSeconds(dashDuration);
 
         _rb.linearDamping = originalDamping;
@@ -267,17 +273,31 @@ public class PredictionMoving : NetworkBehaviour
         _canDash = true;
     }
 
+    #region AfterImageGeneration
+    [ServerRpc(RequireOwnership = false)]
+    private void PlayDashAfterImageServer()
+    {
+        PlayDashAfterImageObservers();
+    }
+
+    [ObserversRpc(ExcludeOwner = true)]
+    private void PlayDashAfterImageObservers()
+    {
+        StartCoroutine(SpawnAfterImages());
+    }
+
     private IEnumerator SpawnAfterImages()
     {
-        while (_isDashing)
+        float timer = 0f;
+
+        while (timer < dashDuration)
         {
             CreateAfterImage();
-
+            timer += refreshRate;
             yield return new WaitForSeconds(refreshRate);
         }
     }
 
-    #region AfterImageGeneration
     private void CreateAfterImage()
     {
         if (afterImagePool.Count == 0)

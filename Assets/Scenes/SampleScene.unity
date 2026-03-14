@@ -15346,6 +15346,12 @@ MonoBehaviour:
   spawnPoints:
   - {fileID: 374221881}
   - {fileID: 179873250}
+  deadLayer:
+    serializedVersion: 2
+    m_Bits: 2048
+  aliveLayer:
+    serializedVersion: 2
+    m_Bits: 64
 --- !u!4 &767506192
 Transform:
   m_ObjectHideFlags: 0
@@ -40201,6 +40207,7 @@ GameObject:
   - component: {fileID: 7443408887111934081}
   - component: {fileID: 7443408887111934084}
   - component: {fileID: 7443408887111934085}
+  - component: {fileID: 7443408887111934086}
   - component: {fileID: 7443408887111934067}
   m_Layer: 0
   m_Name: NetworkManager
