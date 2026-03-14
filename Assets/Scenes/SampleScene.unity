@@ -24295,15 +24295,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 30315a5b7f2dccb40a951c666c87c224, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MobileControlsCanvas
-  pauseMenuManager: {fileID: 0}
   joystickRadius: 100
-  attackButtonSize: 120
-  actionButtonSize: 80
+  primaryBtnSize: 130
+  secondaryBtnSize: 90
   weaponArrowSize: 60
-  pauseButtonSize: 50
-  buttonColor: {r: 1, g: 1, b: 1, a: 0.45}
-  joystickBgColor: {r: 0, g: 0, b: 0, a: 0.25}
-  joystickHandleColor: {r: 1, g: 1, b: 1, a: 0.6}
+  topBarBtnSize: 55
+  primaryColor: {r: 0.9, g: 0.25, b: 0.2, a: 0.7}
+  secondaryColor: {r: 0.2, g: 0.55, b: 0.85, a: 0.55}
+  weaponColor: {r: 0.95, g: 0.75, b: 0.15, a: 0.55}
+  topBarColor: {r: 0.15, g: 0.15, b: 0.15, a: 0.6}
+  joystickBg: {r: 1, g: 1, b: 1, a: 0.1}
+  joystickKnob: {r: 1, g: 1, b: 1, a: 0.5}
+  labelColor: {r: 1, g: 1, b: 1, a: 1}
 --- !u!4 &1227930447
 Transform:
   m_ObjectHideFlags: 0

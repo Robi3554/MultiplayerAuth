@@ -604,6 +604,17 @@
                 },
                 {
                     "name": "",
+                    "id": "ebab7eef-23fa-4bb2-ab82-798cdc5dc996",
+                    "path": "<AndroidGamepad>/start",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Pause",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "c3d4e5f6-0002-4000-8000-000000000020",
                     "path": "<Keyboard>/tab",
                     "interactions": "",
@@ -617,6 +628,17 @@
                     "name": "",
                     "id": "c3d4e5f6-0003-4000-8000-000000000030",
                     "path": "<Gamepad>/select",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Scoreboard",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "63c5d37b-60f0-46d8-b1ca-c94ff83a305c",
+                    "path": "<AndroidGamepad>/select",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
