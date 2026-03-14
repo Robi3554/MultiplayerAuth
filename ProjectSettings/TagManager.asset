@@ -10,7 +10,6 @@ TagManager:
   - PatrolPoint
   - Projectile
   - PlayerAttack
-  - vfx
   layers:
   - Default
   - TransparentFX
