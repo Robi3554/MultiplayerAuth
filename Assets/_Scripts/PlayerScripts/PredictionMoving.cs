@@ -259,7 +259,7 @@ public class PredictionMoving : NetworkBehaviour
 
         _rb.AddForce(dashDir * dashForce, ForceMode.VelocityChange);
 
-        StartCoroutine(SpawnAfterImages());
+        //StartCoroutine(SpawnAfterImages());
 
         PlayDashAfterImageServer();
 
