@@ -68,13 +68,19 @@ public class LobbyBootstrap : MonoBehaviour
         }
     }
 
+    private bool _lobbyManagerSpawned;
+
     private void OnServerConnectionState(ServerConnectionStateArgs args)
     {
         if (args.ConnectionState == LocalConnectionState.Started)
         {
-            // Server just started — spawn the LobbyManager
+            // With Multipass this event fires once per transport — only spawn once.
+            if (_lobbyManagerSpawned)
+                return;
+
             if (lobbyManagerPrefab != null)
             {
+                _lobbyManagerSpawned = true;
                 NetworkObject instance = Instantiate(lobbyManagerPrefab);
                 instance.SetIsGlobal(true);
                 networkManager.ServerManager.Spawn(instance);
