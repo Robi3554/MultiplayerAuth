@@ -375,6 +375,17 @@
                 },
                 {
                     "name": "",
+                    "id": "a1b2c3d4-0002-4000-8000-000000000002",
+                    "path": "<XInputController>/dpad/right",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "ChangeWeaponSlot",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "f4a17449-7f27-4af7-bca3-8a81c74e83a4",
                     "path": "<Keyboard>/f1",
                     "interactions": "",
@@ -421,6 +432,17 @@
                     "name": "",
                     "id": "5eb64ab2-29a1-4560-ad34-2d73994ef50f",
                     "path": "<Keyboard>/r",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Reload",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "a1b2c3d4-0001-4000-8000-000000000001",
+                    "path": "<Gamepad>/buttonNorth",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
