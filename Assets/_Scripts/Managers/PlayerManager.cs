@@ -99,7 +99,7 @@ public class PlayerManager : NetworkBehaviour
         if (victimStats.isRespawning.Value)
             return;
 
-        victim.playerObject.GetComponentInChildren<NetworkAnimator>().SetTrigger("Death");
+        SetPlayerAnimation(victim.playerObject, "Death");
 
         victim.playerObject.layer = deadLayer;
         SetPlayersLayer(victim.playerObject, deadLayer);
@@ -130,8 +130,11 @@ public class PlayerManager : NetworkBehaviour
         int spawnIndex = Random.Range(0, spawnPoints.Count);
         RespawnPlayer(victim.connection, victim.playerObject, spawnIndex);
         ReloadPlayerGuns(victim.connection, victim.playerObject);
+
         victim.playerObject.layer = aliveLayer;
         SetPlayersLayer(victim.playerObject, aliveLayer);
+
+        SetPlayerAnimation(victim.playerObject, "Idle");
 
         victimStats.isRespawning.Value = false;
     }
@@ -142,8 +145,6 @@ public class PlayerManager : NetworkBehaviour
         Rigidbody rb = player.GetComponent<Rigidbody>();
         if (rb)
             rb.linearVelocity = Vector3.zero;
-
-        player.GetComponentInChildren<NetworkAnimator>().SetTrigger("Idle");
 
         player.transform.position = spawnPoints[spawn].position;
         player.transform.rotation = spawnPoints[spawn].rotation;
@@ -162,6 +163,12 @@ public class PlayerManager : NetworkBehaviour
 
     [ObserversRpc]
     void SetPlayersLayer(GameObject player, int layer) => player.layer = layer;
+
+    [ObserversRpc]
+    void SetPlayerAnimation(GameObject player, string trigger)
+    {
+        player.GetComponentInChildren<NetworkAnimator>().SetTrigger(trigger);
+    }
 
     // NEW METHOD: Called by GameModeManager to reset all players
     [Server]
