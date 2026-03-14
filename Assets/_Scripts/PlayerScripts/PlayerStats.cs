@@ -39,6 +39,7 @@ public class PlayerStats : NetworkBehaviour
     private Slider healthSlider;
 
     private bool isHeadBig;
+    private bool isDamageAmp;
 
     private static readonly Color RebelsColor = new Color(0.9f, 0.3f, 0.3f);
     private static readonly Color AIColor = new Color(0.3f, 0.5f, 0.9f);
@@ -315,12 +316,16 @@ public class PlayerStats : NetworkBehaviour
 
     private IEnumerator ChangeMultCo(int multiplier)
     {
-        if (isHeadBig)
+        if (!isDamageAmp)
         {
             int oldMultiplier = damageMult;
             damageMult = multiplier;
+            
+            isDamageAmp = true;
 
             yield return new WaitForSeconds(10f);
+            
+            isDamageAmp = false;
 
             damageMult = oldMultiplier;
         }
