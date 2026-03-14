@@ -11,7 +11,7 @@ using UnityEngine.UI;
 public class MobileControlsCanvas : MonoBehaviour
 {
     [Header("Joystick")]
-    [SerializeField] private float joystickRadius = 110f;
+    [SerializeField] private float joystickRadius = 150f;
 
     [Header("Button Sizes")]
     [SerializeField] private float primaryBtnSize = 130f;   // Attack
@@ -52,40 +52,39 @@ public class MobileControlsCanvas : MonoBehaviour
         // ── Left : Joystick ──
         BuildJoystick();
 
-        // ── Right : Action cluster ──
-        //    Attack (large, center-right), others arranged around it
+        // ── Right : Action cluster (center-right, raised toward middle) ──
         BuildOnScreenButton("AttackBtn",  "\u2022",  primaryBtnSize,
-            new Vector2(-170, 200), "<Gamepad>/rightShoulder",
+            new Vector2(-180, 340), "<Gamepad>/rightShoulder",
             primaryColor, TextAnchor.LowerRight);
 
         BuildOnScreenButton("JumpBtn",   "JMP",  secondaryBtnSize,
-            new Vector2(-300, 130),  "<Gamepad>/buttonSouth",
+            new Vector2(-320, 260),  "<Gamepad>/buttonSouth",
             secondaryColor, TextAnchor.LowerRight);
 
         BuildOnScreenButton("ReloadBtn", "RLD",  secondaryBtnSize,
-            new Vector2(-300, 260), "<Gamepad>/buttonNorth",
+            new Vector2(-320, 410), "<Gamepad>/buttonNorth",
             secondaryColor, TextAnchor.LowerRight);
 
         BuildOnScreenButton("DashBtn",   "DSH",  secondaryBtnSize,
-            new Vector2(-80, 95),   "<Gamepad>/rightStickPress",
+            new Vector2(-80, 220),   "<Gamepad>/rightStickPress",
             secondaryColor, TextAnchor.LowerRight);
 
-        // ── Weapon prev / next (top-right, below top bar) ──
+        // ── Weapon prev / next (next to action cluster) ──
         BuildOnScreenButton("WpnPrev", "\u25C0", weaponArrowSize,
-            new Vector2(-150, -90), "<Gamepad>/dpad/left",
-            weaponColor, TextAnchor.UpperRight);
+            new Vector2(-420, 310), "<Gamepad>/dpad/left",
+            weaponColor, TextAnchor.LowerRight);
 
         BuildOnScreenButton("WpnNext", "\u25B6", weaponArrowSize,
-            new Vector2(-60, -90),  "<Gamepad>/dpad/right",
-            weaponColor, TextAnchor.UpperRight);
+            new Vector2(-420, 390),  "<Gamepad>/dpad/right",
+            weaponColor, TextAnchor.LowerRight);
 
-        // ── Top bar : Pause + Scoreboard ──
+        // ── Pause + Scoreboard (upper-right, lowered and shifted left) ──
         BuildOnScreenButton("PauseBtn", "\u2759\u2759", topBarBtnSize,
-            new Vector2(-20, -20), "<Gamepad>/start",
+            new Vector2(-80, -80), "<Gamepad>/start",
             topBarColor, TextAnchor.UpperRight);
 
         BuildOnScreenButton("ScoreBtn", "SCR", topBarBtnSize,
-            new Vector2(-85, -20), "<Gamepad>/select",
+            new Vector2(-150, -80), "<Gamepad>/select",
             topBarColor, TextAnchor.UpperRight);
     }
 
@@ -97,7 +96,7 @@ public class MobileControlsCanvas : MonoBehaviour
         // Outer ring (background)
         var bg = MakeRect("JoystickBG", transform, diameter, diameter);
         Anchor(bg, TextAnchor.LowerLeft);
-        bg.anchoredPosition = new Vector2(190, 190);
+        bg.anchoredPosition = new Vector2(220, 340);
         var bgImg = bg.gameObject.AddComponent<Image>();
         bgImg.color = joystickBg;
         bgImg.raycastTarget = true;
