@@ -4,50 +4,42 @@ using UnityEngine.InputSystem.OnScreen;
 using UnityEngine.UI;
 
 /// <summary>
-/// Programmatically creates the mobile controls UI at runtime:
-/// - Virtual joystick (left)        → simulates <Gamepad>/leftStick  → Move action
-/// - Attack button (right, large)   → simulates <Gamepad>/rightShoulder → Damage action
-/// - Jump button                    → simulates <Gamepad>/buttonSouth   → Jump action
-/// - Reload button                  → simulates <Gamepad>/buttonNorth   → Reload action
-/// - Dash button                    → simulates <Gamepad>/rightStickPress → Sprint/Dash action
-/// - Weapon prev / next arrows      → simulates dpad left/right         → ChangeWeaponSlot action
-/// - Pause button (top-right)       → calls PauseMenuManager.TogglePause()
-///
-/// Attach this MonoBehaviour to an empty GameObject in the game scene.
-/// The canvas is hidden by default; MobileInputManager activates it on mobile.
+/// Builds a modern mobile controls overlay at runtime.
+/// All action buttons use OnScreenButton to simulate gamepad inputs,
+/// which flow through the existing PlayerInput/InputSystem bindings.
 /// </summary>
 public class MobileControlsCanvas : MonoBehaviour
 {
-    [Header("References")]
-    [SerializeField] private PauseMenuManager pauseMenuManager;
-
-    [Header("Joystick Settings")]
-    [SerializeField] private float joystickRadius = 100f;
+    [Header("Joystick")]
+    [SerializeField] private float joystickRadius = 110f;
 
     [Header("Button Sizes")]
-    [SerializeField] private float attackButtonSize = 120f;
-    [SerializeField] private float actionButtonSize = 80f;
-    [SerializeField] private float weaponArrowSize = 60f;
-    [SerializeField] private float pauseButtonSize = 50f;
+    [SerializeField] private float primaryBtnSize = 130f;   // Attack
+    [SerializeField] private float secondaryBtnSize = 90f;  // Jump, Reload, Dash
+    [SerializeField] private float weaponArrowSize = 65f;
+    [SerializeField] private float topBarBtnSize = 55f;     // Pause, Scoreboard
 
-    [Header("Colors")]
-    [SerializeField] private Color buttonColor = new Color(1f, 1f, 1f, 0.45f);
-    [SerializeField] private Color joystickBgColor = new Color(0f, 0f, 0f, 0.25f);
-    [SerializeField] private Color joystickHandleColor = new Color(1f, 1f, 1f, 0.6f);
-
-    private Canvas _canvas;
+    [Header("Appearance")]
+    [SerializeField] private Color primaryColor   = new Color(0.90f, 0.25f, 0.20f, 0.70f);  // red-ish attack
+    [SerializeField] private Color secondaryColor = new Color(0.20f, 0.55f, 0.85f, 0.55f);  // blue action buttons
+    [SerializeField] private Color weaponColor    = new Color(0.95f, 0.75f, 0.15f, 0.55f);  // gold weapon arrows
+    [SerializeField] private Color topBarColor    = new Color(0.15f, 0.15f, 0.15f, 0.60f);  // dark top-bar buttons
+    [SerializeField] private Color joystickBg     = new Color(1f, 1f, 1f, 0.10f);
+    [SerializeField] private Color joystickKnob   = new Color(1f, 1f, 1f, 0.50f);
+    [SerializeField] private Color labelColor     = Color.white;
 
     private void Awake()
     {
-        BuildCanvas();
+        Build();
     }
 
-    private void BuildCanvas()
+    // ───────────────────────────────────────────────────────────
+    private void Build()
     {
-        // ── Canvas ──
-        _canvas = gameObject.AddComponent<Canvas>();
-        _canvas.renderMode = RenderMode.ScreenSpaceOverlay;
-        _canvas.sortingOrder = 100;
+        // Canvas
+        var canvas  = gameObject.AddComponent<Canvas>();
+        canvas.renderMode = RenderMode.ScreenSpaceOverlay;
+        canvas.sortingOrder = 100;
 
         var scaler = gameObject.AddComponent<CanvasScaler>();
         scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
@@ -55,81 +47,94 @@ public class MobileControlsCanvas : MonoBehaviour
         scaler.matchWidthOrHeight = 0.5f;
 
         gameObject.AddComponent<GraphicRaycaster>();
+        EnsureInputSystemEventSystem();
 
-        // Ensure an EventSystem exists
-        if (FindAnyObjectByType<EventSystem>() == null)
-        {
-            var es = new GameObject("EventSystem");
-            es.AddComponent<EventSystem>();
-            es.AddComponent<UnityEngine.InputSystem.UI.InputSystemUIInputModule>();
-        }
-
-        // ── Virtual Joystick (bottom-left) ──
+        // ── Left : Joystick ──
         BuildJoystick();
 
-        // ── Action Buttons (bottom-right) ──
-        BuildActionButton("AttackBtn", "ATK", attackButtonSize,
-            new Vector2(-160, 140), "<Gamepad>/rightShoulder");
+        // ── Right : Action cluster ──
+        //    Attack (large, center-right), others arranged around it
+        BuildOnScreenButton("AttackBtn",  "\u2022",  primaryBtnSize,
+            new Vector2(-170, 160), "<Gamepad>/rightShoulder",
+            primaryColor, TextAnchor.LowerRight);
 
-        BuildActionButton("JumpBtn", "JMP", actionButtonSize,
-            new Vector2(-280, 80), "<Gamepad>/buttonSouth");
+        BuildOnScreenButton("JumpBtn",   "JMP",  secondaryBtnSize,
+            new Vector2(-300, 90),  "<Gamepad>/buttonSouth",
+            secondaryColor, TextAnchor.LowerRight);
 
-        BuildActionButton("ReloadBtn", "RLD", actionButtonSize,
-            new Vector2(-280, 200), "<Gamepad>/buttonNorth");
+        BuildOnScreenButton("ReloadBtn", "RLD",  secondaryBtnSize,
+            new Vector2(-300, 220), "<Gamepad>/buttonNorth",
+            secondaryColor, TextAnchor.LowerRight);
 
-        BuildActionButton("DashBtn", "DSH", actionButtonSize,
-            new Vector2(-100, 40), "<Gamepad>/rightStickPress");
+        BuildOnScreenButton("DashBtn",   "DSH",  secondaryBtnSize,
+            new Vector2(-80, 55),   "<Gamepad>/rightStickPress",
+            secondaryColor, TextAnchor.LowerRight);
 
-        // ── Weapon Prev / Next (top-right) ──
-        BuildActionButton("WeaponPrev", "◀", weaponArrowSize,
-            new Vector2(-140, -80), "<Gamepad>/dpad/left",
-            TextAnchor.UpperRight);
+        // ── Weapon prev / next (top-right, below top bar) ──
+        BuildOnScreenButton("WpnPrev", "\u25C0", weaponArrowSize,
+            new Vector2(-150, -90), "<Gamepad>/dpad/left",
+            weaponColor, TextAnchor.UpperRight);
 
-        BuildActionButton("WeaponNext", "▶", weaponArrowSize,
-            new Vector2(-60, -80), "<Gamepad>/dpad/right",
-            TextAnchor.UpperRight);
+        BuildOnScreenButton("WpnNext", "\u25B6", weaponArrowSize,
+            new Vector2(-60, -90),  "<Gamepad>/dpad/right",
+            weaponColor, TextAnchor.UpperRight);
 
-        // ── Pause Button (top-right corner) ──
-        BuildPauseButton();
+        // ── Top bar : Pause + Scoreboard ──
+        BuildOnScreenButton("PauseBtn", "\u2759\u2759", topBarBtnSize,
+            new Vector2(-20, -20), "<Gamepad>/start",
+            topBarColor, TextAnchor.UpperRight);
+
+        BuildOnScreenButton("ScoreBtn", "SCR", topBarBtnSize,
+            new Vector2(-85, -20), "<Gamepad>/select",
+            topBarColor, TextAnchor.UpperRight);
     }
 
-    // ─────────────────────── Joystick ───────────────────────
-
+    // ─────────────────── Joystick ────────────────────────────
     private void BuildJoystick()
     {
-        // Background circle
-        var bg = CreateUIElement("JoystickBG", transform, joystickRadius * 2f, joystickRadius * 2f);
-        SetAnchor(bg, TextAnchor.LowerLeft);
-        bg.anchoredPosition = new Vector2(180, 180);
+        float diameter = joystickRadius * 2f;
+
+        // Outer ring (background)
+        var bg = MakeRect("JoystickBG", transform, diameter, diameter);
+        Anchor(bg, TextAnchor.LowerLeft);
+        bg.anchoredPosition = new Vector2(190, 190);
         var bgImg = bg.gameObject.AddComponent<Image>();
-        bgImg.color = joystickBgColor;
+        bgImg.color = joystickBg;
         bgImg.raycastTarget = true;
+        MakeCircle(bgImg);
 
-        // Handle (draggable knob)
-        var handle = CreateUIElement("JoystickHandle", bg, joystickRadius * 0.8f, joystickRadius * 0.8f);
-        handle.anchoredPosition = Vector2.zero;
-        var handleImg = handle.gameObject.AddComponent<Image>();
-        handleImg.color = joystickHandleColor;
-        handleImg.raycastTarget = true;
+        // Inner knob
+        float knobSize = joystickRadius * 0.75f;
+        var knob = MakeRect("JoystickKnob", bg, knobSize, knobSize);
+        knob.anchoredPosition = Vector2.zero;
+        var knobImg = knob.gameObject.AddComponent<Image>();
+        knobImg.color = joystickKnob;
+        knobImg.raycastTarget = true;
+        MakeCircle(knobImg);
 
-        // OnScreenStick on the handle — simulates left stick for movement
-        var stick = handle.gameObject.AddComponent<OnScreenStick>();
+        // OnScreenStick on the knob
+        var stick = knob.gameObject.AddComponent<OnScreenStick>();
         stick.controlPath = "<Gamepad>/leftStick";
         stick.movementRange = joystickRadius;
     }
 
-    // ─────────────────────── Action Button ───────────────────────
-
-    private void BuildActionButton(string name, string label, float size,
-        Vector2 offset, string controlPath, TextAnchor anchor = TextAnchor.LowerRight)
+    // ─────────────────── Generic OnScreen Button ──────────────
+    private void BuildOnScreenButton(string name, string label, float size,
+        Vector2 offset, string controlPath, Color color, TextAnchor anchor)
     {
-        var rt = CreateUIElement(name, transform, size, size);
-        SetAnchor(rt, anchor);
+        var rt = MakeRect(name, transform, size, size);
+        Anchor(rt, anchor);
         rt.anchoredPosition = offset;
 
         var img = rt.gameObject.AddComponent<Image>();
-        img.color = buttonColor;
+        img.color = color;
         img.raycastTarget = true;
+        MakeCircle(img);
+
+        // Outline for depth
+        var outline = rt.gameObject.AddComponent<Outline>();
+        outline.effectColor = new Color(0f, 0f, 0f, 0.35f);
+        outline.effectDistance = new Vector2(2, -2);
 
         // Label
         var textGO = new GameObject("Label");
@@ -139,88 +144,82 @@ public class MobileControlsCanvas : MonoBehaviour
         textRT.anchorMax = Vector2.one;
         textRT.offsetMin = Vector2.zero;
         textRT.offsetMax = Vector2.zero;
-        var text = textGO.AddComponent<Text>();
-        text.text = label;
-        text.alignment = TextAnchor.MiddleCenter;
-        text.fontSize = (int)(size * 0.3f);
-        text.color = Color.white;
-        text.raycastTarget = false;
-        text.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+        var txt = textGO.AddComponent<Text>();
+        txt.text = label;
+        txt.alignment = TextAnchor.MiddleCenter;
+        txt.fontSize = Mathf.Max(16, (int)(size * 0.28f));
+        txt.fontStyle = FontStyle.Bold;
+        txt.color = labelColor;
+        txt.raycastTarget = false;
+        txt.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
 
-        // OnScreenButton — simulates the specified gamepad control
+        // Shadow on text
+        var shadow = textGO.AddComponent<Shadow>();
+        shadow.effectColor = new Color(0, 0, 0, 0.5f);
+        shadow.effectDistance = new Vector2(1, -1);
+
+        // OnScreenButton simulates the gamepad path
         var btn = rt.gameObject.AddComponent<OnScreenButton>();
         btn.controlPath = controlPath;
     }
 
-    // ─────────────────────── Pause Button ───────────────────────
-
-    private void BuildPauseButton()
-    {
-        var rt = CreateUIElement("PauseBtn", transform, pauseButtonSize, pauseButtonSize);
-        SetAnchor(rt, TextAnchor.UpperRight);
-        rt.anchoredPosition = new Vector2(-20, -20);
-
-        var img = rt.gameObject.AddComponent<Image>();
-        img.color = buttonColor;
-        img.raycastTarget = true;
-
-        // Label
-        var textGO = new GameObject("Label");
-        textGO.transform.SetParent(rt, false);
-        var textRT = textGO.AddComponent<RectTransform>();
-        textRT.anchorMin = Vector2.zero;
-        textRT.anchorMax = Vector2.one;
-        textRT.offsetMin = Vector2.zero;
-        textRT.offsetMax = Vector2.zero;
-        var text = textGO.AddComponent<Text>();
-        text.text = "| |";
-        text.alignment = TextAnchor.MiddleCenter;
-        text.fontSize = 22;
-        text.color = Color.white;
-        text.raycastTarget = false;
-        text.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
-
-        // Unity Button component — wired to PauseMenuManager.TogglePause()
-        var button = rt.gameObject.AddComponent<OnScreenButton>();
-        if (pauseMenuManager != null)
-            button.controlPath = "<Gamepad>/start";
-    }
-
-    // ─────────────────────── Helpers ───────────────────────
-
-    private static RectTransform CreateUIElement(string name, Transform parent, float width, float height)
+    // ─────────────────── Helpers ─────────────────────────────
+    private static RectTransform MakeRect(string name, Transform parent, float w, float h)
     {
         var go = new GameObject(name);
         go.transform.SetParent(parent, false);
         var rt = go.AddComponent<RectTransform>();
-        rt.sizeDelta = new Vector2(width, height);
+        rt.sizeDelta = new Vector2(w, h);
         return rt;
     }
 
-    private static void SetAnchor(RectTransform rt, TextAnchor anchor)
+    private static void Anchor(RectTransform rt, TextAnchor corner)
     {
-        switch (anchor)
+        Vector2 v = corner switch
         {
-            case TextAnchor.LowerLeft:
-                rt.anchorMin = new Vector2(0, 0);
-                rt.anchorMax = new Vector2(0, 0);
-                rt.pivot = new Vector2(0.5f, 0.5f);
-                break;
-            case TextAnchor.LowerRight:
-                rt.anchorMin = new Vector2(1, 0);
-                rt.anchorMax = new Vector2(1, 0);
-                rt.pivot = new Vector2(0.5f, 0.5f);
-                break;
-            case TextAnchor.UpperRight:
-                rt.anchorMin = new Vector2(1, 1);
-                rt.anchorMax = new Vector2(1, 1);
-                rt.pivot = new Vector2(0.5f, 0.5f);
-                break;
-            case TextAnchor.UpperLeft:
-                rt.anchorMin = new Vector2(0, 1);
-                rt.anchorMax = new Vector2(0, 1);
-                rt.pivot = new Vector2(0.5f, 0.5f);
-                break;
+            TextAnchor.LowerLeft  => new Vector2(0, 0),
+            TextAnchor.LowerRight => new Vector2(1, 0),
+            TextAnchor.UpperLeft  => new Vector2(0, 1),
+            TextAnchor.UpperRight => new Vector2(1, 1),
+            _ => new Vector2(0.5f, 0.5f)
+        };
+        rt.anchorMin = v;
+        rt.anchorMax = v;
+        rt.pivot = new Vector2(0.5f, 0.5f);
+    }
+
+    /// <summary>
+    /// Makes an Image appear circular by enabling a procedural sprite mask.
+    /// Uses Unity's built-in Knob sprite which is a filled circle.
+    /// </summary>
+    private static void MakeCircle(Image img)
+    {
+        img.sprite = Resources.Load<Sprite>("UI/Skin/Knob");
+        if (img.sprite != null)
+            img.type = Image.Type.Simple;
+    }
+
+    /// <summary>
+    /// Ensures the scene has an EventSystem with InputSystemUIInputModule.
+    /// Removes legacy StandaloneInputModule if present (blocks touch on mobile).
+    /// </summary>
+    private static void EnsureInputSystemEventSystem()
+    {
+        var eventSystem = FindAnyObjectByType<EventSystem>();
+        if (eventSystem == null)
+        {
+            var es = new GameObject("EventSystem");
+            es.AddComponent<EventSystem>();
+            es.AddComponent<UnityEngine.InputSystem.UI.InputSystemUIInputModule>();
+            return;
         }
+
+        // Remove legacy module that blocks touch input
+        var legacy = eventSystem.GetComponent<UnityEngine.EventSystems.StandaloneInputModule>();
+        if (legacy != null)
+            Destroy(legacy);
+
+        if (eventSystem.GetComponent<UnityEngine.InputSystem.UI.InputSystemUIInputModule>() == null)
+            eventSystem.gameObject.AddComponent<UnityEngine.InputSystem.UI.InputSystemUIInputModule>();
     }
 }

@@ -1,4 +1,4 @@
-#if CLIENT || UNITY_EDITOR
+#if CLIENT || UNITY_EDITOR || UNITY_ANDROID || UNITY_IOS
 
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -8,7 +8,7 @@ using System.Text.RegularExpressions;
 public class MainMenuController : MonoBehaviour
 {
     private const int MaxUsernameLength = 20;
-    
+
     [SerializeField] private TMP_InputField _addressInput;
     [SerializeField] private TMP_InputField _usernameInput;
     [SerializeField] private string _gameSceneName = "LobbyScene";
@@ -77,7 +77,7 @@ public class MainMenuController : MonoBehaviour
     {
         ConnectionInfo.IpAddress = "localhost";
         ConnectionInfo.username = SanitizeUsername(_usernameInput.text);
-        
+
         SceneManager.LoadScene(_gameSceneName);
     }
 }

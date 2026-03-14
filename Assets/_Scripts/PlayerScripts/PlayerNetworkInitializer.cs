@@ -38,10 +38,15 @@ public class PlayerNetworkInitializer : NetworkBehaviour
         }
 
         // Configure mobile input mode for the local player
+        var movement = GetComponent<PredictionMoving>();
         if (MobileInputManager.Instance != null)
         {
-            var movement = GetComponent<PredictionMoving>();
             MobileInputManager.Instance.ConfigureLocalPlayer(movement);
+        }
+        else if (Application.isMobilePlatform)
+        {
+            // Fallback: MobileInputManager not in scene, set joystick mode directly
+            movement.SetInputMode(true);
         }
     }
 

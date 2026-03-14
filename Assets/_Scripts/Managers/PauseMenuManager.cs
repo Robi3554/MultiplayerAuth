@@ -20,12 +20,13 @@ public class PauseMenuManager : MonoBehaviour
             _pauseMenuCanvas.gameObject.SetActive(false);
     }
 
-    private void Update()
+    /// <summary>
+    /// Called by PlayerInput via the Pause action (Escape key or Gamepad Start).
+    /// </summary>
+    public void OnPause(InputAction.CallbackContext context)
     {
-        if (Keyboard.current != null && Keyboard.current.escapeKey.wasPressedThisFrame)
-        {
-            TogglePause();
-        }
+        if (!context.performed) return;
+        TogglePause();
     }
 
     /// <summary>

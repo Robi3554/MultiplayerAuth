@@ -1,15 +1,16 @@
 using FishNet.Object;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class ScoreboardManager : NetworkBehaviour
 {
     public static ScoreboardManager Instance { get; private set; }
-    
+
     [SerializeField] private GameObject scoreboardUI;
     [SerializeField] private Transform scoreboardContent;
     [SerializeField] private GameObject scoreboardEntryPrefab;
-    
+
     private Dictionary<PlayerStats, ScoreboardEntry> scoreboardEntries = new Dictionary<PlayerStats, ScoreboardEntry>();
     private bool isScoreboardVisible = false;
 
@@ -21,15 +22,18 @@ public class ScoreboardManager : NetworkBehaviour
             Destroy(gameObject);
     }
 
+    /// <summary>
+    /// Called by PlayerInput via the Scoreboard action (Tab key or Gamepad Select).
+    /// </summary>
+    public void OnScoreboard(InputAction.CallbackContext context)
+    {
+        if (!context.performed) return;
+        isScoreboardVisible = !isScoreboardVisible;
+        scoreboardUI.SetActive(isScoreboardVisible);
+    }
+
     private void Update()
     {
-        // Toggle scoreboard with Tab key
-        if (Input.GetKeyDown(KeyCode.Tab))
-        {
-            isScoreboardVisible = !isScoreboardVisible;
-            scoreboardUI.SetActive(isScoreboardVisible);
-        }
-        
         // Update all entries when visible
         if (isScoreboardVisible)
         {
@@ -48,7 +52,7 @@ public class ScoreboardManager : NetworkBehaviour
         GameObject entryObj = Instantiate(scoreboardEntryPrefab, scoreboardContent);
         ScoreboardEntry entry = entryObj.GetComponent<ScoreboardEntry>();
         entry.Initialize(stats);
-        
+
         scoreboardEntries[stats] = entry;
     }
 
