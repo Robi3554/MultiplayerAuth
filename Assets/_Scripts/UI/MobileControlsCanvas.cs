@@ -81,11 +81,11 @@ public class MobileControlsCanvas : MonoBehaviour
 
         // ── Top bar : Pause + Scoreboard ──
         BuildOnScreenButton("PauseBtn", "\u2759\u2759", topBarBtnSize,
-            new Vector2(-20, -20), "<Gamepad>/start",
+            new Vector2(-20, -70), "<Gamepad>/start",
             topBarColor, TextAnchor.UpperRight);
 
         BuildOnScreenButton("ScoreBtn", "SCR", topBarBtnSize,
-            new Vector2(-85, -20), "<Gamepad>/select",
+            new Vector2(-85, -70), "<Gamepad>/select",
             topBarColor, TextAnchor.UpperRight);
     }
 

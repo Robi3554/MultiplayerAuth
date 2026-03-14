@@ -23,17 +23,19 @@ public class ScoreboardManager : NetworkBehaviour
     }
 
     /// <summary>
-    /// Called by PlayerInput via the Scoreboard action (Tab key or Gamepad Select).
+    /// Polls Tab key and Gamepad Select (simulated by OnScreenButton on mobile).
     /// </summary>
-    public void OnScoreboard(InputAction.CallbackContext context)
-    {
-        if (!context.performed) return;
-        isScoreboardVisible = !isScoreboardVisible;
-        scoreboardUI.SetActive(isScoreboardVisible);
-    }
-
     private void Update()
     {
+        bool tabPressed = Keyboard.current != null && Keyboard.current.tabKey.wasPressedThisFrame;
+        bool selectPressed = Gamepad.current != null && Gamepad.current.selectButton.wasPressedThisFrame;
+
+        if (tabPressed || selectPressed)
+        {
+            isScoreboardVisible = !isScoreboardVisible;
+            scoreboardUI.SetActive(isScoreboardVisible);
+        }
+
         // Update all entries when visible
         if (isScoreboardVisible)
         {
