@@ -407,7 +407,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8a6a39c46bf52104ba8efe3100bce3f7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _componentIndexCache: 9
+  _componentIndexCache: 8
   _addedNetworkObject: {fileID: 7709259699627967468}
   _networkObjectCache: {fileID: 7709259699627967468}
 --- !u!1 &3759074979915206942
@@ -813,6 +813,7 @@ GameObject:
   - component: {fileID: 3560973985284906898}
   - component: {fileID: 3719605036728346066}
   - component: {fileID: 8917676564020997444}
+  - component: {fileID: -3922410006368087103}
   m_Layer: 6
   m_Name: PlayerV2
   m_TagString: Player
@@ -962,10 +963,10 @@ MonoBehaviour:
   - {fileID: 3560973985284906898}
   - {fileID: 3719605036728346066}
   - {fileID: 5750443349139586259}
+  - {fileID: 562640750440192399}
   InitializedParentNetworkBehaviour: {fileID: 0}
   InitializedNestedNetworkObjects:
   - {fileID: 1954642814374175650}
-  - {fileID: 0}
   RuntimeParentNetworkBehaviour: {fileID: 0}
   RuntimeChildNetworkBehaviours: []
   _isNetworked: 1
@@ -988,7 +989,7 @@ MonoBehaviour:
   _spectatorInterpolation: 2
   _enableTeleport: 1
   _teleportThreshold: 1
-  <PrefabId>k__BackingField: 7
+  <PrefabId>k__BackingField: 8
   <SpawnableCollectionId>k__BackingField: 0
   <AssetPathHash>k__BackingField: 7227122753204966705
   <SceneId>k__BackingField: 0
@@ -1460,6 +1461,26 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: d179c145-c8a3-405a-8e35-8483ed50ac20
     m_ActionName: 'UI/Unpause[/Keyboard/escape]'
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: c3d4e5f6-0001-4000-8000-000000000010
+    m_ActionName: 'Gameplay/Scoreboard[/Keyboard/tab]'
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: -3922410006368087103}
+        m_TargetAssemblyTypeName: PlayerAbility, Assembly-CSharp
+        m_MethodName: OnAbilityPress
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: cbbe467f-0a79-4071-bf0a-39abf055535c
+    m_ActionName: 'Gameplay/Abilty[/Keyboard/e]'
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Gameplay
@@ -1533,6 +1554,23 @@ MonoBehaviour:
   m_EditorClassIdentifier: '::'
   _pauseMenuCanvas: {fileID: 0}
   _menuSceneName: WelcomeScreen
+--- !u!114 &-3922410006368087103
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7292517268953296916}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cedc1196b3fea6f46b0ff521efa7c4f8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerAbility
+  _componentIndexCache: 255
+  _addedNetworkObject: {fileID: 7709259699627967468}
+  _networkObjectCache: {fileID: 0}
+  abilityOverlay: {fileID: 5089735257825138609}
+  abilityCooldown: 3
 --- !u!1 &7478038004224456573
 GameObject:
   m_ObjectHideFlags: 0
@@ -3197,14 +3235,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 1876700251906292211, guid: 950c997c80c3f8a42956a570dbe956ce, type: 3}
-      propertyPath: m_ReferenceResolution.x
-      value: 1920
-      objectReference: {fileID: 0}
-    - target: {fileID: 1876700251906292211, guid: 950c997c80c3f8a42956a570dbe956ce, type: 3}
-      propertyPath: m_ReferenceResolution.y
-      value: 1080
-      objectReference: {fileID: 0}
     - target: {fileID: 2057181445870485628, guid: 950c997c80c3f8a42956a570dbe956ce, type: 3}
       propertyPath: m_fontSize
       value: 30
@@ -3553,6 +3583,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bd6da3d911db1404db1fee188820b812, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WeaponHUD
+--- !u!114 &5089735257825138609 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 25116265067100335, guid: 950c997c80c3f8a42956a570dbe956ce, type: 3}
+  m_PrefabInstance: {fileID: 5114792148949692190}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
 --- !u!224 &6185160127772368120 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 1381899205929497574, guid: 950c997c80c3f8a42956a570dbe956ce, type: 3}
@@ -4235,9 +4276,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8a6a39c46bf52104ba8efe3100bce3f7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: FishNet.Runtime::FishNet.Object.EmptyNetworkBehaviour
-  _componentIndexCache: 0
+  _componentIndexCache: 9
   _addedNetworkObject: {fileID: 7709259699627967468}
-  _networkObjectCache: {fileID: 0}
+  _networkObjectCache: {fileID: 7709259699627967468}
 --- !u!114 &5247345835523512195 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 1205793299472401855, guid: cdcf0eae94ed1dd438685bad63846dbf, type: 3}
