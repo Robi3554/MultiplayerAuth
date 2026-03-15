@@ -813,7 +813,7 @@ GameObject:
   - component: {fileID: 3560973985284906898}
   - component: {fileID: 3719605036728346066}
   - component: {fileID: 8917676564020997444}
-  - component: {fileID: -3922410006368087103}
+  - component: {fileID: 5096206826239210856}
   m_Layer: 6
   m_Name: PlayerV2
   m_TagString: Player
@@ -1467,8 +1467,8 @@ MonoBehaviour:
     m_ActionName: 'Gameplay/Scoreboard[/Keyboard/tab]'
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: -3922410006368087103}
-        m_TargetAssemblyTypeName: PlayerAbility, Assembly-CSharp
+      - m_Target: {fileID: 5096206826239210856}
+        m_TargetAssemblyTypeName: PlayerNuke, Assembly-CSharp
         m_MethodName: OnAbilityPress
         m_Mode: 0
         m_Arguments:
@@ -1554,7 +1554,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: '::'
   _pauseMenuCanvas: {fileID: 0}
   _menuSceneName: WelcomeScreen
---- !u!114 &-3922410006368087103
+--- !u!114 &5096206826239210856
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1563,14 +1563,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 7292517268953296916}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cedc1196b3fea6f46b0ff521efa7c4f8, type: 3}
+  m_Script: {fileID: 11500000, guid: a35e4d0df68926b48af6c01cff3e3716, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayerAbility
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerNuke
   _componentIndexCache: 255
   _addedNetworkObject: {fileID: 7709259699627967468}
   _networkObjectCache: {fileID: 0}
   abilityOverlay: {fileID: 5089735257825138609}
   abilityCooldown: 3
+  bomb: {fileID: 2194729488687060785, guid: 90c472044b8d50a4899c278f5c19c374, type: 3}
 --- !u!1 &7478038004224456573
 GameObject:
   m_ObjectHideFlags: 0

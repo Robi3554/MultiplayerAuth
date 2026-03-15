@@ -102,7 +102,7 @@ public class PlayerManager : NetworkBehaviour
         if (players.ContainsKey(attackerClientId))
         {
             var attackerStats = players[attackerClientId].stats;
-            if (attackerStats != null)
+            if (attackerStats != null && attackerClientId != victimClientId)
             {
                 attackerStats.AddKill(); // This triggers GameModeManager.OnPlayerKill()
             }

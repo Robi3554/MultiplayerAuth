@@ -35,11 +35,10 @@ public class PlayerAbility : NetworkBehaviour
 
     protected virtual void ActivateAbilty()
     {
-        Debug.Log("Start timer");
         StartCooldown(abilityCooldown);
     }
 
-    public void StartCooldown(float duration)
+    private void StartCooldown(float duration)
     {
         if (_cooldownRoutine != null)
             StopCoroutine(_cooldownRoutine);
