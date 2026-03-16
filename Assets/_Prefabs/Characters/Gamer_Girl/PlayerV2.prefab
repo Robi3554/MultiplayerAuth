@@ -1346,8 +1346,8 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 7282684786607071409}
-        m_TargetAssemblyTypeName: RaycastShoot, Assembly-CSharp
+      - m_Target: {fileID: 1127438476837218079}
+        m_TargetAssemblyTypeName: ProjectileBurst, Assembly-CSharp
         m_MethodName: OnReload
         m_Mode: 0
         m_Arguments:
@@ -1460,6 +1460,10 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: d179c145-c8a3-405a-8e35-8483ed50ac20
     m_ActionName: 'UI/Unpause[/Keyboard/escape]'
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: c3d4e5f6-0001-4000-8000-000000000010
+    m_ActionName: 'Gameplay/Scoreboard[/Keyboard/tab]'
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Gameplay
