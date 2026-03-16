@@ -2332,6 +2332,7 @@ GameObject:
   - component: {fileID: -3308481879031194424}
   - component: {fileID: -1895290165275853080}
   - component: {fileID: 7586651563334659337}
+  - component: {fileID: 226448667539857932}
   m_Layer: 6
   m_Name: Arts_girl
   m_TagString: Player
@@ -2954,6 +2955,14 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: d179c145-c8a3-405a-8e35-8483ed50ac20
     m_ActionName: 'UI/Unpause[/Keyboard/escape]'
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: c3d4e5f6-0001-4000-8000-000000000010
+    m_ActionName: 'Gameplay/Scoreboard[/Keyboard/tab]'
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: cbbe467f-0a79-4071-bf0a-39abf055535c
+    m_ActionName: 'Gameplay/Abilty[/Keyboard/e]'
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Gameplay
@@ -3027,6 +3036,24 @@ MonoBehaviour:
   m_EditorClassIdentifier: '::'
   _pauseMenuCanvas: {fileID: 0}
   _menuSceneName: WelcomeScreen
+--- !u!114 &226448667539857932
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6423277971489570077}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a35e4d0df68926b48af6c01cff3e3716, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerNuke
+  _componentIndexCache: 255
+  _addedNetworkObject: {fileID: 2146999078989371967}
+  _networkObjectCache: {fileID: 0}
+  abilityOverlay: {fileID: 295318279325346081}
+  abilityCooldown: 3
+  bomb: {fileID: 2194729488687060785, guid: 90c472044b8d50a4899c278f5c19c374, type: 3}
 --- !u!1 &6459075009606579445
 GameObject:
   m_ObjectHideFlags: 0
@@ -4771,6 +4798,17 @@ PrefabInstance:
       addedObject: {fileID: 4796905580836696211}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 950c997c80c3f8a42956a570dbe956ce, type: 3}
+--- !u!114 &295318279325346081 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 25116265067100335, guid: 950c997c80c3f8a42956a570dbe956ce, type: 3}
+  m_PrefabInstance: {fileID: 306268367582744974}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
 --- !u!224 &1688123584304063080 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 1381899205929497574, guid: 950c997c80c3f8a42956a570dbe956ce, type: 3}
