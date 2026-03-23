@@ -1,9 +1,10 @@
 using FishNet.Object;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class ScoreboardManager : NetworkBehaviour
+public class ScoreboardManager : MonoBehaviour
 {
     public static ScoreboardManager Instance { get; private set; }
 
@@ -11,13 +12,27 @@ public class ScoreboardManager : NetworkBehaviour
     [SerializeField] private Transform scoreboardContent;
     [SerializeField] private GameObject scoreboardEntryPrefab;
 
-    private Dictionary<PlayerStats, ScoreboardEntry> scoreboardEntries = new Dictionary<PlayerStats, ScoreboardEntry>();
+    private static Dictionary<PlayerStats, ScoreboardEntry> scoreboardEntries = new Dictionary<PlayerStats, ScoreboardEntry>();
     private bool isScoreboardVisible = false;
 
     private void Awake()
     {
         if (Instance == null)
+        {
             Instance = this;
+
+            foreach (var key in scoreboardEntries.Keys.ToList())
+            {
+                if (scoreboardEntries[key] != null)
+                    continue;
+
+                GameObject entryObj = Instantiate(scoreboardEntryPrefab, scoreboardContent);
+                ScoreboardEntry entry = entryObj.GetComponent<ScoreboardEntry>();
+                entry.Initialize(key);
+
+                scoreboardEntries[key] = entry;
+            }
+        }
         else
             Destroy(gameObject);
     }
@@ -50,6 +65,8 @@ public class ScoreboardManager : NetworkBehaviour
     {
         if (scoreboardEntries.ContainsKey(stats))
             return;
+        
+        Debug.Log("Registering player with ScoreboardManager: " + stats.username.Value);
 
         GameObject entryObj = Instantiate(scoreboardEntryPrefab, scoreboardContent);
         ScoreboardEntry entry = entryObj.GetComponent<ScoreboardEntry>();
@@ -65,5 +82,10 @@ public class ScoreboardManager : NetworkBehaviour
             Destroy(entry.gameObject);
             scoreboardEntries.Remove(stats);
         }
+    }
+
+    public static void AddPlayerToInitialList(PlayerStats stats)
+    {
+        scoreboardEntries[stats] = null;
     }
 }
