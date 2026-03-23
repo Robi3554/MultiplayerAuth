@@ -1,4 +1,5 @@
 using System;
+using _Scripts.Managers;
 using FishNet.Object;
 using UnityEngine;
 using UnityEngine.AI;
@@ -22,6 +23,9 @@ public class KamikazeRobot : NetworkBehaviour
 
     [Header("Patroling")]
     public Transform[] patrolPoints;
+    
+    [SerializeField] private AudioSource audioSource;
+    
     private Vector3 currentPoint;
     private int currIndex;
     private int prevIndex;
@@ -224,7 +228,12 @@ public class KamikazeRobot : NetworkBehaviour
             int attackerId = transform.GetComponent<NetworkObject>().Owner.ClientId;
             Debug.Log($"Kamikaze robot exploded: target: {targetId}");
             PlayerManager.Instance.DamagePlayer(targetId, Damage, attackerId);
-            //playvfx explosion 
+            //playvfx explosion
+            var manager = PersistentAudioSourceManager.GetInstance();
+            if (manager != null)
+            {
+                manager.PlaySoundBasedOnRefencedSource(audioSource);
+            }
             Despawn(this.NetworkObject);
         }
     }
