@@ -109,7 +109,8 @@ public class PlayerManager : NetworkBehaviour
         }
 
         //show death screen on client and wait before respawning
-        DeathScreenManager.Instance.ShowDeathScreen(victim.connection);
+        if(GameModeManager.Instance.isGameActive.Value)
+            DeathScreenManager.Instance.ShowDeathScreen(victim.connection);
         StartCoroutine(RespawnAfterDelay(victim, victimStats));
     }
 

@@ -19,9 +19,9 @@ public class GameModeManager : NetworkBehaviour
     [SerializeField] private TMP_Text winnerText;
 
     // SyncVar to track if game is active
-    private readonly SyncVar<bool> isGameActive = new SyncVar<bool>(true);
+    internal readonly SyncVar<bool> isGameActive = new SyncVar<bool>(true);
     private readonly SyncVar<string> winnerName = new SyncVar<string>("");
-
+     
     private void Awake()
     {
         if (Instance == null)
