@@ -53,9 +53,14 @@ public class PlayerStats : NetworkBehaviour
         ApplyBillboardTeamColor(team.Value);
 
         // Notify scoreboard that this player spawned
+        Debug.Log("PlayerStats OnStartClient: Registering player with ScoreboardManager: " + username.Value);
         if (ScoreboardManager.Instance != null)
         {
             ScoreboardManager.Instance.RegisterPlayer(this);
+        }
+        else
+        {
+            ScoreboardManager.AddPlayerToInitialList(this);
         }
 
         if (IsOwner)
