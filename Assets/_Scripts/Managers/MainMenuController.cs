@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using TMPro;
 using System.Text.RegularExpressions;
+using System.Collections;
 
 public class MainMenuController : MonoBehaviour
 {
@@ -13,6 +14,9 @@ public class MainMenuController : MonoBehaviour
     [SerializeField] private TMP_InputField _usernameInput;
     [SerializeField] private string _gameSceneName = "LobbyScene";
     [SerializeField] private string _defaultAddress = "193.226.15.26";
+
+    [SerializeField] private GameObject _loadingScreen;
+    [SerializeField] private GameObject _connectionUI;
 
     private void Start()
     {
@@ -70,7 +74,8 @@ public class MainMenuController : MonoBehaviour
         ConnectionInfo.username = SanitizeUsername(_usernameInput.text);
 
         // Load the game scene.
-        SceneManager.LoadScene(_gameSceneName);
+        //SceneManager.LoadScene(_gameSceneName);
+        LoadLevel();
     }
 
     public void OnLocalhostClicked()
@@ -78,7 +83,42 @@ public class MainMenuController : MonoBehaviour
         ConnectionInfo.IpAddress = "localhost";
         ConnectionInfo.username = SanitizeUsername(_usernameInput.text);
 
-        SceneManager.LoadScene(_gameSceneName);
+        LoadLevel();
+    }
+
+    private void LoadLevel()
+    {
+        DontDestroyOnLoad(gameObject);
+        DontDestroyOnLoad(_loadingScreen);
+
+        _connectionUI.SetActive(false);
+        _loadingScreen.SetActive(true);
+
+        StartCoroutine(LoadAsync());
+    }
+
+    private IEnumerator LoadAsync()
+    {
+        AsyncOperation loadOperation = SceneManager.LoadSceneAsync(_gameSceneName);
+        loadOperation.allowSceneActivation = false;
+
+        while (loadOperation.progress < 0.9f)
+        {
+            yield return null;
+        }
+
+        yield return new WaitForSeconds(0.2f);
+
+        loadOperation.allowSceneActivation = true;
+
+        while (!loadOperation.isDone)
+        {
+            yield return null;
+        }
+
+        yield return new WaitForSeconds(0.5f);
+        Destroy(_loadingScreen);
+        Destroy(gameObject);
     }
 }
 
