@@ -2,6 +2,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using FishNet;
+using FishNet.Managing.Scened;
+using System.Collections;
 
 /// <summary>
 /// Client-side lobby UI. Polls LobbyManager's SyncList for changes and refreshes the display.
@@ -42,6 +45,8 @@ public class LobbyUI : MonoBehaviour
     [Header("Connection")]
     [SerializeField] private float managerWaitTimeoutSeconds = 10f;
 
+    [SerializeField] private GameObject loadingScreen;
+
     private LobbyManager lobbyManager;
     private bool isReady;
     private bool hasJoined;
@@ -81,6 +86,18 @@ public class LobbyUI : MonoBehaviour
         // Color the team buttons
         SetButtonColor(rebelsButton, RebelsColor);
         SetButtonColor(aiButton, AIColor);
+    }
+
+    private void OnEnable()
+    {
+        InstanceFinder.SceneManager.OnLoadStart += HandleLoadStart;
+        InstanceFinder.SceneManager.OnLoadEnd += HandleLoadEnd;
+    }
+
+    private void OnDisable()
+    {
+        InstanceFinder.SceneManager.OnLoadStart -= HandleLoadStart;
+        InstanceFinder.SceneManager.OnLoadEnd -= HandleLoadEnd;
     }
 
     private void Update()
@@ -174,6 +191,26 @@ public class LobbyUI : MonoBehaviour
             RefreshUI();
             lastPlayerHash = currentHash;
         }
+    }
+
+    private void HandleLoadStart(SceneLoadStartEventArgs args)
+    {
+        DontDestroyOnLoad(loadingScreen);
+        DontDestroyOnLoad(gameObject);
+        loadingScreen.SetActive(true);
+    }
+
+    private void HandleLoadEnd(SceneLoadEndEventArgs args)
+    {
+        StartCoroutine(HideLoadinScreen());
+    }
+
+    private IEnumerator HideLoadinScreen()
+    {
+        yield return new WaitForSeconds(0.5f);
+
+        Destroy(loadingScreen);
+        Destroy(gameObject);
     }
 
     private int ComputePlayersHash()
