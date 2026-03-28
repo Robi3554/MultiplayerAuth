@@ -158,12 +158,12 @@ public class LobbyUI : MonoBehaviour
         }
 
         // Reveal the lobby UI once we know the lobby is active
-        if (!lobbyRevealed)
-        {
-            if (lobbyContentRoot != null)
-                lobbyContentRoot.SetActive(true);
-            lobbyRevealed = true;
-        }
+        //if (!lobbyRevealed)
+        //{
+        //    if (lobbyContentRoot != null)
+        //        lobbyContentRoot.SetActive(true);
+        //    lobbyRevealed = true;
+        //}
 
         // Send username to server once after connecting
         if (!hasJoined)
@@ -191,19 +191,24 @@ public class LobbyUI : MonoBehaviour
             RefreshUI();
             lastPlayerHash = currentHash;
         }
+
+        if (!lobbyRevealed && IsLobbyReady())
+        {
+            StartCoroutine(ShowLobby());
+        }
     }
 
     private void HandleLoadStart(SceneLoadStartEventArgs args)
     {
         DontDestroyOnLoad(loadingScreen);
         DontDestroyOnLoad(gameObject);
-        loadingScreen.SetActive(true);
+        LoadingManager.Instance.Show();
     }
 
     private void HandleLoadEnd(SceneLoadEndEventArgs args)
     {
         StartCoroutine(HideLoadinScreen());
-    }
+    } 
 
     private IEnumerator HideLoadinScreen()
     {
@@ -316,5 +321,29 @@ public class LobbyUI : MonoBehaviour
         colors.highlightedColor = color * 1.1f;
         colors.pressedColor = color * 0.8f;
         button.colors = colors;
+    }
+
+    private bool IsLobbyReady()
+    {
+        if (lobbyManager == null) return false;
+        if (!lobbyManager.IsSpawned) return false;
+        if (!hasJoined) return false;
+        if (lobbyManager.Players.Count == 0) return false;
+
+        return true;
+    }
+
+    private IEnumerator ShowLobby()
+    {
+        lobbyRevealed = true;
+
+        // Let UI populate first
+        yield return null;
+        yield return null;
+
+        if (lobbyContentRoot != null)
+            lobbyContentRoot.SetActive(true);
+
+        LoadingManager.Instance.Hide();
     }
 }

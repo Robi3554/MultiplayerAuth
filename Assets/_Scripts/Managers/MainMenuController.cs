@@ -15,7 +15,6 @@ public class MainMenuController : MonoBehaviour
     [SerializeField] private string _gameSceneName = "LobbyScene";
     [SerializeField] private string _defaultAddress = "193.226.15.26";
 
-    [SerializeField] private GameObject _loadingScreen;
     [SerializeField] private GameObject _connectionUI;
 
     private void Start()
@@ -88,11 +87,11 @@ public class MainMenuController : MonoBehaviour
 
     private void LoadLevel()
     {
-        DontDestroyOnLoad(gameObject);
-        DontDestroyOnLoad(_loadingScreen);
+        //DontDestroyOnLoad(gameObject);
+        //DontDestroyOnLoad(_loadingScreen);
 
         _connectionUI.SetActive(false);
-        _loadingScreen.SetActive(true);
+        LoadingManager.Instance.Show();
 
         StartCoroutine(LoadAsync());
     }
@@ -115,10 +114,6 @@ public class MainMenuController : MonoBehaviour
         {
             yield return null;
         }
-
-        yield return new WaitForSeconds(0.5f);
-        Destroy(_loadingScreen);
-        Destroy(gameObject);
     }
 }
 
