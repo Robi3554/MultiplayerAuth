@@ -23,7 +23,6 @@ public class PredictionMelee : NetworkBehaviour
     protected int Damage => damage.Value * playerStats.damageMult;
 
     [Header("References")]
-	[SerializeField] private Transform slashPoint;
 	[SerializeField] private float coneAngle = 60f;
 	[SerializeField] private VisualEffect VFX_SLASH;
 
@@ -42,13 +41,12 @@ public class PredictionMelee : NetworkBehaviour
 	private bool _isAnimating = false;
 	private bool Slash;
 
-	
-
 	public override void OnStartNetwork()
 	{
 		base.OnStartNetwork();
 		playerCollider = GetComponentInParent<CapsuleCollider>();
 		playerStats = GetComponentInParent<PlayerStats>();
+		// VFXEventAttribute EventSettings = VFX_SLASH.CreateVFXEventAttribute();	
 	}
 
 	public void OnDamage(InputAction.CallbackContext context)
@@ -124,19 +122,12 @@ public class PredictionMelee : NetworkBehaviour
 		Slash = true;	
 	}
 
-	// [ServerRpc(RequireOwnership = false)]
-	// private void PlayServerWeaponVfx()
-	// {
-	// 	Debug.Log("Melee: server weapon vfx");
-	// 	PlayObserverWeaponVfx();
-	// }
-
-	[ObserversRpc]
+	
 	public void PlayObserverWeaponVfx()
 	{
 		if (VFX_SLASH != null)
 		{
-			VFX_SLASH.SendEvent("OnPlay");
+			VFX_SLASH.SendEvent("OnSlash");
 		}
 	}
 

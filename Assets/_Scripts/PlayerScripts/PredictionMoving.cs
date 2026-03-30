@@ -131,8 +131,10 @@ public class PredictionMoving : NetworkBehaviour
 
     public void OnJump(InputAction.CallbackContext context)
     {
+        Debug.Log("is respawning in OnJump");
         if (_playerStats != null && _playerStats.isRespawning.Value)
             return;
+        Debug.Log("respawned in OnJump");
 
         if (context.performed && _isGrounded && !_jumpPressed)
         {
@@ -173,6 +175,7 @@ public class PredictionMoving : NetworkBehaviour
         animator.SetFloat("VelocityBackwardsValue", movingBackwards);
         if (_jumpPressed)
         {
+            Debug.Log("jump Pressed");
             _rb.AddForce(Vector3.up * jumpForce, ForceMode.VelocityChange);
             _jumpPressed = false;
         }
