@@ -1,8 +1,9 @@
-using FishNet.Connection;
-using FishNet.Object;
-using FishNet.Managing.Scened;
-using UnityEngine;
+using System.Collections;
 using System.Collections.Generic; // Required for using Lists
+using FishNet.Connection;
+using FishNet.Managing.Scened;
+using FishNet.Object;
+using UnityEngine;
 
 public class PlayerSpawnerCustom : NetworkBehaviour
 {
@@ -56,6 +57,15 @@ public class PlayerSpawnerCustom : NetworkBehaviour
             return;
 
         SpawnAllConnectedPlayers();
+
+        // Hide the loading screen for the client(s)
+        // Only hide for non-server clients
+        foreach (var kvp in ServerManager.Clients)
+        {
+            NetworkConnection conn = kvp.Value;
+            if (!conn.IsLocalClient) continue; // Only hide for the local client
+            StartCoroutine(HideLoadingScreenWithDelay());
+        }
     }
 
     /// <summary>
@@ -177,5 +187,13 @@ public class PlayerSpawnerCustom : NetworkBehaviour
         }
 
         return points[Random.Range(0, points.Count)];
+    }
+
+    private IEnumerator HideLoadingScreenWithDelay()
+    {
+        yield return new WaitForSeconds(0.5f);
+
+        if (LoadingManager.Instance != null)
+            LoadingManager.Instance.Hide();
     }
 }

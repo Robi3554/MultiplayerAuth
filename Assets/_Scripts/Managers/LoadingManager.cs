@@ -1,3 +1,6 @@
+using System.Collections;
+using FishNet;
+using FishNet.Managing.Scened;
 using UnityEngine;
 
 public class LoadingManager : MonoBehaviour
@@ -15,6 +18,37 @@ public class LoadingManager : MonoBehaviour
 
         Instance = this;
         DontDestroyOnLoad(gameObject);
+
+        loadingScreen.SetActive(false);
+    }
+
+    private void OnEnable()
+    {
+        InstanceFinder.SceneManager.OnLoadStart += HandleLoadStart;
+        InstanceFinder.SceneManager.OnLoadEnd += HandleLoadEnd;
+    }
+
+    private void OnDisable()
+    {
+        InstanceFinder.SceneManager.OnLoadStart -= HandleLoadStart;
+        InstanceFinder.SceneManager.OnLoadEnd -= HandleLoadEnd;
+    }
+
+    private void HandleLoadStart(SceneLoadStartEventArgs args)
+    {
+        Show();
+    }
+
+    private void HandleLoadEnd(SceneLoadEndEventArgs args)
+    {
+        StartCoroutine(HideAfterLoad());
+    }
+
+    private IEnumerator HideAfterLoad()
+    {
+        yield return new WaitForSeconds(0.5f);
+
+        Hide();
     }
 
     public void Show()
