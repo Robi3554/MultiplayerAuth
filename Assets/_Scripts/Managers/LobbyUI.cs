@@ -45,8 +45,6 @@ public class LobbyUI : MonoBehaviour
     [Header("Connection")]
     [SerializeField] private float managerWaitTimeoutSeconds = 10f;
 
-    [SerializeField] private GameObject loadingScreen;
-
     private LobbyManager lobbyManager;
     private bool isReady;
     private bool hasJoined;
@@ -86,18 +84,6 @@ public class LobbyUI : MonoBehaviour
         // Color the team buttons
         SetButtonColor(rebelsButton, RebelsColor);
         SetButtonColor(aiButton, AIColor);
-    }
-
-    private void OnEnable()
-    {
-        InstanceFinder.SceneManager.OnLoadStart += HandleLoadStart;
-        InstanceFinder.SceneManager.OnLoadEnd += HandleLoadEnd;
-    }
-
-    private void OnDisable()
-    {
-        InstanceFinder.SceneManager.OnLoadStart -= HandleLoadStart;
-        InstanceFinder.SceneManager.OnLoadEnd -= HandleLoadEnd;
     }
 
     private void Update()
@@ -150,6 +136,8 @@ public class LobbyUI : MonoBehaviour
         // hidden and show a status message. FishNet will transition us to the game scene.
         if (lobbyManager.IsGameStarting.Value)
         {
+            LoadingManager.Instance.Show();
+
             if (lobbyContentRoot != null)
                 lobbyContentRoot.SetActive(false);
             if (statusText != null)
@@ -196,26 +184,6 @@ public class LobbyUI : MonoBehaviour
         {
             StartCoroutine(ShowLobby());
         }
-    }
-
-    private void HandleLoadStart(SceneLoadStartEventArgs args)
-    {
-        DontDestroyOnLoad(loadingScreen);
-        DontDestroyOnLoad(gameObject);
-        LoadingManager.Instance.Show();
-    }
-
-    private void HandleLoadEnd(SceneLoadEndEventArgs args)
-    {
-        StartCoroutine(HideLoadinScreen());
-    } 
-
-    private IEnumerator HideLoadinScreen()
-    {
-        yield return new WaitForSeconds(0.5f);
-
-        Destroy(loadingScreen);
-        Destroy(gameObject);
     }
 
     private int ComputePlayersHash()
