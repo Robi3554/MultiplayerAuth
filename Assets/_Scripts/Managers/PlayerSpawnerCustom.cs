@@ -64,7 +64,7 @@ public class PlayerSpawnerCustom : NetworkBehaviour
         {
             NetworkConnection conn = kvp.Value;
             if (!conn.IsLocalClient) continue; // Only hide for the local client
-            StartCoroutine(HideLoadingScreenWithDelay());
+            HideLoadingObservers();
         }
     }
 
@@ -187,6 +187,12 @@ public class PlayerSpawnerCustom : NetworkBehaviour
         }
 
         return points[Random.Range(0, points.Count)];
+    }
+
+    [ObserversRpc]
+    private void HideLoadingObservers()
+    {
+        StartCoroutine(HideLoadingScreenWithDelay());
     }
 
     private IEnumerator HideLoadingScreenWithDelay()
