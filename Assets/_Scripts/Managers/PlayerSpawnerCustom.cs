@@ -7,6 +7,8 @@ using UnityEngine;
 
 public class PlayerSpawnerCustom : NetworkBehaviour
 {
+    public static PlayerSpawnerCustom Instance { get; private set; }
+
     [Header("Player Prefab")]
     [SerializeField]
     private NetworkObject _playerPrefab;
@@ -25,6 +27,11 @@ public class PlayerSpawnerCustom : NetworkBehaviour
     [Tooltip("True to add the player to the default scene upon spawning.")]
     [SerializeField]
     private bool _addToDefaultScene = true;
+
+    private void Awake()
+    {
+        Instance = this;
+    }
 
     public override void OnStartServer()
     {
@@ -128,6 +135,13 @@ public class PlayerSpawnerCustom : NetworkBehaviour
             return;
         }
 
+        // Late joiner: wait for team selection before spawning
+        if (LobbyManager.Instance != null && LobbyManager.Instance.IsPendingLateJoiner(conn.ClientId))
+        {
+            Debug.Log($"[Spawner] ClientId={conn.ClientId} is a pending late joiner. Waiting for team selection.");
+            return;
+        }
+
         // Determine this player's team
         Team playerTeam = Team.None;
         if (LobbyData.PlayerTeams.TryGetValue(conn.ClientId, out Team lobbyTeam))
@@ -201,5 +215,13 @@ public class PlayerSpawnerCustom : NetworkBehaviour
 
         if (LoadingManager.Instance != null)
             LoadingManager.Instance.Hide();
+    }
+
+    [Server]
+    public void SpawnSinglePlayer(NetworkConnection conn)
+    {
+        if (HasSpawnedPlayer(conn))
+            return;
+        SpawnPlayer(conn);
     }
 }
