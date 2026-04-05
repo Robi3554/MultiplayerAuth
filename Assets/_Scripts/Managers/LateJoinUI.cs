@@ -191,7 +191,7 @@ public class LateJoinUI : MonoBehaviour
         teamRowLayout.childControlWidth = true;
         teamRowLayout.childControlHeight = true;
         teamRowLayout.childForceExpandWidth = true;
-        teamRowLayout.childForceExpandHeight = false;
+        teamRowLayout.childForceExpandHeight = true;
         var teamRowLE = teamRow.AddComponent<LayoutElement>();
         teamRowLE.preferredHeight = 50;
 
@@ -284,6 +284,7 @@ public class LateJoinUI : MonoBehaviour
         tmp.fontStyle = FontStyles.Bold;
         tmp.color = Color.white;
         tmp.alignment = TextAlignmentOptions.Center;
+        tmp.raycastTarget = false;
 
         return btn;
     }
