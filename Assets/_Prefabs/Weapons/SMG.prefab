@@ -81,6 +81,59 @@ Transform:
   - {fileID: 7112990030179831298}
   m_Father: {fileID: 3963929329994855241}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1335221773780830255
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6607891230450646541}
+  - component: {fileID: 7500942585993718823}
+  m_Layer: 0
+  m_Name: WallCheckCollider
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6607891230450646541
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1335221773780830255}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0.00000023841855, y: -0.000001498847, z: 0.0000042752704, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3963929329994855241}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &7500942585993718823
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1335221773780830255}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 128
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.0010066383, y: 0.010110138, z: 0.00571075}
+  m_Center: {x: -0.000036986992, y: 0.0034289055, z: -0.0004641631}
 --- !u!1 &1752245226687291384
 GameObject:
   m_ObjectHideFlags: 0
@@ -716,6 +769,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: 97e2d49ed34c04f4996414c89aea1016, type: 3}
       insertIndex: -1
       addedObject: {fileID: 4473162061109274162}
+    - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: 97e2d49ed34c04f4996414c89aea1016, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6607891230450646541}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 97e2d49ed34c04f4996414c89aea1016, type: 3}
       insertIndex: -1
@@ -759,6 +815,7 @@ MonoBehaviour:
   reloadAudioSource: {fileID: 2179823877494820151}
   muzzleFlash: {fileID: 0}
   wallCheckCollider: {fileID: 0}
+  weaponHUD: {fileID: 0}
   playerLayer:
     serializedVersion: 2
     m_Bits: 64
@@ -793,6 +850,8 @@ MonoBehaviour:
   reloadAudioSource: {fileID: 2179823877494820151}
   muzzleFlash: {fileID: 0}
   wallCheckCollider: {fileID: 0}
+  weaponHUD: {fileID: 0}
   projectilePrefab: {fileID: 72838035728811199, guid: 962a47bbe2fb0b646b8895cdf8b44160, type: 3}
+  jamAudioSource: {fileID: 0}
   timeBetweenShots: 0.1
   burstCount: 3

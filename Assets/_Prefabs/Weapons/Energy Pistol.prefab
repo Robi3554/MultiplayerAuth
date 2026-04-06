@@ -272,6 +272,59 @@ MonoBehaviour:
     m_HintWeight: 1
     m_MaintainTargetPositionOffset: 0
     m_MaintainTargetRotationOffset: 0
+--- !u!1 &3284195070942356256
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5398633668935213857}
+  - component: {fileID: 7394978307826687512}
+  m_Layer: 0
+  m_Name: WallCheckCollider
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5398633668935213857
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3284195070942356256}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 5322550691431191195}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &7394978307826687512
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3284195070942356256}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 128
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.03907883, y: 0.1872159, z: 0.11368405}
+  m_Center: {x: 0.0026874729, y: 0.007035654, z: -0.034743708}
 --- !u!1 &3709966480279227771
 GameObject:
   m_ObjectHideFlags: 0
@@ -697,6 +750,9 @@ PrefabInstance:
       addedObject: {fileID: 1382730675259297705}
     - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: 67e34182af6df46459194cf4e20cd0ee, type: 3}
       insertIndex: -1
+      addedObject: {fileID: 5398633668935213857}
+    - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: 67e34182af6df46459194cf4e20cd0ee, type: 3}
+      insertIndex: -1
       addedObject: {fileID: 7875956227124745789}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 67e34182af6df46459194cf4e20cd0ee, type: 3}
@@ -704,13 +760,7 @@ PrefabInstance:
       addedObject: {fileID: 3980028035428594428}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 67e34182af6df46459194cf4e20cd0ee, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 3403562702567576854}
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 67e34182af6df46459194cf4e20cd0ee, type: 3}
-      insertIndex: -1
       addedObject: {fileID: 1280794750252728180}
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 67e34182af6df46459194cf4e20cd0ee, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 7377442243642034537}
   m_SourcePrefab: {fileID: 100100000, guid: 67e34182af6df46459194cf4e20cd0ee, type: 3}
 --- !u!1 &4798214918135629857 stripped
 GameObject:
@@ -740,7 +790,9 @@ MonoBehaviour:
   shootAudioSource: {fileID: 4142536059135947096}
   shootAudioClip: {fileID: 8300000, guid: b18bab8db6b4fa74f88f40f9e947d55f, type: 3}
   reloadAudioSource: {fileID: 5791500136311642115}
+  muzzleFlash: {fileID: 0}
   wallCheckCollider: {fileID: 0}
+  weaponHUD: {fileID: 0}
   playerLayer:
     serializedVersion: 2
     m_Bits: 64
@@ -748,59 +800,6 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 128
   shotLinePrefab: {fileID: 7133602437278059814, guid: 0e3e214fbff67c642a1f4f61c1361237, type: 3}
---- !u!114 &3403562702567576854
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4798214918135629857}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 26b716c41e9b56b4baafaf13a523ba2e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: FishNet.Runtime::FishNet.Object.NetworkObject
-  <IsNested>k__BackingField: 0
-  WasActiveDuringEdit: 0
-  WasActiveDuringEdit_Set1: 1
-  <ComponentIndex>k__BackingField: 0
-  <PredictedSpawn>k__BackingField: {fileID: 0}
-  <PredictedOwner>k__BackingField: {fileID: 0}
-  NetworkBehaviours:
-  - {fileID: 7377442243642034537}
-  InitializedParentNetworkBehaviour: {fileID: 0}
-  InitializedNestedNetworkObjects: []
-  RuntimeParentNetworkBehaviour: {fileID: 0}
-  RuntimeChildNetworkBehaviours: []
-  _isNetworked: 1
-  _isSpawnable: 1
-  _isGlobal: 0
-  _initializeOrder: 0
-  _preventDespawnOnDisconnect: 0
-  _defaultDespawnType: 0
-  NetworkObserver: {fileID: 0}
-  _enablePrediction: 0
-  _predictionType: 0
-  _graphicalObject: {fileID: 0}
-  _detachGraphicalObject: 0
-  _enableStateForwarding: 1
-  _networkTransform: {fileID: 0}
-  _ownerInterpolation: 1
-  _ownerSmoothedProperties: 255
-  _adaptiveInterpolation: 3
-  _spectatorSmoothedProperties: 255
-  _spectatorInterpolation: 2
-  _enableTeleport: 0
-  _teleportThreshold: 1
-  <PrefabId>k__BackingField: 11
-  <SpawnableCollectionId>k__BackingField: 0
-  <AssetPathHash>k__BackingField: 9555182384281400064
-  <SceneId>k__BackingField: 0
-  SerializedTransformProperties:
-    Position: {x: 0.05, y: 1.365, z: 0.476}
-    Rotation: {x: -0.70710695, y: 0.0000019632278, z: 0.0000040829177, w: 0.70710665}
-    Scale: {x: 4, y: 4, z: 4}
-    IsValid: 1
 --- !u!114 &1280794750252728180
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -824,23 +823,11 @@ MonoBehaviour:
   shootAudioSource: {fileID: 4142536059135947096}
   shootAudioClip: {fileID: 8300000, guid: b18bab8db6b4fa74f88f40f9e947d55f, type: 3}
   reloadAudioSource: {fileID: 5791500136311642115}
+  muzzleFlash: {fileID: 0}
   wallCheckCollider: {fileID: 395243978294020328}
+  weaponHUD: {fileID: 0}
   projectilePrefab: {fileID: 72838035728811199, guid: 962a47bbe2fb0b646b8895cdf8b44160, type: 3}
---- !u!114 &7377442243642034537
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4798214918135629857}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8a6a39c46bf52104ba8efe3100bce3f7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: FishNet.Runtime::FishNet.Object.EmptyNetworkBehaviour
-  _componentIndexCache: 0
-  _addedNetworkObject: {fileID: 3403562702567576854}
-  _networkObjectCache: {fileID: 3403562702567576854}
+  jamAudioSource: {fileID: 0}
 --- !u!4 &5322550691431191195 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 67e34182af6df46459194cf4e20cd0ee, type: 3}

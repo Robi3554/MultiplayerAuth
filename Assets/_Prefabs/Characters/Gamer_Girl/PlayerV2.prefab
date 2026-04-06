@@ -946,6 +946,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 26b716c41e9b56b4baafaf13a523ba2e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  NetworkObserver: {fileID: 0}
+  _enablePrediction: 1
+  _predictionType: 1
+  _graphicalObject: {fileID: 0}
+  _detachGraphicalObject: 0
+  _enableStateForwarding: 1
+  _networkTransform: {fileID: 0}
+  _ownerInterpolation: 1
+  _ownerSmoothedProperties: 4294967295
+  _adaptiveInterpolation: 3
+  _spectatorSmoothedProperties: 4294967295
+  _spectatorInterpolation: 2
+  _enableTeleport: 1
+  _teleportThreshold: 1
+  <PrefabId>k__BackingField: 7
+  <SpawnableCollectionId>k__BackingField: 0
+  <AssetPathHash>k__BackingField: 7227122753204966705
+  <SceneId>k__BackingField: 0
+  SerializedTransformProperties:
+    Position: {x: 0, y: 0, z: 0}
+    Rotation: {x: 0, y: 0, z: 0, w: 1}
+    Scale: {x: 1, y: 1, z: 1}
+    IsValid: 1
   <IsNested>k__BackingField: 0
   WasActiveDuringEdit: 0
   WasActiveDuringEdit_Set1: 1
@@ -4191,7 +4214,8 @@ PrefabInstance:
     - {fileID: -8816568010276086457, guid: cdcf0eae94ed1dd438685bad63846dbf, type: 3}
     - {fileID: 7377442243642034537, guid: cdcf0eae94ed1dd438685bad63846dbf, type: 3}
     - {fileID: 3403562702567576854, guid: cdcf0eae94ed1dd438685bad63846dbf, type: 3}
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 7806186164428191509, guid: cdcf0eae94ed1dd438685bad63846dbf, type: 3}
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: 5322550691431191195, guid: cdcf0eae94ed1dd438685bad63846dbf, type: 3}
       insertIndex: -1
@@ -4454,7 +4478,23 @@ MonoBehaviour:
     m_Active: 0
   - m_Rig: {fileID: 8630774766322733106}
     m_Active: 1
-  m_Effectors: []
+  m_Effectors:
+  - m_Transform: {fileID: 5778671634930275639}
+    m_Style:
+      shape: {fileID: 4300000, guid: c6793350c150f456688e39a81f97364a, type: 2}
+      color: {r: 1, g: 0, b: 0, a: 0.5}
+      size: 0.1
+      position: {x: 0, y: 0, z: 0}
+      rotation: {x: 0, y: 0, z: 0}
+    m_Visible: 1
+  - m_Transform: {fileID: 5778671634930275639}
+    m_Style:
+      shape: {fileID: 4300000, guid: c6793350c150f456688e39a81f97364a, type: 2}
+      color: {r: 1, g: 0, b: 0, a: 0.5}
+      size: 0.1
+      position: {x: 0, y: 0, z: 0}
+      rotation: {x: 0, y: 0, z: 0}
+    m_Visible: 1
 --- !u!114 &4311814598240723044
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5154,6 +5194,16 @@ PrefabInstance:
     m_TransformParent: {fileID: 7005966477742677644}
     m_Modifications:
     - target: {fileID: 1993874010740704856, guid: ea07a6998ea6bb343a086f2403b86cd9, type: 3}
+      propertyPath: m_InitialEventName
+      value: OnSlash
+      objectReference: {fileID: 0}
+    - target: {fileID: 1993874010740704856, guid: ea07a6998ea6bb343a086f2403b86cd9, type: 3}
+      propertyPath: m_InitialEventNameOverriden
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3326410324996173108, guid: ea07a6998ea6bb343a086f2403b86cd9, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.34133783
       propertyPath: m_InitialEventNameOverriden
       value: 1
       objectReference: {fileID: 0}
@@ -5171,7 +5221,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3326410324996173108, guid: ea07a6998ea6bb343a086f2403b86cd9, type: 3}
       propertyPath: m_LocalScale.z
-      value: 0.74485
+      value: 0.6447238
       objectReference: {fileID: 0}
     - target: {fileID: 3326410324996173108, guid: ea07a6998ea6bb343a086f2403b86cd9, type: 3}
       propertyPath: m_LocalPosition.x
@@ -5277,6 +5327,11 @@ PrefabInstance:
 --- !u!4 &4357579909354699731 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4783109202052940752, guid: ea07a6998ea6bb343a086f2403b86cd9, type: 3}
+  m_PrefabInstance: {fileID: 9086082261542221827}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &5778671634930275639 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 3326410324996173108, guid: ea07a6998ea6bb343a086f2403b86cd9, type: 3}
   m_PrefabInstance: {fileID: 9086082261542221827}
   m_PrefabAsset: {fileID: 0}
 --- !u!2083052967 &7328366445604568667 stripped
