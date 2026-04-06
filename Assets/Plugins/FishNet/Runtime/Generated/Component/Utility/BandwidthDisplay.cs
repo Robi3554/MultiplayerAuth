@@ -193,6 +193,7 @@ namespace FishNet.Component.Utility
 
             if (!_networkTrafficStatistics.UpdateClient && !_networkTrafficStatistics.UpdateServer)
             {
+                
                 Debug.LogWarning($"StatisticsManager.NetworkTraffic is not updating for client nor server. To see results ensure your NetworkManager has a StatisticsManager component added with the NetworkTraffic values configured.");
                 return;
             }

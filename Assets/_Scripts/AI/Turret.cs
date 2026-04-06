@@ -143,7 +143,6 @@ public class Turret : NetworkBehaviour
     {
         if (projectilePrefab == null)
         {
-            Debug.LogWarning("Turret: No projectile prefab assigned!");
             return;
         }
 

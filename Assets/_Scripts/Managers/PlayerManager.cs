@@ -48,11 +48,8 @@ public class PlayerManager : NetworkBehaviour
 
     public void DamagePlayer(int victimClientId, int damage, int attackerClientId)
     {
-        Debug.Log("DAVEEE: DamagePlayer entered!");
         if (!IsServerInitialized)
             return;
-        
-        Debug.Log("DAVEEE: continai");
 
         if (!players.ContainsKey(victimClientId))
         {
@@ -68,19 +65,13 @@ public class PlayerManager : NetworkBehaviour
             Team attackerTeam = players[attackerClientId].stats.team.Value;
             if (victimTeam == attackerTeam && victimTeam != Team.None)
             {
-                Debug.Log($"[PlayerManager] Friendly fire blocked: {attackerClientId} → {victimClientId} (same team: {victimTeam})");
                 return;
             }
         }
 
-        Debug.Log("DAVEEE: Am ajuns aici?");
-
         var victim = players[victimClientId];
-        Debug.Log("DAVEEE: vicky {}");
         var victimStats = victim.stats;
         if (victimStats == null) return;
-        
-        Debug.Log("DAVEEE: de aici incolo dam damage!!!!");
 
         victimStats.TakeDamage(damage);
 
@@ -99,7 +90,7 @@ public class PlayerManager : NetworkBehaviour
         if (victimStats.isRespawning.Value)
             return;
 
-        victim.playerObject.GetComponentInChildren<NetworkAnimator>().SetTrigger("Death");
+        SetPlayerAnimation(victim.playerObject, "Death");
 
         victim.playerObject.layer = deadLayer;
         SetPlayersLayer(victim.playerObject, deadLayer);
@@ -118,7 +109,8 @@ public class PlayerManager : NetworkBehaviour
         }
 
         //show death screen on client and wait before respawning
-        DeathScreenManager.Instance.ShowDeathScreen(victim.connection);
+        if(GameModeManager.Instance.isGameActive.Value)
+            DeathScreenManager.Instance.ShowDeathScreen(victim.connection);
         StartCoroutine(RespawnAfterDelay(victim, victimStats));
     }
 
@@ -131,6 +123,11 @@ public class PlayerManager : NetworkBehaviour
         RespawnPlayer(victim.connection, victim.playerObject, spawnIndex);
         ReloadPlayerGuns(victim.connection, victim.playerObject);
 
+        victim.playerObject.layer = aliveLayer;
+        SetPlayersLayer(victim.playerObject, aliveLayer);
+
+        SetPlayerAnimation(victim.playerObject, "Idle");
+
         victimStats.isRespawning.Value = false;
     }
 
@@ -141,11 +138,6 @@ public class PlayerManager : NetworkBehaviour
         if (rb)
             rb.linearVelocity = Vector3.zero;
 
-        player.layer = aliveLayer;
-        SetPlayersLayer(player, aliveLayer);
-
-        player.GetComponentInChildren<NetworkAnimator>().SetTrigger("Idle");
-
         player.transform.position = spawnPoints[spawn].position;
         player.transform.rotation = spawnPoints[spawn].rotation;
     }
@@ -154,21 +146,25 @@ public class PlayerManager : NetworkBehaviour
     void ReloadPlayerGuns(NetworkConnection conn, GameObject player)
     {
         var weapons = player.GetComponentsInChildren<Weapon>(true);
-        Debug.Log("Weapons : " + weapons.Length);
         foreach (var weapon in weapons)
         {
             weapon.OnDeathReload();
         }
     }
 
-    //[ObserversRpc]
+    [ObserversRpc]
     void SetPlayersLayer(GameObject player, int layer) => player.layer = layer;
+
+    [ObserversRpc]
+    void SetPlayerAnimation(GameObject player, string trigger)
+    {
+        player.GetComponentInChildren<NetworkAnimator>().SetTrigger(trigger);
+    }
 
     // NEW METHOD: Called by GameModeManager to reset all players
     [Server]
     public void ResetAllPlayers()
     {
-        Debug.Log("[PlayerManager] Resetting all players...");
 
         foreach (var kvp in players)
         {

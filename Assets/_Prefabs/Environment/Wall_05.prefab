@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 7457916645694523130}
   m_Layer: 7
   m_Name: Collider_01
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -65,7 +65,7 @@ GameObject:
   - component: {fileID: 8865000468852763948}
   m_Layer: 7
   m_Name: Collider_03
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -118,7 +118,7 @@ GameObject:
   - component: {fileID: 4784554231805496349}
   m_Layer: 7
   m_Name: Collider_02
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -239,6 +239,10 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 7
       objectReference: {fileID: 0}
+    - target: {fileID: -2157242212128355462, guid: 292a2a32044bc4847bba8525cb206533, type: 3}
+      propertyPath: m_TagString
+      value: Wall
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 292a2a32044bc4847bba8525cb206533, type: 3}
       propertyPath: m_Name
       value: Wall_05
@@ -246,6 +250,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 292a2a32044bc4847bba8525cb206533, type: 3}
       propertyPath: m_Layer
       value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 292a2a32044bc4847bba8525cb206533, type: 3}
+      propertyPath: m_TagString
+      value: Wall
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

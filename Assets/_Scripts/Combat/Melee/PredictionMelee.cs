@@ -57,7 +57,6 @@ public class PredictionMelee : NetworkBehaviour
 		if (playerStats != null && playerStats.isRespawning.Value)
 			return;
 
-		Debug.Log("Melee: left click pressed");
 		if (context.performed)
 		{
 			_meleePressed = true;
@@ -93,7 +92,6 @@ public class PredictionMelee : NetworkBehaviour
 		// Check if animation has finished and reset the flag
 		if (_isAnimating && !animator.GetBool(IsSlashingHash))
 		{
-			Debug.Log("Melee: Animation finished, resetting _isAnimating");
 			_isAnimating = false;
 			StartCooldownServerRpc();
 			_cooldownTimer = 0f;
@@ -135,19 +133,15 @@ public class PredictionMelee : NetworkBehaviour
 	{
 		if (Slash)
 		{
-			Debug.Log("Melee: Attack pressed");
 			if (enemyCollider.CompareTag("Player") && enemyCollider != playerCollider)
 			{
-				Debug.Log("Melee: Hit a player");
 				int targetId = enemyCollider.transform.GetComponent<NetworkObject>().Owner.ClientId;
 				int attackerId = transform.GetComponent<NetworkObject>().Owner.ClientId;
-				Debug.Log($"DAVEEEEEEE: target: {targetId} aaaand attacker: {attackerId}");
 				PlayerManager.Instance.DamagePlayer(targetId, Damage, attackerId);
 				
 			}
 			else if (enemyCollider.CompareTag("Robot"))
 			{
-				Debug.Log("Melee: Hit robot!");
 				if(enemyCollider.GetComponent<KamikazeRobot>() != null)
 				{
 					var robot = enemyCollider.GetComponent<KamikazeRobot>();
@@ -170,9 +164,7 @@ public class PredictionMelee : NetworkBehaviour
     //[ServerRpc(RequireOwnership = false)]
 	private void DespawnRobot(NetworkObject robot)
 	{
-		Debug.Log("DAVIDDDDDDDDDDDDDDDDDDDD: Despawned robot");
 		RobotSpawnManager.Instance.DespawnRobot(robot);
-		Debug.Log("DAVIDDDDDDDDDDDDDDDDDDDD: OUT");
     }
 
 

@@ -28,10 +28,6 @@ public class PickUpRespawn : NetworkBehaviour
         {
             _respawnList[index] = respawnData;
         }
-        else
-        {
-            Debug.LogWarning($"Index {index} is out of range for _respawnList (Count: {_respawnList.Count})");
-        }
     }
 
     public override void OnStartServer()
@@ -42,7 +38,6 @@ public class PickUpRespawn : NetworkBehaviour
     // call this method to start the respawn timer in the item
     public void StartRespawnTimer(NetworkObject pickedNetworkObj, Vector3 initPosition, Quaternion initRotation)
     {
-        Debug.Log("PickUpRespawn: Starting respawn timer");
         if (pickedNetworkObj == null || !IsServerStarted) return;
         RespawnData newRespawn = new RespawnData
         {
@@ -79,7 +74,6 @@ public class PickUpRespawn : NetworkBehaviour
     }
     private void RespawnChildServer(RespawnData data)
     {
-        Debug.Log("PickUpRespawn: Respawning child on server");
         if (spawnableObjPrefab == null)
         {
             Debug.LogError("PickUpRespawn: spawnableObjPrefab is null; cannot respawn.");

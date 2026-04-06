@@ -12,7 +12,6 @@ public class PlayerNetworkInitializer : NetworkBehaviour
 
         if (PlayerManager.Instance == null)
         {
-            Debug.LogWarning("[PlayerNetworkInitializer] PlayerManager not found — player spawned outside game scene?");
             return;
         }
 
@@ -32,7 +31,22 @@ public class PlayerNetworkInitializer : NetworkBehaviour
         base.OnStartClient();
 
         if (!IsOwner)
+        {
             playerHUD.SetActive(false);
+            return;
+        }
+
+        // Configure mobile input mode for the local player
+        var movement = GetComponent<PredictionMoving>();
+        if (MobileInputManager.Instance != null)
+        {
+            MobileInputManager.Instance.ConfigureLocalPlayer(movement);
+        }
+        else if (Application.isMobilePlatform)
+        {
+            // Fallback: MobileInputManager not in scene, set joystick mode directly
+            movement.SetInputMode(true);
+        }
     }
 
     // Called by RaycastShoot when a hit happens
@@ -45,7 +59,6 @@ public class PlayerNetworkInitializer : NetworkBehaviour
         int targetId = (int)targetPlayer.Owner.ClientId;
         int attackerId = (int)Owner.ClientId;
 
-        Debug.Log($"[Server] Player {attackerId} hit Player {targetId} for {damage} damage.");
         PlayerManager.Instance.DamagePlayer(targetId, damage, attackerId);
     }
 
@@ -80,7 +93,6 @@ public class PlayerNetworkInitializer : NetworkBehaviour
         ServerManager.Spawn(go);
 
         int attackerId = (int)Owner.ClientId;
-        Debug.Log("Attacker ID: " +  attackerId);
 
         if (go.TryGetComponent(out ProjectileScript p))
         {
@@ -93,7 +105,7 @@ public class PlayerNetworkInitializer : NetworkBehaviour
     {
         PlayProjectileWeaponSoundObserversRpc();
     }
-    
+
     [ObserversRpc]
     private void PlayProjectileWeaponSoundObserversRpc()
     {
@@ -101,7 +113,7 @@ public class PlayerNetworkInitializer : NetworkBehaviour
         if (weapon != null)
             weapon.PlaySound();
     }
-    
+
     [ServerRpc]
     public void NotifyMuzzleFlashServer()
     {
@@ -115,13 +127,13 @@ public class PlayerNetworkInitializer : NetworkBehaviour
         if (weapon != null)
             weapon.PlayMuzzleFlash();
     }
-    
+
     [ServerRpc]
     public void ControlFootstepSoundsServer(PredictionMoving playerMovement, float speed)
     {
         playerMovement.ControlFootstepSounds(speed);
     }
-    
+
     [ServerRpc]
     public void PlayDashSoundServer(PredictionMoving playerMovement)
     {

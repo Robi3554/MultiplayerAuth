@@ -5,11 +5,11 @@ using UnityEngine.SceneManagement;
 using FishNet;
 using FishNet.Managing;
 
-public class PauseMenuManager : MonoBehaviour 
+public class PauseMenuManager : MonoBehaviour
 {
     [SerializeField] private Canvas _pauseMenuCanvas;
     [SerializeField] private string _menuSceneName = "WelcomeScreen";
-    
+
     private PredictionMoving _playerMovement;
     private PlayerInput _playerInput;
     private bool _isPaused = false;
@@ -22,31 +22,39 @@ public class PauseMenuManager : MonoBehaviour
 
     private void Update()
     {
-        if (Keyboard.current != null && Keyboard.current.escapeKey.wasPressedThisFrame)
-        {
-            if (_isPaused)
-                Resume();
-            else
-                Pause();
-        }
+        bool escPressed = Keyboard.current != null && Keyboard.current.escapeKey.wasPressedThisFrame;
+        bool startPressed = Gamepad.current != null && Gamepad.current.startButton.wasPressedThisFrame;
+
+        if (escPressed || startPressed)
+            TogglePause();
+    }
+
+    /// <summary>
+    /// Called from the on-screen Pause button on mobile, or from keyboard ESC / gamepad Start.
+    /// </summary>
+    public void TogglePause()
+    {
+        if (_isPaused)
+            Resume();
+        else
+            Pause();
     }
 
     private IEnumerator FindLocalPlayerDelayed()
     {
         yield return new WaitForSeconds(0.5f);
-        
+
         PredictionMoving[] allPlayers = FindObjectsByType<PredictionMoving>(FindObjectsSortMode.None);
         foreach (var player in allPlayers)
         {
-            if (player.IsOwner) 
+            if (player.IsOwner)
             {
                 _playerMovement = player;
                 _playerInput = player.GetComponent<PlayerInput>();
-                Debug.Log("Local player found for pause menu!");
                 break;
             }
         }
-        
+
         if (_playerMovement == null)
         {
             Debug.LogWarning("Local player not found!");
@@ -71,7 +79,7 @@ public class PauseMenuManager : MonoBehaviour
     private IEnumerator FindLocalPlayerAndPause()
     {
         yield return FindLocalPlayerDelayed();
-        
+
         if (_playerMovement != null && _playerInput != null)
         {
             Pause();
@@ -105,9 +113,9 @@ public class PauseMenuManager : MonoBehaviour
     public void LeaveMatch()
     {
         Time.timeScale = 1f; // Reset time scale before leaving
-        
+
         NetworkManager networkManager = InstanceFinder.NetworkManager;
-        
+
         if (networkManager != null)
         {
             // Stop server if we're hosting
@@ -115,21 +123,21 @@ public class PauseMenuManager : MonoBehaviour
             {
                 networkManager.ServerManager.StopConnection(true);
             }
-            
+
             // Stop client connection
             if (networkManager.IsClientStarted)
             {
                 networkManager.ClientManager.StopConnection();
             }
-            
+
             // Destroy the persistent NetworkManager so a fresh one is created when rejoining
             Destroy(networkManager.gameObject);
         }
-        
+
         // Load scene immediately - the NetworkManager destruction will complete
         SceneManager.LoadScene(_menuSceneName);
     }
-    
+
     public void QuitGame()
     {
         #if UNITY_EDITOR

@@ -1,11 +1,14 @@
-using FishNet.Connection;
-using FishNet.Object;
-using FishNet.Managing.Scened;
-using UnityEngine;
+using System.Collections;
 using System.Collections.Generic; // Required for using Lists
+using FishNet.Connection;
+using FishNet.Managing.Scened;
+using FishNet.Object;
+using UnityEngine;
 
 public class PlayerSpawnerCustom : NetworkBehaviour
 {
+    public static PlayerSpawnerCustom Instance { get; private set; }
+
     [Header("Player Prefab")]
     [SerializeField]
     private NetworkObject _playerPrefab;
@@ -24,6 +27,11 @@ public class PlayerSpawnerCustom : NetworkBehaviour
     [Tooltip("True to add the player to the default scene upon spawning.")]
     [SerializeField]
     private bool _addToDefaultScene = true;
+
+    private void Awake()
+    {
+        Instance = this;
+    }
 
     public override void OnStartServer()
     {
@@ -56,6 +64,15 @@ public class PlayerSpawnerCustom : NetworkBehaviour
             return;
 
         SpawnAllConnectedPlayers();
+
+        // Hide the loading screen for the client(s)
+        // Only hide for non-server clients
+        foreach (var kvp in ServerManager.Clients)
+        {
+            NetworkConnection conn = kvp.Value;
+            if (!conn.IsLocalClient) continue; // Only hide for the local client
+            HideLoadingObservers();
+        }
     }
 
     /// <summary>
@@ -118,6 +135,13 @@ public class PlayerSpawnerCustom : NetworkBehaviour
             return;
         }
 
+        // Late joiner: wait for team selection before spawning
+        if (LobbyManager.Instance != null && LobbyManager.Instance.IsPendingLateJoiner(conn.ClientId))
+        {
+            Debug.Log($"[Spawner] ClientId={conn.ClientId} is a pending late joiner. Waiting for team selection.");
+            return;
+        }
+
         // Determine this player's team
         Team playerTeam = Team.None;
         if (LobbyData.PlayerTeams.TryGetValue(conn.ClientId, out Team lobbyTeam))
@@ -151,8 +175,6 @@ public class PlayerSpawnerCustom : NetworkBehaviour
         {
             base.SceneManager.AddOwnerToDefaultScene(playerInstance);
         }
-
-        Debug.Log($"[Spawner] Spawned player ClientId={conn.ClientId}, Team={playerTeam}, Mode={LobbyData.ResolvedGameMode}");
     }
 
     private Transform GetSpawnPoint(Team team)
@@ -175,10 +197,31 @@ public class PlayerSpawnerCustom : NetworkBehaviour
 
         if (points == null || points.Count == 0)
         {
-            Debug.LogWarning("[Spawner] No spawn points available! Using origin.");
             return transform;
         }
 
         return points[Random.Range(0, points.Count)];
+    }
+
+    [ObserversRpc]
+    private void HideLoadingObservers()
+    {
+        StartCoroutine(HideLoadingScreenWithDelay());
+    }
+
+    private IEnumerator HideLoadingScreenWithDelay()
+    {
+        yield return new WaitForSeconds(0.5f);
+
+        if (LoadingManager.Instance != null)
+            LoadingManager.Instance.Hide();
+    }
+
+    [Server]
+    public void SpawnSinglePlayer(NetworkConnection conn)
+    {
+        if (HasSpawnedPlayer(conn))
+            return;
+        SpawnPlayer(conn);
     }
 }

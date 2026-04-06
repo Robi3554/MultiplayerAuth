@@ -39,6 +39,7 @@ public class PlayerStats : NetworkBehaviour
     private Slider healthSlider;
 
     private bool isHeadBig;
+    private bool isDamageAmp;
 
     private static readonly Color RebelsColor = new Color(0.9f, 0.3f, 0.3f);
     private static readonly Color AIColor = new Color(0.3f, 0.5f, 0.9f);
@@ -52,9 +53,14 @@ public class PlayerStats : NetworkBehaviour
         ApplyBillboardTeamColor(team.Value);
 
         // Notify scoreboard that this player spawned
+        Debug.Log("PlayerStats OnStartClient: Registering player with ScoreboardManager: " + username.Value);
         if (ScoreboardManager.Instance != null)
         {
             ScoreboardManager.Instance.RegisterPlayer(this);
+        }
+        else
+        {
+            ScoreboardManager.AddPlayerToInitialList(this);
         }
 
         if (IsOwner)
@@ -173,13 +179,11 @@ public class PlayerStats : NetworkBehaviour
     {
         if ((health.Value + healAmount) >= 100)
         {
-            Debug.Log("Player healed to 100Hp");
             health.Value = 100;
         }
         else
         {
             health.Value += healAmount;
-            Debug.Log($"Player healed to {health.Value}");
         }
     }
 
@@ -307,7 +311,7 @@ public class PlayerStats : NetworkBehaviour
         ServerChangeMult(multiplier);
     }
 
-    [ServerRpc]
+    [ServerRpc(RequireOwnership = false)]
     private void ServerChangeMult(int multiplier)
     {
         StartCoroutine(ChangeMultCo(multiplier));
@@ -315,12 +319,16 @@ public class PlayerStats : NetworkBehaviour
 
     private IEnumerator ChangeMultCo(int multiplier)
     {
-        if (isHeadBig)
+        if (!isDamageAmp)
         {
             int oldMultiplier = damageMult;
             damageMult = multiplier;
+            
+            isDamageAmp = true;
 
             yield return new WaitForSeconds(10f);
+            
+            isDamageAmp = false;
 
             damageMult = oldMultiplier;
         }

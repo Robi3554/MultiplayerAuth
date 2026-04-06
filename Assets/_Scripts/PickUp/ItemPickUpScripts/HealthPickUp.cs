@@ -23,7 +23,6 @@ public class HealthPickUp : PickUpObject
             // cache initial position and rotation on server
             initPosition.Value = transform.position;
             initRotation.Value = transform.rotation;
-            Debug.Log($"HealthPickUp: Cached initial position at {initPosition.Value}");
         }
     }
 
@@ -35,15 +34,9 @@ public class HealthPickUp : PickUpObject
 
     private void OnEnable()
     {
-        Debug.Log($"HealthPickUp: OnEnable IsServerInitialized:{IsServerInitialized}, IsServerStarted:{IsServerStarted}, IsClientInitialized:{IsClientInitialized}");
         if (IsServerInitialized)
         {
-            Debug.Log("HealthPickUp: Enable on server");
             ResetPickupState();
-        }
-        if (IsClientInitialized)
-        {
-            Debug.Log("HealthPickUp: Enable on client");
         }
     }
 
@@ -56,22 +49,13 @@ public class HealthPickUp : PickUpObject
         PlayerStats playerStats = other.GetComponentInParent<PlayerStats>();
         if (playerStats != null)
         {
-            Debug.Log("HealthPickUp: Healing player");
             playerStats.HealPlayer(healAmount); // call the server-side HealPlayer method
-        }
-        else
-        {
-            Debug.LogWarning("HealthPickUp: PlayerStats component not found");
         }
         // get the PickUpRespawn component from the parent
         PickUpRespawn parentRespawn = GetComponentInParent<PickUpRespawn>();
         if (parentRespawn != null)
         {
             parentRespawn.StartRespawnTimer(this.NetworkObject,initPosition.Value,initRotation.Value); // call the StartRespawnTimer method on the parent
-        }
-        else
-        {
-            Debug.LogWarning("HealthPickUp: PickUpRespawn component not found on parent!");
         }
     }
 }
