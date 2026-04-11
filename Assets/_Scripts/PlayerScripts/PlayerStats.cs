@@ -25,7 +25,12 @@ public class PlayerStats : NetworkBehaviour
     [SerializeField] private AudioSource _hitAudioSource;
     [SerializeField] private AudioClip _hitAudioClip;
     [SerializeField] private GameObject _damageTakenVfx;
-    
+    [SerializeField] private Canvas _playerGlued;
+    [SerializeField] private GameObject _floatingDamage;
+    private int damageTextCount = 0;
+    private int accumulatedDamage = 0;
+    private Coroutine damageRoutine;
+
     [Header("UI stats")]
     [SerializeField] private TMP_Text _killText; 
     [SerializeField] private TMP_Text _deathText;
@@ -143,12 +148,7 @@ public class PlayerStats : NetworkBehaviour
     {
         if (_usernameTextOnBillboard == null) return;
 
-        _usernameTextOnBillboard.color = t switch
-        {
-            Team.Rebels => RebelsColor,
-            Team.AI     => AIColor,
-            _           => Color.white
-        };
+        _usernameTextOnBillboard.color = GetTeamColor(t);
     }
 
     void Update()
@@ -172,6 +172,7 @@ public class PlayerStats : NetworkBehaviour
         TargetHitSound();
         TargetShakeCamera(Owner, 0.5f, 0.1f);
         TargetDamagedVFX();
+        AccumulateDamage(damage);
     }
 
     [Server]
@@ -236,6 +237,69 @@ public class PlayerStats : NetworkBehaviour
             _damageTakenVfx.GetComponent<ParticleSystem>().Play();
         }
     }
+
+    #region Floating Damage Text
+    [ObserversRpc]
+    private void ShowText(int damage)
+    {
+        GameObject text = Instantiate(_floatingDamage, _playerGlued.transform);
+
+        RectTransform rt = text.GetComponent<RectTransform>();
+        RectTransform usernameRT = _usernameTextOnBillboard.GetComponent<RectTransform>();
+
+        Vector2 basePos = usernameRT.anchoredPosition + new Vector2(0, 30f);
+
+        float stackOffset = damageTextCount * 15f;
+
+        float randomX = UnityEngine.Random.Range(-15f, 15f);
+        float randomY = UnityEngine.Random.Range(0f, 10f);
+
+        rt.anchoredPosition = basePos + new Vector2(randomX, randomY + stackOffset);
+
+        TMP_Text tmp = text.GetComponent<TMP_Text>();
+        tmp.text = damage.ToString();
+        tmp.color = GetTeamColor(team.Value);
+
+        damageTextCount++;
+
+        StartCoroutine(ResetDamageTextCount());
+    }
+
+    private Color GetTeamColor(Team t)
+    {
+        return t switch
+        {
+            Team.Rebels => RebelsColor,
+            Team.AI => AIColor,
+            _ => Color.white
+        };
+    }
+
+    private IEnumerator ResetDamageTextCount()
+    {
+        yield return new WaitForSeconds(0.5f);
+        damageTextCount = Mathf.Max(0, damageTextCount - 1);
+    }
+
+    private void AccumulateDamage(int damage)
+    {
+        accumulatedDamage += damage;
+        if(damageRoutine != null) 
+            StopCoroutine(damageRoutine);
+
+        damageRoutine = StartCoroutine(ShowAccumulatedDamage());
+    }
+
+    private IEnumerator ShowAccumulatedDamage()
+    {
+        yield return new WaitForSeconds(0.1f);
+
+        ShowText(accumulatedDamage);
+
+        accumulatedDamage = 0;
+        damageRoutine = null;
+    }
+    #endregion
 
     private void InitUI()
     {

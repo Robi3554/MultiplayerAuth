@@ -8834,6 +8834,8 @@ MonoBehaviour:
   _hitAudioSource: {fileID: 8479587830544246739}
   _hitAudioClip: {fileID: 8300000, guid: 920fd5498c3b21b4eadefe5f6dc29c0b, type: 3}
   _damageTakenVfx: {fileID: 5365166667201668719}
+  _playerGlued: {fileID: 2183982200293380521}
+  _floatingDamage: {fileID: 2695494221600626890, guid: 4c65f9397eda42548a64f7c9bc2ab836, type: 3}
   _killText: {fileID: 5551932082331895800}
   _deathText: {fileID: 24850146785302064}
   _healthText: {fileID: 6437446347497816002}
@@ -32330,7 +32332,6 @@ MonoBehaviour:
     NetworkManager: {fileID: 0}
     NetworkBehaviour: {fileID: 0}
     _value: 25
-  slashPoint: {fileID: 0}
   coneAngle: 60
   VFX_SLASH: {fileID: 7278037312050733163}
   animator: {fileID: 7801810563577014767}
