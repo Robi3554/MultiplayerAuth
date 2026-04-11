@@ -946,29 +946,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 26b716c41e9b56b4baafaf13a523ba2e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  NetworkObserver: {fileID: 0}
-  _enablePrediction: 1
-  _predictionType: 1
-  _graphicalObject: {fileID: 0}
-  _detachGraphicalObject: 0
-  _enableStateForwarding: 1
-  _networkTransform: {fileID: 0}
-  _ownerInterpolation: 1
-  _ownerSmoothedProperties: 4294967295
-  _adaptiveInterpolation: 3
-  _spectatorSmoothedProperties: 4294967295
-  _spectatorInterpolation: 2
-  _enableTeleport: 1
-  _teleportThreshold: 1
-  <PrefabId>k__BackingField: 7
-  <SpawnableCollectionId>k__BackingField: 0
-  <AssetPathHash>k__BackingField: 7227122753204966705
-  <SceneId>k__BackingField: 0
-  SerializedTransformProperties:
-    Position: {x: 0, y: 0, z: 0}
-    Rotation: {x: 0, y: 0, z: 0, w: 1}
-    Scale: {x: 1, y: 1, z: 1}
-    IsValid: 1
   <IsNested>k__BackingField: 0
   WasActiveDuringEdit: 0
   WasActiveDuringEdit_Set1: 1
@@ -1118,6 +1095,8 @@ MonoBehaviour:
   _hitAudioSource: {fileID: 6368002052658960838}
   _hitAudioClip: {fileID: 8300000, guid: 920fd5498c3b21b4eadefe5f6dc29c0b, type: 3}
   _damageTakenVfx: {fileID: 6220200228329462400}
+  _playerGlued: {fileID: 4593819146620973095}
+  _floatingDamage: {fileID: 2695494221600626890, guid: 4c65f9397eda42548a64f7c9bc2ab836, type: 3}
   _killText: {fileID: 2055468401315117420}
   _deathText: {fileID: 3931334673081709720}
   _healthText: {fileID: 6518951647710343010}
@@ -2539,6 +2518,11 @@ PrefabInstance:
 --- !u!224 &4098434517043087306 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 1381899205929497574, guid: 950c997c80c3f8a42956a570dbe956ce, type: 3}
+  m_PrefabInstance: {fileID: 3156441126028702764}
+  m_PrefabAsset: {fileID: 0}
+--- !u!223 &4593819146620973095 stripped
+Canvas:
+  m_CorrespondingSourceObject: {fileID: 1444925781479572491, guid: 950c997c80c3f8a42956a570dbe956ce, type: 3}
   m_PrefabInstance: {fileID: 3156441126028702764}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &5956568383369459251 stripped
@@ -5198,12 +5182,6 @@ PrefabInstance:
       value: OnSlash
       objectReference: {fileID: 0}
     - target: {fileID: 1993874010740704856, guid: ea07a6998ea6bb343a086f2403b86cd9, type: 3}
-      propertyPath: m_InitialEventNameOverriden
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3326410324996173108, guid: ea07a6998ea6bb343a086f2403b86cd9, type: 3}
-      propertyPath: m_LocalScale.x
-      value: 0.34133783
       propertyPath: m_InitialEventNameOverriden
       value: 1
       objectReference: {fileID: 0}
