@@ -18,7 +18,7 @@ public class LobbyBootstrap : MonoBehaviour
     [Tooltip("Drag the LobbyManager prefab here. It will be spawned on the server at runtime.")]
     [SerializeField] private NetworkObject lobbyManagerPrefab;
 
-    private const ushort BayouPort = 8080;
+    private const ushort BayouPort = 7777;
 
     private void Awake()
     {

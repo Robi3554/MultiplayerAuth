@@ -11,7 +11,7 @@ public class GameBootstrap : MonoBehaviour
     [SerializeField] private string defaultAddress = "localhost";
     [SerializeField] private ushort defaultPort = 7777;
 
-    private const ushort BayouPort = 8080;
+    private const ushort BayouPort = 7777;
 
     private void Awake()
     {
