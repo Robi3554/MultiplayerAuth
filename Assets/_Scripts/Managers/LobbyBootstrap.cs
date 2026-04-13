@@ -3,6 +3,11 @@ using FishNet.Managing;
 using FishNet.Object;
 using FishNet.Transporting.Tugboat;
 using FishNet.Transporting;
+#if UNITY_WEBGL && !UNITY_EDITOR
+using FishNet.Transporting.Bayou;
+#else
+using FishNet.Transporting.Multipass;
+#endif
 
 /// <summary>
 /// Handles network connection setup in the Lobby scene.
@@ -12,6 +17,7 @@ public class LobbyBootstrap : MonoBehaviour
 {
     [SerializeField] private NetworkManager networkManager;
     [SerializeField] private ushort defaultPort = 7777;
+    [SerializeField] private ushort webGLPort = 7770;
 
     [Header("Lobby Manager (Prefab)")]
     [Tooltip("Drag the LobbyManager prefab here. It will be spawned on the server at runtime.")]
@@ -85,16 +91,29 @@ public class LobbyBootstrap : MonoBehaviour
 
     private void InitializeConnection()
     {
+#if UNITY_WEBGL && !UNITY_EDITOR
+        // WebGL: use Bayou (WebSocket) transport
+        Bayou bayou = networkManager.GetComponent<Bayou>();
+        if (bayou == null)
+        {
+            Debug.LogError("[LobbyBootstrap] Bayou transport not found on NetworkManager! Add the Bayou component for WebGL builds.");
+            return;
+        }
+
+        string address = string.IsNullOrWhiteSpace(ConnectionInfo.IpAddress) ? "localhost" : ConnectionInfo.IpAddress;
+        bayou.SetClientAddress(address);
+        bayou.SetPort(webGLPort);
+        networkManager.TransportManager.Transport = bayou;
+
+        Debug.Log($"[LobbyBootstrap] WebGL → Bayou client connecting to {address}:{webGLPort}");
+        networkManager.ClientManager.StartConnection();
+#else
         Tugboat tugboat = networkManager.GetComponent<Tugboat>();
         if (tugboat == null)
         {
             Debug.LogError("[LobbyBootstrap] Tugboat transport not found!");
             return;
         }
-
-#if UNITY_WEBGL && !UNITY_EDITOR
-        Debug.LogError("[LobbyBootstrap] WebGL build detected but current transport is Tugboat (UDP). Browsers cannot use UDP sockets. Configure a WebSocket/WebRTC transport for WebGL clients.");
-#endif
 
         string address = string.IsNullOrWhiteSpace(ConnectionInfo.IpAddress) ? "localhost" : ConnectionInfo.IpAddress;
         tugboat.SetPort(defaultPort);
@@ -119,6 +138,7 @@ public class LobbyBootstrap : MonoBehaviour
             else
             {
                 Debug.Log("[LobbyBootstrap] ParrelSync original → HOST (localhost).");
+                SetupMultipass(tugboat);
                 networkManager.ServerManager.StartConnection();
                 networkManager.ClientManager.StartConnection();
             }
@@ -127,6 +147,7 @@ public class LobbyBootstrap : MonoBehaviour
 #elif DEDICATED_SERVER
         // Bind to all interfaces so external clients can connect
         tugboat.SetServerBindAddress("0.0.0.0", IPAddressType.IPv4);
+        SetupMultipass(tugboat);
         Debug.Log("[LobbyBootstrap] Starting Dedicated Server on 0.0.0.0:" + defaultPort);
         networkManager.ServerManager.StartConnection();
 
@@ -138,8 +159,32 @@ public class LobbyBootstrap : MonoBehaviour
 #else
         tugboat.SetClientAddress(address);
         if (address == "localhost")
+        {
+            SetupMultipass(tugboat);
             networkManager.ServerManager.StartConnection();
+        }
         networkManager.ClientManager.StartConnection();
 #endif
+#endif // !UNITY_WEBGL
     }
+
+#if !(UNITY_WEBGL && !UNITY_EDITOR)
+    /// <summary>
+    /// Configures Multipass to wrap Tugboat + Bayou so the server accepts both UDP and WebSocket clients.
+    /// Sets Tugboat as the client transport for non-WebGL builds.
+    /// </summary>
+    private void SetupMultipass(Tugboat tugboat)
+    {
+        var multipass = networkManager.GetComponent<Multipass>();
+        if (multipass == null)
+        {
+            Debug.LogWarning("[LobbyBootstrap] Multipass not found on NetworkManager. Server will only accept Tugboat (UDP) connections.");
+            return;
+        }
+
+        multipass.SetClientTransport<Tugboat>();
+        networkManager.TransportManager.Transport = multipass;
+        Debug.Log($"[LobbyBootstrap] Multipass enabled — Tugboat:{defaultPort} + Bayou:{webGLPort}");
+    }
+#endif
 }

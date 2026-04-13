@@ -3,12 +3,18 @@ using FishNet.Managing;
 using FishNet.Transporting.Tugboat;
 using System;
 using FishNet.Transporting;
+#if UNITY_WEBGL && !UNITY_EDITOR
+using FishNet.Transporting.Bayou;
+#else
+using FishNet.Transporting.Multipass;
+#endif
 
 public class GameBootstrap : MonoBehaviour
 {
     [SerializeField] private NetworkManager networkManager;
     [SerializeField] private string defaultAddress = "localhost";
     [SerializeField] private ushort defaultPort = 7777;
+    [SerializeField] private ushort webGLPort = 7770;
 
     private void Awake()
     {
@@ -37,6 +43,23 @@ public class GameBootstrap : MonoBehaviour
 
     private void InitializeConnection()
     {
+#if UNITY_WEBGL && !UNITY_EDITOR
+        // WebGL: use Bayou (WebSocket) transport
+        Bayou bayou = networkManager.GetComponent<Bayou>();
+        if (bayou == null)
+        {
+            Debug.LogError("[Bootstrap] Bayou transport not found on NetworkManager! Add the Bayou component for WebGL builds.");
+            return;
+        }
+
+        string address = string.IsNullOrWhiteSpace(ConnectionInfo.IpAddress) ? "localhost" : ConnectionInfo.IpAddress;
+        bayou.SetClientAddress(address);
+        bayou.SetPort(webGLPort);
+        networkManager.TransportManager.Transport = bayou;
+
+        Debug.Log($"[Bootstrap] WebGL → Bayou client connecting to {address}:{webGLPort}");
+        networkManager.ClientManager.StartConnection();
+#else
         // Transport
         Tugboat tugboat = networkManager.GetComponent<Tugboat>();
         if (tugboat == null)
@@ -66,6 +89,7 @@ public class GameBootstrap : MonoBehaviour
             Debug.Log("[ParrelSync] Starting as HOST (original).");
             if (address == "localhost")
             {
+                SetupMultipass(tugboat);
                 networkManager.ServerManager.StartConnection();
             }
 
@@ -75,6 +99,7 @@ public class GameBootstrap : MonoBehaviour
 #elif DEDICATED_SERVER
         // --- BUILD MODE: Dedicated Server ---
         tugboat.SetServerBindAddress("0.0.0.0", IPAddressType.IPv4);
+        SetupMultipass(tugboat);
         Debug.Log("[Bootstrap] Starting Dedicated Server on 0.0.0.0:" + defaultPort);
         networkManager.ServerManager.StartConnection();
 
@@ -97,10 +122,32 @@ public class GameBootstrap : MonoBehaviour
 
         tugboat.SetServerBindAddress(serverAddress, IPAddressType.IPv4);
 
+        SetupMultipass(tugboat);
         Debug.Log("[Bootstrap] Starting Dedicated Server.");
         networkManager.ServerManager.StartConnection();
         Debug.Log("[Bootstrap] Starting Host (default).");
 
 #endif
+#endif // !UNITY_WEBGL
     }
+
+#if !(UNITY_WEBGL && !UNITY_EDITOR)
+    /// <summary>
+    /// Configures Multipass to wrap Tugboat + Bayou so the server accepts both UDP and WebSocket clients.
+    /// Sets Tugboat as the client transport for non-WebGL builds.
+    /// </summary>
+    private void SetupMultipass(Tugboat tugboat)
+    {
+        var multipass = networkManager.GetComponent<Multipass>();
+        if (multipass == null)
+        {
+            Debug.LogWarning("[Bootstrap] Multipass not found on NetworkManager. Server will only accept Tugboat (UDP) connections.");
+            return;
+        }
+
+        multipass.SetClientTransport<Tugboat>();
+        networkManager.TransportManager.Transport = multipass;
+        Debug.Log($"[Bootstrap] Multipass enabled — Tugboat:{defaultPort} + Bayou:{webGLPort}");
+    }
+#endif
 }
