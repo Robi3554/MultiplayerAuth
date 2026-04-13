@@ -21,6 +21,7 @@ public class GamerGirlAnimatorProxy : MonoBehaviour
     private void enableMeleeCollider()
     {
         meleeCollider.GetComponent<MeshCollider>().enabled = true;
+        meleeCollider.GetComponent<meleeCollision>().ExecuteHurtbox();
     }
 
     private void disableMeleeCollider()

@@ -152,7 +152,8 @@ public class PredictionMoving : NetworkBehaviour
         if (_playerStats != null && _playerStats.isRespawning.Value)
         {
             _rb.linearVelocity = Vector3.zero;
-            animator.SetFloat("Velocity", 0f);
+            animator.SetFloat("Z Velocity", 0f);
+            animator.SetFloat("X Velocity", 0f);
             return;
         }
         
@@ -167,12 +168,15 @@ public class PredictionMoving : NetworkBehaviour
         float speed = moveRate;
         Vector3 velocity = direction * speed;
         velocity.y = _rb.linearVelocity.y;
+        animator.SetFloat("Speed", direction.magnitude);
+        //calculate world velocity
+        Vector3 worldVelocity = new Vector3(_moveInput.x, 0f, _moveInput.y);
+        //convert world velocity to local space
+        Vector3 localVelocity = transform.InverseTransformDirection(worldVelocity);
+        
+        animator.SetFloat("X Velocity", localVelocity.x);
+        animator.SetFloat("Z Velocity", localVelocity.z);
 
-        //calculate if we are moving backwards
-        float dotProductDirection = Vector3.Dot(transform.forward, direction);
-        _isMovingBackwards = dotProductDirection < 0f && direction.magnitude > 0.1f;
-        float movingBackwards = _isMovingBackwards ? -1f : 1f;
-        animator.SetFloat("VelocityBackwardsValue", movingBackwards);
         if (_jumpPressed)
         {
             Debug.Log("jump Pressed");
@@ -182,16 +186,6 @@ public class PredictionMoving : NetworkBehaviour
 
         _rb.linearVelocity = velocity;
 
-        if (_isAnalogMovement)
-        {
-            animator.SetFloat("Velocity", direction.magnitude);
-        }
-        else
-        {
-            var vel = direction.magnitude > 0 ? 0.5f : 0f;
-            vel *= 1f;
-            animator.SetFloat("Velocity", vel);
-        }
     }
     
     private void Update()
@@ -391,7 +385,8 @@ public class PredictionMoving : NetworkBehaviour
 
     public void SetRunAnimFalse()
     {
-        animator.SetFloat("Velocity", 0);
+        animator.SetFloat("Z Velocity", 0);
+        animator.SetFloat("X Velocity", 0);
         _rb.linearVelocity = new Vector3(Mathf.Lerp(_rb.linearVelocity.x, 0, decelSpeed + Time.deltaTime), _rb.linearVelocity.y, Mathf.Lerp(_rb.linearVelocity.z, 0, decelSpeed + Time.deltaTime));
     }
     private void OnDrawGizmosSelected()

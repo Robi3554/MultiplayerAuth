@@ -6,6 +6,7 @@ using NUnit.Framework.Constraints;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.VFX;
+using System.Collections.Generic;
 
 public class PredictionMelee : NetworkBehaviour
 {
@@ -15,6 +16,7 @@ public class PredictionMelee : NetworkBehaviour
 	[SerializeField] private SyncVar<float> cooldownTime = new SyncVar<float>(1.25f);
 	[AllowMutableSyncType]
 	[SerializeField] private SyncVar<float> attackRange = new SyncVar<float>(3f);
+	[SerializeField] private float buffer = 0.5f; //extra distance to account for latency and hitbox size
 	[AllowMutableSyncType]
 	[SerializeField] private SyncVar<int> damage = new SyncVar<int>(10);
 
@@ -40,7 +42,7 @@ public class PredictionMelee : NetworkBehaviour
 	private float _cooldownTimer;
 	private bool _isAnimating = false;
 	private bool Slash;
-
+	private List<int> _hitTargetsThisSwing = new List<int>();
 	public override void OnStartNetwork()
 	{
 		base.OnStartNetwork();
@@ -91,7 +93,7 @@ public class PredictionMelee : NetworkBehaviour
 
 		// Check if animation has finished and reset the flag
 		if (_isAnimating && !animator.GetBool(IsSlashingHash))
-		{
+		{	
 			_isAnimating = false;
 			StartCooldownServerRpc();
 			_cooldownTimer = 0f;
@@ -99,7 +101,7 @@ public class PredictionMelee : NetworkBehaviour
 
 		if (_meleePressed && !_isOnCooldown.Value && !_isAnimating && !animator.GetBool(IsSlashingHash))
 		{
-			Slash = true;
+			// Slash = true;
 			PerformSlashRequestServerRpc();
 			netAnimator.SetTrigger(SlashTriggerHash);
 			_isAnimating = true; 
@@ -131,47 +133,79 @@ public class PredictionMelee : NetworkBehaviour
 
 	public void DealDamage(Collider enemyCollider)
 	{
-		if (Slash)
+		if (!IsOwner) return;
+		if (!Slash) return;
+		
+		int id = enemyCollider.gameObject.GetInstanceID(); //this is used to track who was hit this swing, so they dont get hit twice
+		if (_hitTargetsThisSwing.Contains(id)) return; //already hit this person!
+		_hitTargetsThisSwing.Add(id);
+
+		if (enemyCollider.CompareTag("Player") && enemyCollider != playerCollider)
 		{
-			if (enemyCollider.CompareTag("Player") && enemyCollider != playerCollider)
+			if (enemyCollider.TryGetComponent(out NetworkObject playerNetObj))
 			{
-				int targetId = enemyCollider.transform.GetComponent<NetworkObject>().Owner.ClientId;
-				int attackerId = transform.GetComponent<NetworkObject>().Owner.ClientId;
-				PlayerManager.Instance.DamagePlayer(targetId, Damage, attackerId);
-				
+				RequestDamage(playerNetObj);
 			}
-			else if (enemyCollider.CompareTag("Robot"))
+		}
+		else if (enemyCollider.CompareTag("Robot"))
+		{
+			NetworkObject robotNob = enemyCollider.GetComponentInParent<NetworkObject>();
+			if (robotNob != null)
 			{
-				if(enemyCollider.GetComponent<KamikazeRobot>() != null)
-				{
-					var robot = enemyCollider.GetComponent<KamikazeRobot>();
-					robot.DestroyRobot(playerCollider.GetComponent<NetworkObject>());
-					DespawnRobot(robot.NetworkObject);
-				}
-				else if(enemyCollider.GetComponent<LittleRobot>() != null)
-				{
-					var robot = enemyCollider.GetComponent<LittleRobot>();
-					robot.DestroyRobot(playerCollider.GetComponent<NetworkObject>());
-					DespawnRobot(robot.NetworkObject);
-				}
+				RequestRobotDestroyServerRpc(robotNob);
+			}else 
+			{
+				Debug.LogWarning($"Hit Robot tag on {enemyCollider.name} but found no NetworkObject!");
 			}
-            
-			_meleePressed = false;
-			Slash = false;
+		}
+		
+		_meleePressed = false;
+	
+	}
+	private void RequestDamage(NetworkObject target)
+	{
+		// if(Vector3.Distance(transform.position, target.transform.position) > attackRange.Value + buffer) return; //check distance on server to prevent cheating with hitbox size or latency
+
+		if (target != null && target.Owner.IsValid)
+		{
+			int targetId = target.Owner.ClientId;
+			int attackerId = Owner.ClientId;
+			
+			PlayerManager.Instance.DamagePlayer(targetId, Damage, attackerId);
 		}
 	}
 
-    //[ServerRpc(RequireOwnership = false)]
-	private void DespawnRobot(NetworkObject robot)
+	private void RequestRobotDestroyServerRpc(NetworkObject robotNob)
 	{
-		RobotSpawnManager.Instance.DespawnRobot(robot);
-    }
+		if (robotNob == null) return;
+
+		if (robotNob.TryGetComponent(out KamikazeRobot kami))
+		{
+			kami.DestroyRobot(playerCollider.GetComponent<NetworkObject>());
+		}
+		else if (robotNob.TryGetComponent(out LittleRobot little))
+		{
+			little.DestroyRobot(playerCollider.GetComponent<NetworkObject>());
+		}
+		RobotSpawnManager.Instance.DespawnRobot(robotNob); //despawn on server
+	}
+	[ServerRpc(RequireOwnership = false)]
+	public void EndSlashWindow()
+	{
+		Slash = false;
+		_hitTargetsThisSwing.Clear();
+	}
+
+    //[ServerRpc(RequireOwnership = false)]
+	// private void DespawnRobot(NetworkObject robot)
+	// {
+	// 	RobotSpawnManager.Instance.DespawnRobot(robot);
+    // }
 
 
     // Add this method to handle animation completion
     public void OnAnimationComplete()
     {
-        Debug.Log("Melee: Animation completed");
         _isAnimating = false;
     }
 }
