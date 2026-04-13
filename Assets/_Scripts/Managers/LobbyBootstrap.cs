@@ -3,6 +3,7 @@ using FishNet.Managing;
 using FishNet.Object;
 using FishNet.Transporting.Tugboat;
 using FishNet.Transporting;
+using FishNet.Transporting.Multipass;
 
 /// <summary>
 /// Handles network connection setup in the Lobby scene.
@@ -17,10 +18,17 @@ public class LobbyBootstrap : MonoBehaviour
     [Tooltip("Drag the LobbyManager prefab here. It will be spawned on the server at runtime.")]
     [SerializeField] private NetworkObject lobbyManagerPrefab;
 
+    private const ushort BayouPort = 7777;
+
     private void Awake()
     {
         if (networkManager == null)
             networkManager = FindFirstObjectByType<NetworkManager>();
+
+        // Set Bayou port early — before NetworkManager.Start() auto-starts headless server
+        Multipass multipass = networkManager != null ? networkManager.GetComponent<Multipass>() : null;
+        if (multipass != null)
+            SetBayouServerPort(multipass, BayouPort);
     }
 
     private void Start()
@@ -34,10 +42,15 @@ public class LobbyBootstrap : MonoBehaviour
             return;
         }
 
-        // If already connected (returning from game), skip
+        // If already connected (returning from game), skip connection setup
+        // but still spawn LobbyManager if server is running and it hasn't been spawned yet
         if (networkManager.IsClientStarted || networkManager.IsServerStarted)
         {
-            Debug.Log("[LobbyBootstrap] Already connected. Skipping.");
+            Debug.Log("[LobbyBootstrap] Already connected. Skipping connection setup.");
+            if (networkManager.IsServerStarted && LobbyManager.Instance == null)
+            {
+                SpawnLobbyManager();
+            }
             return;
         }
 
@@ -63,18 +76,28 @@ public class LobbyBootstrap : MonoBehaviour
     {
         if (args.ConnectionState == LocalConnectionState.Started)
         {
-            // Server just started — spawn the LobbyManager
-            if (lobbyManagerPrefab != null)
-            {
-                NetworkObject instance = Instantiate(lobbyManagerPrefab);
-                instance.SetIsGlobal(true);
-                networkManager.ServerManager.Spawn(instance);
-                Debug.Log("[LobbyBootstrap] Spawned LobbyManager on server (global).");
-            }
-            else
-            {
-                Debug.LogError("[LobbyBootstrap] LobbyManager prefab is not assigned!");
-            }
+            SpawnLobbyManager();
+        }
+    }
+
+    private void SpawnLobbyManager()
+    {
+        if (LobbyManager.Instance != null)
+        {
+            Debug.Log("[LobbyBootstrap] LobbyManager already exists. Skipping spawn.");
+            return;
+        }
+
+        if (lobbyManagerPrefab != null)
+        {
+            NetworkObject instance = Instantiate(lobbyManagerPrefab);
+            instance.SetIsGlobal(true);
+            networkManager.ServerManager.Spawn(instance);
+            Debug.Log("[LobbyBootstrap] Spawned LobbyManager on server (global).");
+        }
+        else
+        {
+            Debug.LogError("[LobbyBootstrap] LobbyManager prefab is not assigned!");
         }
     }
 
@@ -85,24 +108,26 @@ public class LobbyBootstrap : MonoBehaviour
 
     private void InitializeConnection()
     {
+        Multipass multipass = networkManager.GetComponent<Multipass>();
         Tugboat tugboat = networkManager.GetComponent<Tugboat>();
-        if (tugboat == null)
+
+        if (multipass == null || tugboat == null)
         {
-            Debug.LogError("[LobbyBootstrap] Tugboat transport not found!");
+            Debug.LogError("[LobbyBootstrap] Multipass or Tugboat transport not found on NetworkManager!");
             return;
         }
 
-#if UNITY_WEBGL && !UNITY_EDITOR
-        Debug.LogError("[LobbyBootstrap] WebGL build detected but current transport is Tugboat (UDP). Browsers cannot use UDP sockets. Configure a WebSocket/WebRTC transport for WebGL clients.");
-#endif
-
         string address = string.IsNullOrWhiteSpace(ConnectionInfo.IpAddress) ? "localhost" : ConnectionInfo.IpAddress;
         tugboat.SetPort(defaultPort);
+        tugboat.SetClientAddress(address);
+
+        // Multipass must be the active transport; pick the right client transport per platform
+        networkManager.TransportManager.Transport = multipass;
+        SetClientTransportForPlatform(multipass, address);
 
         Debug.Log($"[LobbyBootstrap] Address={address}, Port={defaultPort}");
 
 #if UNITY_EDITOR
-        tugboat.SetClientAddress(address);
         if (ParrelSync.ClonesManager.IsClone())
         {
             Debug.Log("[LobbyBootstrap] ParrelSync clone → CLIENT.");
@@ -110,7 +135,6 @@ public class LobbyBootstrap : MonoBehaviour
         }
         else
         {
-            // If address is NOT localhost, connect as client only (remote dedicated server)
             if (address != "localhost")
             {
                 Debug.Log($"[LobbyBootstrap] ParrelSync original → CLIENT (remote server: {address}).");
@@ -125,21 +149,55 @@ public class LobbyBootstrap : MonoBehaviour
         }
 
 #elif DEDICATED_SERVER
-        // Bind to all interfaces so external clients can connect
         tugboat.SetServerBindAddress("0.0.0.0", IPAddressType.IPv4);
         Debug.Log("[LobbyBootstrap] Starting Dedicated Server on 0.0.0.0:" + defaultPort);
         networkManager.ServerManager.StartConnection();
 
 #elif CLIENT
-        tugboat.SetClientAddress(address);
         Debug.Log($"[LobbyBootstrap] Starting Client → {address}:{defaultPort}");
         networkManager.ClientManager.StartConnection();
 
 #else
-        tugboat.SetClientAddress(address);
         if (address == "localhost")
             networkManager.ServerManager.StartConnection();
         networkManager.ClientManager.StartConnection();
 #endif
+    }
+
+    private void SetBayouServerPort(Multipass multipass, ushort port)
+    {
+        for (int i = 0; i < multipass.Transports.Count; i++)
+        {
+            if (multipass.Transports[i].GetType().Name == "Bayou")
+            {
+                multipass.Transports[i].SetPort(port);
+                Debug.Log($"[LobbyBootstrap] Bayou server port set to {port}");
+                return;
+            }
+        }
+    }
+
+    private void SetClientTransportForPlatform(Multipass multipass, string address)
+    {
+        if (Application.platform == RuntimePlatform.WebGLPlayer)
+        {
+            // WebGL: find Bayou in the Multipass transport list and use it
+            for (int i = 0; i < multipass.Transports.Count; i++)
+            {
+                if (multipass.Transports[i].GetType().Name == "Bayou")
+                {
+                    multipass.Transports[i].SetClientAddress(address);
+                    multipass.Transports[i].SetPort(BayouPort);
+                    multipass.SetClientTransport(i);
+                    Debug.Log($"[LobbyBootstrap] WebGL detected \u2192 using Bayou (transport index {i}) on port {BayouPort}");
+                    return;
+                }
+            }
+            Debug.LogError("[LobbyBootstrap] WebGL build but Bayou not found in Multipass transports!");
+        }
+        else
+        {
+            multipass.SetClientTransport<Tugboat>();
+        }
     }
 }
