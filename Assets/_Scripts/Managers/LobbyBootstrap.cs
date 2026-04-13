@@ -18,10 +18,17 @@ public class LobbyBootstrap : MonoBehaviour
     [Tooltip("Drag the LobbyManager prefab here. It will be spawned on the server at runtime.")]
     [SerializeField] private NetworkObject lobbyManagerPrefab;
 
+    private const ushort BayouPort = 8080;
+
     private void Awake()
     {
         if (networkManager == null)
             networkManager = FindFirstObjectByType<NetworkManager>();
+
+        // Set Bayou port early — before NetworkManager.Start() auto-starts headless server
+        Multipass multipass = networkManager != null ? networkManager.GetComponent<Multipass>() : null;
+        if (multipass != null)
+            SetBayouServerPort(multipass, BayouPort);
     }
 
     private void Start()
@@ -143,7 +150,6 @@ public class LobbyBootstrap : MonoBehaviour
 
 #elif DEDICATED_SERVER
         tugboat.SetServerBindAddress("0.0.0.0", IPAddressType.IPv4);
-        SetBayouServerPort(multipass, 80);
         Debug.Log("[LobbyBootstrap] Starting Dedicated Server on 0.0.0.0:" + defaultPort);
         networkManager.ServerManager.StartConnection();
 
@@ -181,9 +187,9 @@ public class LobbyBootstrap : MonoBehaviour
                 if (multipass.Transports[i].GetType().Name == "Bayou")
                 {
                     multipass.Transports[i].SetClientAddress(address);
-                    multipass.Transports[i].SetPort(80);
+                    multipass.Transports[i].SetPort(BayouPort);
                     multipass.SetClientTransport(i);
-                    Debug.Log($"[LobbyBootstrap] WebGL detected → using Bayou (transport index {i}) on port 80");
+                    Debug.Log($"[LobbyBootstrap] WebGL detected \u2192 using Bayou (transport index {i}) on port {BayouPort}");
                     return;
                 }
             }

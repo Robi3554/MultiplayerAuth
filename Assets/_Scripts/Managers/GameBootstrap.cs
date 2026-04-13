@@ -11,10 +11,16 @@ public class GameBootstrap : MonoBehaviour
     [SerializeField] private string defaultAddress = "localhost";
     [SerializeField] private ushort defaultPort = 7777;
 
+    private const ushort BayouPort = 8080;
+
     private void Awake()
     {
         if (networkManager == null)
             networkManager = FindFirstObjectByType<NetworkManager>();
+
+        Multipass multipass = networkManager != null ? networkManager.GetComponent<Multipass>() : null;
+        if (multipass != null)
+            SetBayouServerPort(multipass, BayouPort);
     }
 
     private void Start()
@@ -78,7 +84,6 @@ public class GameBootstrap : MonoBehaviour
 #elif DEDICATED_SERVER
         // --- BUILD MODE: Dedicated Server ---
         tugboat.SetServerBindAddress("0.0.0.0", IPAddressType.IPv4);
-        SetBayouServerPort(multipass, 80);
         Debug.Log("[Bootstrap] Starting Dedicated Server on 0.0.0.0:" + defaultPort);
         networkManager.ServerManager.StartConnection();
 
@@ -130,9 +135,9 @@ public class GameBootstrap : MonoBehaviour
                 if (multipass.Transports[i].GetType().Name == "Bayou")
                 {
                     multipass.Transports[i].SetClientAddress(address);
-                    multipass.Transports[i].SetPort(80);
+                    multipass.Transports[i].SetPort(BayouPort);
                     multipass.SetClientTransport(i);
-                    Debug.Log($"[Bootstrap] WebGL detected → using Bayou (transport index {i}) on port 80");
+                    Debug.Log($"[Bootstrap] WebGL detected \u2192 using Bayou (transport index {i}) on port {BayouPort}");
                     return;
                 }
             }
