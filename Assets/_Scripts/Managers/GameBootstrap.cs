@@ -3,12 +3,16 @@ using FishNet.Managing;
 using FishNet.Transporting.Tugboat;
 using System;
 using FishNet.Transporting;
+#if UNITY_WEBGL && !UNITY_EDITOR
+using FishNet.Transporting.Bayou;
+#endif
 
 public class GameBootstrap : MonoBehaviour
 {
     [SerializeField] private NetworkManager networkManager;
     [SerializeField] private string defaultAddress = "localhost";
     [SerializeField] private ushort defaultPort = 7777;
+    [SerializeField] private ushort webGLPort = 7770;
 
     private void Awake()
     {
@@ -37,6 +41,23 @@ public class GameBootstrap : MonoBehaviour
 
     private void InitializeConnection()
     {
+#if UNITY_WEBGL && !UNITY_EDITOR
+        // WebGL: use Bayou (WebSocket) transport
+        Bayou bayou = networkManager.GetComponent<Bayou>();
+        if (bayou == null)
+        {
+            Debug.LogError("[Bootstrap] Bayou transport not found on NetworkManager! Add the Bayou component for WebGL builds.");
+            return;
+        }
+
+        string address = string.IsNullOrWhiteSpace(ConnectionInfo.IpAddress) ? "localhost" : ConnectionInfo.IpAddress;
+        bayou.SetClientAddress(address);
+        bayou.SetPort(webGLPort);
+        networkManager.TransportManager.Transport = bayou;
+
+        Debug.Log($"[Bootstrap] WebGL → Bayou client connecting to {address}:{webGLPort}");
+        networkManager.ClientManager.StartConnection();
+#else
         // Transport
         Tugboat tugboat = networkManager.GetComponent<Tugboat>();
         if (tugboat == null)
@@ -102,5 +123,6 @@ public class GameBootstrap : MonoBehaviour
         Debug.Log("[Bootstrap] Starting Host (default).");
 
 #endif
+#endif // !UNITY_WEBGL
     }
 }
