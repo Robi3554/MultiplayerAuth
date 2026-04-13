@@ -72,6 +72,7 @@ public class GameBootstrap : MonoBehaviour
 
         tugboat.SetClientAddress(address);
         tugboat.SetPort(defaultPort);
+        networkManager.TransportManager.Transport = tugboat;
 
         Debug.Log($"[Bootstrap] Using Address={address}, Port={defaultPort}");
 

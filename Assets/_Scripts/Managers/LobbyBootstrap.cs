@@ -117,6 +117,7 @@ public class LobbyBootstrap : MonoBehaviour
 
         string address = string.IsNullOrWhiteSpace(ConnectionInfo.IpAddress) ? "localhost" : ConnectionInfo.IpAddress;
         tugboat.SetPort(defaultPort);
+        networkManager.TransportManager.Transport = tugboat;
 
         Debug.Log($"[LobbyBootstrap] Address={address}, Port={defaultPort}");
 
