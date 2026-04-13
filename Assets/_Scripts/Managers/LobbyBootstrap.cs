@@ -35,10 +35,15 @@ public class LobbyBootstrap : MonoBehaviour
             return;
         }
 
-        // If already connected (returning from game), skip
+        // If already connected (returning from game), skip connection setup
+        // but still spawn LobbyManager if server is running and it hasn't been spawned yet
         if (networkManager.IsClientStarted || networkManager.IsServerStarted)
         {
-            Debug.Log("[LobbyBootstrap] Already connected. Skipping.");
+            Debug.Log("[LobbyBootstrap] Already connected. Skipping connection setup.");
+            if (networkManager.IsServerStarted && LobbyManager.Instance == null)
+            {
+                SpawnLobbyManager();
+            }
             return;
         }
 
@@ -64,18 +69,28 @@ public class LobbyBootstrap : MonoBehaviour
     {
         if (args.ConnectionState == LocalConnectionState.Started)
         {
-            // Server just started — spawn the LobbyManager
-            if (lobbyManagerPrefab != null)
-            {
-                NetworkObject instance = Instantiate(lobbyManagerPrefab);
-                instance.SetIsGlobal(true);
-                networkManager.ServerManager.Spawn(instance);
-                Debug.Log("[LobbyBootstrap] Spawned LobbyManager on server (global).");
-            }
-            else
-            {
-                Debug.LogError("[LobbyBootstrap] LobbyManager prefab is not assigned!");
-            }
+            SpawnLobbyManager();
+        }
+    }
+
+    private void SpawnLobbyManager()
+    {
+        if (LobbyManager.Instance != null)
+        {
+            Debug.Log("[LobbyBootstrap] LobbyManager already exists. Skipping spawn.");
+            return;
+        }
+
+        if (lobbyManagerPrefab != null)
+        {
+            NetworkObject instance = Instantiate(lobbyManagerPrefab);
+            instance.SetIsGlobal(true);
+            networkManager.ServerManager.Spawn(instance);
+            Debug.Log("[LobbyBootstrap] Spawned LobbyManager on server (global).");
+        }
+        else
+        {
+            Debug.LogError("[LobbyBootstrap] LobbyManager prefab is not assigned!");
         }
     }
 
