@@ -51,9 +51,9 @@ public class GameBootstrap : MonoBehaviour
         tugboat.SetClientAddress(address);
         tugboat.SetPort(defaultPort);
 
-        // Multipass must be the active transport; set which child transport the client uses
+        // Multipass must be the active transport; pick the right client transport per platform
         networkManager.TransportManager.Transport = multipass;
-        multipass.SetClientTransport<Tugboat>();
+        SetClientTransportForPlatform(multipass, address);
 
         Debug.Log($"[Bootstrap] Using Address={address}, Port={defaultPort}");
 
@@ -105,5 +105,27 @@ public class GameBootstrap : MonoBehaviour
         Debug.Log("[Bootstrap] Starting Host (default).");
 
 #endif
+    }
+
+    private void SetClientTransportForPlatform(Multipass multipass, string address)
+    {
+        if (Application.platform == RuntimePlatform.WebGLPlayer)
+        {
+            for (int i = 0; i < multipass.Transports.Count; i++)
+            {
+                if (multipass.Transports[i].GetType().Name == "Bayou")
+                {
+                    multipass.Transports[i].SetClientAddress(address);
+                    multipass.SetClientTransport(i);
+                    Debug.Log($"[Bootstrap] WebGL detected → using Bayou (transport index {i})");
+                    return;
+                }
+            }
+            Debug.LogError("[Bootstrap] WebGL build but Bayou not found in Multipass transports!");
+        }
+        else
+        {
+            multipass.SetClientTransport<Tugboat>();
+        }
     }
 }
