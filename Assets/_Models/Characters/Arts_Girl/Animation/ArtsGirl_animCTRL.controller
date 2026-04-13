@@ -111,7 +111,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400000, guid: cd6fc3c2df8f41948a8a7bf4e3f4c25e, type: 2}
+  m_Motion: {fileID: 0}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 
@@ -502,7 +502,7 @@ AnimatorController:
   - serializedVersion: 5
     m_Name: UpperBody
     m_StateMachine: {fileID: 8794024180404440758}
-    m_Mask: {fileID: 31900000, guid: a28b633140e6d97fa8dc9e3e97bffc27, type: 2}
+    m_Mask: {fileID: 31900000, guid: 81d01d7102e0b194fb2e0009eeaca2d7, type: 2}
     m_Motions: []
     m_Behaviours: []
     m_BlendingMode: 0
@@ -514,7 +514,7 @@ AnimatorController:
   - serializedVersion: 5
     m_Name: UpperBody Toggle
     m_StateMachine: {fileID: 9213908666588237770}
-    m_Mask: {fileID: 31900000, guid: a28b633140e6d97fa8dc9e3e97bffc27, type: 2}
+    m_Mask: {fileID: 31900000, guid: 81d01d7102e0b194fb2e0009eeaca2d7, type: 2}
     m_Motions:
     - serializedVersion: 2
       m_State: {fileID: -6668414288536222739}
@@ -524,7 +524,7 @@ AnimatorController:
       m_Motion: {fileID: 7400000, guid: 9763b1d17f119ab4d85be281ca0c7adc, type: 2}
     m_Behaviours: []
     m_BlendingMode: 0
-    m_SyncedLayerIndex: 0
+    m_SyncedLayerIndex: 3
     m_DefaultWeight: 1
     m_IKPass: 0
     m_SyncedLayerAffectsTiming: 0
@@ -781,7 +781,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400000, guid: 782ed508b24b72e4f899503aac4fb0a9, type: 2}
+  m_Motion: {fileID: 7400000, guid: 9763b1d17f119ab4d85be281ca0c7adc, type: 2}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 
