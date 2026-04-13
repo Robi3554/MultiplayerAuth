@@ -20,6 +20,7 @@ public class LobbyManager : NetworkBehaviour
         public string Username;
         public Team Team;
         public GameMode PreferredMode;
+        public NetworkObject Character;
         public bool IsReady;
     }
 
@@ -133,6 +134,17 @@ public class LobbyManager : NetworkBehaviour
             return p;
         });
     }
+    
+    [ServerRpc(RequireOwnership = false)]
+    public void CmdSetCharacter(NetworkObject character, NetworkConnection sender = null)
+    {
+        UpdatePlayer(sender.ClientId, p =>
+        {
+            p.Character = character;
+            p.IsReady = false;
+            return p;
+        });
+    }
 
     [ServerRpc(RequireOwnership = false)]
     public void CmdSetReady(bool ready, NetworkConnection sender = null)
@@ -201,6 +213,7 @@ public class LobbyManager : NetworkBehaviour
         foreach (var p in Players)
         {
             LobbyData.PlayerTeams[p.ClientId] = p.Team;
+            LobbyData.PlayerCharacters[p.ClientId] = p.Character;
         }
 
         Debug.Log($"[Lobby] Game starting! Mode={resolvedMode}, Players={Players.Count}");

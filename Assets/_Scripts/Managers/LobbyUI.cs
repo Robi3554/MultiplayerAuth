@@ -5,6 +5,8 @@ using TMPro;
 using FishNet;
 using FishNet.Managing.Scened;
 using System.Collections;
+using FishNet.Object;
+using UnityEngine.Serialization;
 
 /// <summary>
 /// Client-side lobby UI. Polls LobbyManager's SyncList for changes and refreshes the display.
@@ -26,6 +28,11 @@ public class LobbyUI : MonoBehaviour
     [Header("Game Mode Buttons")]
     [SerializeField] private Button ffaButton;
     [SerializeField] private Button tdmButton;
+    
+    [Header("Character Buttons")]
+    [SerializeField] private GameObject characterButtonsParent;
+    [SerializeField] private Button characterButtonTemplate;
+    [SerializeField] private List<NetworkObject> characterOptions;
 
     [Header("Ready")]
     [SerializeField] private Button readyButton;
@@ -78,6 +85,8 @@ public class LobbyUI : MonoBehaviour
 
         ffaButton.onClick.AddListener(() => { Debug.Log("[LobbyUI] FFA clicked"); SelectGameMode(GameMode.FreeForAll); });
         tdmButton.onClick.AddListener(() => { Debug.Log("[LobbyUI] TDM clicked"); SelectGameMode(GameMode.TeamDeathmatch); });
+
+        InitializeCharacterButtons();
 
         readyButton.onClick.AddListener(ToggleReady);
 
@@ -185,6 +194,28 @@ public class LobbyUI : MonoBehaviour
             StartCoroutine(ShowLobby());
         }
     }
+    
+    private void InitializeCharacterButtons()
+    {
+        // Create a button for each character option
+        foreach (var characterPrefab in characterOptions)
+        {
+            var go = Instantiate(characterButtonTemplate.gameObject, characterButtonsParent.transform);
+            var button = go.GetComponent<Button>();
+            var charName = characterPrefab.name;
+            button.GetComponentInChildren<TMP_Text>().text = charName;
+            button.onClick.AddListener(() =>
+            {
+                Debug.Log($"[LobbyUI] Character '{charName}' selected");
+                lobbyManager.CmdSetCharacter(characterPrefab);
+                isReady = false;
+                UpdateReadyButton();
+                HighlightCharacterButton(charName);
+            });
+        }
+        
+        Destroy(characterButtonTemplate.gameObject);
+    }
 
     private int ComputePlayersHash()
     {
@@ -264,6 +295,23 @@ public class LobbyUI : MonoBehaviour
         Color tdmCol = new Color(0.2f, 0.75f, 0.5f);
         SetButtonColor(ffaButton, mode == GameMode.FreeForAll ? ffaCol : ffaCol * 0.5f);
         SetButtonColor(tdmButton, mode == GameMode.TeamDeathmatch ? tdmCol : tdmCol * 0.5f);
+    }
+    
+    private void HighlightCharacterButton(string characterName)
+    {
+        var buttonColour = new Color(0.8f, 0.8f, 0.8f);
+        
+        foreach (Transform child in characterButtonsParent.transform)
+        {
+            var button = child.GetComponent<Button>();
+            if (button == null) continue;
+
+            var text = button.GetComponentInChildren<TMP_Text>();
+            if (text == null) continue;
+
+            bool isSelected = text.text == characterName;
+            SetButtonColor(button, isSelected ? buttonColour : buttonColour * 0.5f);
+        }
     }
 
     private void ToggleReady()

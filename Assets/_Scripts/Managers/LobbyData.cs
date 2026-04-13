@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using FishNet.Object;
+using UnityEngine;
 
 /// <summary>
 /// Static data storage for passing lobby state across scene transitions.
@@ -9,6 +11,7 @@ public static class LobbyData
 {
     public static GameMode ResolvedGameMode = GameMode.FreeForAll;
     public static Dictionary<int, Team> PlayerTeams = new Dictionary<int, Team>();
+    public static Dictionary<int, NetworkObject> PlayerCharacters = new();
 
     public static void Clear()
     {

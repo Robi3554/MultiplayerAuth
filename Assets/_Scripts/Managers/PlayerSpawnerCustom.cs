@@ -4,14 +4,16 @@ using FishNet.Connection;
 using FishNet.Managing.Scened;
 using FishNet.Object;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class PlayerSpawnerCustom : NetworkBehaviour
 {
     public static PlayerSpawnerCustom Instance { get; private set; }
 
+    [FormerlySerializedAs("_playerPrefab")]
     [Header("Player Prefab")]
     [SerializeField]
-    private NetworkObject _playerPrefab;
+    private NetworkObject _defaultPlayerPrefab;
 
     [Header("Spawning - FFA / Default")]
     [Tooltip("Points where players may spawn in FFA mode.")]
@@ -129,9 +131,9 @@ public class PlayerSpawnerCustom : NetworkBehaviour
     private void SpawnPlayer(NetworkConnection conn)
     {
         // Check if a player prefab is assigned.
-        if (_playerPrefab == null)
+        if (_defaultPlayerPrefab == null)
         {
-            Debug.LogWarning("Player Prefab is not set in the PlayerSpawner.");
+            Debug.LogWarning("Default Player Prefab is not set in the PlayerSpawner.");
             return;
         }
 
@@ -159,8 +161,20 @@ public class PlayerSpawnerCustom : NetworkBehaviour
         // Choose spawn point based on game mode and team
         Transform spawnTransform = GetSpawnPoint(playerTeam);
 
+        NetworkObject playerPrefab;
+        if (LobbyData.PlayerCharacters.TryGetValue(conn.ClientId, out NetworkObject customPrefab))
+        {
+            playerPrefab = customPrefab;
+            Debug.Log($"[Spawner] ClientId={conn.ClientId} using selected player prefab.");
+        }
+        else
+        {
+            playerPrefab = _defaultPlayerPrefab;
+            Debug.Log($"[Spawner] ClientId={conn.ClientId} using default player prefab.");
+        }
+        
         // Spawn the player
-        NetworkObject playerInstance = base.NetworkManager.GetPooledInstantiated(_playerPrefab, true);
+        NetworkObject playerInstance = base.NetworkManager.GetPooledInstantiated(playerPrefab, true);
         playerInstance.transform.SetPositionAndRotation(spawnTransform.position, spawnTransform.rotation);
         base.ServerManager.Spawn(playerInstance, conn);
 
