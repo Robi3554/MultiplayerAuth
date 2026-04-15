@@ -189,7 +189,7 @@ public class PredictionMelee : NetworkBehaviour
 		}
 		RobotSpawnManager.Instance.DespawnRobot(robotNob); //despawn on server
 	}
-	[ServerRpc(RequireOwnership = false)]
+	// [ServerRpc(RequireOwnership = false)]
 	public void EndSlashWindow()
 	{
 		Slash = false;
