@@ -1441,7 +1441,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 603917079}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 314b449d3505bd24487ba69b61c2fda5, type: 3}
   m_Name: 
@@ -1457,7 +1457,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 603917079}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 362dfd7e6009fb44c90beec3df0ad853, type: 3}
   m_Name: 
@@ -1469,7 +1469,7 @@ MonoBehaviour:
     CertificatePassword: 
     SslProtocol: 0
   _mtu: 1023
-  _port: 7770
+  _port: 7777
   _maximumClients: 2000
   _clientAddress: localhost
 --- !u!1 &688179988
@@ -5416,7 +5416,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::LobbyBootstrap
   networkManager: {fileID: 603917080}
   defaultPort: 7777
-  webGLPort: 7770
   lobbyManagerPrefab: {fileID: 6342306074532676162, guid: aaf18f7d42ec8ed45927b69496325c34, type: 3}
 --- !u!4 &1957274559
 Transform:

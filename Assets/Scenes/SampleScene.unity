@@ -3930,7 +3930,6 @@ MonoBehaviour:
   networkManager: {fileID: 7443408887111934077}
   defaultAddress: localhost
   defaultPort: 7777
-  webGLPort: 7770
 --- !u!4 &209733462
 Transform:
   m_ObjectHideFlags: 0
@@ -45377,7 +45376,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7443408887111934076}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 362dfd7e6009fb44c90beec3df0ad853, type: 3}
   m_Name: 
@@ -45389,7 +45388,7 @@ MonoBehaviour:
     CertificatePassword: 
     SslProtocol: 0
   _mtu: 1023
-  _port: 7770
+  _port: 7777
   _maximumClients: 2000
   _clientAddress: localhost
 --- !u!114 &7443408887111934087
@@ -45399,7 +45398,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7443408887111934076}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 314b449d3505bd24487ba69b61c2fda5, type: 3}
   m_Name: 
