@@ -3,6 +3,7 @@ using FishNet.Managing;
 using FishNet.Transporting.Tugboat;
 using System;
 using FishNet.Transporting;
+using FishNet.Transporting.Multipass;
 
 public class GameBootstrap : MonoBehaviour
 {
@@ -10,10 +11,16 @@ public class GameBootstrap : MonoBehaviour
     [SerializeField] private string defaultAddress = "localhost";
     [SerializeField] private ushort defaultPort = 7777;
 
+    private const ushort BayouPort = 7777;
+
     private void Awake()
     {
         if (networkManager == null)
             networkManager = FindFirstObjectByType<NetworkManager>();
+
+        Multipass multipass = networkManager != null ? networkManager.GetComponent<Multipass>() : null;
+        if (multipass != null)
+            SetBayouServerPort(multipass, BayouPort);
     }
 
     private void Start()
@@ -37,22 +44,24 @@ public class GameBootstrap : MonoBehaviour
 
     private void InitializeConnection()
     {
-        // Transport
+        Multipass multipass = networkManager.GetComponent<Multipass>();
         Tugboat tugboat = networkManager.GetComponent<Tugboat>();
-        if (tugboat == null)
+
+        if (multipass == null || tugboat == null)
         {
-            Debug.LogError("No Tugboat transport found on NetworkManager!");
+            Debug.LogError("[Bootstrap] Multipass or Tugboat transport not found on NetworkManager!");
             return;
         }
 
         string address = string.IsNullOrWhiteSpace(ConnectionInfo.IpAddress) ? "localhost" : ConnectionInfo.IpAddress;
-
         tugboat.SetClientAddress(address);
         tugboat.SetPort(defaultPort);
 
+        // Multipass must be the active transport; pick the right client transport per platform
+        networkManager.TransportManager.Transport = multipass;
+        SetClientTransportForPlatform(multipass, address);
+
         Debug.Log($"[Bootstrap] Using Address={address}, Port={defaultPort}");
-
-
 
 #if UNITY_EDITOR
         // --- EDITOR MODE (ParrelSync) ---
@@ -102,5 +111,41 @@ public class GameBootstrap : MonoBehaviour
         Debug.Log("[Bootstrap] Starting Host (default).");
 
 #endif
+    }
+
+    private void SetBayouServerPort(Multipass multipass, ushort port)
+    {
+        for (int i = 0; i < multipass.Transports.Count; i++)
+        {
+            if (multipass.Transports[i].GetType().Name == "Bayou")
+            {
+                multipass.Transports[i].SetPort(port);
+                Debug.Log($"[Bootstrap] Bayou server port set to {port}");
+                return;
+            }
+        }
+    }
+
+    private void SetClientTransportForPlatform(Multipass multipass, string address)
+    {
+        if (Application.platform == RuntimePlatform.WebGLPlayer)
+        {
+            for (int i = 0; i < multipass.Transports.Count; i++)
+            {
+                if (multipass.Transports[i].GetType().Name == "Bayou")
+                {
+                    multipass.Transports[i].SetClientAddress(address);
+                    multipass.Transports[i].SetPort(BayouPort);
+                    multipass.SetClientTransport(i);
+                    Debug.Log($"[Bootstrap] WebGL detected \u2192 using Bayou (transport index {i}) on port {BayouPort}");
+                    return;
+                }
+            }
+            Debug.LogError("[Bootstrap] WebGL build but Bayou not found in Multipass transports!");
+        }
+        else
+        {
+            multipass.SetClientTransport<Tugboat>();
+        }
     }
 }

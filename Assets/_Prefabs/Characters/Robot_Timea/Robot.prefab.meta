@@ -1,6 +1,11 @@
 fileFormatVersion: 2
+<<<<<<<< HEAD:Assets/_Prefabs/Characters/Robot_Timea/Robot.prefab.meta
 guid: cfee426581d55314f9149dc9212cb0fd
 PrefabImporter:
+========
+guid: 48f07f72fa094094bb70b7a69debae89
+TextScriptImporter:
+>>>>>>>> a3f8b4ac (added bayou):Assets/FishNet/Plugins/Bayou/CHANGELOG.txt.meta
   externalObjects: {}
   userData: 
   assetBundleName: 

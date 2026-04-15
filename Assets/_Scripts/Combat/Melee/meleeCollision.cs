@@ -14,7 +14,6 @@ public class meleeCollision : MonoBehaviour
     }
     private void Start()
     {
-        ExecuteHurtbox();
     }
     public void ExecuteHurtbox()
     {
@@ -33,5 +32,6 @@ public class meleeCollision : MonoBehaviour
                 Debug.Log("Hit: " + hit.name);
             }
         }
+        sword.EndSlashWindow();
     }
 }

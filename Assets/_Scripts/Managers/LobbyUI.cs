@@ -28,7 +28,7 @@ public class LobbyUI : MonoBehaviour
     [Header("Game Mode Buttons")]
     [SerializeField] private Button ffaButton;
     [SerializeField] private Button tdmButton;
-    
+
     [Header("Character Buttons")]
     [SerializeField] private GameObject characterButtonsParent;
     [SerializeField] private Button characterButtonTemplate;
@@ -115,7 +115,7 @@ public class LobbyUI : MonoBehaviour
                         lobbyContentRoot.SetActive(true);
 
 #if UNITY_WEBGL && !UNITY_EDITOR
-                    string errorText = "<color=red>Could not connect.</color> Web builds require a browser-compatible transport (WebSocket/WebRTC).";
+                    string errorText = "<color=red>Could not connect.</color> Check that the server is running and the WebSocket port is accessible.";
 #else
                     string errorText = "<color=red>Could not connect to lobby server.</color> Check server address/port and server status.";
 #endif
@@ -194,7 +194,7 @@ public class LobbyUI : MonoBehaviour
             StartCoroutine(ShowLobby());
         }
     }
-    
+
     private void InitializeCharacterButtons()
     {
         // Create a button for each character option
@@ -213,7 +213,7 @@ public class LobbyUI : MonoBehaviour
                 HighlightCharacterButton(charName);
             });
         }
-        
+
         Destroy(characterButtonTemplate.gameObject);
     }
 
@@ -296,11 +296,11 @@ public class LobbyUI : MonoBehaviour
         SetButtonColor(ffaButton, mode == GameMode.FreeForAll ? ffaCol : ffaCol * 0.5f);
         SetButtonColor(tdmButton, mode == GameMode.TeamDeathmatch ? tdmCol : tdmCol * 0.5f);
     }
-    
+
     private void HighlightCharacterButton(string characterName)
     {
         var buttonColour = new Color(0.8f, 0.8f, 0.8f);
-        
+
         foreach (Transform child in characterButtonsParent.transform)
         {
             var button = child.GetComponent<Button>();
