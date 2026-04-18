@@ -24,6 +24,8 @@ public class PlayerStats : NetworkBehaviour
     [SerializeField] private TMP_Text _usernameTextOnBillboard;
     [SerializeField] private AudioSource _hitAudioSource;
     [SerializeField] private AudioClip _hitAudioClip;
+    [SerializeField] private AudioSource _deathAudioSource;
+    [SerializeField] private AudioClip _deathAudioClip;
     [SerializeField] private GameObject _damageTakenVfx;
     [SerializeField] private Canvas _playerGlued;
     [SerializeField] private GameObject _floatingDamage;
@@ -203,6 +205,11 @@ public class PlayerStats : NetworkBehaviour
     public void AddDeath()
     {
         deaths.Value++;
+        
+        if (_deathAudioSource && _deathAudioClip)
+        {
+            _deathAudioSource.PlayOneShot(_deathAudioClip);
+        }
     }
     public void ResetHealth()
     {

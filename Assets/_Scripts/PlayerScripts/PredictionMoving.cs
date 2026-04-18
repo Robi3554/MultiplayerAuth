@@ -405,12 +405,14 @@ public class PredictionMoving : NetworkBehaviour
         {
             if (speed > 0.05f)
             {
+                if (footstepAudioSource.isPlaying) return;
+                
                 footstepAudioSource.Play();
+                
+                return;
             }
-            else
-            {
-                footstepAudioSource.Stop();
-            }
+
+            footstepAudioSource.Stop();
         }
     }
 
