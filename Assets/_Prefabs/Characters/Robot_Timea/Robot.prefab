@@ -8685,6 +8685,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 26b716c41e9b56b4baafaf13a523ba2e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  NetworkObserver: {fileID: 0}
+  _enablePrediction: 1
+  _predictionType: 1
+  _graphicalObject: {fileID: 0}
+  _detachGraphicalObject: 0
+  _enableStateForwarding: 1
+  _networkTransform: {fileID: 0}
+  _ownerInterpolation: 1
+  _ownerSmoothedProperties: 4294967295
+  _adaptiveInterpolation: 3
+  _spectatorSmoothedProperties: 4294967295
+  _spectatorInterpolation: 2
+  _enableTeleport: 1
+  _teleportThreshold: 1
+  <PrefabId>k__BackingField: 7
+  <SpawnableCollectionId>k__BackingField: 0
+  <AssetPathHash>k__BackingField: 5430534368922158557
+  <SceneId>k__BackingField: 0
+  SerializedTransformProperties:
+    Position: {x: 0, y: 0, z: 0}
+    Rotation: {x: 0, y: 0, z: 0, w: 1}
+    Scale: {x: 1, y: 1, z: 1}
+    IsValid: 1
   <IsNested>k__BackingField: 0
   WasActiveDuringEdit: 0
   WasActiveDuringEdit_Set1: 1
@@ -8713,29 +8736,6 @@ MonoBehaviour:
   _initializeOrder: 0
   _preventDespawnOnDisconnect: 0
   _defaultDespawnType: 0
-  NetworkObserver: {fileID: 0}
-  _enablePrediction: 1
-  _predictionType: 1
-  _graphicalObject: {fileID: 0}
-  _detachGraphicalObject: 0
-  _enableStateForwarding: 1
-  _networkTransform: {fileID: 0}
-  _ownerInterpolation: 1
-  _ownerSmoothedProperties: 4294967295
-  _adaptiveInterpolation: 3
-  _spectatorSmoothedProperties: 4294967295
-  _spectatorInterpolation: 2
-  _enableTeleport: 1
-  _teleportThreshold: 1
-  <PrefabId>k__BackingField: 7
-  <SpawnableCollectionId>k__BackingField: 0
-  <AssetPathHash>k__BackingField: 5430534368922158557
-  <SceneId>k__BackingField: 0
-  SerializedTransformProperties:
-    Position: {x: 0, y: 0, z: 0}
-    Rotation: {x: 0, y: 0, z: 0, w: 1}
-    Scale: {x: 1, y: 1, z: 1}
-    IsValid: 1
 --- !u!114 &3741803031832409858
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8796,7 +8796,7 @@ MonoBehaviour:
   poolSize: 50
   footstepAudioSource: {fileID: 9026375173488276819}
   dashAudioSource: {fileID: 7534527435650390241}
-  dashAudioClip: {fileID: 8300000, guid: 31db1f4bffaa765519c1d5a690e0abc4, type: 3}
+  dashAudioClip: {fileID: 8300000, guid: 733d356d9cf40f361a4b2794c5fe7c15, type: 3}
 --- !u!114 &6305252028893306117
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8833,6 +8833,8 @@ MonoBehaviour:
   _usernameTextOnBillboard: {fileID: 237179565192249236}
   _hitAudioSource: {fileID: 8479587830544246739}
   _hitAudioClip: {fileID: 8300000, guid: 920fd5498c3b21b4eadefe5f6dc29c0b, type: 3}
+  _deathAudioSource: {fileID: 8479587830544246739}
+  _deathAudioClip: {fileID: 8300000, guid: 3d51d12770db0691d8ca428a24088f38, type: 3}
   _damageTakenVfx: {fileID: 5365166667201668719}
   _playerGlued: {fileID: 2183982200293380521}
   _floatingDamage: {fileID: 2695494221600626890, guid: 4c65f9397eda42548a64f7c9bc2ab836, type: 3}
@@ -20794,7 +20796,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
-  m_Resource: {fileID: 8300000, guid: 9bab83cb7d24343048a872da813034a7, type: 3}
+  m_Resource: {fileID: 8300000, guid: 733d356d9cf40f361a4b2794c5fe7c15, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
@@ -32328,6 +32330,7 @@ MonoBehaviour:
     NetworkManager: {fileID: 0}
     NetworkBehaviour: {fileID: 0}
     _value: 0.9
+  buffer: 0.5
   damage:
     NetworkManager: {fileID: 0}
     NetworkBehaviour: {fileID: 0}
@@ -32353,24 +32356,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 26b716c41e9b56b4baafaf13a523ba2e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <IsNested>k__BackingField: 1
-  WasActiveDuringEdit: 1
-  WasActiveDuringEdit_Set1: 1
-  <ComponentIndex>k__BackingField: 1
-  <PredictedSpawn>k__BackingField: {fileID: 0}
-  <PredictedOwner>k__BackingField: {fileID: 0}
-  NetworkBehaviours:
-  - {fileID: 6522693122879547793}
-  InitializedParentNetworkBehaviour: {fileID: 826313090492108274}
-  InitializedNestedNetworkObjects: []
-  RuntimeParentNetworkBehaviour: {fileID: 0}
-  RuntimeChildNetworkBehaviours: []
-  _isNetworked: 1
-  _isSpawnable: 1
-  _isGlobal: 0
-  _initializeOrder: 0
-  _preventDespawnOnDisconnect: 0
-  _defaultDespawnType: 0
   NetworkObserver: {fileID: 0}
   _enablePrediction: 1
   _predictionType: 0
@@ -32394,6 +32379,24 @@ MonoBehaviour:
     Rotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
     Scale: {x: 2.827, y: 2.827, z: 2.827}
     IsValid: 1
+  <IsNested>k__BackingField: 1
+  WasActiveDuringEdit: 1
+  WasActiveDuringEdit_Set1: 1
+  <ComponentIndex>k__BackingField: 1
+  <PredictedSpawn>k__BackingField: {fileID: 0}
+  <PredictedOwner>k__BackingField: {fileID: 0}
+  NetworkBehaviours:
+  - {fileID: 6522693122879547793}
+  InitializedParentNetworkBehaviour: {fileID: 826313090492108274}
+  InitializedNestedNetworkObjects: []
+  RuntimeParentNetworkBehaviour: {fileID: 0}
+  RuntimeChildNetworkBehaviours: []
+  _isNetworked: 1
+  _isSpawnable: 1
+  _isGlobal: 0
+  _initializeOrder: 0
+  _preventDespawnOnDisconnect: 0
+  _defaultDespawnType: 0
 --- !u!114 &4542675902940804923
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -33218,7 +33221,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
-  m_Resource: {fileID: 8300000, guid: ad22feb11a93ba54b89a8c0b3e284f75, type: 3}
+  m_Resource: {fileID: 8300000, guid: 3f5e5a977288757d18fe98ef5c6e1c42, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
