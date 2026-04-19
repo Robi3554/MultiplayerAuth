@@ -9,10 +9,16 @@ public class EmoteSystem : NetworkBehaviour
     private Animator animator; 
     [SerializeField]
     private NetworkAnimator netAnimator;
-    
+    private PlayerStats _playerStats;
+
+    private void Awake()
+    {
+        _playerStats = GetComponent<PlayerStats>();
+    }
+
     public void OnEmote(InputAction.CallbackContext context)
     {
-        if (!context.performed || !IsOwner)
+        if (_playerStats != null && _playerStats.isRespawning.Value)
             return;
 
         string emoteName = context.control.name;
@@ -21,7 +27,7 @@ public class EmoteSystem : NetworkBehaviour
 
     public void OnMove(InputAction.CallbackContext context)
     {
-        if (!context.performed || !IsOwner)
+        if (_playerStats != null && _playerStats.isRespawning.Value)
             return;
         
         ChangeEmote("");
@@ -29,7 +35,7 @@ public class EmoteSystem : NetworkBehaviour
     
     private void ChangeEmote(string emoteName)
     {
-        emoteName = emoteName.ToUpper();
+            emoteName = emoteName.ToUpper();
         switch (emoteName)
         {
             case "F1":
