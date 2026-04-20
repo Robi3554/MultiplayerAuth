@@ -10,6 +10,7 @@ using UnityEngine.Serialization;
 
 /// <summary>
 /// Client-side lobby UI. Polls LobbyManager's SyncList for changes and refreshes the display.
+/// Layout: Left = Player list | Center = 3D character preview with arrows | Right = Team + Mode + Ready.
 /// Hides all lobby content until the LobbyManager is confirmed available and the game is NOT
 /// already in progress. If a game is already underway (reconnect scenario), shows a
 /// "Joining game..." overlay and lets FishNet handle the scene transition.
@@ -29,10 +30,8 @@ public class LobbyUI : MonoBehaviour
     [SerializeField] private Button ffaButton;
     [SerializeField] private Button tdmButton;
 
-    [Header("Character Buttons")]
-    [SerializeField] private GameObject characterButtonsParent;
-    [SerializeField] private Button characterButtonTemplate;
-    [SerializeField] private List<NetworkObject> characterOptions;
+    [Header("Character Preview")]
+    [SerializeField] private CharacterPreviewUI characterPreview;
 
     [Header("Ready")]
     [SerializeField] private Button readyButton;
@@ -64,6 +63,42 @@ public class LobbyUI : MonoBehaviour
     private static readonly Color RebelsColor = new Color(0.9f, 0.3f, 0.3f);
     private static readonly Color AIColor = new Color(0.3f, 0.5f, 0.9f);
 
+    /// <summary>
+    /// Called by LobbyLayoutBuilder to wire all UI references at runtime.
+    /// When used, the serialized fields are overridden by the builder-created elements.
+    /// </summary>
+    public void SetupLayoutReferences(
+        Transform playerListContent,
+        GameObject playerEntryPrefab,
+        Button rebelsButton,
+        Button aiButton,
+        Button noTeamButton,
+        Button ffaButton,
+        Button tdmButton,
+        CharacterPreviewUI characterPreview,
+        Button readyButton,
+        TMP_Text readyButtonText,
+        Image readyButtonImage,
+        TMP_Text statusText,
+        TMP_Text gameModeText,
+        GameObject lobbyContentRoot)
+    {
+        this.playerListContent = playerListContent;
+        this.playerEntryPrefab = playerEntryPrefab;
+        this.rebelsButton = rebelsButton;
+        this.aiButton = aiButton;
+        this.noTeamButton = noTeamButton;
+        this.ffaButton = ffaButton;
+        this.tdmButton = tdmButton;
+        this.characterPreview = characterPreview;
+        this.readyButton = readyButton;
+        this.readyButtonText = readyButtonText;
+        this.readyButtonImage = readyButtonImage;
+        this.statusText = statusText;
+        this.gameModeText = gameModeText;
+        this.lobbyContentRoot = lobbyContentRoot;
+    }
+
     private void Start()
     {
         Debug.Log($"[LobbyUI] Start() — rebels={rebelsButton != null}, ai={aiButton != null}, noTeam={noTeamButton != null}, ffa={ffaButton != null}, tdm={tdmButton != null}, ready={readyButton != null}");
@@ -86,13 +121,30 @@ public class LobbyUI : MonoBehaviour
         ffaButton.onClick.AddListener(() => { Debug.Log("[LobbyUI] FFA clicked"); SelectGameMode(GameMode.FreeForAll); });
         tdmButton.onClick.AddListener(() => { Debug.Log("[LobbyUI] TDM clicked"); SelectGameMode(GameMode.TeamDeathmatch); });
 
-        InitializeCharacterButtons();
+        // Subscribe to character preview changes (arrow-based cycling)
+        if (characterPreview != null)
+            characterPreview.OnCharacterChanged += OnCharacterPreviewChanged;
 
         readyButton.onClick.AddListener(ToggleReady);
 
         // Color the team buttons
         SetButtonColor(rebelsButton, RebelsColor);
         SetButtonColor(aiButton, AIColor);
+    }
+
+    private void OnDestroy()
+    {
+        if (characterPreview != null)
+            characterPreview.OnCharacterChanged -= OnCharacterPreviewChanged;
+    }
+
+    private void OnCharacterPreviewChanged(NetworkObject character)
+    {
+        if (lobbyManager == null) return;
+        Debug.Log($"[LobbyUI] Character changed to '{character.name}'");
+        lobbyManager.CmdSetCharacter(character);
+        isReady = false;
+        UpdateReadyButton();
     }
 
     private void Update()
@@ -195,27 +247,7 @@ public class LobbyUI : MonoBehaviour
         }
     }
 
-    private void InitializeCharacterButtons()
-    {
-        // Create a button for each character option
-        foreach (var characterPrefab in characterOptions)
-        {
-            var go = Instantiate(characterButtonTemplate.gameObject, characterButtonsParent.transform);
-            var button = go.GetComponent<Button>();
-            var charName = characterPrefab.name;
-            button.GetComponentInChildren<TMP_Text>().text = charName;
-            button.onClick.AddListener(() =>
-            {
-                Debug.Log($"[LobbyUI] Character '{charName}' selected");
-                lobbyManager.CmdSetCharacter(characterPrefab);
-                isReady = false;
-                UpdateReadyButton();
-                HighlightCharacterButton(charName);
-            });
-        }
-
-        Destroy(characterButtonTemplate.gameObject);
-    }
+    // ─── Helpers ──────────────────────────────────────────────────────
 
     private int ComputePlayersHash()
     {
@@ -295,23 +327,6 @@ public class LobbyUI : MonoBehaviour
         Color tdmCol = new Color(0.2f, 0.75f, 0.5f);
         SetButtonColor(ffaButton, mode == GameMode.FreeForAll ? ffaCol : ffaCol * 0.5f);
         SetButtonColor(tdmButton, mode == GameMode.TeamDeathmatch ? tdmCol : tdmCol * 0.5f);
-    }
-
-    private void HighlightCharacterButton(string characterName)
-    {
-        var buttonColour = new Color(0.8f, 0.8f, 0.8f);
-
-        foreach (Transform child in characterButtonsParent.transform)
-        {
-            var button = child.GetComponent<Button>();
-            if (button == null) continue;
-
-            var text = button.GetComponentInChildren<TMP_Text>();
-            if (text == null) continue;
-
-            bool isSelected = text.text == characterName;
-            SetButtonColor(button, isSelected ? buttonColour : buttonColour * 0.5f);
-        }
     }
 
     private void ToggleReady()
