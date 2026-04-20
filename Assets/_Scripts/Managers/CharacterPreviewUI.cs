@@ -58,6 +58,10 @@ public class CharacterPreviewUI : MonoBehaviour
 
     private void Start()
     {
+        // Ensure RawImage has the RenderTexture bound — covers all Awake() orderings
+        if (previewImage != null && renderTexture != null)
+            previewImage.texture = renderTexture;
+
         if (leftArrowButton != null)
             leftArrowButton.onClick.AddListener(PreviousCharacter);
         if (rightArrowButton != null)
