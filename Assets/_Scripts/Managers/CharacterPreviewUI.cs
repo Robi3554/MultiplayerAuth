@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 using UnityEngine.UI;
 using FishNet.Object;
 
@@ -45,14 +46,18 @@ public class CharacterPreviewUI : MonoBehaviour
 
     private void Awake()
     {
-        previewLayer = LayerMask.NameToLayer("UI");
-        if (previewLayer < 0) previewLayer = 5; // fallback to UI layer
+        // Use a dedicated layer so the preview camera only sees preview models.
+        // "CharacterPreview" is preferred; fall back to an unused high layer.
+        previewLayer = LayerMask.NameToLayer("CharacterPreview");
+        if (previewLayer < 0)
+            previewLayer = 31; // last layer, least likely to conflict
+
+        // Create camera early so builder can wire the RawImage in its own Awake
+        SetupPreviewCamera();
     }
 
     private void Start()
     {
-        SetupPreviewCamera();
-
         if (leftArrowButton != null)
             leftArrowButton.onClick.AddListener(PreviousCharacter);
         if (rightArrowButton != null)
@@ -80,12 +85,13 @@ public class CharacterPreviewUI : MonoBehaviour
     /// </summary>
     private void SetupPreviewCamera()
     {
-        renderTexture = new RenderTexture(renderTextureWidth, renderTextureHeight, 24);
+        renderTexture = new RenderTexture(renderTextureWidth, renderTextureHeight, 24, RenderTextureFormat.ARGB32);
         renderTexture.antiAliasing = 4;
 
         var camObj = new GameObject("LobbyPreviewCamera");
         camObj.transform.position = previewPosition;
         camObj.transform.rotation = Quaternion.Euler(cameraRotation);
+
         previewCamera = camObj.AddComponent<Camera>();
         previewCamera.targetTexture = renderTexture;
         previewCamera.clearFlags = CameraClearFlags.SolidColor;
@@ -95,15 +101,34 @@ public class CharacterPreviewUI : MonoBehaviour
         previewCamera.farClipPlane = 50f;
         previewCamera.fieldOfView = 30f;
 
-        // Add a subtle light for the preview
+        // URP requires this additional data component to render properly
+        var urpCamData = camObj.AddComponent<UniversalAdditionalCameraData>();
+        urpCamData.renderType = CameraRenderType.Base;
+        urpCamData.renderShadows = false;
+        urpCamData.renderPostProcessing = false;
+
+        // Add a directional light dedicated to the preview
         var lightObj = new GameObject("PreviewLight");
         lightObj.transform.SetParent(camObj.transform);
         lightObj.transform.localPosition = new Vector3(0.5f, 2f, -1f);
         lightObj.transform.localRotation = Quaternion.Euler(30f, -15f, 0f);
+        lightObj.layer = previewLayer;
         var previewLight = lightObj.AddComponent<Light>();
         previewLight.type = LightType.Directional;
         previewLight.intensity = 1.2f;
         previewLight.cullingMask = 1 << previewLayer;
+
+        // Also add a fill light from the opposite side
+        var fillObj = new GameObject("PreviewFillLight");
+        fillObj.transform.SetParent(camObj.transform);
+        fillObj.transform.localPosition = new Vector3(-1f, 1f, 0.5f);
+        fillObj.transform.localRotation = Quaternion.Euler(15f, 150f, 0f);
+        fillObj.layer = previewLayer;
+        var fillLight = fillObj.AddComponent<Light>();
+        fillLight.type = LightType.Directional;
+        fillLight.intensity = 0.6f;
+        fillLight.color = new Color(0.7f, 0.8f, 1f);
+        fillLight.cullingMask = 1 << previewLayer;
 
         if (previewImage != null)
             previewImage.texture = renderTexture;
