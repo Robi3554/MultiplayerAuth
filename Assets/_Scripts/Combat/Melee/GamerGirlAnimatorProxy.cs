@@ -6,7 +6,7 @@ public class GamerGirlAnimatorProxy : MonoBehaviour
 
     [SerializeField] private PredictionMelee meleeWeapon;
     [SerializeField] private Animator animator;
-    [SerializeField] private  GameObject meleeCollider;
+    [SerializeField] private  meleeCollision meleeCollider;
     private static readonly int IsSlashingHash = Animator.StringToHash("IsSlashing");
     private void OnSlashStart()
     {
@@ -21,7 +21,7 @@ public class GamerGirlAnimatorProxy : MonoBehaviour
     private void enableMeleeCollider()
     {
         meleeCollider.GetComponent<MeshCollider>().enabled = true;
-        meleeCollider.GetComponent<meleeCollision>().ExecuteHurtbox();
+        meleeCollider.ExecuteHurtbox();
     }
 
     private void disableMeleeCollider()

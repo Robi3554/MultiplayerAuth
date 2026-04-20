@@ -14,6 +14,7 @@ public class meleeCollision : MonoBehaviour
     }
     private void Start()
     {
+        
     }
     public void ExecuteHurtbox()
     {
