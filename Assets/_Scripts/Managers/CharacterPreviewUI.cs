@@ -187,6 +187,13 @@ public class CharacterPreviewUI : MonoBehaviour
         if (characterOptions == null || characterOptions.Count == 0) return;
         currentIndex = Mathf.Clamp(index, 0, characterOptions.Count - 1);
 
+        // Ensure RenderTexture is bound to the RawImage (lazy bind)
+        if (previewImage != null && renderTexture != null && previewImage.texture != renderTexture)
+        {
+            previewImage.texture = renderTexture;
+            Debug.Log("[CharacterPreview] Late-bound RenderTexture to RawImage.");
+        }
+
         // Destroy previous preview instance
         if (currentPreviewInstance != null)
             Destroy(currentPreviewInstance);
@@ -221,7 +228,7 @@ public class CharacterPreviewUI : MonoBehaviour
         Debug.Log($"[CharacterPreview] Showing '{prefab.name}' at {spawnPos}, layer={previewLayer}, " +
                   $"renderers={currentPreviewInstance.GetComponentsInChildren<Renderer>().Length}, " +
                   $"camera={previewCamera != null}, rt={renderTexture != null}, " +
-                  $"rawImage={(previewImage != null ? previewImage.texture != null : false)}");
+                  $"rawImage={previewImage != null}, textureBound={previewImage != null && previewImage.texture == renderTexture}");
 
         // Update name label
         if (characterNameText != null)
