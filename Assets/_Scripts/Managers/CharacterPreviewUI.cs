@@ -18,6 +18,7 @@ public class CharacterPreviewUI : MonoBehaviour
     [SerializeField] private Vector3 previewPosition = new Vector3(1000f, 0f, 0f);
     [SerializeField] private Vector3 characterOffset = new Vector3(0f, -0.9f, 2.5f);
     [SerializeField] private Vector3 characterRotation = new Vector3(0f, 180f, 0f);
+    [SerializeField] private float characterScale = 0.6f;
     [SerializeField] private Vector3 cameraRotation = new Vector3(5f, 0f, 0f);
     [SerializeField] private int renderTextureWidth = 512;
     [SerializeField] private int renderTextureHeight = 768;
@@ -209,6 +210,7 @@ public class CharacterPreviewUI : MonoBehaviour
         Vector3 spawnPos = previewPosition + characterOffset;
         currentPreviewInstance = Instantiate(prefab.gameObject, spawnPos, Quaternion.Euler(characterRotation));
         currentPreviewInstance.name = $"Preview_{prefab.name}";
+        currentPreviewInstance.transform.localScale = Vector3.one * characterScale;
 
         // Strip all network/gameplay components immediately — must use DestroyImmediate
         // because FishNet's NetworkObject.OnDestroy can interfere with deferred Destroy.
