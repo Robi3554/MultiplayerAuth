@@ -21,7 +21,7 @@ public class CharacterPreviewUI : MonoBehaviour
     [SerializeField] private Vector3 cameraRotation = new Vector3(5f, 0f, 0f);
     [SerializeField] private int renderTextureWidth = 512;
     [SerializeField] private int renderTextureHeight = 768;
-    [SerializeField] private Color backgroundColor = new Color(0.08f, 0.08f, 0.12f, 0f);
+    [SerializeField] private Color backgroundColor = new Color(0.08f, 0.08f, 0.12f, 1f);
 
     [Header("UI References (auto-created if null)")]
     [SerializeField] private RawImage previewImage;
@@ -188,13 +188,19 @@ public class CharacterPreviewUI : MonoBehaviour
             Destroy(currentPreviewInstance);
 
         var prefab = characterOptions[currentIndex];
-        if (prefab == null) return;
+        if (prefab == null)
+        {
+            Debug.LogWarning($"[CharacterPreview] Prefab at index {currentIndex} is null!");
+            return;
+        }
 
         // Instantiate at preview position (far from gameplay area)
         Vector3 spawnPos = previewPosition + characterOffset;
         currentPreviewInstance = Instantiate(prefab.gameObject, spawnPos, Quaternion.Euler(characterRotation));
+        currentPreviewInstance.name = $"Preview_{prefab.name}";
 
-        // Strip all network/gameplay components — this is a visual-only preview
+        // Strip all network/gameplay components immediately — must use DestroyImmediate
+        // because FishNet's NetworkObject.OnDestroy can interfere with deferred Destroy.
         StripNonVisualComponents(currentPreviewInstance);
 
         // Set layer recursively so only the preview camera sees it
@@ -207,6 +213,11 @@ public class CharacterPreviewUI : MonoBehaviour
             animator.enabled = true;
             animator.Play("Idle", 0, 0f);
         }
+
+        Debug.Log($"[CharacterPreview] Showing '{prefab.name}' at {spawnPos}, layer={previewLayer}, " +
+                  $"renderers={currentPreviewInstance.GetComponentsInChildren<Renderer>().Length}, " +
+                  $"camera={previewCamera != null}, rt={renderTexture != null}, " +
+                  $"rawImage={(previewImage != null ? previewImage.texture != null : false)}");
 
         // Update name label
         if (characterNameText != null)
@@ -221,18 +232,28 @@ public class CharacterPreviewUI : MonoBehaviour
     /// </summary>
     private static void StripNonVisualComponents(GameObject obj)
     {
+        // Collect all non-visual components, then destroy them with DestroyImmediate.
+        // DestroyImmediate is required because FishNet's NetworkObject.OnDestroy (deferred)
+        // can destroy the entire GameObject before the frame ends.
+        var toDestroy = new List<Component>();
         var allComponents = obj.GetComponentsInChildren<Component>(true);
         foreach (var comp in allComponents)
         {
             if (comp == null) continue;
             if (comp is Transform) continue;
             if (comp is MeshFilter) continue;
-            if (comp is MeshRenderer) continue;
-            if (comp is SkinnedMeshRenderer) continue;
+            if (comp is Renderer) continue;    // covers MeshRenderer, SkinnedMeshRenderer, etc.
             if (comp is Animator) continue;
             if (comp is LODGroup) continue;
-            // Destroy everything else (NetworkBehaviour, Rigidbody, Colliders, scripts, etc.)
-            Destroy(comp);
+            toDestroy.Add(comp);
+        }
+
+        // Destroy in reverse order so child components are removed before parents.
+        // This prevents FishNet NetworkBehaviour from cascading destruction.
+        for (int i = toDestroy.Count - 1; i >= 0; i--)
+        {
+            if (toDestroy[i] != null)
+                DestroyImmediate(toDestroy[i]);
         }
     }
 
