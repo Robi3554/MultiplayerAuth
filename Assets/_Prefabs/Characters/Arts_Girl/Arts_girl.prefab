@@ -2115,7 +2115,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   meleeWeapon: {fileID: 5695631393982808779}
   animator: {fileID: 6172843232084524608}
-  meleeCollider: {fileID: 2019166447297538321}
+  meleeCollider: {fileID: 2442803670750059895}
 --- !u!95 &6172843232084524608
 Animator:
   serializedVersion: 7
@@ -2126,7 +2126,7 @@ Animator:
   m_GameObject: {fileID: 6328526897602395283}
   m_Enabled: 1
   m_Avatar: {fileID: 9000000, guid: 406ede3575fb8cc40ba79fe0999ff119, type: 3}
-  m_Controller: {fileID: 9100000, guid: 1b588ba4814798d4baa53fd53aeaea6a, type: 2}
+  m_Controller: {fileID: 9100000, guid: e012b937d9d14524d9d4d2f5122e7227, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 1
@@ -2282,29 +2282,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 26b716c41e9b56b4baafaf13a523ba2e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  NetworkObserver: {fileID: 0}
-  _enablePrediction: 1
-  _predictionType: 1
-  _graphicalObject: {fileID: 0}
-  _detachGraphicalObject: 0
-  _enableStateForwarding: 1
-  _networkTransform: {fileID: 0}
-  _ownerInterpolation: 1
-  _ownerSmoothedProperties: 4294967295
-  _adaptiveInterpolation: 3
-  _spectatorSmoothedProperties: 4294967295
-  _spectatorInterpolation: 2
-  _enableTeleport: 1
-  _teleportThreshold: 1
-  <PrefabId>k__BackingField: 25
-  <SpawnableCollectionId>k__BackingField: 0
-  <AssetPathHash>k__BackingField: 17641289575890520833
-  <SceneId>k__BackingField: 0
-  SerializedTransformProperties:
-    Position: {x: 0, y: 0, z: 0}
-    Rotation: {x: 0, y: -0, z: -0, w: 1}
-    Scale: {x: 1, y: 1, z: 1}
-    IsValid: 1
   <IsNested>k__BackingField: 0
   WasActiveDuringEdit: 0
   WasActiveDuringEdit_Set1: 1
@@ -2334,6 +2311,29 @@ MonoBehaviour:
   _initializeOrder: 0
   _preventDespawnOnDisconnect: 0
   _defaultDespawnType: 0
+  NetworkObserver: {fileID: 0}
+  _enablePrediction: 1
+  _predictionType: 1
+  _graphicalObject: {fileID: 0}
+  _detachGraphicalObject: 0
+  _enableStateForwarding: 1
+  _networkTransform: {fileID: 0}
+  _ownerInterpolation: 1
+  _ownerSmoothedProperties: 4294967295
+  _adaptiveInterpolation: 3
+  _spectatorSmoothedProperties: 4294967295
+  _spectatorInterpolation: 2
+  _enableTeleport: 1
+  _teleportThreshold: 1
+  <PrefabId>k__BackingField: 25
+  <SpawnableCollectionId>k__BackingField: 0
+  <AssetPathHash>k__BackingField: 17641289575890520833
+  <SceneId>k__BackingField: 0
+  SerializedTransformProperties:
+    Position: {x: 0, y: 0, z: 0}
+    Rotation: {x: 0, y: -0, z: -0, w: 1}
+    Scale: {x: 1, y: 1, z: 1}
+    IsValid: 1
 --- !u!54 &1942937363775309974
 Rigidbody:
   m_ObjectHideFlags: 0
