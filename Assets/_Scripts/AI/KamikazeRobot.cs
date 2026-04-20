@@ -25,8 +25,6 @@ public class KamikazeRobot : NetworkBehaviour
     public Transform[] patrolPoints;
     
     [SerializeField] private AudioSource audioSource;
-
-    [SerializeField] private GameObject explosion;
     
     private Vector3 currentPoint;
     private int currIndex;
@@ -227,6 +225,7 @@ public class KamikazeRobot : NetworkBehaviour
             int attackerId = transform.GetComponent<NetworkObject>().Owner.ClientId;
             Debug.Log($"Kamikaze robot exploded: target: {targetId}");
             PlayerManager.Instance.DamagePlayer(targetId, Damage, attackerId);
+            ParticlesManager.Instance.PlayEffect(transform.position, EffectType.Explosion);
             var manager = PersistentAudioSourceManager.GetInstance();
             if (manager != null)
             {
