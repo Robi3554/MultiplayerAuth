@@ -8854,7 +8854,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Actions: {fileID: 0}
+  m_Actions: {fileID: -944628639613478452, guid: 0233f63e95b82504bb4af551c071ec3f, type: 3}
   m_NotificationBehavior: 2
   m_UIInputModule: {fileID: 0}
   m_DeviceLostEvent:
@@ -8973,42 +8973,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: RaycastShoot, Assembly-CSharp
-        m_MethodName: OnDamage
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 8840096365261928825}
-        m_TargetAssemblyTypeName: RaycastShoot, Assembly-CSharp
-        m_MethodName: OnDamage
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 7074918492901970764}
-        m_TargetAssemblyTypeName: ShotgunShoot, Assembly-CSharp
-        m_MethodName: OnDamage
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
       - m_Target: {fileID: 1820990083903404978}
         m_TargetAssemblyTypeName: ProjectileShooting, Assembly-CSharp
         m_MethodName: OnDamage
@@ -9060,19 +9024,7 @@ MonoBehaviour:
     m_ActionId: 2e5fcd95-77fe-4bb6-8215-bf4d732aef82
     m_ActionName: 'Gameplay/Damage[/Keyboard/tab]'
   - m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 7960017168826210224}
-        m_TargetAssemblyTypeName: EmoteSystem, Assembly-CSharp
-        m_MethodName: OnEmote
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
     m_ActionId: 45048cd7-5b4d-42d5-b35d-593b3c017317
     m_ActionName: 'Gameplay/Emote[/Keyboard/f1,/Keyboard/f2,/Keyboard/f3]'
   - m_PersistentCalls:
@@ -33223,7 +33175,7 @@ AudioSource:
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 8300000, guid: 3f5e5a977288757d18fe98ef5c6e1c42, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 1
+  m_Volume: 0.475
   m_Pitch: 1
   Loop: 1
   Mute: 0
@@ -35703,7 +35655,7 @@ Transform:
   m_GameObject: {fileID: 8755940670835641990}
   serializedVersion: 2
   m_LocalRotation: {x: 0.5, y: 0.5, z: -0.5, w: 0.5}
-  m_LocalPosition: {x: 0, y: 0.24, z: 2.854}
+  m_LocalPosition: {x: 0, y: 1.2946, z: 2.854}
   m_LocalScale: {x: 295.78137, y: 131.87117, z: 200}
   m_ConstrainProportionsScale: 0
   m_Children: []
