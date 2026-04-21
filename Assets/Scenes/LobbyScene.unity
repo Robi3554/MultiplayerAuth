@@ -3621,7 +3621,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LobbyLayoutBuilder
   lobbyUI: {fileID: 1289442773}
-  characterPreview: {fileID: 0}
+  characterPreview: {fileID: 1289442775}
   playerEntryPrefab: {fileID: 1254769514}
   font: {fileID: 0}
   panelColor: {r: 0.06, g: 0.06, b: 0.1, a: 0.85}
@@ -3647,6 +3647,7 @@ MonoBehaviour:
   previewPosition: {x: 1000, y: 0, z: 0}
   characterOffset: {x: 0, y: -0.9, z: 2.5}
   characterRotation: {x: 0, y: 180, z: 0}
+  characterScale: 0.6
   cameraRotation: {x: 5, y: 0, z: 0}
   renderTextureWidth: 512
   renderTextureHeight: 768
