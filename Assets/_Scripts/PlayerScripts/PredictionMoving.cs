@@ -277,7 +277,7 @@ public class PredictionMoving : NetworkBehaviour
         PlayDashAfterImageObservers();
     }
 
-    [ObserversRpc(ExcludeOwner = true)]
+    [ObserversRpc()]
     private void PlayDashAfterImageObservers()
     {
         StartCoroutine(SpawnAfterImages());
