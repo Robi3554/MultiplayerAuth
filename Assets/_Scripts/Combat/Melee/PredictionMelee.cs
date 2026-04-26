@@ -14,8 +14,6 @@ public class PredictionMelee : NetworkBehaviour
 	[AllowMutableSyncType]
 	[SerializeField] private SyncVar<float> cooldownTime = new SyncVar<float>(1.25f);
 	[AllowMutableSyncType]
-	[SerializeField] private SyncVar<float> attackRange = new SyncVar<float>(3f);
-	[AllowMutableSyncType]
 	[SerializeField] private SyncVar<int> damage = new SyncVar<int>(10);
 
     protected PlayerStats playerStats;
@@ -23,10 +21,7 @@ public class PredictionMelee : NetworkBehaviour
     protected int Damage => damage.Value * playerStats.damageMult;
 
     [Header("References")]
-	[SerializeField] private Transform slashPoint;
-	[SerializeField] private float coneAngle = 60f;
-	[SerializeField] private VisualEffect VFX_SLASH;
-
+	[SerializeField] private ParticleSystem VFX_SLASH;
 	[Header("Animation")]
 	[SerializeField] private Animator animator;
 	[SerializeField] private NetworkAnimator netAnimator;
@@ -134,9 +129,10 @@ public class PredictionMelee : NetworkBehaviour
 	[ObserversRpc]
 	public void PlayObserverWeaponVfx()
 	{
-		if (VFX_SLASH != null)
+		if (VFX_SLASH != null && !VFX_SLASH.isPlaying)
 		{
-			VFX_SLASH.SendEvent("OnPlay");
+			VFX_SLASH.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+			VFX_SLASH.Play();
 		}
 	}
 
@@ -169,6 +165,10 @@ public class PredictionMelee : NetworkBehaviour
 					robot.DestroyRobot(playerCollider.GetComponent<NetworkObject>());
 					DespawnRobotServerRpc(robot.NetworkObject);
 				}
+			} else if (enemyCollider.gameObject.layer == LayerMask.NameToLayer("Projectile"))
+			{
+				Debug.Log("Melee: Hit a bullet!");
+				Destroy(enemyCollider.gameObject);
 			}
             
 			_meleePressed = false;
