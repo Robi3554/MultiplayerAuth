@@ -6,10 +6,12 @@ public class meleeCollision : MonoBehaviour
 {
     private CapsuleCollider playerCollider;
     [SerializeField] private PredictionMelee sword;
+    private MeshCollider meshCollider;
 
     private void Awake()
     {
         playerCollider = GetComponentInParent<CapsuleCollider>();
+        meshCollider = GetComponent<MeshCollider>();
 
     }
     private void Start()
@@ -18,16 +20,16 @@ public class meleeCollision : MonoBehaviour
     }
     public void ExecuteHurtbox()
     {
-        Vector3 boxCenter = transform.position + transform.forward * 1.5f; //offset
-        Vector3 halfExtents = new Vector3(1f, 1f, 1f); // half the total size of the box
-        Quaternion orientation = transform.rotation;
+        Bounds meshBounds = meshCollider.bounds;
+        Vector3 boxCenter = meshBounds.center;
+        Vector3 halfExtents = meshBounds.extents;
 
-        //this returns an array of EVERY collider inside the box 
-        Collider[] hitColliders = Physics.OverlapBox(boxCenter, halfExtents, orientation);
+        //this returns an array of EVERY collider overlapping with the mesh collider bounds
+        Collider[] hitColliders = Physics.OverlapBox(boxCenter, halfExtents);
 
         foreach (var hit in hitColliders)
         {
-            if (hit != playerCollider)
+            if (hit != playerCollider && hit != meshCollider)
             {
                 sword.DealDamage(hit);
                 Debug.Log("Hit: " + hit.name);
