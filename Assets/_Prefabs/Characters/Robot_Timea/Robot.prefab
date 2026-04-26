@@ -8835,7 +8835,7 @@ MonoBehaviour:
   _hitAudioClip: {fileID: 8300000, guid: 920fd5498c3b21b4eadefe5f6dc29c0b, type: 3}
   _deathAudioSource: {fileID: 8479587830544246739}
   _deathAudioClip: {fileID: 8300000, guid: 3d51d12770db0691d8ca428a24088f38, type: 3}
-  _damageTakenVfx: {fileID: 5365166667201668719}
+  _damageTakenVfx: {fileID: 3591723005841569901, guid: 7a4bb3005558caa45bff87bb330ae975, type: 3}
   _playerGlued: {fileID: 2183982200293380521}
   _floatingDamage: {fileID: 2695494221600626890, guid: 4c65f9397eda42548a64f7c9bc2ab836, type: 3}
   _killText: {fileID: 5551932082331895800}
