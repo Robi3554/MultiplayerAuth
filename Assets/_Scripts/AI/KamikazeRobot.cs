@@ -200,9 +200,7 @@ public class KamikazeRobot : NetworkBehaviour
     }
 
     public void DestroyRobot(NetworkObject player)
-    {
-        Debug.Log($"[Robot Log] KamikazeRobot {gameObject.name} was destroyed. Killer: {(player != null ? player.name : "Unknown")}");
-        
+    {       
         OnRobotKilled?.Invoke(this);
 
         // powerup.TriggerEffect(player);
@@ -223,12 +221,11 @@ public class KamikazeRobot : NetworkBehaviour
         
         if(col.CompareTag("Player"))
         {
-            Debug.Log($"[Robot Log] KamikazeRobot {gameObject.name} exploded on {col.gameObject.name}.");
             int targetId = col.GetComponent<NetworkObject>().Owner.ClientId;
             int attackerId = transform.GetComponent<NetworkObject>().Owner.ClientId;
             Debug.Log($"Kamikaze robot exploded: target: {targetId}");
             PlayerManager.Instance.DamagePlayer(targetId, Damage, attackerId);
-            //playvfx explosion
+            ParticlesManager.Instance.PlayEffect(transform.position, EffectType.Explosion);
             var manager = PersistentAudioSourceManager.GetInstance();
             if (manager != null)
             {

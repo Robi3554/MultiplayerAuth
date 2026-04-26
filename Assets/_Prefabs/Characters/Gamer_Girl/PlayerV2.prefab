@@ -1234,42 +1234,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 8021581412489060544}
-        m_TargetAssemblyTypeName: RaycastShoot, Assembly-CSharp
-        m_MethodName: OnDamage
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 7282684786607071409}
-        m_TargetAssemblyTypeName: RaycastShoot, Assembly-CSharp
-        m_MethodName: OnDamage
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 990796205943166328}
-        m_TargetAssemblyTypeName: ShotgunShoot, Assembly-CSharp
-        m_MethodName: OnDamage
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
       - m_Target: {fileID: 5309686409406704968}
         m_TargetAssemblyTypeName: ProjectileShooting, Assembly-CSharp
         m_MethodName: OnDamage
@@ -1321,19 +1285,7 @@ MonoBehaviour:
     m_ActionId: 2e5fcd95-77fe-4bb6-8215-bf4d732aef82
     m_ActionName: 'Gameplay/Damage[/Keyboard/tab]'
   - m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 3364373959102236544}
-        m_TargetAssemblyTypeName: EmoteSystem, Assembly-CSharp
-        m_MethodName: OnEmote
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
     m_ActionId: 45048cd7-5b4d-42d5-b35d-593b3c017317
     m_ActionName: 'Gameplay/Emote[/Keyboard/f1,/Keyboard/f2,/Keyboard/f3]'
   - m_PersistentCalls:
@@ -2265,17 +2217,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 8277046779161242954, guid: a615e5387b3d46042810f8d472623229, type: 3}
   m_PrefabInstance: {fileID: 2763708688216233261}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &7282684786607071409 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 4849217169773376924, guid: a615e5387b3d46042810f8d472623229, type: 3}
-  m_PrefabInstance: {fileID: 2763708688216233261}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1879072507561131230}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cf40e658b9ac8ef489b5333048eb7d42, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!4 &8293095552267574597 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6146380087576873064, guid: a615e5387b3d46042810f8d472623229, type: 3}
@@ -4274,17 +4215,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a8fb82406c81a964fb9858d3b1e1d57d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ProjectileShooting
---- !u!114 &8021581412489060544 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 3980028035428594428, guid: cdcf0eae94ed1dd438685bad63846dbf, type: 3}
-  m_PrefabInstance: {fileID: 6370772279283438140}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1945318272994646557}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9843bf2612ed08e47acf8ea3bd7ce4dc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &6781209095568335087
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4957,17 +4887,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 8618280175570269345, guid: 9e0837ead7a06c64b822b3a0a5cc1200, type: 3}
   m_PrefabInstance: {fileID: 8832750361882550919}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &990796205943166328 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 8598559443094501375, guid: 9e0837ead7a06c64b822b3a0a5cc1200, type: 3}
-  m_PrefabInstance: {fileID: 8832750361882550919}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4412511933998750678}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1113581c51f50784d980d067be0537ff, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!4 &2816199328491006411 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6737699475807013708, guid: 9e0837ead7a06c64b822b3a0a5cc1200, type: 3}

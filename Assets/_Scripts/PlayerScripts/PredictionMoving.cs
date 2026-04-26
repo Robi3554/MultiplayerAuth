@@ -190,6 +190,7 @@ public class PredictionMoving : NetworkBehaviour
     
     private void Update()
     {
+        Debug.Log($"IsOwner: {IsOwner}, Current Action Map: {_playerInput.currentActionMap.name}");
         if (!IsOwner || !_playerInput.currentActionMap.name.Equals("Gameplay")) return;
 
         if (_playerStats != null && _playerStats.isRespawning.Value)
@@ -276,7 +277,7 @@ public class PredictionMoving : NetworkBehaviour
         PlayDashAfterImageObservers();
     }
 
-    [ObserversRpc(ExcludeOwner = true)]
+    [ObserversRpc()]
     private void PlayDashAfterImageObservers()
     {
         StartCoroutine(SpawnAfterImages());
