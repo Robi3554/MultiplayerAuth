@@ -205,11 +205,8 @@ public class PlayerStats : NetworkBehaviour
     public void AddDeath()
     {
         deaths.Value++;
-        
-        if (_deathAudioSource && _deathAudioClip)
-        {
-            _deathAudioSource.PlayOneShot(_deathAudioClip);
-        }
+
+        DeathSound();
     }
     public void ResetHealth()
     {
@@ -227,6 +224,15 @@ public class PlayerStats : NetworkBehaviour
         if (_canPlayHitSound)
         {
             _hitAudioSource.PlayOneShot(_hitAudioClip);
+        }
+    }
+    
+    [ObserversRpc]
+    private void DeathSound()
+    {
+        if (_deathAudioSource && _deathAudioClip)
+        {
+            _deathAudioSource.PlayOneShot(_deathAudioClip);
         }
     }
 

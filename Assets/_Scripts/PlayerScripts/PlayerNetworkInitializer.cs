@@ -139,4 +139,10 @@ public class PlayerNetworkInitializer : NetworkBehaviour
     {
         playerMovement.PlayDashSound();
     }
+    
+    [ServerRpc]
+    public void PlayJumpSoundServer(PredictionMoving playerMovement)
+    {
+        playerMovement.PlayJumpSound();
+    }
 }

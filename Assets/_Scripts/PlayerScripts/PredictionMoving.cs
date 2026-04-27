@@ -46,6 +46,8 @@ public class PredictionMoving : NetworkBehaviour
     [SerializeField] private AudioSource footstepAudioSource;
     [SerializeField] private AudioSource dashAudioSource;
     [SerializeField] private AudioClip dashAudioClip;
+    [SerializeField] private AudioSource jumpAudioSource;
+    [SerializeField] private AudioClip jumpAudioClip;
 
     private Vector2 _moveInput;
     private bool _isAnalogMovement;
@@ -139,6 +141,8 @@ public class PredictionMoving : NetworkBehaviour
         if (context.performed && _isGrounded && !_jumpPressed)
         {
             _jumpPressed = true;
+            
+            _playerNet.PlayJumpSoundServer(this);
             if (netAnimator)
                 netAnimator.SetTrigger("Jumping");
         }
@@ -423,6 +427,15 @@ public class PredictionMoving : NetworkBehaviour
         if (dashAudioSource && dashAudioClip)
         {
             dashAudioSource.PlayOneShot(dashAudioClip);
+        }
+    }
+
+    [ObserversRpc]
+    public void PlayJumpSound()
+    {
+        if (jumpAudioSource && jumpAudioClip)
+        {
+            jumpAudioSource.PlayOneShot(jumpAudioClip);
         }
     }
 }
