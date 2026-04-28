@@ -162,7 +162,7 @@ public class PlayerSpawnerCustom : NetworkBehaviour
         Transform spawnTransform = GetSpawnPoint(playerTeam);
 
         NetworkObject playerPrefab;
-        if (LobbyData.PlayerCharacters.TryGetValue(conn.ClientId, out NetworkObject customPrefab))
+        if (LobbyData.PlayerCharacters.TryGetValue(conn.ClientId, out NetworkObject customPrefab) && customPrefab != null)
         {
             playerPrefab = customPrefab;
             Debug.Log($"[Spawner] ClientId={conn.ClientId} using selected player prefab.");
@@ -170,7 +170,7 @@ public class PlayerSpawnerCustom : NetworkBehaviour
         else
         {
             playerPrefab = _defaultPlayerPrefab;
-            Debug.Log($"[Spawner] ClientId={conn.ClientId} using default player prefab.");
+            Debug.Log($"[Spawner] ClientId={conn.ClientId} using default player prefab (custom was {(LobbyData.PlayerCharacters.ContainsKey(conn.ClientId) ? "null" : "not set")}).");
         }
         
         // Spawn the player
