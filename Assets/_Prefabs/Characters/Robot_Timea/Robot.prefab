@@ -8575,7 +8575,7 @@ Transform:
   m_Children:
   - {fileID: 830100520228709595}
   - {fileID: 2382891103230537338}
-  - {fileID: 280945768629304776}
+  - {fileID: 3380707394228472099}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!54 &81052645608070099
@@ -8686,6 +8686,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 26b716c41e9b56b4baafaf13a523ba2e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  NetworkObserver: {fileID: 0}
+  _enablePrediction: 1
+  _predictionType: 1
+  _graphicalObject: {fileID: 0}
+  _detachGraphicalObject: 0
+  _enableStateForwarding: 1
+  _networkTransform: {fileID: 0}
+  _ownerInterpolation: 1
+  _ownerSmoothedProperties: 4294967295
+  _adaptiveInterpolation: 3
+  _spectatorSmoothedProperties: 4294967295
+  _spectatorInterpolation: 2
+  _enableTeleport: 1
+  _teleportThreshold: 1
+  <PrefabId>k__BackingField: 7
+  <SpawnableCollectionId>k__BackingField: 0
+  <AssetPathHash>k__BackingField: 5430534368922158557
+  <SceneId>k__BackingField: 0
+  SerializedTransformProperties:
+    Position: {x: 0, y: 0, z: 0}
+    Rotation: {x: 0, y: 0, z: 0, w: 1}
+    Scale: {x: 1, y: 1, z: 1}
+    IsValid: 1
   <IsNested>k__BackingField: 0
   WasActiveDuringEdit: 0
   WasActiveDuringEdit_Set1: 1
@@ -8714,29 +8737,6 @@ MonoBehaviour:
   _initializeOrder: 0
   _preventDespawnOnDisconnect: 0
   _defaultDespawnType: 0
-  NetworkObserver: {fileID: 0}
-  _enablePrediction: 1
-  _predictionType: 1
-  _graphicalObject: {fileID: 0}
-  _detachGraphicalObject: 0
-  _enableStateForwarding: 1
-  _networkTransform: {fileID: 0}
-  _ownerInterpolation: 1
-  _ownerSmoothedProperties: 4294967295
-  _adaptiveInterpolation: 3
-  _spectatorSmoothedProperties: 4294967295
-  _spectatorInterpolation: 2
-  _enableTeleport: 1
-  _teleportThreshold: 1
-  <PrefabId>k__BackingField: 7
-  <SpawnableCollectionId>k__BackingField: 0
-  <AssetPathHash>k__BackingField: 5430534368922158557
-  <SceneId>k__BackingField: 0
-  SerializedTransformProperties:
-    Position: {x: 0, y: 0, z: 0}
-    Rotation: {x: 0, y: 0, z: 0, w: 1}
-    Scale: {x: 1, y: 1, z: 1}
-    IsValid: 1
 --- !u!114 &3741803031832409858
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -21715,7 +21715,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   meleeWeapon: {fileID: 6522693122879547793}
   animator: {fileID: 7801810563577014767}
-  meleeCollider: {fileID: 3853353879317796277}
+  meleeCollider: {fileID: 2727282839811518542}
 --- !u!1 &5801712783365923501
 GameObject:
   m_ObjectHideFlags: 0
@@ -27523,7 +27523,7 @@ MonoBehaviour:
   VFX_SLASH: {fileID: 5874998741811968884}
   animator: {fileID: 7801810563577014767}
   netAnimator: {fileID: 3741803031832409858}
-  meshCollider: {fileID: 5143496213527089434}
+  meshCollider: {fileID: 5356559603538693314}
   _isOnCooldown:
     NetworkManager: {fileID: 0}
     NetworkBehaviour: {fileID: 0}
@@ -27540,24 +27540,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 26b716c41e9b56b4baafaf13a523ba2e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <IsNested>k__BackingField: 1
-  WasActiveDuringEdit: 1
-  WasActiveDuringEdit_Set1: 1
-  <ComponentIndex>k__BackingField: 1
-  <PredictedSpawn>k__BackingField: {fileID: 0}
-  <PredictedOwner>k__BackingField: {fileID: 0}
-  NetworkBehaviours:
-  - {fileID: 6522693122879547793}
-  InitializedParentNetworkBehaviour: {fileID: 826313090492108274}
-  InitializedNestedNetworkObjects: []
-  RuntimeParentNetworkBehaviour: {fileID: 0}
-  RuntimeChildNetworkBehaviours: []
-  _isNetworked: 1
-  _isSpawnable: 1
-  _isGlobal: 0
-  _initializeOrder: 0
-  _preventDespawnOnDisconnect: 0
-  _defaultDespawnType: 0
   NetworkObserver: {fileID: 0}
   _enablePrediction: 1
   _predictionType: 0
@@ -27581,6 +27563,24 @@ MonoBehaviour:
     Rotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
     Scale: {x: 2.827, y: 2.827, z: 2.827}
     IsValid: 1
+  <IsNested>k__BackingField: 1
+  WasActiveDuringEdit: 1
+  WasActiveDuringEdit_Set1: 1
+  <ComponentIndex>k__BackingField: 1
+  <PredictedSpawn>k__BackingField: {fileID: 0}
+  <PredictedOwner>k__BackingField: {fileID: 0}
+  NetworkBehaviours:
+  - {fileID: 6522693122879547793}
+  InitializedParentNetworkBehaviour: {fileID: 826313090492108274}
+  InitializedNestedNetworkObjects: []
+  RuntimeParentNetworkBehaviour: {fileID: 0}
+  RuntimeChildNetworkBehaviours: []
+  _isNetworked: 1
+  _isSpawnable: 1
+  _isGlobal: 0
+  _initializeOrder: 0
+  _preventDespawnOnDisconnect: 0
+  _defaultDespawnType: 0
 --- !u!114 &4542675902940804923
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -30860,74 +30860,6 @@ MonoBehaviour:
     m_HintWeight: 1
     m_MaintainTargetPositionOffset: 0
     m_MaintainTargetRotationOffset: 0
---- !u!1 &8755940670835641990
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 280945768629304776}
-  - component: {fileID: 5143496213527089434}
-  - component: {fileID: 3853353879317796277}
-  m_Layer: 0
-  m_Name: MeleeCollider
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &280945768629304776
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8755940670835641990}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0.5, y: 0.5, z: -0.5, w: 0.5}
-  m_LocalPosition: {x: 0, y: 1.2946, z: 2.854}
-  m_LocalScale: {x: 295.78137, y: 131.87117, z: 200}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 3285245667151818026}
-  m_LocalEulerAnglesHint: {x: 90, y: 180, z: 90}
---- !u!64 &5143496213527089434
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8755940670835641990}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 64
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 4300000, guid: 7555322d15840a54faad4d34bec53301, type: 2}
---- !u!114 &3853353879317796277
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8755940670835641990}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 80eddc1871ffd214fa9ed053172f9ce0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: '::'
-  sword: {fileID: 6522693122879547793}
 --- !u!1 &8764312577331252958
 GameObject:
   m_ObjectHideFlags: 0
@@ -31313,4 +31245,86 @@ Transform:
 ParticleSystem:
   m_CorrespondingSourceObject: {fileID: 6503818606426063059, guid: f7964fcc340ff6e42bee13080e52f760, type: 3}
   m_PrefabInstance: {fileID: 849496611427695527}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1001 &6315866173023083387
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 3285245667151818026}
+    m_Modifications:
+    - target: {fileID: 5008127587956313494, guid: 6f2e7b682824b9415ad771210dcc8966, type: 3}
+      propertyPath: m_Name
+      value: V2MeleeCollider
+      objectReference: {fileID: 0}
+    - target: {fileID: 8250374173961595701, guid: 6f2e7b682824b9415ad771210dcc8966, type: 3}
+      propertyPath: sword
+      value: 
+      objectReference: {fileID: 6522693122879547793}
+    - target: {fileID: 8740600278731199064, guid: 6f2e7b682824b9415ad771210dcc8966, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8740600278731199064, guid: 6f2e7b682824b9415ad771210dcc8966, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 1.58
+      objectReference: {fileID: 0}
+    - target: {fileID: 8740600278731199064, guid: 6f2e7b682824b9415ad771210dcc8966, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 2.854
+      objectReference: {fileID: 0}
+    - target: {fileID: 8740600278731199064, guid: 6f2e7b682824b9415ad771210dcc8966, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8740600278731199064, guid: 6f2e7b682824b9415ad771210dcc8966, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8740600278731199064, guid: 6f2e7b682824b9415ad771210dcc8966, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8740600278731199064, guid: 6f2e7b682824b9415ad771210dcc8966, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8740600278731199064, guid: 6f2e7b682824b9415ad771210dcc8966, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 90
+      objectReference: {fileID: 0}
+    - target: {fileID: 8740600278731199064, guid: 6f2e7b682824b9415ad771210dcc8966, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 180
+      objectReference: {fileID: 0}
+    - target: {fileID: 8740600278731199064, guid: 6f2e7b682824b9415ad771210dcc8966, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 90
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 6f2e7b682824b9415ad771210dcc8966, type: 3}
+--- !u!114 &2727282839811518542 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8250374173961595701, guid: 6f2e7b682824b9415ad771210dcc8966, type: 3}
+  m_PrefabInstance: {fileID: 6315866173023083387}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80eddc1871ffd214fa9ed053172f9ce0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: '::'
+--- !u!4 &3380707394228472099 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8740600278731199064, guid: 6f2e7b682824b9415ad771210dcc8966, type: 3}
+  m_PrefabInstance: {fileID: 6315866173023083387}
+  m_PrefabAsset: {fileID: 0}
+--- !u!64 &5356559603538693314 stripped
+MeshCollider:
+  m_CorrespondingSourceObject: {fileID: 2157264104724879289, guid: 6f2e7b682824b9415ad771210dcc8966, type: 3}
+  m_PrefabInstance: {fileID: 6315866173023083387}
   m_PrefabAsset: {fileID: 0}
