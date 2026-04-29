@@ -60,8 +60,14 @@ public class LobbyUI : MonoBehaviour
     private int lastPlayerHash = -1;
     private readonly List<GameObject> entryObjects = new();
 
-    private static readonly Color RebelsColor = new Color(0.9f, 0.3f, 0.3f);
-    private static readonly Color AIColor = new Color(0.3f, 0.5f, 0.9f);
+    // Cached hover-effect components for the polished selected/hover state.
+    private UIButtonHoverEffect rebelsHover, aiHover, noTeamHover;
+    private UIButtonHoverEffect ffaHover, tdmHover;
+    private UIButtonHoverEffect readyHover;
+
+    // Local UI state of "what does the user have actively selected"
+    private Team selectedTeam = Team.None;
+    private GameMode selectedMode = GameMode.FreeForAll;
 
     /// <summary>
     /// Called by LobbyLayoutBuilder to wire all UI references at runtime.
@@ -127,9 +133,18 @@ public class LobbyUI : MonoBehaviour
 
         readyButton.onClick.AddListener(ToggleReady);
 
-        // Color the team buttons
-        SetButtonColor(rebelsButton, RebelsColor);
-        SetButtonColor(aiButton, AIColor);
+        // Cache the hover-effect components from the new procedural buttons (LobbyLayoutBuilder
+        // attaches a UIButtonHoverEffect to every CreateLobbyButton output).
+        rebelsHover = rebelsButton.GetComponent<UIButtonHoverEffect>();
+        aiHover = aiButton.GetComponent<UIButtonHoverEffect>();
+        noTeamHover = noTeamButton.GetComponent<UIButtonHoverEffect>();
+        ffaHover = ffaButton.GetComponent<UIButtonHoverEffect>();
+        tdmHover = tdmButton.GetComponent<UIButtonHoverEffect>();
+        readyHover = readyButton.GetComponent<UIButtonHoverEffect>();
+
+        HighlightTeamButton(selectedTeam);
+        HighlightModeButton(selectedMode);
+        UpdateReadyButton();
     }
 
     private void OnDestroy()
@@ -308,34 +323,34 @@ public class LobbyUI : MonoBehaviour
     private void SelectTeam(Team team)
     {
         if (lobbyManager == null) return;
+        selectedTeam = team;
         lobbyManager.CmdSetTeam(team);
         isReady = false;
-        UpdateReadyButton();
         HighlightTeamButton(team);
+        UpdateReadyButton();
     }
 
     private void SelectGameMode(GameMode mode)
     {
         if (lobbyManager == null) return;
+        selectedMode = mode;
         lobbyManager.CmdSetGameMode(mode);
         isReady = false;
-        UpdateReadyButton();
         HighlightModeButton(mode);
+        UpdateReadyButton();
     }
 
     private void HighlightTeamButton(Team team)
     {
-        SetButtonColor(rebelsButton, team == Team.Rebels ? RebelsColor : RebelsColor * 0.5f);
-        SetButtonColor(aiButton, team == Team.AI ? AIColor : AIColor * 0.5f);
-        SetButtonColor(noTeamButton, team == Team.None ? new Color(0.45f, 0.45f, 0.5f) : new Color(0.25f, 0.25f, 0.3f));
+        SetSelected(rebelsHover, team == Team.Rebels);
+        SetSelected(aiHover, team == Team.AI);
+        SetSelected(noTeamHover, team == Team.None);
     }
 
     private void HighlightModeButton(GameMode mode)
     {
-        Color ffaCol = new Color(0.9f, 0.65f, 0.2f);
-        Color tdmCol = new Color(0.2f, 0.75f, 0.5f);
-        SetButtonColor(ffaButton, mode == GameMode.FreeForAll ? ffaCol : ffaCol * 0.5f);
-        SetButtonColor(tdmButton, mode == GameMode.TeamDeathmatch ? tdmCol : tdmCol * 0.5f);
+        SetSelected(ffaHover, mode == GameMode.FreeForAll);
+        SetSelected(tdmHover, mode == GameMode.TeamDeathmatch);
     }
 
     private void ToggleReady()
@@ -347,20 +362,18 @@ public class LobbyUI : MonoBehaviour
 
     private void UpdateReadyButton()
     {
-        readyButtonText.text = isReady ? "READY!" : "Ready Up";
-        if (readyButtonImage != null)
-            readyButtonImage.color = isReady ? Color.green : Color.white;
+        if (readyButtonText != null)
+            readyButtonText.text = isReady ? "READY!" : "READY UP";
+        // The button image is the rounded sliced sprite; we don't recolor it directly anymore.
+        // Instead, the hover effect drives the outline + glow alpha for a clean selected state.
+        SetSelected(readyHover, isReady);
     }
 
     // ─── Helpers ──────────────────────────────────────────────────────
 
-    private static void SetButtonColor(Button button, Color color)
+    private static void SetSelected(UIButtonHoverEffect hover, bool selected)
     {
-        var colors = button.colors;
-        colors.normalColor = color;
-        colors.highlightedColor = color * 1.1f;
-        colors.pressedColor = color * 0.8f;
-        button.colors = colors;
+        if (hover != null) hover.SetSelected(selected);
     }
 
     private bool IsLobbyReady()
