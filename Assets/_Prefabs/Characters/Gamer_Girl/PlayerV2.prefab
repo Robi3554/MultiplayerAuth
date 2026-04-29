@@ -2774,6 +2774,7 @@ GameObject:
   - component: {fileID: 3782441155577224865}
   - component: {fileID: 3525329727369419788}
   - component: {fileID: 6390025327402182927}
+  - component: {fileID: 8425036055381962710}
   m_Layer: 0
   m_Name: Game mode
   m_TagString: Untagged
@@ -2899,6 +2900,19 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &8425036055381962710
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8990071772891741159}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 79b182c2382ae0341814ac500f0277b4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameModeText
+  gameModeText: {fileID: 6390025327402182927}
 --- !u!1001 &2408146021243487344
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -12,6 +12,7 @@ public class GameModeManager : NetworkBehaviour
 
     [Header("Game Mode Settings")]
     [SerializeField] private int killsToWin = 20;
+    [SerializeField] private int teamKillsToWin = 20;
     [SerializeField] private float gameRestartDelay = 5f;
 
     [Header("UI")]
@@ -61,7 +62,7 @@ public class GameModeManager : NetworkBehaviour
         {
             // TDM: check if the player's team total kills reached the limit
             int teamKills = GetTeamKills(player.team.Value);
-            if (teamKills >= killsToWin)
+            if (teamKills >= teamKillsToWin)
             {
                 TeamWon(player.team.Value);
             }
