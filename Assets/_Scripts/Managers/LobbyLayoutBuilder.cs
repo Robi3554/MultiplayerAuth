@@ -1,23 +1,35 @@
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 /// <summary>
-/// Builds a vibrant, game-y lobby layout procedurally at runtime.
+/// Builds a vibrant, game-y lobby layout procedurally.
 ///
 /// Style direction is Fortnite-ish: saturated solid color blocks, chunky borders,
 /// thick yellow accent strips, big bold uppercase typography, flat panels with
 /// strong contrast — not the more subtle realistic/tech look.
 ///
-/// Three columns sit over a saturated blue background with a faint diagonal
-/// pattern overlay. Each panel has a chunky yellow band across its top.
-/// Buttons have a solid color fill plus a darker bottom strip for a chunky 3D
-/// depth, and a <see cref="UIButtonHoverEffect"/> that lerps scale and
-/// outline/glow alphas on hover/press/select. The selected state pops with a
-/// bright yellow outline and pulse.
+/// All proportions and colors are exposed as serialized fields so they can be
+/// tweaked from the Inspector. The build runs once in <see cref="Awake"/> by
+/// default, and can be re-run on demand via the right-click context menu:
+///   - "Rebuild Layout" — destroys the previously generated children under this
+///     transform and rebuilds from the current inspector values. Works in edit
+///     mode (recommended) and at runtime.
+///   - "Clear Built UI" — removes everything this component generated under its
+///     transform, leaving the canvas ready for a manual hierarchy or a fresh
+///     rebuild.
+///
+/// Tip: to switch to a hand-edited canvas, run "Rebuild Layout" once in edit
+/// mode, then disable this component. The generated GameObjects persist in the
+/// scene and become normal hand-editable UI elements. After that you'll want to
+/// wire the Lobby UI references on <see cref="LobbyUI"/> manually via the
+/// Inspector since this builder will no longer call <see cref="LobbyUI.SetupLayoutReferences"/>.
 /// </summary>
 public class LobbyLayoutBuilder : MonoBehaviour
 {
+    // ─── Serialized inspector fields ───────────────────────────────────
+
     [Header("References")]
     [SerializeField] private LobbyUI lobbyUI;
     [SerializeField] private CharacterPreviewUI characterPreview;
@@ -28,30 +40,76 @@ public class LobbyLayoutBuilder : MonoBehaviour
     [Header("Fonts")]
     [SerializeField] private TMP_FontAsset font;
 
-    // ─── Palette (Fortnite-inspired) ──────────────────────────────────
-    // Saturated blues form the base; bright yellow is the universal accent /
-    // selection color; team/mode buttons keep their distinct hues but get the
-    // chunky border treatment.
-    private static readonly Color BgPrimary = new Color(0.10f, 0.16f, 0.40f, 1f);   // deep royal blue
-    private static readonly Color BgSecondary = new Color(0.14f, 0.22f, 0.55f, 1f); // mid royal blue
-    private static readonly Color PanelFill = new Color(0.13f, 0.21f, 0.52f, 1f);
-    private static readonly Color PanelBottom = new Color(0.05f, 0.09f, 0.25f, 1f); // chunky bottom strip
-    private static readonly Color AccentYellow = new Color(1.00f, 0.82f, 0.18f, 1f);
-    private static readonly Color AccentYellowDim = new Color(0.78f, 0.62f, 0.10f, 1f);
-    private static readonly Color AccentMint = new Color(0.32f, 0.86f, 0.68f, 1f);
-    private static readonly Color TextWhite = new Color(0.99f, 1.00f, 1.00f, 1f);
-    private static readonly Color TextDim = new Color(0.78f, 0.85f, 1.00f, 1f);
-    private static readonly Color OutlineDark = new Color(0.02f, 0.05f, 0.14f, 1f);
+    [Header("Build Behavior")]
+    [Tooltip("If true, the layout is (re)built in Awake. Disable to preserve a manually-baked / hand-edited hierarchy.")]
+    [SerializeField] private bool rebuildOnAwake = true;
 
-    // Team / Mode tints — kept saturated, with a darker bottom strip per button.
-    private static readonly Color RebelsCol = new Color(0.95f, 0.30f, 0.34f, 1f);
-    private static readonly Color AICol = new Color(0.30f, 0.55f, 1.00f, 1f);
-    private static readonly Color NoneCol = new Color(0.55f, 0.58f, 0.70f, 1f);
-    private static readonly Color FFACol = new Color(1.00f, 0.65f, 0.18f, 1f);
-    private static readonly Color TDMCol = new Color(0.32f, 0.86f, 0.55f, 1f);
-    private static readonly Color ReadyCol = new Color(1.00f, 0.82f, 0.18f, 1f); // yellow CTA — Fortnite-y
+    [Header("Title")]
+    [SerializeField] private string lobbyTitle = "MULTIPLAYER LOBBY";
+    [SerializeField, Range(20, 80)] private int titleFontSize = 38;
+    [SerializeField, Range(0f, 20f)] private float titleCharacterSpacing = 8f;
 
-    // Built UI references (exposed for LobbyUI wiring)
+    [Header("Layout — Outer (anchors, 0..1 of canvas)")]
+    [Tooltip("Outer left/right margin from the canvas edge.")]
+    [SerializeField, Range(0f, 0.10f)] private float panelMargin = 0.013f;
+
+    [Tooltip("Horizontal gap between the side columns and the center panel.")]
+    [SerializeField, Range(0f, 0.05f)] private float columnGap = 0.010f;
+
+    [Tooltip("Width of the left players panel as a fraction of the canvas.")]
+    [SerializeField, Range(0.10f, 0.45f)] private float leftColumnWidth = 0.232f;
+
+    [Tooltip("Width of the right loadout panel as a fraction of the canvas.")]
+    [SerializeField, Range(0.10f, 0.45f)] private float rightColumnWidth = 0.232f;
+
+    [Tooltip("Top edge of the side panels (below the title).")]
+    [SerializeField, Range(0.5f, 0.99f)] private float contentTop = 0.93f;
+
+    [Tooltip("Bottom edge of the side panels (above the status bar).")]
+    [SerializeField, Range(0.01f, 0.30f)] private float contentBottom = 0.075f;
+
+    [Tooltip("Status bar bottom anchor (gap to canvas bottom).")]
+    [SerializeField, Range(0f, 0.05f)] private float statusBarBottom = 0.012f;
+
+    [Tooltip("Status bar top anchor (sets its height = top - bottom).")]
+    [SerializeField, Range(0.02f, 0.15f)] private float statusBarTop = 0.062f;
+
+    [Tooltip("Bottom anchor of the title text area.")]
+    [SerializeField, Range(0.85f, 0.99f)] private float titleBarBottom = 0.945f;
+
+    [Tooltip("Top anchor of the title text area (and bottom of the top yellow stripe).")]
+    [SerializeField, Range(0.90f, 1f)] private float titleBarTop = 0.985f;
+
+    [Header("Layout — Right Panel Internals")]
+    [SerializeField, Range(0.02f, 0.12f)] private float panelHeader_Top = 0.985f;
+    [SerializeField, Range(0.02f, 0.12f)] private float panelHeader_Bottom = 0.92f;
+    [SerializeField, Range(0.02f, 0.20f)] private float buttonHeight = 0.075f;
+    [SerializeField, Range(0f, 0.05f)] private float buttonGap = 0.014f;
+    [SerializeField, Range(0f, 0.06f)] private float sectionGap = 0.018f;
+    [SerializeField, Range(0.02f, 0.06f)] private float sectionHeaderHeight = 0.045f;
+    [SerializeField, Range(0.05f, 0.25f)] private float readyButtonHeight = 0.11f;
+    [SerializeField, Range(0f, 0.20f)] private float readyButtonBottom = 0.035f;
+
+    [Header("Palette — Base")]
+    [SerializeField] private Color bgPrimary = new(0.10f, 0.16f, 0.40f, 1f);
+    [SerializeField] private Color bgSecondary = new(0.14f, 0.22f, 0.55f, 1f);
+    [SerializeField] private Color panelFill = new(0.13f, 0.21f, 0.52f, 1f);
+    [SerializeField] private Color panelBottom = new(0.05f, 0.09f, 0.25f, 1f);
+    [SerializeField] private Color accentYellow = new(1.00f, 0.82f, 0.18f, 1f);
+    [SerializeField] private Color outlineDark = new(0.02f, 0.05f, 0.14f, 1f);
+    [SerializeField] private Color textWhite = new(0.99f, 1.00f, 1.00f, 1f);
+    [SerializeField] private Color textDim = new(0.78f, 0.85f, 1.00f, 1f);
+
+    [Header("Palette — Team / Mode")]
+    [SerializeField] private Color rebelsColor = new(0.95f, 0.30f, 0.34f, 1f);
+    [SerializeField] private Color aiColor = new(0.30f, 0.55f, 1.00f, 1f);
+    [SerializeField] private Color noneTeamColor = new(0.55f, 0.58f, 0.70f, 1f);
+    [SerializeField] private Color ffaColor = new(1.00f, 0.65f, 0.18f, 1f);
+    [SerializeField] private Color tdmColor = new(0.32f, 0.86f, 0.55f, 1f);
+    [SerializeField] private Color readyColor = new(1.00f, 0.82f, 0.18f, 1f);
+
+    // ─── Built UI references (exposed for LobbyUI wiring) ──────────────
+
     private Transform playerListContent;
     private Button rebelsButton, aiButton, noTeamButton;
     private Button ffaButton, tdmButton;
@@ -63,10 +121,56 @@ public class LobbyLayoutBuilder : MonoBehaviour
     private GameObject lobbyContentRoot;
     private TMP_Text characterTaglineText;
 
+    // Tracks the children we created so Clear() can remove them without touching
+    // anything the user added manually under this transform.
+    private readonly List<GameObject> _generatedChildren = new();
+
     private void Awake()
     {
+        if (!rebuildOnAwake) return;
         BuildLayout();
         WireReferences();
+    }
+
+    // ─── Editor-friendly entry points (right-click on this component) ──
+
+    [ContextMenu("Rebuild Layout")]
+    public void Rebuild()
+    {
+        Clear();
+        BuildLayout();
+        WireReferences();
+    }
+
+    [ContextMenu("Clear Built UI")]
+    public void Clear()
+    {
+        // Tear down everything this builder added. We track our own children so
+        // we don't accidentally delete other things the user parented under this
+        // GameObject.
+        for (int i = _generatedChildren.Count - 1; i >= 0; i--)
+        {
+            var go = _generatedChildren[i];
+            if (go == null) continue;
+            if (Application.isPlaying)
+                Destroy(go);
+            else
+                DestroyImmediate(go);
+        }
+        _generatedChildren.Clear();
+
+        // Belt + braces: also clear loose top-level children whose names match our
+        // generated objects (in case _generatedChildren was wiped by a domain reload).
+        var names = new HashSet<string> { "BG_Base", "BG_Pattern", "BG_TopStripe", "BG_TopStripeShadow", "LobbyContent" };
+        var toDelete = new List<GameObject>();
+        foreach (Transform child in transform)
+            if (names.Contains(child.name))
+                toDelete.Add(child.gameObject);
+        foreach (var go in toDelete)
+        {
+            if (Application.isPlaying) Destroy(go);
+            else DestroyImmediate(go);
+        }
     }
 
     // ─── Top-level layout ──────────────────────────────────────────────
@@ -91,6 +195,7 @@ public class LobbyLayoutBuilder : MonoBehaviour
         BuildBackground(transform);
 
         lobbyContentRoot = CreateAnchoredPanel("LobbyContent", transform, Vector2.zero, Vector2.one, Color.clear);
+        Track(lobbyContentRoot);
 
         BuildLeftPanel(lobbyContentRoot.transform);
         BuildCenterPanel(lobbyContentRoot.transform);
@@ -99,79 +204,78 @@ public class LobbyLayoutBuilder : MonoBehaviour
         BuildTopTitle(lobbyContentRoot.transform);
     }
 
-    private static void BuildBackground(Transform parent)
+    private void BuildBackground(Transform parent)
     {
         // Solid saturated base: vertical step from BgPrimary (top) to BgSecondary (bottom).
-        // Kept gentle so the background reads as a single saturated color, not a "moody" gradient.
         var bg = CreateAnchoredPanel("BG_Base", parent, Vector2.zero, Vector2.one, Color.white);
+        Track(bg);
         var bgImg = bg.GetComponent<Image>();
-        bgImg.sprite = LobbyVisuals.GetVerticalGradient(BgPrimary, BgSecondary);
+        bgImg.sprite = LobbyVisuals.GetVerticalGradient(bgPrimary, bgSecondary);
         bgImg.type = Image.Type.Simple;
         bgImg.raycastTarget = false;
 
-        // Subtle diagonal scan-line pattern at low alpha so the BG isn't completely flat
+        // Subtle diagonal scan-line pattern at low alpha
         var pattern = CreateAnchoredPanel("BG_Pattern", parent, Vector2.zero, Vector2.one, Color.white);
+        Track(pattern);
         var patImg = pattern.GetComponent<Image>();
         patImg.sprite = LobbyVisuals.GetSubtlePattern(new Color(1f, 1f, 1f, 1f));
         patImg.type = Image.Type.Tiled;
         patImg.color = new Color(1f, 1f, 1f, 0.07f);
         patImg.raycastTarget = false;
 
-        // Thick yellow accent stripe along the very top of the screen (Fortnite signature).
+        // Thick yellow accent stripe along the very top of the screen
         var topStripe = CreateAnchoredPanel("BG_TopStripe", parent,
-            new Vector2(0f, 0.985f), new Vector2(1f, 1f), AccentYellow);
-        var stripeImg = topStripe.GetComponent<Image>();
-        stripeImg.raycastTarget = false;
-        // Hard shadow under the stripe for a chunky outline
+            new Vector2(0f, titleBarTop), new Vector2(1f, 1f), accentYellow);
+        Track(topStripe);
+        topStripe.GetComponent<Image>().raycastTarget = false;
+
+        // Hard shadow under the stripe
         var topShadow = CreateAnchoredPanel("BG_TopStripeShadow", parent,
-            new Vector2(0f, 0.978f), new Vector2(1f, 0.985f), new Color(0f, 0f, 0f, 0.55f));
+            new Vector2(0f, titleBarTop - 0.007f), new Vector2(1f, titleBarTop), new Color(0f, 0f, 0f, 0.55f));
+        Track(topShadow);
         topShadow.GetComponent<Image>().raycastTarget = false;
     }
 
     private void BuildTopTitle(Transform parent)
     {
         var bar = CreateAnchoredPanel("TitleBar", parent,
-            new Vector2(0f, 0.945f), new Vector2(1f, 0.985f), Color.clear);
+            new Vector2(0f, titleBarBottom), new Vector2(1f, titleBarTop), Color.clear);
 
-        var title = CreateText("LobbyTitle", bar.transform, "MULTIPLAYER LOBBY", 38, AccentYellow,
-            new Vector2(0f, 0f), new Vector2(1f, 1f), TextAlignmentOptions.Center,
-            new Vector2(0, 0), new Vector2(0, 0));
+        var title = CreateText("LobbyTitle", bar.transform, lobbyTitle, titleFontSize, accentYellow,
+            new Vector2(0f, 0f), new Vector2(1f, 1f), TextAlignmentOptions.Center);
         title.fontStyle = FontStyles.Bold | FontStyles.UpperCase;
-        title.characterSpacing = 8f;
+        title.characterSpacing = titleCharacterSpacing;
 
-        // Chunky black outline + dark drop shadow for the punchy game-y look
         var titleOutline = title.gameObject.AddComponent<Outline>();
-        titleOutline.effectColor = OutlineDark;
+        titleOutline.effectColor = outlineDark;
         titleOutline.effectDistance = new Vector2(2.2f, -2.2f);
         var titleShadow = title.gameObject.AddComponent<Shadow>();
         titleShadow.effectColor = new Color(0f, 0f, 0f, 0.55f);
         titleShadow.effectDistance = new Vector2(0f, -3f);
     }
 
-    // ─── LEFT PANEL: Player List ──────────────────────────────────────
+    // ─── LEFT PANEL ───────────────────────────────────────────────────
 
     private void BuildLeftPanel(Transform parent)
     {
         var panel = CreateChunkyPanel("LeftPanel", parent,
-            new Vector2(0.013f, 0.075f),
-            new Vector2(0.245f, 0.93f),
-            PanelFill, PanelBottom);
+            new Vector2(panelMargin, contentBottom),
+            new Vector2(panelMargin + leftColumnWidth, contentTop),
+            panelFill, panelBottom);
 
-        // Yellow header strip across the very top of the panel
         var headerStrip = CreateAnchoredPanel("HeaderStripe", panel.transform,
-            new Vector2(0f, 0.92f), new Vector2(1f, 0.985f), AccentYellow);
+            new Vector2(0f, panelHeader_Bottom), new Vector2(1f, panelHeader_Top), accentYellow);
         headerStrip.GetComponent<Image>().raycastTarget = false;
 
-        // Header text on top of the strip
-        var header = CreateText("PlayerListHeader", panel.transform, "PLAYERS", 24, OutlineDark,
-            new Vector2(0f, 0.92f), new Vector2(1f, 0.985f), TextAlignmentOptions.Center,
+        var header = CreateText("PlayerListHeader", panel.transform, "PLAYERS", 24, outlineDark,
+            new Vector2(0f, panelHeader_Bottom), new Vector2(1f, panelHeader_Top), TextAlignmentOptions.Center,
             new Vector2(10, 0), new Vector2(-10, 0));
         header.fontStyle = FontStyles.Bold | FontStyles.UpperCase;
         header.characterSpacing = 10f;
 
         // Scrollable list area
         var scrollArea = CreateAnchoredPanel("PlayerScrollArea", panel.transform,
-            new Vector2(0.025f, 0.04f), new Vector2(0.975f, 0.905f), Color.clear);
+            new Vector2(0.025f, 0.04f), new Vector2(0.975f, panelHeader_Bottom - 0.015f), Color.clear);
 
         var scrollRect = scrollArea.AddComponent<ScrollRect>();
         scrollRect.horizontal = false;
@@ -206,24 +310,26 @@ public class LobbyLayoutBuilder : MonoBehaviour
         playerListContent = content.transform;
     }
 
-    // ─── CENTER PANEL: Character Preview (no frame, just stage) ───────
+    // ─── CENTER PANEL ─────────────────────────────────────────────────
 
     private void BuildCenterPanel(Transform parent)
     {
+        // Center panel spans the gap between the two side columns.
+        float centerLeft = panelMargin + leftColumnWidth + columnGap;
+        float centerRight = 1f - panelMargin - rightColumnWidth - columnGap;
+
         var panel = CreateAnchoredPanel("CenterPanel", parent,
-            new Vector2(0.255f, 0.075f),
-            new Vector2(0.745f, 0.93f),
+            new Vector2(centerLeft, contentBottom),
+            new Vector2(centerRight, contentTop),
             Color.clear);
 
-        // Big radial glow behind the character — tinted by the active character's accent color.
         var glow = CreateAnchoredPanel("PreviewGlow", panel.transform,
             new Vector2(-0.10f, -0.05f), new Vector2(1.10f, 0.92f), Color.white);
         var glowImg = glow.GetComponent<Image>();
-        glowImg.sprite = LobbyVisuals.GetRadialGlow(AccentYellow);
+        glowImg.sprite = LobbyVisuals.GetRadialGlow(accentYellow);
         glowImg.color = new Color(1f, 1f, 1f, 0.55f);
         glowImg.raycastTarget = false;
 
-        // The RawImage stands on its own — no surrounding frame, just open to the background.
         var previewObj = new GameObject("CharacterPreviewImage", typeof(RectTransform));
         previewObj.transform.SetParent(panel.transform, false);
         var previewRT = (RectTransform)previewObj.transform;
@@ -235,33 +341,28 @@ public class LobbyLayoutBuilder : MonoBehaviour
         previewImage.color = Color.white;
         previewImage.raycastTarget = false;
 
-        // Yellow "stage" stripe under the character — gives the model a podium feel.
         var stageStripe = CreateAnchoredPanel("StageStripe", panel.transform,
-            new Vector2(0.10f, 0.085f), new Vector2(0.90f, 0.110f), AccentYellow);
+            new Vector2(0.10f, 0.085f), new Vector2(0.90f, 0.110f), accentYellow);
         stageStripe.GetComponent<Image>().raycastTarget = false;
-        // Dark shadow underneath the stripe for chunkiness
         var stageShadow = CreateAnchoredPanel("StageStripeShadow", panel.transform,
             new Vector2(0.10f, 0.075f), new Vector2(0.90f, 0.088f), new Color(0f, 0f, 0f, 0.45f));
         stageShadow.GetComponent<Image>().raycastTarget = false;
 
-        // BIG character name above
-        var charNameText = CreateText("CharacterName", panel.transform, "Select Character", 48, AccentYellow,
+        var charNameText = CreateText("CharacterName", panel.transform, "Select Character", 48, accentYellow,
             new Vector2(0.05f, 0.88f), new Vector2(0.95f, 0.965f), TextAlignmentOptions.Center);
         charNameText.fontStyle = FontStyles.Bold | FontStyles.UpperCase;
         charNameText.characterSpacing = 6f;
         var nameOutline = charNameText.gameObject.AddComponent<Outline>();
-        nameOutline.effectColor = OutlineDark;
+        nameOutline.effectColor = outlineDark;
         nameOutline.effectDistance = new Vector2(2.5f, -2.5f);
         var nameShadow = charNameText.gameObject.AddComponent<Shadow>();
         nameShadow.effectColor = new Color(0f, 0f, 0f, 0.55f);
         nameShadow.effectDistance = new Vector2(0f, -4f);
 
-        // Tagline below the name
-        characterTaglineText = CreateText("CharacterTagline", panel.transform, "", 18, TextDim,
+        characterTaglineText = CreateText("CharacterTagline", panel.transform, "", 18, textDim,
             new Vector2(0.10f, 0.835f), new Vector2(0.90f, 0.880f), TextAlignmentOptions.Center);
         characterTaglineText.fontStyle = FontStyles.Italic;
 
-        // Circular yellow arrow buttons
         var leftArrow = CreateCircularArrowButton("LeftArrow", panel.transform, "<",
             new Vector2(0.00f, 0.36f), new Vector2(0.10f, 0.58f));
         var rightArrow = CreateCircularArrowButton("RightArrow", panel.transform, ">",
@@ -274,83 +375,74 @@ public class LobbyLayoutBuilder : MonoBehaviour
             characterPreview.SetCharacterNameText(charNameText);
             characterPreview.SetCharacterTaglineText(characterTaglineText);
 
-            // Retint the radial glow + name highlight when the character changes.
             characterPreview.OnDefinitionChanged += def =>
             {
                 if (def == null) return;
                 glowImg.color = new Color(def.accentColor.r, def.accentColor.g, def.accentColor.b, 0.65f);
                 charNameText.color = def.accentColor;
-                // Keep the dark outline so the text remains punchy regardless of accent.
             };
         }
     }
 
-    // ─── RIGHT PANEL: Team, Mode, Ready ───────────────────────────────
+    // ─── RIGHT PANEL ──────────────────────────────────────────────────
 
     private void BuildRightPanel(Transform parent)
     {
         var panel = CreateChunkyPanel("RightPanel", parent,
-            new Vector2(0.755f, 0.075f),
-            new Vector2(0.987f, 0.93f),
-            PanelFill, PanelBottom);
+            new Vector2(1f - panelMargin - rightColumnWidth, contentBottom),
+            new Vector2(1f - panelMargin, contentTop),
+            panelFill, panelBottom);
 
-        // Yellow header strip across the very top of the panel (matches LeftPanel style)
         var headerStrip = CreateAnchoredPanel("HeaderStripe", panel.transform,
-            new Vector2(0f, 0.92f), new Vector2(1f, 0.985f), AccentYellow);
+            new Vector2(0f, panelHeader_Bottom), new Vector2(1f, panelHeader_Top), accentYellow);
         headerStrip.GetComponent<Image>().raycastTarget = false;
-        var loadout = CreateText("LoadoutHeader", panel.transform, "LOADOUT", 24, OutlineDark,
-            new Vector2(0f, 0.92f), new Vector2(1f, 0.985f), TextAlignmentOptions.Center);
+        var loadout = CreateText("LoadoutHeader", panel.transform, "LOADOUT", 24, outlineDark,
+            new Vector2(0f, panelHeader_Bottom), new Vector2(1f, panelHeader_Top), TextAlignmentOptions.Center);
         loadout.fontStyle = FontStyles.Bold | FontStyles.UpperCase;
         loadout.characterSpacing = 12f;
 
-        float yTop = 0.91f;
-        float headerHeight = 0.045f;
-        float sectionGap = 0.018f;
-        float btnH = 0.075f;
-        float btnGap = 0.014f;
+        // Section layout starts just under the header strip
+        float yTop = panelHeader_Bottom - 0.01f;
 
         // ─── TEAM ───
-        CreateSectionHeader(panel.transform, "TEAM", yTop - headerHeight, yTop);
-        yTop -= headerHeight + sectionGap;
+        CreateSectionHeader(panel.transform, "TEAM", yTop - sectionHeaderHeight, yTop);
+        yTop -= sectionHeaderHeight + sectionGap;
 
         rebelsButton = CreateLobbyButton("RebelsBtn", panel.transform, "REBELS", "✦",
-            new Vector2(0.07f, yTop - btnH), new Vector2(0.93f, yTop), RebelsCol);
-        yTop -= btnH + btnGap;
+            new Vector2(0.07f, yTop - buttonHeight), new Vector2(0.93f, yTop), rebelsColor);
+        yTop -= buttonHeight + buttonGap;
 
         aiButton = CreateLobbyButton("AIBtn", panel.transform, "A.I.", "◆",
-            new Vector2(0.07f, yTop - btnH), new Vector2(0.93f, yTop), AICol);
-        yTop -= btnH + btnGap;
+            new Vector2(0.07f, yTop - buttonHeight), new Vector2(0.93f, yTop), aiColor);
+        yTop -= buttonHeight + buttonGap;
 
         noTeamButton = CreateLobbyButton("NoTeamBtn", panel.transform, "NO TEAM", "—",
-            new Vector2(0.07f, yTop - btnH), new Vector2(0.93f, yTop), NoneCol);
-        yTop -= btnH + sectionGap * 2;
+            new Vector2(0.07f, yTop - buttonHeight), new Vector2(0.93f, yTop), noneTeamColor);
+        yTop -= buttonHeight + sectionGap * 2;
 
         // ─── GAME MODE ───
-        CreateSectionHeader(panel.transform, "MODE", yTop - headerHeight, yTop);
-        yTop -= headerHeight + sectionGap;
+        CreateSectionHeader(panel.transform, "MODE", yTop - sectionHeaderHeight, yTop);
+        yTop -= sectionHeaderHeight + sectionGap;
 
         ffaButton = CreateLobbyButton("FFABtn", panel.transform, "FREE FOR ALL", "●",
-            new Vector2(0.07f, yTop - btnH), new Vector2(0.93f, yTop), FFACol);
-        yTop -= btnH + btnGap;
+            new Vector2(0.07f, yTop - buttonHeight), new Vector2(0.93f, yTop), ffaColor);
+        yTop -= buttonHeight + buttonGap;
 
         tdmButton = CreateLobbyButton("TDMBtn", panel.transform, "TEAM DEATHMATCH", "▲",
-            new Vector2(0.07f, yTop - btnH), new Vector2(0.93f, yTop), TDMCol);
-        yTop -= btnH + sectionGap;
+            new Vector2(0.07f, yTop - buttonHeight), new Vector2(0.93f, yTop), tdmColor);
+        yTop -= buttonHeight + sectionGap;
 
-        // Vote tally
-        gameModeText = CreateText("GameModeVote", panel.transform, "", 14, TextDim,
+        gameModeText = CreateText("GameModeVote", panel.transform, "", 14, textDim,
             new Vector2(0.06f, yTop - 0.05f), new Vector2(0.94f, yTop), TextAlignmentOptions.Center);
         gameModeText.fontStyle = FontStyles.Italic;
 
         // ─── READY (huge yellow CTA at the bottom) ───
-        float readyH = 0.11f;
-        float readyY = 0.035f;
         readyButton = CreateLobbyButton("ReadyBtn", panel.transform, "READY UP", "✓",
-            new Vector2(0.06f, readyY), new Vector2(0.94f, readyY + readyH), ReadyCol, big: true);
+            new Vector2(0.06f, readyButtonBottom), new Vector2(0.94f, readyButtonBottom + readyButtonHeight),
+            readyColor, big: true);
         readyButtonText = readyButton.GetComponentInChildren<TMP_Text>();
         readyButtonImage = readyButton.GetComponent<Image>();
 
-        // Pulse when armed
         var readyHover = readyButton.GetComponent<UIButtonHoverEffect>();
         if (readyHover != null)
             readyHover.EnableSelectedPulse(speed: 2.6f, amplitude: 0.45f);
@@ -358,15 +450,14 @@ public class LobbyLayoutBuilder : MonoBehaviour
 
     private void CreateSectionHeader(Transform parent, string text, float yMin, float yMax)
     {
-        var header = CreateText($"Header_{text}", parent, text, 18, AccentYellow,
+        var header = CreateText($"Header_{text}", parent, text, 18, accentYellow,
             new Vector2(0f, yMin), new Vector2(1f, yMax), TextAlignmentOptions.MidlineLeft,
             new Vector2(20, 0), new Vector2(-20, 0));
         header.fontStyle = FontStyles.Bold | FontStyles.UpperCase;
         header.characterSpacing = 10f;
 
-        // Thick yellow underline bar under the header — flat, no gradient
         var bar = CreateAnchoredPanel($"HeaderBar_{text}", parent,
-            new Vector2(0.07f, yMin - 0.004f), new Vector2(0.93f, yMin + 0.001f), AccentYellow);
+            new Vector2(0.07f, yMin - 0.004f), new Vector2(0.93f, yMin + 0.001f), accentYellow);
         bar.GetComponent<Image>().raycastTarget = false;
     }
 
@@ -375,17 +466,15 @@ public class LobbyLayoutBuilder : MonoBehaviour
     private void BuildStatusBar(Transform parent)
     {
         var bar = CreateChunkyPanel("StatusBar", parent,
-            new Vector2(0.013f, 0.012f), new Vector2(0.987f, 0.062f),
+            new Vector2(panelMargin, statusBarBottom), new Vector2(1f - panelMargin, statusBarTop),
             new Color(0.07f, 0.11f, 0.30f, 1f), new Color(0.03f, 0.05f, 0.16f, 1f));
 
-        // Left: connection / counts
-        statusText = CreateText("StatusText", bar.transform, "Connecting...", 18, TextWhite,
+        statusText = CreateText("StatusText", bar.transform, "Connecting...", 18, textWhite,
             new Vector2(0f, 0f), new Vector2(0.55f, 1f), TextAlignmentOptions.MidlineLeft,
             new Vector2(28, 0), new Vector2(-12, 0));
         statusText.fontStyle = FontStyles.Bold;
 
-        // Right: tip
-        var tip = CreateText("StatusTip", bar.transform, "PICK A TEAM, GAME MODE, AND READY UP", 14, AccentYellow,
+        var tip = CreateText("StatusTip", bar.transform, "PICK A TEAM, GAME MODE, AND READY UP", 14, accentYellow,
             new Vector2(0.55f, 0f), new Vector2(1f, 1f), TextAlignmentOptions.MidlineRight,
             new Vector2(12, 0), new Vector2(-28, 0));
         tip.fontStyle = FontStyles.Bold | FontStyles.UpperCase;
@@ -435,11 +524,7 @@ public class LobbyLayoutBuilder : MonoBehaviour
         return obj;
     }
 
-    /// <summary>
-    /// Chunky panel with a flat fill, a darker bottom strip for "depth", a thick top
-    /// black outline for the game-y look, and a hard drop shadow underneath.
-    /// </summary>
-    private static GameObject CreateChunkyPanel(string name, Transform parent, Vector2 anchorMin, Vector2 anchorMax,
+    private GameObject CreateChunkyPanel(string name, Transform parent, Vector2 anchorMin, Vector2 anchorMax,
         Color fill, Color bottomStrip, int cornerRadius = 10)
     {
         var obj = new GameObject(name, typeof(RectTransform));
@@ -450,18 +535,15 @@ public class LobbyLayoutBuilder : MonoBehaviour
         rt.offsetMin = Vector2.zero;
         rt.offsetMax = Vector2.zero;
 
-        // Root: rounded rect with a thick dark border
         var img = obj.AddComponent<Image>();
-        img.sprite = LobbyVisuals.GetRoundedRect(cornerRadius, 3, fill, OutlineDark);
+        img.sprite = LobbyVisuals.GetRoundedRect(cornerRadius, 3, fill, outlineDark);
         img.type = Image.Type.Sliced;
         img.pixelsPerUnitMultiplier = 1f;
 
-        // Drop shadow
         var shadow = obj.AddComponent<Shadow>();
         shadow.effectColor = new Color(0f, 0f, 0f, 0.65f);
         shadow.effectDistance = new Vector2(0f, -4f);
 
-        // Bottom strip child for chunky depth
         var strip = new GameObject("BottomStrip", typeof(RectTransform));
         strip.transform.SetParent(obj.transform, false);
         var stripRT = (RectTransform)strip.transform;
@@ -470,7 +552,7 @@ public class LobbyLayoutBuilder : MonoBehaviour
         stripRT.offsetMin = new Vector2(3, 3);
         stripRT.offsetMax = new Vector2(-3, 0);
         var stripImg = strip.AddComponent<Image>();
-        stripImg.sprite = LobbyVisuals.GetRoundedRect(cornerRadius - 4, 0, bottomStrip, bottomStrip);
+        stripImg.sprite = LobbyVisuals.GetRoundedRect(Mathf.Max(1, cornerRadius - 4), 0, bottomStrip, bottomStrip);
         stripImg.type = Image.Type.Sliced;
         stripImg.color = Color.white;
         stripImg.raycastTarget = false;
@@ -501,12 +583,6 @@ public class LobbyLayoutBuilder : MonoBehaviour
         return tmp;
     }
 
-    /// <summary>
-    /// Solid color button with: a thick dark outline, a darker bottom strip for
-    /// chunky 3D depth, an icon glyph on the left, big bold uppercase label, and
-    /// a <see cref="UIButtonHoverEffect"/> hover/select polish that brightens an
-    /// outline + soft glow. The selected state shows a thick yellow accent ring.
-    /// </summary>
     private Button CreateLobbyButton(string name, Transform parent, string label, string iconGlyph,
         Vector2 anchorMin, Vector2 anchorMax, Color tint, bool big = false)
     {
@@ -518,22 +594,19 @@ public class LobbyLayoutBuilder : MonoBehaviour
         rt.offsetMin = Vector2.zero;
         rt.offsetMax = Vector2.zero;
 
-        // Solid color fill, thick black border
         Color bottomCol = tint * 0.55f; bottomCol.a = 1f;
         int corner = big ? 14 : 10;
         var img = obj.AddComponent<Image>();
-        img.sprite = LobbyVisuals.GetRoundedRect(corner, big ? 4 : 3, tint, OutlineDark);
+        img.sprite = LobbyVisuals.GetRoundedRect(corner, big ? 4 : 3, tint, outlineDark);
         img.type = Image.Type.Sliced;
         img.pixelsPerUnitMultiplier = 1f;
 
-        // Hard drop shadow
         var shadow = obj.AddComponent<Shadow>();
         shadow.effectColor = new Color(0f, 0f, 0f, 0.7f);
         shadow.effectDistance = new Vector2(0f, big ? -4f : -3f);
 
-        // Yellow selected-state outline (alpha is driven by hover effect)
         var outline = obj.AddComponent<Outline>();
-        Color outlineCol = AccentYellow;
+        Color outlineCol = accentYellow;
         outlineCol.a = 0f;
         outline.effectColor = outlineCol;
         outline.effectDistance = new Vector2(big ? 2.5f : 2f, big ? -2.5f : -2f);
@@ -548,7 +621,6 @@ public class LobbyLayoutBuilder : MonoBehaviour
         btn.colors = colors;
         btn.targetGraphic = img;
 
-        // Chunky bottom strip for the 3D depth (sits inside the rounded rect)
         var depth = new GameObject("DepthStrip", typeof(RectTransform));
         depth.transform.SetParent(obj.transform, false);
         var depthRT = (RectTransform)depth.transform;
@@ -557,12 +629,11 @@ public class LobbyLayoutBuilder : MonoBehaviour
         depthRT.offsetMin = new Vector2(4, 4);
         depthRT.offsetMax = new Vector2(-4, 0);
         var depthImg = depth.AddComponent<Image>();
-        depthImg.sprite = LobbyVisuals.GetRoundedRect(corner - 4, 0, bottomCol, bottomCol);
+        depthImg.sprite = LobbyVisuals.GetRoundedRect(Mathf.Max(1, corner - 4), 0, bottomCol, bottomCol);
         depthImg.type = Image.Type.Sliced;
         depthImg.color = Color.white;
         depthImg.raycastTarget = false;
 
-        // Subtle top sheen — kept minimal for the flat-color feel
         var sheen = new GameObject("Sheen", typeof(RectTransform));
         sheen.transform.SetParent(obj.transform, false);
         var sheenRT = (RectTransform)sheen.transform;
@@ -575,7 +646,6 @@ public class LobbyLayoutBuilder : MonoBehaviour
         sheenImg.color = Color.white;
         sheenImg.raycastTarget = false;
 
-        // Selected-state glow (driven by hover effect)
         var glow = new GameObject("InnerGlow", typeof(RectTransform));
         glow.transform.SetParent(obj.transform, false);
         var glowRT = (RectTransform)glow.transform;
@@ -584,12 +654,11 @@ public class LobbyLayoutBuilder : MonoBehaviour
         glowRT.offsetMin = Vector2.zero;
         glowRT.offsetMax = Vector2.zero;
         var glowImg = glow.AddComponent<Image>();
-        glowImg.sprite = LobbyVisuals.GetRadialGlow(AccentYellow);
+        glowImg.sprite = LobbyVisuals.GetRadialGlow(accentYellow);
         glowImg.color = new Color(1f, 1f, 1f, 0f);
         glowImg.raycastTarget = false;
         glow.transform.SetSiblingIndex(0);
 
-        // Icon glyph (left-aligned)
         if (!string.IsNullOrEmpty(iconGlyph))
         {
             var icon = CreateText($"{name}_Icon", obj.transform, iconGlyph, big ? 28 : 22,
@@ -600,7 +669,6 @@ public class LobbyLayoutBuilder : MonoBehaviour
             iconShadow.effectDistance = new Vector2(1f, -1f);
         }
 
-        // Big bold uppercase label
         var labelObj = CreateText($"{name}_Label", obj.transform, label, big ? 28 : 18, Color.white,
             new Vector2(0.20f, 0.10f), new Vector2(0.92f, 0.90f), TextAlignmentOptions.Center,
             new Vector2(0, 4), new Vector2(0, -4));
@@ -616,9 +684,6 @@ public class LobbyLayoutBuilder : MonoBehaviour
         return btn;
     }
 
-    /// <summary>
-    /// Big bright yellow circular arrow button used by the character carousel.
-    /// </summary>
     private Button CreateCircularArrowButton(string name, Transform parent, string arrow,
         Vector2 anchorMin, Vector2 anchorMax)
     {
@@ -631,7 +696,7 @@ public class LobbyLayoutBuilder : MonoBehaviour
         rt.offsetMax = Vector2.zero;
 
         var img = obj.AddComponent<Image>();
-        img.sprite = LobbyVisuals.GetRoundedRect(64, 4, AccentYellow, OutlineDark);
+        img.sprite = LobbyVisuals.GetRoundedRect(64, 4, accentYellow, outlineDark);
         img.type = Image.Type.Sliced;
         img.pixelsPerUnitMultiplier = 1f;
 
@@ -654,7 +719,6 @@ public class LobbyLayoutBuilder : MonoBehaviour
         btn.colors = colors;
         btn.targetGraphic = img;
 
-        // Inner glow
         var glow = new GameObject("InnerGlow", typeof(RectTransform));
         glow.transform.SetParent(obj.transform, false);
         var glowRT = (RectTransform)glow.transform;
@@ -663,12 +727,12 @@ public class LobbyLayoutBuilder : MonoBehaviour
         glowRT.offsetMin = Vector2.zero;
         glowRT.offsetMax = Vector2.zero;
         var glowImg = glow.AddComponent<Image>();
-        glowImg.sprite = LobbyVisuals.GetRadialGlow(AccentYellow);
+        glowImg.sprite = LobbyVisuals.GetRadialGlow(accentYellow);
         glowImg.color = new Color(1f, 1f, 1f, 0f);
         glowImg.raycastTarget = false;
         glow.transform.SetSiblingIndex(0);
 
-        var arrowText = CreateText($"{name}_Arrow", obj.transform, arrow, 56, OutlineDark,
+        var arrowText = CreateText($"{name}_Arrow", obj.transform, arrow, 56, outlineDark,
             Vector2.zero, Vector2.one, TextAlignmentOptions.Center);
         arrowText.fontStyle = FontStyles.Bold;
 
@@ -676,5 +740,11 @@ public class LobbyLayoutBuilder : MonoBehaviour
         hover.Bind(outline, glowImg);
 
         return btn;
+    }
+
+    private void Track(GameObject go)
+    {
+        if (go == null) return;
+        _generatedChildren.Add(go);
     }
 }
