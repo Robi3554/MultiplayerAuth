@@ -4080,8 +4080,7 @@ MonoBehaviour:
   _damageTakenVfx: {fileID: 104809873158851211}
   _playerGlued: {fileID: 1441578494608613555}
   _floatingDamage: {fileID: 2695494221600626890, guid: 4c65f9397eda42548a64f7c9bc2ab836, type: 3}
-  _killText: {fileID: 6790597797403052028}
-  _deathText: {fileID: 8373767476283509256}
+  _killText: {fileID: 6776711864559865173}
   _healthText: {fileID: 1786951401546961394}
   _healthSlider: {fileID: 2000330215617009627}
 --- !u!114 &185659278579477786
@@ -5115,7 +5114,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 11
+  m_text: 0
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 490a56c37575b374db114d04fe56fdf0, type: 2}
   m_sharedMaterial: {fileID: 7376519152817904667, guid: 490a56c37575b374db114d04fe56fdf0, type: 2}
@@ -6163,6 +6162,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameModeText
   gameModeText: {fileID: 962567394975769429}
+  myTeamKills: {fileID: 6776711864559865173}
+  oppositeTeamKills: {fileID: 9071106847452502718}
 --- !u!1 &8568071739771766363
 GameObject:
   m_ObjectHideFlags: 0
@@ -7097,28 +7098,6 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 2985320484782720655, guid: 950c997c80c3f8a42956a570dbe956ce, type: 3}
   m_PrefabInstance: {fileID: 306268367582744974}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &6790597797403052028 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 6520396160030938738, guid: 950c997c80c3f8a42956a570dbe956ce, type: 3}
-  m_PrefabInstance: {fileID: 306268367582744974}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &8373767476283509256 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 8103537390086019974, guid: 950c997c80c3f8a42956a570dbe956ce, type: 3}
-  m_PrefabInstance: {fileID: 306268367582744974}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &9017332820106122129 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8747139576269685279, guid: 950c997c80c3f8a42956a570dbe956ce, type: 3}

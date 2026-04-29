@@ -9144,7 +9144,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 11
+  m_text: 0
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 490a56c37575b374db114d04fe56fdf0, type: 2}
   m_sharedMaterial: {fileID: 7376519152817904667, guid: 490a56c37575b374db114d04fe56fdf0, type: 2}
@@ -9365,6 +9365,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameModeText
   gameModeText: {fileID: 153059144038352117}
+  myTeamKills: {fileID: 2142432668241313824}
+  oppositeTeamKills: {fileID: 4919666312025143593}
 --- !u!1 &3658419368040831803
 GameObject:
   m_ObjectHideFlags: 0
@@ -9804,8 +9806,7 @@ MonoBehaviour:
   _damageTakenVfx: {fileID: 3591723005841569901, guid: 7a4bb3005558caa45bff87bb330ae975, type: 3}
   _playerGlued: {fileID: 2183982200293380521}
   _floatingDamage: {fileID: 2695494221600626890, guid: 4c65f9397eda42548a64f7c9bc2ab836, type: 3}
-  _killText: {fileID: 5551932082331895800}
-  _deathText: {fileID: 24850146785302064}
+  _killText: {fileID: 2142432668241313824}
   _healthText: {fileID: 6437446347497816002}
   _healthSlider: {fileID: 4828944335509882183}
 --- !u!114 &6159724918014281138

@@ -18,6 +18,8 @@ public class GameModeManager : NetworkBehaviour
     [Header("UI")]
     [SerializeField] private GameObject gameOverPanel;
     [SerializeField] private TMP_Text winnerText;
+    internal int myTeamKills;
+    internal int oppositeTeamKills;
 
     // SyncVar to track if game is active
     internal readonly SyncVar<bool> isGameActive = new SyncVar<bool>(true);
@@ -61,8 +63,9 @@ public class GameModeManager : NetworkBehaviour
         if (LobbyData.ResolvedGameMode == GameMode.TeamDeathmatch)
         {
             // TDM: check if the player's team total kills reached the limit
-            int teamKills = GetTeamKills(player.team.Value);
-            if (teamKills >= teamKillsToWin)
+            myTeamKills = GetTeamKills(player.team.Value);
+            oppositeTeamKills = GetOppositeTeamKills(player.team.Value);
+            if (myTeamKills >= teamKillsToWin)
             {
                 TeamWon(player.team.Value);
             }
@@ -87,6 +90,13 @@ public class GameModeManager : NetworkBehaviour
                 total += kvp.Value.stats.kills.Value;
         }
         return total;
+    }
+
+    [Server]
+    private int GetOppositeTeamKills(Team myTeam)
+    {
+        Team oppositeTeam = (myTeam == Team.Rebels) ? Team.AI : Team.Rebels;
+        return GetTeamKills(oppositeTeam);
     }
 
     [Server]
