@@ -231,6 +231,15 @@ public class LobbyUI : MonoBehaviour
             Debug.Log($"[LobbyUI] Calling CmdJoinLobby('{username}'), IsSpawned={lobbyManager.IsSpawned}, Players.Count={lobbyManager.Players.Count}");
             lobbyManager.CmdJoinLobby(username);
             hasJoined = true;
+
+            // The default character (index 0) is shown in CharacterPreviewUI.Start() before
+            // lobbyManager is available, so OnCharacterPreviewChanged silently returns without
+            // sending CmdSetCharacter. Push the current selection now that we're joined.
+            if (characterPreview != null && characterPreview.CurrentCharacter != null)
+            {
+                Debug.Log($"[LobbyUI] Syncing default character '{characterPreview.CurrentCharacter.name}' to server.");
+                lobbyManager.CmdSetCharacter(characterPreview.CurrentCharacter);
+            }
         }
 
         // Poll SyncList for changes via a simple hash comparison

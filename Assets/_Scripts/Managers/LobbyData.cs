@@ -17,6 +17,7 @@ public static class LobbyData
     {
         ResolvedGameMode = GameMode.FreeForAll;
         PlayerTeams.Clear();
+        PlayerCharacters.Clear();
     }
 
     /// <summary>

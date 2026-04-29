@@ -35,6 +35,7 @@ public class CharacterPreviewUI : MonoBehaviour
     private GameObject currentPreviewInstance;
     private int currentIndex;
     private int previewLayer;
+    private bool _arrowButtonsSetExternally;
 
     public List<NetworkObject> CharacterOptions => characterOptions;
     public int CurrentIndex => currentIndex;
@@ -63,10 +64,15 @@ public class CharacterPreviewUI : MonoBehaviour
         if (previewImage != null && renderTexture != null)
             previewImage.texture = renderTexture;
 
-        if (leftArrowButton != null)
-            leftArrowButton.onClick.AddListener(PreviousCharacter);
-        if (rightArrowButton != null)
-            rightArrowButton.onClick.AddListener(NextCharacter);
+        // Only register listeners here if SetArrowButtons() was NOT called by LobbyLayoutBuilder.
+        // Registering twice would cause each click to skip a character and send two RPCs.
+        if (!_arrowButtonsSetExternally)
+        {
+            if (leftArrowButton != null)
+                leftArrowButton.onClick.AddListener(PreviousCharacter);
+            if (rightArrowButton != null)
+                rightArrowButton.onClick.AddListener(NextCharacter);
+        }
 
         if (characterOptions != null && characterOptions.Count > 0)
             ShowCharacter(0);
@@ -158,6 +164,7 @@ public class CharacterPreviewUI : MonoBehaviour
         rightArrowButton = right;
         leftArrowButton.onClick.AddListener(PreviousCharacter);
         rightArrowButton.onClick.AddListener(NextCharacter);
+        _arrowButtonsSetExternally = true;
     }
 
     /// <summary>
