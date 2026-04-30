@@ -17350,6 +17350,7 @@ MonoBehaviour:
   _addedNetworkObject: {fileID: 767506190}
   _networkObjectCache: {fileID: 0}
   killsToWin: 5
+  teamKillsToWin: 20
   gameRestartDelay: 5
   gameOverPanel: {fileID: 335062288}
   winnerText: {fileID: 2043226257}
@@ -43805,8 +43806,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 48
-  m_fontSizeBase: 48
+  m_fontSize: 32
+  m_fontSizeBase: 32
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
