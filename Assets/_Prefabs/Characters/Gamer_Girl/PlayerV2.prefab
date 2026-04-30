@@ -1811,6 +1811,7 @@ MonoBehaviour:
   _playerGlued: {fileID: 4593819146620973095}
   _floatingDamage: {fileID: 2695494221600626890, guid: 4c65f9397eda42548a64f7c9bc2ab836, type: 3}
   _killText: {fileID: 2055468401315117420}
+  _deathText: {fileID: 3931334673081709720}
   _healthText: {fileID: 6518951647710343010}
   _healthSlider: {fileID: 7197508931101129873}
 --- !u!114 &4214152988996548071
@@ -2913,7 +2914,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GameModeText
   gameModeText: {fileID: 6390025327402182927}
   myTeamKills: {fileID: 3931334673081709720}
-  oppositeTeamKills: {fileID: 0}
+  oppositeTeamKills: {fileID: 3931334673081709720}
 --- !u!1001 &2408146021243487344
 PrefabInstance:
   m_ObjectHideFlags: 0

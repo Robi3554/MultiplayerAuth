@@ -4081,6 +4081,7 @@ MonoBehaviour:
   _playerGlued: {fileID: 1441578494608613555}
   _floatingDamage: {fileID: 2695494221600626890, guid: 4c65f9397eda42548a64f7c9bc2ab836, type: 3}
   _killText: {fileID: 6776711864559865173}
+  _deathText: {fileID: 9071106847452502718}
   _healthText: {fileID: 1786951401546961394}
   _healthSlider: {fileID: 2000330215617009627}
 --- !u!114 &185659278579477786

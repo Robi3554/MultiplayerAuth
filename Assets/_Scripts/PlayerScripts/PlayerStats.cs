@@ -35,7 +35,7 @@ public class PlayerStats : NetworkBehaviour
 
     [Header("UI stats")]
     [SerializeField] private TMP_Text _killText; 
-    //[SerializeField] private TMP_Text _deathText;
+    [SerializeField] private TMP_Text _deathText;
     [SerializeField] private TMP_Text _healthText;
     [SerializeField] private Slider _healthSlider;
     private TMP_Text healthText;
@@ -321,8 +321,10 @@ public class PlayerStats : NetworkBehaviour
         healthSlider = _healthSlider;
         healthSlider.maxValue = health.Value;
         if(LobbyData.ResolvedGameMode == GameMode.FreeForAll)
+        {
             killText = _killText;
-        //deathText = _deathText;
+            deathText = _deathText;
+        }
     }
 
     private void OnHealthChanged(int previous, int current, bool asServer)
