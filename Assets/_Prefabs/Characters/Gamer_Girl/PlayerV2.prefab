@@ -2912,8 +2912,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 79b182c2382ae0341814ac500f0277b4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameModeText
+  _componentIndexCache: 255
+  _addedNetworkObject: {fileID: 7709259699627967468}
+  _networkObjectCache: {fileID: 0}
   gameModeText: {fileID: 6390025327402182927}
-  myTeamKills: {fileID: 3931334673081709720}
+  myTeamKills: {fileID: 2055468401315117420}
   oppositeTeamKills: {fileID: 3931334673081709720}
 --- !u!1001 &2408146021243487344
 PrefabInstance:
