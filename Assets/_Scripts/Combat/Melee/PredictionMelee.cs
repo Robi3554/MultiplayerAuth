@@ -185,6 +185,7 @@ public class PredictionMelee : NetworkBehaviour
 		ServerManager.Despawn(bullet.GetComponent<NetworkObject>());
 	}
 
+	[ServerRpc(RequireOwnership = false)]
 	private void DespawnRobotServerRpc(NetworkObject robot)
 	{
 		Debug.Log("DAVIDDDDDDDDDDDDDDDDDDDD: Despawned robot");
