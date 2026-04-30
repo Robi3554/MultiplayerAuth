@@ -1,15 +1,19 @@
+using FishNet.Object;
 using TMPro;
 using UnityEngine;
 
-public class GameModeText : MonoBehaviour
+public class GameModeText : NetworkBehaviour
 {
     [SerializeField] private TMP_Text gameModeText;
 
     [SerializeField] private TMP_Text myTeamKills;
     [SerializeField] private TMP_Text oppositeTeamKills;
-    void Start()
+
+    public override void OnStartServer()
     {
-        if(LobbyData.ResolvedGameMode == GameMode.TeamDeathmatch)
+        base.OnStartServer();
+
+        if (LobbyData.ResolvedGameMode == GameMode.TeamDeathmatch)
         {
             gameModeText.text = "Team Deathmatch";
         }
