@@ -132,7 +132,8 @@ public abstract class Weapon : MonoBehaviour
             ammoText = GameObject.Find("PlayerHUD").transform.Find("Player Ammo").transform.Find("Ammo Text").GetComponent<TMP_Text>();
         }
 
-        ammoText.text = $"{currentAmmo}/{maxAmmo}";
+        //ammoText.text = $"{currentAmmo}/{maxAmmo}";
+        ammoText.text = $"{currentAmmo}";
     }
 
     protected abstract void Shoot();
