@@ -129,7 +129,7 @@ public abstract class Weapon : MonoBehaviour
 
         if (ammoText == null)
         {
-            ammoText = GameObject.Find("PlayerHUD").transform.Find("Player Ammo").transform.Find("Ammo Text").GetComponent<TMP_Text>();
+            ammoText = GameObject.Find("PlayerHUD").transform.Find("Player Ammo (1)").transform.Find("Ammo Text").GetComponent<TMP_Text>();
         }
 
         //ammoText.text = $"{currentAmmo}/{maxAmmo}";
@@ -172,7 +172,7 @@ public abstract class Weapon : MonoBehaviour
         isOnSwapCooldown = true;
         
         if (ammoText == null)
-            ammoText = GameObject.Find("PlayerHUD").transform.Find("Player Ammo").transform.Find("Ammo Text").GetComponent<TMP_Text>();
+            ammoText = GameObject.Find("PlayerHUD").transform.Find("Player Ammo (1)").transform.Find("Ammo Text").GetComponent<TMP_Text>();
 
         nextShootTime = 0f;
         canPlayShootSound = shootAudioSource && shootAudioClip;

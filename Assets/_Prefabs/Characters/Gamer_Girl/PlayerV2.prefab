@@ -180,7 +180,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
-  m_Resource: {fileID: 0}
+  m_Resource: {fileID: 8300000, guid: acce5e47e57cd2f4fbede04e73a12e5b, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 0.8
   m_Pitch: 1
@@ -526,7 +526,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 22.934845, y: 26.918396, z: 103.6355, w: -6.27417}
+  m_margin: {x: 22.934845, y: 26.918396, z: 81.045105, w: -6.27417}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
@@ -9392,6 +9392,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2472542210249486467, guid: a615e5387b3d46042810f8d472623229, type: 3}
+      propertyPath: m_Resource
+      value: 
+      objectReference: {fileID: 8300000, guid: acce5e47e57cd2f4fbede04e73a12e5b, type: 3}
+    - target: {fileID: 2472542210249486467, guid: a615e5387b3d46042810f8d472623229, type: 3}
       propertyPath: m_PlayOnAwake
       value: 0
       objectReference: {fileID: 0}
@@ -11362,6 +11366,10 @@ PrefabInstance:
       propertyPath: afterChangeDelay
       value: 0.5
       objectReference: {fileID: 0}
+    - target: {fileID: 317594660846120664, guid: d5fbe6d1ba744e441bcc2dbe30e99ae8, type: 3}
+      propertyPath: m_Resource
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 1123272284917336981, guid: d5fbe6d1ba744e441bcc2dbe30e99ae8, type: 3}
       propertyPath: m_Data.m_Mid
       value: 
@@ -11645,6 +11653,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4142536059135947096, guid: cdcf0eae94ed1dd438685bad63846dbf, type: 3}
+      propertyPath: m_Resource
+      value: 
+      objectReference: {fileID: 8300000, guid: acce5e47e57cd2f4fbede04e73a12e5b, type: 3}
     - target: {fileID: 4142536059135947096, guid: cdcf0eae94ed1dd438685bad63846dbf, type: 3}
       propertyPath: m_PlayOnAwake
       value: 0
@@ -12439,7 +12451,7 @@ PrefabInstance:
     - target: {fileID: 6150143733585687789, guid: 9e0837ead7a06c64b822b3a0a5cc1200, type: 3}
       propertyPath: m_Resource
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 8300000, guid: acce5e47e57cd2f4fbede04e73a12e5b, type: 3}
     - target: {fileID: 6150143733585687789, guid: 9e0837ead7a06c64b822b3a0a5cc1200, type: 3}
       propertyPath: m_PlayOnAwake
       value: 0
