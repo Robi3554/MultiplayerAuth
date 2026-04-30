@@ -9218,6 +9218,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: MeleeCollider
       objectReference: {fileID: 0}
+    - target: {fileID: 5008127587956313494, guid: 6f2e7b682824b9415ad771210dcc8966, type: 3}
+      propertyPath: m_TagString
+      value: PlayerAttack
+      objectReference: {fileID: 0}
     - target: {fileID: 8250374173961595701, guid: 6f2e7b682824b9415ad771210dcc8966, type: 3}
       propertyPath: sword
       value: 
