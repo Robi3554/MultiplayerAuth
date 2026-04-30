@@ -2116,7 +2116,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   meleeWeapon: {fileID: 5695631393982808779}
   animator: {fileID: 6172843232084524608}
-  meleeCollider: {fileID: 0}
+  meleeCollider: {fileID: 2920351088586949542}
 --- !u!95 &6172843232084524608
 Animator:
   serializedVersion: 7
@@ -2283,29 +2283,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 26b716c41e9b56b4baafaf13a523ba2e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  NetworkObserver: {fileID: 0}
-  _enablePrediction: 1
-  _predictionType: 1
-  _graphicalObject: {fileID: 0}
-  _detachGraphicalObject: 0
-  _enableStateForwarding: 1
-  _networkTransform: {fileID: 0}
-  _ownerInterpolation: 1
-  _ownerSmoothedProperties: 4294967295
-  _adaptiveInterpolation: 3
-  _spectatorSmoothedProperties: 4294967295
-  _spectatorInterpolation: 2
-  _enableTeleport: 1
-  _teleportThreshold: 1
-  <PrefabId>k__BackingField: 25
-  <SpawnableCollectionId>k__BackingField: 0
-  <AssetPathHash>k__BackingField: 17641289575890520833
-  <SceneId>k__BackingField: 0
-  SerializedTransformProperties:
-    Position: {x: 0, y: 0, z: 0}
-    Rotation: {x: 0, y: -0, z: -0, w: 1}
-    Scale: {x: 1, y: 1, z: 1}
-    IsValid: 1
   <IsNested>k__BackingField: 0
   WasActiveDuringEdit: 0
   WasActiveDuringEdit_Set1: 1
@@ -2335,6 +2312,29 @@ MonoBehaviour:
   _initializeOrder: 0
   _preventDespawnOnDisconnect: 0
   _defaultDespawnType: 0
+  NetworkObserver: {fileID: 0}
+  _enablePrediction: 1
+  _predictionType: 1
+  _graphicalObject: {fileID: 0}
+  _detachGraphicalObject: 0
+  _enableStateForwarding: 1
+  _networkTransform: {fileID: 0}
+  _ownerInterpolation: 1
+  _ownerSmoothedProperties: 4294967295
+  _adaptiveInterpolation: 3
+  _spectatorSmoothedProperties: 4294967295
+  _spectatorInterpolation: 2
+  _enableTeleport: 1
+  _teleportThreshold: 1
+  <PrefabId>k__BackingField: 25
+  <SpawnableCollectionId>k__BackingField: 0
+  <AssetPathHash>k__BackingField: 17641289575890520833
+  <SceneId>k__BackingField: 0
+  SerializedTransformProperties:
+    Position: {x: 0, y: 0, z: 0}
+    Rotation: {x: 0, y: -0, z: -0, w: 1}
+    Scale: {x: 1, y: 1, z: 1}
+    IsValid: 1
 --- !u!54 &1942937363775309974
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -6379,6 +6379,17 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 8740600278731199064, guid: 6f2e7b682824b9415ad771210dcc8966, type: 3}
   m_PrefabInstance: {fileID: 6555020382891354259}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &2920351088586949542 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8250374173961595701, guid: 6f2e7b682824b9415ad771210dcc8966, type: 3}
+  m_PrefabInstance: {fileID: 6555020382891354259}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80eddc1871ffd214fa9ed053172f9ce0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: '::'
 --- !u!64 &5118402587300527914 stripped
 MeshCollider:
   m_CorrespondingSourceObject: {fileID: 2157264104724879289, guid: 6f2e7b682824b9415ad771210dcc8966, type: 3}
