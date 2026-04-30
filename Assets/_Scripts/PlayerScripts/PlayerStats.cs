@@ -320,8 +320,11 @@ public class PlayerStats : NetworkBehaviour
         healthText = _healthText;
         healthSlider = _healthSlider;
         healthSlider.maxValue = health.Value;
-        killText = _killText;
-        deathText = _deathText;
+        if(LobbyData.ResolvedGameMode == GameMode.FreeForAll)
+        {
+            killText = _killText;
+            deathText = _deathText;
+        }
     }
 
     private void OnHealthChanged(int previous, int current, bool asServer)
