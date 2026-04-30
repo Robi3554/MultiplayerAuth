@@ -168,7 +168,7 @@ public class PredictionMelee : NetworkBehaviour
 			} else if (enemyCollider.gameObject.layer == LayerMask.NameToLayer("Projectile"))
 			{
 				Debug.Log("Melee: Hit a bullet!");
-				Destroy(enemyCollider.gameObject);
+				DespawnBullet(enemyCollider.gameObject);
 			}
             
 			_meleePressed = false;
