@@ -412,11 +412,10 @@ public class LobbyLayoutBuilder : MonoBehaviour
 
         aiButton = CreateLobbyButton("AIBtn", panel.transform, "A.I.", "◆",
             new Vector2(0.07f, yTop - buttonHeight), new Vector2(0.93f, yTop), aiColor);
-        yTop -= buttonHeight + buttonGap;
-
-        noTeamButton = CreateLobbyButton("NoTeamBtn", panel.transform, "NO TEAM", "—",
-            new Vector2(0.07f, yTop - buttonHeight), new Vector2(0.93f, yTop), noneTeamColor);
         yTop -= buttonHeight + sectionGap * 2;
+
+        // No Team button removed — players are auto-assigned to the smaller team on join.
+        noTeamButton = null;
 
         // ─── GAME MODE ───
         CreateSectionHeader(panel.transform, "MODE", yTop - sectionHeaderHeight, yTop);

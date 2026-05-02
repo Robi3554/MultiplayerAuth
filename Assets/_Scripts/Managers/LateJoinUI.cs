@@ -32,7 +32,9 @@ public class LateJoinUI : MonoBehaviour
     private Button joinButton;
 
     private LobbyManager lobbyManager;
-    private Team selectedTeam = Team.None;
+    // Default to Rebels — matches the lobby's auto-assign tie-breaker. The user can
+    // still flip to AI before pressing Join. No Team is no longer offered.
+    private Team selectedTeam = Team.Rebels;
     private bool hasJoined;
     private bool uiBuilt;
     private int lastHash = -1;
@@ -197,11 +199,12 @@ public class LateJoinUI : MonoBehaviour
 
         rebelsButton = CreateButton(teamRow.transform, "RebelsButton", "REBELS", RebelsColor);
         aiButton = CreateButton(teamRow.transform, "AIButton", "AI", AIColor);
-        noTeamButton = CreateButton(teamRow.transform, "NoTeamButton", "NONE", NoneColor);
+        // No Team is no longer offered. The button reference stays null so any
+        // older code that touches it has to null-check (it does in HighlightTeamButton).
+        noTeamButton = null;
 
         rebelsButton.onClick.AddListener(() => SelectTeam(Team.Rebels));
         aiButton.onClick.AddListener(() => SelectTeam(Team.AI));
-        noTeamButton.onClick.AddListener(() => SelectTeam(Team.None));
 
         // Spacer
         var spacer = new GameObject("Spacer");
@@ -215,8 +218,8 @@ public class LateJoinUI : MonoBehaviour
         joinLE.preferredHeight = 60;
         joinButton.onClick.AddListener(OnJoinClicked);
 
-        // Initial highlight
-        HighlightTeamButton(Team.None);
+        // Initial highlight (Rebels by default, matching the auto-assign tie-breaker)
+        HighlightTeamButton(selectedTeam);
     }
 
     // ─── UI Factory Helpers ───────────────────────────────────────────
@@ -335,7 +338,8 @@ public class LateJoinUI : MonoBehaviour
     {
         SetButtonColor(rebelsButton, team == Team.Rebels ? RebelsColor : RebelsColor * 0.5f);
         SetButtonColor(aiButton, team == Team.AI ? AIColor : AIColor * 0.5f);
-        SetButtonColor(noTeamButton, team == Team.None ? NoneColor : NoneColor * 0.5f);
+        if (noTeamButton != null)
+            SetButtonColor(noTeamButton, team == Team.None ? NoneColor : NoneColor * 0.5f);
     }
 
     private void OnJoinClicked()
@@ -350,6 +354,7 @@ public class LateJoinUI : MonoBehaviour
 
     private static void SetButtonColor(Button button, Color color)
     {
+        if (button == null) return;
         var img = button.GetComponent<Image>();
         if (img != null) img.color = color;
 

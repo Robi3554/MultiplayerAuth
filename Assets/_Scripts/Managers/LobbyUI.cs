@@ -65,8 +65,10 @@ public class LobbyUI : MonoBehaviour
     private UIButtonHoverEffect ffaHover, tdmHover;
     private UIButtonHoverEffect readyHover;
 
-    // Local UI state of "what does the user have actively selected"
-    private Team selectedTeam = Team.None;
+    // Local UI state of "what does the user have actively selected".
+    // Defaults to Rebels (matches the server's auto-assign tie-breaker); the actual
+    // team is overwritten from the SyncList in RefreshUI as soon as it arrives.
+    private Team selectedTeam = Team.Rebels;
     private GameMode selectedMode = GameMode.FreeForAll;
 
     /// <summary>
@@ -122,7 +124,10 @@ public class LobbyUI : MonoBehaviour
 
         rebelsButton.onClick.AddListener(() => { Debug.Log("[LobbyUI] Rebels clicked"); SelectTeam(Team.Rebels); });
         aiButton.onClick.AddListener(() => { Debug.Log("[LobbyUI] AI clicked"); SelectTeam(Team.AI); });
-        noTeamButton.onClick.AddListener(() => { Debug.Log("[LobbyUI] NoTeam clicked"); SelectTeam(Team.None); });
+        // The No Team button has been removed from the UI; the field may be null on
+        // newer scenes. Keep it null-safe so older scenes that still expose it work too.
+        if (noTeamButton != null)
+            noTeamButton.onClick.AddListener(() => { Debug.Log("[LobbyUI] NoTeam clicked"); SelectTeam(Team.None); });
 
         ffaButton.onClick.AddListener(() => { Debug.Log("[LobbyUI] FFA clicked"); SelectGameMode(GameMode.FreeForAll); });
         tdmButton.onClick.AddListener(() => { Debug.Log("[LobbyUI] TDM clicked"); SelectGameMode(GameMode.TeamDeathmatch); });
@@ -137,7 +142,7 @@ public class LobbyUI : MonoBehaviour
         // attaches a UIButtonHoverEffect to every CreateLobbyButton output).
         rebelsHover = rebelsButton.GetComponent<UIButtonHoverEffect>();
         aiHover = aiButton.GetComponent<UIButtonHoverEffect>();
-        noTeamHover = noTeamButton.GetComponent<UIButtonHoverEffect>();
+        noTeamHover = noTeamButton != null ? noTeamButton.GetComponent<UIButtonHoverEffect>() : null;
         ffaHover = ffaButton.GetComponent<UIButtonHoverEffect>();
         tdmHover = tdmButton.GetComponent<UIButtonHoverEffect>();
         readyHover = readyButton.GetComponent<UIButtonHoverEffect>();
@@ -296,6 +301,7 @@ public class LobbyUI : MonoBehaviour
         int totalCount = lobbyManager.Players.Count;
         int ffaVotes = 0;
         int tdmVotes = 0;
+        int localId = InstanceFinder.ClientManager?.Connection?.ClientId ?? -1;
 
         for (int i = 0; i < lobbyManager.Players.Count; i++)
         {
@@ -310,6 +316,14 @@ public class LobbyUI : MonoBehaviour
             if (player.IsReady) readyCount++;
             if (player.PreferredMode == GameMode.FreeForAll) ffaVotes++;
             else tdmVotes++;
+
+            // Mirror the server's team for the local player — covers the auto-assign-on-join
+            // case where the server picks the team before the client ever clicks anything.
+            if (player.ClientId == localId && player.Team != Team.None && player.Team != selectedTeam)
+            {
+                selectedTeam = player.Team;
+                HighlightTeamButton(selectedTeam);
+            }
         }
 
         statusText.text = $"Players: {totalCount}  |  Ready: {readyCount}/{totalCount}";
