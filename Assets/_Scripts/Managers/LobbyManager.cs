@@ -286,6 +286,18 @@ public class LobbyManager : NetworkBehaviour
         // joiners always have a team in TDM and the friendly-fire check stays sane.
         Team resolvedTeam = team == Team.None ? LobbyData.GetAutoAssignTeam() : team;
 
+        // Pull whatever character the late joiner selected during the late-join overlay
+        // (set via CmdSetCharacter) so the spawner instantiates the right prefab.
+        NetworkObject resolvedCharacter = null;
+        for (int i = 0; i < Players.Count; i++)
+        {
+            if (Players[i].ClientId == clientId)
+            {
+                resolvedCharacter = Players[i].Character;
+                break;
+            }
+        }
+
         UpdatePlayer(clientId, p =>
         {
             p.Username = resolvedUsername;
@@ -295,6 +307,8 @@ public class LobbyManager : NetworkBehaviour
         });
 
         LobbyData.PlayerTeams[clientId] = resolvedTeam;
+        if (resolvedCharacter != null)
+            LobbyData.PlayerCharacters[clientId] = resolvedCharacter;
         _pendingLateJoiners.Remove(clientId);
 
         Debug.Log($"[Lobby] Late joiner {resolvedUsername} (ClientId={clientId}) confirmed with team {team}.");
