@@ -165,11 +165,12 @@ public class PredictionMelee : NetworkBehaviour
 					robot.DestroyRobot(playerCollider.GetComponent<NetworkObject>());
 					DespawnRobotServerRpc(robot.NetworkObject);
 				}
-			} else if (enemyCollider.gameObject.layer == LayerMask.NameToLayer("Projectile"))
-			{
-				Debug.Log("Melee: Hit a bullet!");
-				Destroy(enemyCollider.gameObject);
-			}
+			} 
+			// else if (enemyCollider.gameObject.layer == LayerMask.NameToLayer("Projectile"))
+			// {
+			// 	Debug.Log("Melee: Hit a bullet!");
+			// 	DespawnBullet(enemyCollider.gameObject);
+			// }
             
 			_meleePressed = false;
 		}
