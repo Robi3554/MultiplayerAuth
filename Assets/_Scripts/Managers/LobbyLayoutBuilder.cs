@@ -375,12 +375,10 @@ public class LobbyLayoutBuilder : MonoBehaviour
             characterPreview.SetCharacterNameText(charNameText);
             characterPreview.SetCharacterTaglineText(characterTaglineText);
 
-            characterPreview.OnDefinitionChanged += def =>
-            {
-                if (def == null) return;
-                glowImg.color = new Color(def.accentColor.r, def.accentColor.g, def.accentColor.b, 0.65f);
-                charNameText.color = def.accentColor;
-            };
+            // Bake-friendly retinting: assign serialized refs the preview reads in
+            // ShowCharacter, instead of subscribing a runtime-only C# event lambda.
+            characterPreview.SetAccentGlow(glowImg);
+            characterPreview.SetAccentNameOutline(nameOutline);
         }
     }
 

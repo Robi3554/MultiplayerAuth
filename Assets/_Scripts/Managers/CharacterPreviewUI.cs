@@ -43,6 +43,13 @@ public class CharacterPreviewUI : MonoBehaviour
     [Tooltip("Optional: tagline text shown beneath the character name.")]
     [SerializeField] private TMPro.TMP_Text characterTaglineText;
 
+    [Tooltip("Optional: a UI Image whose color is retinted with the active character's accent (e.g. a radial glow behind the preview).")]
+    [SerializeField] private Image accentGlowImage;
+    [SerializeField, Range(0f, 1f)] private float accentGlowAlpha = 0.65f;
+
+    [Tooltip("Optional: an Outline component (typically on the character name text) whose color is retinted to a darker shade of the accent.")]
+    [SerializeField] private Outline accentNameOutline;
+
     private Camera previewCamera;
     private RenderTexture renderTexture;
     private GameObject currentPreviewInstance;
@@ -250,6 +257,22 @@ public class CharacterPreviewUI : MonoBehaviour
         characterTaglineText = text;
     }
 
+    /// <summary>
+    /// Assign the optional radial glow image whose color is retinted per character.
+    /// </summary>
+    public void SetAccentGlow(Image image)
+    {
+        accentGlowImage = image;
+    }
+
+    /// <summary>
+    /// Assign the optional Outline component on the name text that gets retinted per character.
+    /// </summary>
+    public void SetAccentNameOutline(Outline outline)
+    {
+        accentNameOutline = outline;
+    }
+
     public void NextCharacter()
     {
         if (characterDefinitions == null || characterDefinitions.Count == 0) return;
@@ -323,9 +346,26 @@ public class CharacterPreviewUI : MonoBehaviour
         }
 
         if (characterNameText != null)
+        {
             characterNameText.text = !string.IsNullOrWhiteSpace(def.displayName) ? def.displayName : def.name;
+            characterNameText.color = def.accentColor;
+        }
         if (characterTaglineText != null)
             characterTaglineText.text = def.tagline ?? string.Empty;
+
+        // Retint the optional UI accent surfaces. Doing this here (instead of via a
+        // C# event subscription from the layout builder) means the references are
+        // preserved through scene save / "bake" workflows.
+        if (accentGlowImage != null)
+        {
+            accentGlowImage.color = new Color(def.accentColor.r, def.accentColor.g, def.accentColor.b, accentGlowAlpha);
+        }
+        if (accentNameOutline != null)
+        {
+            Color o = def.accentColor * 0.45f;
+            o.a = 0.85f;
+            accentNameOutline.effectColor = o;
+        }
 
         Debug.Log($"[CharacterPreview] Showing '{def.displayName}' (prefab '{def.prefab.name}'), accent={def.accentColor}");
 
