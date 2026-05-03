@@ -22,6 +22,9 @@ public class PredictionMelee : NetworkBehaviour
 
     [Header("References")]
 	[SerializeField] private ParticleSystem VFX_SLASH;
+    [SerializeField] private AudioSource swingAudioSource;
+    [SerializeField] private AudioClip swingAudioClip;
+    
 	[Header("Animation")]
 	[SerializeField] private Animator animator;
 	[SerializeField] private NetworkAnimator netAnimator;
@@ -133,6 +136,15 @@ public class PredictionMelee : NetworkBehaviour
 		{
 			VFX_SLASH.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
 			VFX_SLASH.Play();
+		}
+	}
+	
+	[ObserversRpc]
+	public void PlayObserverWeaponSfx()
+	{
+		if (swingAudioSource != null && swingAudioClip != null)
+		{
+			swingAudioSource.PlayOneShot(swingAudioClip);
 		}
 	}
 
