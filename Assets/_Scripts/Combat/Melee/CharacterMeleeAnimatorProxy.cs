@@ -1,7 +1,7 @@
 using UnityEngine;
 
 
-public class GamerGirlAnimatorProxy : MonoBehaviour
+public class CharacterMeleeAnimatorProxy : MonoBehaviour
 {
 
     [SerializeField] private PredictionMelee meleeWeapon;
@@ -11,6 +11,7 @@ public class GamerGirlAnimatorProxy : MonoBehaviour
     private void OnSlashStart()
     {
         animator.SetBool(IsSlashingHash, true);
+        meleeWeapon.PlayObserverWeaponSfx();
     }
 
     private void OnSlashEnd()
