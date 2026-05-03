@@ -38198,6 +38198,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6503818606426063059, guid: f7964fcc340ff6e42bee13080e52f760, type: 3}
+      propertyPath: simulationSpeed
+      value: 2.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6503818606426063059, guid: f7964fcc340ff6e42bee13080e52f760, type: 3}
       propertyPath: InitialModule.startColor.maxColor.b
       value: 0.990566
       objectReference: {fileID: 0}
