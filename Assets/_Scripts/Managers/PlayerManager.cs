@@ -1,10 +1,12 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using FishNet.Component.Animating;
 using FishNet.Connection;
 using FishNet.Object;
-using TMPro;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class PlayerManager : NetworkBehaviour
 {
@@ -17,7 +19,9 @@ public class PlayerManager : NetworkBehaviour
 
     public Dictionary<int, Player> players = new Dictionary<int, Player>();
 
-    [SerializeField] List<Transform> spawnPoints = new List<Transform>();
+    [SerializeField] List<Transform> ffaSpawnPoints = new List<Transform>();
+    [SerializeField] List<Transform> tdHumanSpawnPoints = new List<Transform>();
+    [SerializeField] List<Transform> tdAiSpawnPoints = new List<Transform>();
 
     private int 
         deadLayer,
@@ -119,8 +123,7 @@ public class PlayerManager : NetworkBehaviour
         //wait for death screen countdown (5 seconds) + UI cleanup time (.75 seconds)
         yield return new WaitForSeconds(5.75f);
         victimStats.ResetHealth(); // reset
-        int spawnIndex = Random.Range(0, spawnPoints.Count);
-        RespawnPlayer(victim.connection, victim.playerObject, spawnIndex);
+        RespawnPlayer(victim.connection, victim.playerObject, victim.stats);
         ReloadPlayerGuns(victim.connection, victim.playerObject);
 
         victim.playerObject.layer = aliveLayer;
@@ -132,14 +135,65 @@ public class PlayerManager : NetworkBehaviour
     }
 
     [TargetRpc]
-    void RespawnPlayer(NetworkConnection conn, GameObject player, int spawn)
+    void RespawnPlayer(NetworkConnection conn, GameObject player, PlayerStats stats)
     {
         Rigidbody rb = player.GetComponent<Rigidbody>();
         if (rb)
             rb.linearVelocity = Vector3.zero;
+        
+        List<Transform> availableSpawnPoints;
+        switch (LobbyData.ResolvedGameMode)
+        {
+            case GameMode.FreeForAll:
+                availableSpawnPoints = ffaSpawnPoints;
+                break;
+            case GameMode.TeamDeathmatch:
+                var team = stats.team.Value;
+                if (team == Team.Rebels)
+                    availableSpawnPoints = tdHumanSpawnPoints;
+                else if (team == Team.AI)
+                    availableSpawnPoints = tdAiSpawnPoints;
+                else
+                    availableSpawnPoints = ffaSpawnPoints; // Fallback
+                break;
+            default:
+                availableSpawnPoints = ffaSpawnPoints;
+                break;
+        }
 
-        player.transform.position = spawnPoints[spawn].position;
-        player.transform.rotation = spawnPoints[spawn].rotation;
+        Transform spawnPoint = null;
+
+        while (availableSpawnPoints.Count > 0)
+        {
+            var randomIndex = Random.Range(0, availableSpawnPoints.Count);
+            spawnPoint = availableSpawnPoints[randomIndex];
+            try
+            {
+                var occupied = players.Values.ToList()
+                    .Where(p => !p.stats.isRespawning.Value && p.playerObject != player)
+                    .Any(p =>
+                    {
+                        var distance = Vector3.Distance(p.playerObject.transform.position, spawnPoint.position);
+                        return distance < 1f;
+                    });
+
+                if (!occupied)
+                {
+                    break; // Found an unoccupied spawn point
+                }
+
+                availableSpawnPoints.RemoveAt(randomIndex); // Remove occupied spawn point and try again
+            }
+            catch (Exception e)
+            {
+                break; // If there's an error checking occupancy, just use this spawn point
+            }
+        }
+
+        if (!spawnPoint) return;
+        
+        player.transform.position = spawnPoint.position;
+        player.transform.rotation = spawnPoint.rotation;
     }
 
     [TargetRpc]
@@ -178,23 +232,10 @@ public class PlayerManager : NetworkBehaviour
                 player.stats.isRespawning.Value = false;
 
                 // Respawn at random location
-                int spawnIndex = Random.Range(0, spawnPoints.Count);
-                RespawnPlayer(player.connection, player.playerObject, spawnIndex);
+                RespawnPlayer(player.connection, player.playerObject, player.stats);
                 ReloadPlayerGuns(player.connection, player.playerObject);
             }
         }
-    }
-
-    // NEW METHOD: Get random spawn point (for GameModeManager)
-    public Transform GetRandomSpawnPoint()
-    {
-        if (spawnPoints == null || spawnPoints.Count == 0)
-        {
-            Debug.LogWarning("[PlayerManager] No spawn points configured!");
-            return null;
-        }
-
-        return spawnPoints[Random.Range(0, spawnPoints.Count)];
     }
 
     public class Player
