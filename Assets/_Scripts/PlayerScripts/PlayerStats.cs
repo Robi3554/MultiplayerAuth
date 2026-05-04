@@ -320,7 +320,21 @@ public class PlayerStats : NetworkBehaviour
         healthText = _healthText;
         healthSlider = _healthSlider;
         healthSlider.maxValue = health.Value;
-        if(LobbyData.ResolvedGameMode == GameMode.FreeForAll)
+
+        StartCoroutine(InitScore());
+    }
+
+    private IEnumerator InitScore()
+    {
+        while (GameModeManager.Instance == null)
+            yield return null;
+
+        var gm = GameModeManager.Instance;
+
+        while (gm.gameMode == null)
+            yield return null;
+
+        if (gm.gameMode.Value == GameMode.FreeForAll)
         {
             killText = _killText;
             deathText = _deathText;
