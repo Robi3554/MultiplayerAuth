@@ -3691,29 +3691,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 26b716c41e9b56b4baafaf13a523ba2e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  NetworkObserver: {fileID: 0}
-  _enablePrediction: 1
-  _predictionType: 1
-  _graphicalObject: {fileID: 0}
-  _detachGraphicalObject: 0
-  _enableStateForwarding: 1
-  _networkTransform: {fileID: 0}
-  _ownerInterpolation: 1
-  _ownerSmoothedProperties: 4294967295
-  _adaptiveInterpolation: 3
-  _spectatorSmoothedProperties: 4294967295
-  _spectatorInterpolation: 2
-  _enableTeleport: 1
-  _teleportThreshold: 1
-  <PrefabId>k__BackingField: 25
-  <SpawnableCollectionId>k__BackingField: 0
-  <AssetPathHash>k__BackingField: 17641289575890520833
-  <SceneId>k__BackingField: 0
-  SerializedTransformProperties:
-    Position: {x: 0, y: 0, z: 0}
-    Rotation: {x: 0, y: -0, z: -0, w: 1}
-    Scale: {x: 1, y: 1, z: 1}
-    IsValid: 1
   <IsNested>k__BackingField: 0
   WasActiveDuringEdit: 0
   WasActiveDuringEdit_Set1: 1
@@ -3743,6 +3720,29 @@ MonoBehaviour:
   _initializeOrder: 0
   _preventDespawnOnDisconnect: 0
   _defaultDespawnType: 0
+  NetworkObserver: {fileID: 0}
+  _enablePrediction: 1
+  _predictionType: 1
+  _graphicalObject: {fileID: 0}
+  _detachGraphicalObject: 0
+  _enableStateForwarding: 1
+  _networkTransform: {fileID: 0}
+  _ownerInterpolation: 1
+  _ownerSmoothedProperties: 4294967295
+  _adaptiveInterpolation: 3
+  _spectatorSmoothedProperties: 4294967295
+  _spectatorInterpolation: 2
+  _enableTeleport: 1
+  _teleportThreshold: 1
+  <PrefabId>k__BackingField: 25
+  <SpawnableCollectionId>k__BackingField: 0
+  <AssetPathHash>k__BackingField: 17641289575890520833
+  <SceneId>k__BackingField: 0
+  SerializedTransformProperties:
+    Position: {x: 0, y: 0, z: 0}
+    Rotation: {x: 0, y: -0, z: -0, w: 1}
+    Scale: {x: 1, y: 1, z: 1}
+    IsValid: 1
 --- !u!54 &1942937363775309974
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -6362,8 +6362,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -0.000015258789}
-  m_SizeDelta: {x: 615.9182, y: 120}
+  m_AnchoredPosition: {x: 0.00096783, y: 0.000015259}
+  m_SizeDelta: {x: 565.52, y: 131.0198}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1753439111307576925
 CanvasRenderer:
@@ -7424,7 +7424,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2074b9c87e9952c4abcd5843e80379f8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WeaponInfo
-  HUDIcon: {fileID: -1536035389, guid: a79eb2efd02955240a2d4873970c486d, type: 3}
+  HUDIcon: {fileID: -1984753505, guid: bdb6995a38e67ec488498e9b0758a0a0, type: 3}
 --- !u!4 &6554974879912994080 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8998568660076139457, guid: d5fbe6d1ba744e441bcc2dbe30e99ae8, type: 3}
@@ -7740,7 +7740,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2074b9c87e9952c4abcd5843e80379f8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WeaponInfo
-  HUDIcon: {fileID: -1536035389, guid: a79eb2efd02955240a2d4873970c486d, type: 3}
+  HUDIcon: {fileID: -172266714, guid: edd703cf72f2773479244156c0f3b741, type: 3}
 --- !u!4 &8440988852551319389 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6737699475807013708, guid: 9e0837ead7a06c64b822b3a0a5cc1200, type: 3}
@@ -8417,7 +8417,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2074b9c87e9952c4abcd5843e80379f8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WeaponInfo
-  HUDIcon: {fileID: -1536035389, guid: a79eb2efd02955240a2d4873970c486d, type: 3}
+  HUDIcon: {fileID: -886428485, guid: b1c5d451c6d7c9f4397fca5b543bfc49, type: 3}
 --- !u!114 &8552642162714002650 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 2710454206161282580, guid: a615e5387b3d46042810f8d472623229, type: 3}
@@ -9563,7 +9563,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2074b9c87e9952c4abcd5843e80379f8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WeaponInfo
-  HUDIcon: {fileID: 896915031, guid: a79eb2efd02955240a2d4873970c486d, type: 3}
+  HUDIcon: {fileID: 420793199, guid: b8975e541169299479a13dbe0a2572b7, type: 3}
 --- !u!114 &5417013303312458404
 MonoBehaviour:
   m_ObjectHideFlags: 0
