@@ -1,3 +1,4 @@
+using System.Collections;
 using FishNet.Object;
 using TMPro;
 using UnityEngine;
@@ -9,26 +10,51 @@ public class GameModeText : NetworkBehaviour
     [SerializeField] private TMP_Text myTeamKills;
     [SerializeField] private TMP_Text oppositeTeamKills;
 
-    public override void OnStartServer()
+    public override void OnStartClient()
     {
-        base.OnStartServer();
-
-        if (LobbyData.ResolvedGameMode == GameMode.TeamDeathmatch)
-        {
-            gameModeText.text = "Team Deathmatch";
-        }
-        else if(LobbyData.ResolvedGameMode == GameMode.FreeForAll)
-        {
-            gameModeText.text = "Free For All";
-        }
+        base.OnStartClient();
+        StartCoroutine(InitWhenReady());
     }
 
-    void Update()
+    private void OnGameModeChanged(GameMode oldValue, GameMode newValue, bool asServer)
     {
-        if (LobbyData.ResolvedGameMode == GameMode.TeamDeathmatch)
-        {
-            myTeamKills.text = GameModeManager.Instance.myTeamKills.ToString();
-            oppositeTeamKills.text = GameModeManager.Instance.oppositeTeamKills.ToString();
-        }
+        if (newValue == GameMode.TeamDeathmatch)
+            gameModeText.text = "Team Deathmatch";
+        else if (newValue == GameMode.FreeForAll)
+            gameModeText.text = "Free for All";
+    }
+
+    private void OnKillsTeamChanged(int oldValue, int newValue, bool asServer)
+    {
+        UpdateKillsUI();
+    }
+
+    private void UpdateKillsUI()
+    {
+        var gm = GameModeManager.Instance;
+
+        if (gm.gameMode.Value == GameMode.FreeForAll)
+            return;
+
+        myTeamKills.text = gm.myTeamKills.Value.ToString();
+        oppositeTeamKills.text = gm.oppositeTeamKills.Value.ToString();
+    }
+
+    private IEnumerator InitWhenReady()
+    {
+        while(GameModeManager.Instance == null) 
+            yield return null;
+
+        var gm = GameModeManager.Instance;
+
+        while (gm.gameMode == null)
+            yield return null;
+
+        gm.gameMode.OnChange += OnGameModeChanged;
+        gm.myTeamKills.OnChange += OnKillsTeamChanged;
+        gm.oppositeTeamKills.OnChange += OnKillsTeamChanged;
+
+        OnGameModeChanged(default, gm.gameMode.Value, false);
+        UpdateKillsUI();
     }
 }
