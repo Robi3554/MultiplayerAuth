@@ -178,11 +178,15 @@ public class PredictionMelee : NetworkBehaviour
 					DespawnRobotServerRpc(robot.NetworkObject);
 				}
 			} 
-			// else if (enemyCollider.gameObject.layer == LayerMask.NameToLayer("Projectile"))
-			// {
-			// 	Debug.Log("Melee: Hit a bullet!");
-			// 	DespawnBullet(enemyCollider.gameObject);
-			// }
+			else if (enemyCollider.gameObject.layer == LayerMask.NameToLayer("Projectile"))
+			{
+				Debug.Log("Melee: Hit a bullet!");
+				// Clients should not try to pass GameObjects/NetworkObjects over RPCs.
+				// Instead report the hit position to the server and let the server
+				// find and despawn the authoritative projectile objects.
+				Vector3 hitPoint = enemyCollider.ClosestPoint(transform.position);
+				ReportProjectileHitServerRpc(hitPoint);
+			}
             
 			_meleePressed = false;
 		}
@@ -193,17 +197,45 @@ public class PredictionMelee : NetworkBehaviour
 		Slash = false;
 	}
 
+	// Client reports a local projectile hit point; server finds authoritative projectile(s)
+	// near that point and despawns them. This avoids passing object references from
+	// clients which may be null on dedicated server setups.
 	[ServerRpc(RequireOwnership = false)]
-	private void DespawnBullet(GameObject bullet){
-		ServerManager.Despawn(bullet.GetComponent<NetworkObject>());
-	}
+	private void ReportProjectileHitServerRpc(Vector3 hitPoint)
+	{
+		if (!IsServer)
+			return;
 
+		// Tweak this radius to match projectile size / melee reach.
+		float despawnRadius = 1.0f;
+		Collider[] hits = Physics.OverlapSphere(hitPoint, despawnRadius);
+		foreach (var c in hits)
+		{
+			if (c == null)
+				continue;
+
+			if (c.gameObject.layer == LayerMask.NameToLayer("Projectile"))
+			{
+				var netObj = c.GetComponent<NetworkObject>();
+				if (netObj != null)
+				{
+					ServerManager.Despawn(netObj);
+				}
+				else
+				{
+					// If projectile isn't networked, destroy locally on server.
+					GameObject.Destroy(c.gameObject);
+				}
+			}
+		}
+	}
+	
 	[ServerRpc(RequireOwnership = false)]
 	private void DespawnRobotServerRpc(NetworkObject robot)
 	{
-		Debug.Log("DAVIDDDDDDDDDDDDDDDDDDDD: Despawned robot");
+		// Debug.Log("DAVIDDDDDDDDDDDDDDDDDDDD: Despawned robot");
 		RobotSpawnManager.Instance.DespawnRobot(robot);
-		Debug.Log("DAVIDDDDDDDDDDDDDDDDDDDD: OUT");
+		// Debug.Log("DAVIDDDDDDDDDDDDDDDDDDDD: OUT");
     }
 
 	[ServerRpc(RequireOwnership = false)]
@@ -216,7 +248,7 @@ public class PredictionMelee : NetworkBehaviour
     // Add this method to handle animation completion
     public void OnAnimationComplete()
     {
-        Debug.Log("Melee: Animation completed");
+        // Debug.Log("Melee: Animation completed");
         _isAnimating = false;
     }
 }

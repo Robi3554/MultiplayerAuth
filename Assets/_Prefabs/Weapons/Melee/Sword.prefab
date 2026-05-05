@@ -206,6 +206,8 @@ MonoBehaviour:
     NetworkBehaviour: {fileID: 0}
     _value: 25
   VFX_SLASH: {fileID: 0}
+  swingAudioSource: {fileID: 0}
+  swingAudioClip: {fileID: 0}
   animator: {fileID: 0}
   netAnimator: {fileID: 0}
   meshCollider: {fileID: 0}
@@ -225,24 +227,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 26b716c41e9b56b4baafaf13a523ba2e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <IsNested>k__BackingField: 0
-  WasActiveDuringEdit: 0
-  WasActiveDuringEdit_Set1: 1
-  <ComponentIndex>k__BackingField: 0
-  <PredictedSpawn>k__BackingField: {fileID: 0}
-  <PredictedOwner>k__BackingField: {fileID: 0}
-  NetworkBehaviours:
-  - {fileID: 1305148260922259572}
-  InitializedParentNetworkBehaviour: {fileID: 0}
-  InitializedNestedNetworkObjects: []
-  RuntimeParentNetworkBehaviour: {fileID: 0}
-  RuntimeChildNetworkBehaviours: []
-  _isNetworked: 1
-  _isSpawnable: 1
-  _isGlobal: 0
-  _initializeOrder: 0
-  _preventDespawnOnDisconnect: 0
-  _defaultDespawnType: 0
   NetworkObserver: {fileID: 0}
   _enablePrediction: 1
   _predictionType: 0
@@ -266,6 +250,24 @@ MonoBehaviour:
     Rotation: {x: -0.60876137, y: 0, z: 0, w: 0.7933534}
     Scale: {x: 2.827, y: 2.827, z: 2.827}
     IsValid: 1
+  <IsNested>k__BackingField: 0
+  WasActiveDuringEdit: 1
+  WasActiveDuringEdit_Set1: 1
+  <ComponentIndex>k__BackingField: 0
+  <PredictedSpawn>k__BackingField: {fileID: 0}
+  <PredictedOwner>k__BackingField: {fileID: 0}
+  NetworkBehaviours:
+  - {fileID: 1305148260922259572}
+  InitializedParentNetworkBehaviour: {fileID: 0}
+  InitializedNestedNetworkObjects: []
+  RuntimeParentNetworkBehaviour: {fileID: 0}
+  RuntimeChildNetworkBehaviours: []
+  _isNetworked: 1
+  _isSpawnable: 1
+  _isGlobal: 0
+  _initializeOrder: 0
+  _preventDespawnOnDisconnect: 0
+  _defaultDespawnType: 0
 --- !u!114 &5131505854757585838
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -604,6 +606,10 @@ PrefabInstance:
     - target: {fileID: 3188413184293006354, guid: f7964fcc340ff6e42bee13080e52f760, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6503818606426063059, guid: f7964fcc340ff6e42bee13080e52f760, type: 3}
+      propertyPath: simulationSpeed
+      value: 45
       objectReference: {fileID: 0}
     - target: {fileID: 8077160873422092717, guid: f7964fcc340ff6e42bee13080e52f760, type: 3}
       propertyPath: m_Name
