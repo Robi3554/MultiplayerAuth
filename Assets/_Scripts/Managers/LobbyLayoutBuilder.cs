@@ -142,6 +142,141 @@ public class LobbyLayoutBuilder : MonoBehaviour
         WireReferences();
     }
 
+    /// <summary>
+    /// Walks every Image under this transform and re-applies the procedural sprite
+    /// it should have, based on the GameObject's name. Use this on a hand-edited
+    /// canvas (where you don't want to lose your positioning tweaks) to repair
+    /// "all white buttons" caused by procedural sprites going stale after a save +
+    /// domain reload. Adds a <see cref="LobbyProceduralSprite"/> component to each
+    /// matching Image so the sprite survives subsequent reloads automatically.
+    /// </summary>
+    [ContextMenu("Patch Procedural Sprites")]
+    public void PatchProceduralSprites()
+    {
+        int patched = 0;
+        var images = GetComponentsInChildren<Image>(true);
+        foreach (var img in images)
+        {
+            if (img == null) continue;
+            if (img.GetComponent<LobbyProceduralSprite>() != null) continue; // already managed
+            if (PatchByName(img))
+                patched++;
+        }
+        Debug.Log($"[LobbyLayoutBuilder] Patched {patched} procedural sprites under {name}.");
+    }
+
+    private bool PatchByName(Image img)
+    {
+        string n = img.gameObject.name;
+        string parent = img.transform.parent != null ? img.transform.parent.name : "";
+
+        switch (n)
+        {
+            case "BG_Base":
+                AttachVerticalGradient(img, bgPrimary, bgSecondary);
+                img.type = Image.Type.Simple;
+                return true;
+            case "BG_Pattern":
+                AttachSubtlePattern(img, new Color(1f, 1f, 1f, 1f));
+                img.type = Image.Type.Tiled;
+                if (img.color.a > 0.5f) img.color = new Color(1f, 1f, 1f, 0.07f);
+                return true;
+            case "TitleStrip":
+            case "Sep":
+                AttachVerticalGradient(img, new Color(0f, 0f, 0f, 0f), accentYellow);
+                return true;
+            case "PreviewGlow":
+                AttachRadialGlow(img, accentYellow);
+                return true;
+            case "LeftPanel":
+            case "RightPanel":
+                AttachRoundedRect(img, 10, 3, panelFill, outlineDark);
+                return true;
+            case "StatusBar":
+                AttachRoundedRect(img, 10, 1, new Color(0.07f, 0.11f, 0.30f, 1f), outlineDark);
+                return true;
+            case "BottomStrip":
+            {
+                Color stripCol = parent == "StatusBar" ? new Color(0.03f, 0.05f, 0.16f, 1f) : panelBottom;
+                AttachRoundedRect(img, 6, 0, stripCol, stripCol);
+                return true;
+            }
+            case "LeftArrow":
+            case "RightArrow":
+                AttachRoundedRect(img, 64, 4, accentYellow, outlineDark);
+                return true;
+            case "InnerGlow":
+                AttachRadialGlow(img, accentYellow);
+                return true;
+            case "Sheen":
+                AttachVerticalGradient(img, new Color(1f, 1f, 1f, 0.18f), new Color(1f, 1f, 1f, 0f));
+                return true;
+        }
+
+        if (TryGetButtonTint(n, out Color tint))
+        {
+            bool big = n == "ReadyBtn";
+            AttachRoundedRect(img, big ? 14 : 10, big ? 4 : 3, tint, outlineDark);
+            return true;
+        }
+
+        if (n == "DepthStrip" && TryGetButtonTint(parent, out Color parentTint))
+        {
+            Color bottom = parentTint * 0.55f; bottom.a = 1f;
+            bool big = parent == "ReadyBtn";
+            int corner = big ? 14 : 10;
+            AttachRoundedRect(img, Mathf.Max(1, corner - 4), 0, bottom, bottom);
+            return true;
+        }
+
+        return false;
+    }
+
+    private bool TryGetButtonTint(string n, out Color color)
+    {
+        switch (n)
+        {
+            case "RebelsBtn": color = rebelsColor; return true;
+            case "AIBtn": color = aiColor; return true;
+            case "NoTeamBtn": color = noneTeamColor; return true;
+            case "FFABtn": color = ffaColor; return true;
+            case "TDMBtn": color = tdmColor; return true;
+            case "ReadyBtn": color = readyColor; return true;
+        }
+        color = default;
+        return false;
+    }
+
+    // ─── Persistent-sprite helpers (use these instead of img.sprite = ...) ─
+
+    private static void AttachRoundedRect(Image img, int corner, int border, Color fill, Color borderColor)
+    {
+        var sp = img.gameObject.GetComponent<LobbyProceduralSprite>();
+        if (sp == null) sp = img.gameObject.AddComponent<LobbyProceduralSprite>();
+        sp.SetRoundedRect(corner, border, fill, borderColor);
+    }
+
+    private static void AttachVerticalGradient(Image img, Color top, Color bottom, int height = 256)
+    {
+        var sp = img.gameObject.GetComponent<LobbyProceduralSprite>();
+        if (sp == null) sp = img.gameObject.AddComponent<LobbyProceduralSprite>();
+        sp.SetVerticalGradient(top, bottom, height);
+    }
+
+    private static void AttachRadialGlow(Image img, Color center, int size = 256)
+    {
+        var sp = img.gameObject.GetComponent<LobbyProceduralSprite>();
+        if (sp == null) sp = img.gameObject.AddComponent<LobbyProceduralSprite>();
+        sp.SetRadialGlow(center, size);
+    }
+
+    private static void AttachSubtlePattern(Image img, Color color, int size = 32)
+    {
+        var sp = img.gameObject.GetComponent<LobbyProceduralSprite>();
+        if (sp == null) sp = img.gameObject.AddComponent<LobbyProceduralSprite>();
+        sp.SetSubtlePattern(color, size);
+    }
+
     [ContextMenu("Clear Built UI")]
     public void Clear()
     {
@@ -210,7 +345,7 @@ public class LobbyLayoutBuilder : MonoBehaviour
         var bg = CreateAnchoredPanel("BG_Base", parent, Vector2.zero, Vector2.one, Color.white);
         Track(bg);
         var bgImg = bg.GetComponent<Image>();
-        bgImg.sprite = LobbyVisuals.GetVerticalGradient(bgPrimary, bgSecondary);
+        AttachVerticalGradient(bgImg, bgPrimary, bgSecondary);
         bgImg.type = Image.Type.Simple;
         bgImg.raycastTarget = false;
 
@@ -218,7 +353,7 @@ public class LobbyLayoutBuilder : MonoBehaviour
         var pattern = CreateAnchoredPanel("BG_Pattern", parent, Vector2.zero, Vector2.one, Color.white);
         Track(pattern);
         var patImg = pattern.GetComponent<Image>();
-        patImg.sprite = LobbyVisuals.GetSubtlePattern(new Color(1f, 1f, 1f, 1f));
+        AttachSubtlePattern(patImg, new Color(1f, 1f, 1f, 1f));
         patImg.type = Image.Type.Tiled;
         patImg.color = new Color(1f, 1f, 1f, 0.07f);
         patImg.raycastTarget = false;
@@ -326,7 +461,7 @@ public class LobbyLayoutBuilder : MonoBehaviour
         var glow = CreateAnchoredPanel("PreviewGlow", panel.transform,
             new Vector2(-0.10f, -0.05f), new Vector2(1.10f, 0.92f), Color.white);
         var glowImg = glow.GetComponent<Image>();
-        glowImg.sprite = LobbyVisuals.GetRadialGlow(accentYellow);
+        AttachRadialGlow(glowImg, accentYellow);
         glowImg.color = new Color(1f, 1f, 1f, 0.55f);
         glowImg.raycastTarget = false;
 
@@ -533,8 +668,7 @@ public class LobbyLayoutBuilder : MonoBehaviour
         rt.offsetMax = Vector2.zero;
 
         var img = obj.AddComponent<Image>();
-        img.sprite = LobbyVisuals.GetRoundedRect(cornerRadius, 3, fill, outlineDark);
-        img.type = Image.Type.Sliced;
+        AttachRoundedRect(img, cornerRadius, 3, fill, outlineDark);
         img.pixelsPerUnitMultiplier = 1f;
 
         var shadow = obj.AddComponent<Shadow>();
@@ -549,8 +683,7 @@ public class LobbyLayoutBuilder : MonoBehaviour
         stripRT.offsetMin = new Vector2(3, 3);
         stripRT.offsetMax = new Vector2(-3, 0);
         var stripImg = strip.AddComponent<Image>();
-        stripImg.sprite = LobbyVisuals.GetRoundedRect(Mathf.Max(1, cornerRadius - 4), 0, bottomStrip, bottomStrip);
-        stripImg.type = Image.Type.Sliced;
+        AttachRoundedRect(stripImg, Mathf.Max(1, cornerRadius - 4), 0, bottomStrip, bottomStrip);
         stripImg.color = Color.white;
         stripImg.raycastTarget = false;
 
@@ -594,8 +727,7 @@ public class LobbyLayoutBuilder : MonoBehaviour
         Color bottomCol = tint * 0.55f; bottomCol.a = 1f;
         int corner = big ? 14 : 10;
         var img = obj.AddComponent<Image>();
-        img.sprite = LobbyVisuals.GetRoundedRect(corner, big ? 4 : 3, tint, outlineDark);
-        img.type = Image.Type.Sliced;
+        AttachRoundedRect(img, corner, big ? 4 : 3, tint, outlineDark);
         img.pixelsPerUnitMultiplier = 1f;
 
         var shadow = obj.AddComponent<Shadow>();
@@ -626,8 +758,7 @@ public class LobbyLayoutBuilder : MonoBehaviour
         depthRT.offsetMin = new Vector2(4, 4);
         depthRT.offsetMax = new Vector2(-4, 0);
         var depthImg = depth.AddComponent<Image>();
-        depthImg.sprite = LobbyVisuals.GetRoundedRect(Mathf.Max(1, corner - 4), 0, bottomCol, bottomCol);
-        depthImg.type = Image.Type.Sliced;
+        AttachRoundedRect(depthImg, Mathf.Max(1, corner - 4), 0, bottomCol, bottomCol);
         depthImg.color = Color.white;
         depthImg.raycastTarget = false;
 
@@ -639,7 +770,7 @@ public class LobbyLayoutBuilder : MonoBehaviour
         sheenRT.offsetMin = new Vector2(4, 0);
         sheenRT.offsetMax = new Vector2(-4, -4);
         var sheenImg = sheen.AddComponent<Image>();
-        sheenImg.sprite = LobbyVisuals.GetVerticalGradient(new Color(1f, 1f, 1f, 0.18f), new Color(1f, 1f, 1f, 0f));
+        AttachVerticalGradient(sheenImg, new Color(1f, 1f, 1f, 0.18f), new Color(1f, 1f, 1f, 0f));
         sheenImg.color = Color.white;
         sheenImg.raycastTarget = false;
 
@@ -651,7 +782,7 @@ public class LobbyLayoutBuilder : MonoBehaviour
         glowRT.offsetMin = Vector2.zero;
         glowRT.offsetMax = Vector2.zero;
         var glowImg = glow.AddComponent<Image>();
-        glowImg.sprite = LobbyVisuals.GetRadialGlow(accentYellow);
+        AttachRadialGlow(glowImg, accentYellow);
         glowImg.color = new Color(1f, 1f, 1f, 0f);
         glowImg.raycastTarget = false;
         glow.transform.SetSiblingIndex(0);
@@ -693,8 +824,7 @@ public class LobbyLayoutBuilder : MonoBehaviour
         rt.offsetMax = Vector2.zero;
 
         var img = obj.AddComponent<Image>();
-        img.sprite = LobbyVisuals.GetRoundedRect(64, 4, accentYellow, outlineDark);
-        img.type = Image.Type.Sliced;
+        AttachRoundedRect(img, 64, 4, accentYellow, outlineDark);
         img.pixelsPerUnitMultiplier = 1f;
 
         var shadow = obj.AddComponent<Shadow>();
@@ -724,7 +854,7 @@ public class LobbyLayoutBuilder : MonoBehaviour
         glowRT.offsetMin = Vector2.zero;
         glowRT.offsetMax = Vector2.zero;
         var glowImg = glow.AddComponent<Image>();
-        glowImg.sprite = LobbyVisuals.GetRadialGlow(accentYellow);
+        AttachRadialGlow(glowImg, accentYellow);
         glowImg.color = new Color(1f, 1f, 1f, 0f);
         glowImg.raycastTarget = false;
         glow.transform.SetSiblingIndex(0);

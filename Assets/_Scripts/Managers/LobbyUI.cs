@@ -62,6 +62,12 @@ public class LobbyUI : MonoBehaviour
              "buttons, their headers and the vote tally text — anything related to game-mode voting).")]
     [SerializeField] private GameObject[] hideInLateJoinMode;
 
+    [Tooltip("GameObjects that should track the visibility of Lobby Content Root (typically the " +
+             "BG_Base / BG_Pattern / BG_TopStripe / BG_TopStripeShadow siblings the procedural " +
+             "builder created). When the canvas hides itself in late-join mode, these hide too. " +
+             "Leave empty in the LobbyScene canvas (where the BG should always be visible).")]
+    [SerializeField] private GameObject[] hideAlongLobbyContent;
+
     [Tooltip("Optional TMP text shown in late-join mode with the resolved game mode " +
              "(\"Free For All\" / \"Team Deathmatch\"). Leave empty to skip.")]
     [SerializeField] private TMP_Text resolvedModeLabel;
@@ -136,9 +142,8 @@ public class LobbyUI : MonoBehaviour
             lobbyContentRoot = null;
         }
 
-        // Hide optional content root while we wait for the lobby to be ready
-        if (lobbyContentRoot != null)
-            lobbyContentRoot.SetActive(false);
+        // Hide optional content root (and any tracked BG siblings) while we wait for the lobby.
+        SetCanvasVisible(false);
 
         rebelsButton.onClick.AddListener(() => { Debug.Log("[LobbyUI] Rebels clicked"); SelectTeam(Team.Rebels); });
         aiButton.onClick.AddListener(() => { Debug.Log("[LobbyUI] AI clicked"); SelectTeam(Team.AI); });
@@ -209,8 +214,7 @@ public class LobbyUI : MonoBehaviour
                 if (managerWaitElapsed >= managerWaitTimeoutSeconds)
                 {
                     // If content was hidden during connect, reveal it so users can see status text.
-                    if (lobbyContentRoot != null)
-                        lobbyContentRoot.SetActive(true);
+                    SetCanvasVisible(true);
 
 #if UNITY_WEBGL && !UNITY_EDITOR
                     string errorText = "<color=red>Could not connect.</color> Check that the server is running and the WebSocket port is accessible.";
@@ -253,8 +257,7 @@ public class LobbyUI : MonoBehaviour
         {
             LoadingManager.Instance.Show();
 
-            if (lobbyContentRoot != null)
-                lobbyContentRoot.SetActive(false);
+            SetCanvasVisible(false);
             if (statusText != null)
                 statusText.text = "<color=yellow>Joining game in progress...</color>";
             return;
@@ -317,14 +320,14 @@ public class LobbyUI : MonoBehaviour
         // The LobbyManager NetworkObject must be spawned before any ServerRpcs work.
         if (!lobbyManager.IsSpawned)
         {
-            if (lobbyContentRoot != null) lobbyContentRoot.SetActive(false);
+            SetCanvasVisible(false);
             return;
         }
 
         int localId = InstanceFinder.ClientManager?.Connection?.ClientId ?? -1;
         if (localId < 0)
         {
-            if (lobbyContentRoot != null) lobbyContentRoot.SetActive(false);
+            SetCanvasVisible(false);
             return;
         }
 
@@ -346,8 +349,7 @@ public class LobbyUI : MonoBehaviour
         // joiner can see the gameplay.
         bool isPending = foundLocal && !localRow.IsReady;
 
-        if (lobbyContentRoot != null && lobbyContentRoot.activeSelf != isPending)
-            lobbyContentRoot.SetActive(isPending);
+        SetCanvasVisible(isPending);
 
         if (!isPending)
             return;
@@ -528,6 +530,27 @@ public class LobbyUI : MonoBehaviour
         if (hover != null) hover.SetSelected(selected);
     }
 
+    /// <summary>
+    /// Toggle the lobby panels and any BG / vignette siblings together. Use this
+    /// instead of writing to lobbyContentRoot directly — otherwise the BG_* layers
+    /// the procedural builder creates as siblings of LobbyContent stay visible.
+    /// </summary>
+    private void SetCanvasVisible(bool visible)
+    {
+        if (lobbyContentRoot != null && lobbyContentRoot.activeSelf != visible)
+            lobbyContentRoot.SetActive(visible);
+
+        if (hideAlongLobbyContent != null)
+        {
+            for (int i = 0; i < hideAlongLobbyContent.Length; i++)
+            {
+                var go = hideAlongLobbyContent[i];
+                if (go != null && go.activeSelf != visible)
+                    go.SetActive(visible);
+            }
+        }
+    }
+
     private bool IsLobbyReady()
     {
         if (lobbyManager == null) return false;
@@ -546,8 +569,7 @@ public class LobbyUI : MonoBehaviour
         yield return null;
         yield return null;
 
-        if (lobbyContentRoot != null)
-            lobbyContentRoot.SetActive(true);
+        SetCanvasVisible(true);
 
         LoadingManager.Instance.Hide();
     }
