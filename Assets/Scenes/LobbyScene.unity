@@ -562,8 +562,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 0, y: -131}
-  m_SizeDelta: {x: 424, y: 60}
+  m_AnchoredPosition: {x: 0, y: -441.91803}
+  m_SizeDelta: {x: 424, y: 681.8361}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &103215546
 MonoBehaviour:
@@ -2833,10 +2833,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 1908267287}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.06, y: -0.537}
-  m_AnchorMax: {x: 0.94, y: -0.48700002}
-  m_AnchoredPosition: {x: 0, y: 517}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchorMin: {x: 0.5, y: 0}
+  m_AnchorMax: {x: 0.5, y: 0}
+  m_AnchoredPosition: {x: 0, y: 177}
+  m_SizeDelta: {x: 392, y: 46}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &321642796
 CanvasRenderer:
@@ -11687,6 +11687,10 @@ MonoBehaviour:
   gameModeText: {fileID: 321642797}
   lobbyContentRoot: {fileID: 177514556}
   managerWaitTimeoutSeconds: 10
+  isLateJoinMode: 0
+  hideInLateJoinMode: []
+  hideAlongLobbyContent: []
+  resolvedModeLabel: {fileID: 0}
 --- !u!114 &1289442774
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12717,10 +12721,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 1908267287}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 1}
-  m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 0, y: -122}
-  m_SizeDelta: {x: 472, y: 4}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: -131}
+  m_SizeDelta: {x: 0, y: 4}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1399510872
 MonoBehaviour:
@@ -12792,10 +12796,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 1908267287}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -69}
-  m_SizeDelta: {x: 472, y: 4}
+  m_AnchorMin: {x: 0, y: 0.5}
+  m_AnchorMax: {x: 1, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: -71}
+  m_SizeDelta: {x: 0, y: 4}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1411367560
 MonoBehaviour:
@@ -14642,7 +14646,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1648690330
 RectTransform:
   m_ObjectHideFlags: 0

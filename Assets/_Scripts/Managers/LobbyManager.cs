@@ -67,15 +67,20 @@ public class LobbyManager : NetworkBehaviour
     {
         if (args.ConnectionState == RemoteConnectionState.Started)
         {
+            // Auto-balance on join: drop the new player into the team with fewer
+            // members (Rebels on tie / empty lobby). The lobby UI no longer offers
+            // a "No Team" option, so every player has a team from the moment they
+            // appear in the SyncList.
+            Team assignedTeam = ComputeAutoAssignTeam();
             Players.Add(new LobbyPlayerData
             {
                 ClientId = conn.ClientId,
                 Username = "Connecting...",
-                Team = Team.None,
+                Team = assignedTeam,
                 PreferredMode = GameMode.FreeForAll,
                 IsReady = false
             });
-            Debug.Log($"[Lobby] Player connected: ClientId={conn.ClientId}");
+            Debug.Log($"[Lobby] Player connected: ClientId={conn.ClientId}, auto-assigned to {assignedTeam}.");
 
             if (IsGameStarting.Value)
             {
@@ -115,6 +120,14 @@ public class LobbyManager : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     public void CmdSetTeam(Team team, NetworkConnection sender = null)
     {
+        // Team.None is no longer a valid lobby selection (the UI button was removed).
+        // Reject it server-side so a stale or modified client cannot un-team itself.
+        if (team == Team.None)
+        {
+            Debug.LogWarning($"[Lobby] CmdSetTeam: ignoring Team.None from ClientId={sender.ClientId}");
+            return;
+        }
+
         Debug.Log($"[Lobby] CmdSetTeam called: ClientId={sender.ClientId}, Team={team}");
         UpdatePlayer(sender.ClientId, p =>
         {
@@ -171,6 +184,24 @@ public class LobbyManager : NetworkBehaviour
             }
         }
         Debug.LogWarning($"[Lobby] UpdatePlayer: ClientId={clientId} NOT FOUND in Players list (count={Players.Count})!");
+    }
+
+    /// <summary>
+    /// Returns the team with fewer current members so the next player gets auto-balanced
+    /// onto it. Returns <see cref="Team.Rebels"/> when both sides are equal (or the lobby
+    /// is empty), as requested.
+    /// </summary>
+    [Server]
+    private Team ComputeAutoAssignTeam()
+    {
+        int rebels = 0;
+        int ai = 0;
+        foreach (var p in Players)
+        {
+            if (p.Team == Team.Rebels) rebels++;
+            else if (p.Team == Team.AI) ai++;
+        }
+        return rebels <= ai ? Team.Rebels : Team.AI;
     }
 
     [Server]
@@ -251,15 +282,33 @@ public class LobbyManager : NetworkBehaviour
 
         string resolvedUsername = string.IsNullOrEmpty(username) ? $"Player {clientId}" : username;
 
+        // No Team is no longer a valid selection: fall back to auto-assign so late
+        // joiners always have a team in TDM and the friendly-fire check stays sane.
+        Team resolvedTeam = team == Team.None ? LobbyData.GetAutoAssignTeam() : team;
+
+        // Pull whatever character the late joiner selected during the late-join overlay
+        // (set via CmdSetCharacter) so the spawner instantiates the right prefab.
+        NetworkObject resolvedCharacter = null;
+        for (int i = 0; i < Players.Count; i++)
+        {
+            if (Players[i].ClientId == clientId)
+            {
+                resolvedCharacter = Players[i].Character;
+                break;
+            }
+        }
+
         UpdatePlayer(clientId, p =>
         {
             p.Username = resolvedUsername;
-            p.Team = team;
+            p.Team = resolvedTeam;
             p.IsReady = true;
             return p;
         });
 
-        LobbyData.PlayerTeams[clientId] = team;
+        LobbyData.PlayerTeams[clientId] = resolvedTeam;
+        if (resolvedCharacter != null)
+            LobbyData.PlayerCharacters[clientId] = resolvedCharacter;
         _pendingLateJoiners.Remove(clientId);
 
         Debug.Log($"[Lobby] Late joiner {resolvedUsername} (ClientId={clientId}) confirmed with team {team}.");

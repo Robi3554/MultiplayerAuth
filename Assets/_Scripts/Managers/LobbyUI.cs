@@ -51,6 +51,27 @@ public class LobbyUI : MonoBehaviour
     [Header("Connection")]
     [SerializeField] private float managerWaitTimeoutSeconds = 10f;
 
+    [Header("Late Join Mode")]
+    [Tooltip("When true this canvas behaves as the in-game late-join overlay: it auto-shows only " +
+             "for pending late joiners, hides the game-mode voting UI, and turns the Ready button " +
+             "into a one-shot Join Game button. Use this on a duplicated copy of the lobby canvas " +
+             "placed in the gameplay scene (SampleScene).")]
+    [SerializeField] private bool isLateJoinMode = false;
+
+    [Tooltip("In late-join mode, these GameObjects are deactivated at Start (e.g. the FFA / TDM " +
+             "buttons, their headers and the vote tally text — anything related to game-mode voting).")]
+    [SerializeField] private GameObject[] hideInLateJoinMode;
+
+    [Tooltip("GameObjects that should track the visibility of Lobby Content Root (typically the " +
+             "BG_Base / BG_Pattern / BG_TopStripe / BG_TopStripeShadow siblings the procedural " +
+             "builder created). When the canvas hides itself in late-join mode, these hide too. " +
+             "Leave empty in the LobbyScene canvas (where the BG should always be visible).")]
+    [SerializeField] private GameObject[] hideAlongLobbyContent;
+
+    [Tooltip("Optional TMP text shown in late-join mode with the resolved game mode " +
+             "(\"Free For All\" / \"Team Deathmatch\"). Leave empty to skip.")]
+    [SerializeField] private TMP_Text resolvedModeLabel;
+
     private LobbyManager lobbyManager;
     private bool isReady;
     private bool hasJoined;
@@ -65,9 +86,14 @@ public class LobbyUI : MonoBehaviour
     private UIButtonHoverEffect ffaHover, tdmHover;
     private UIButtonHoverEffect readyHover;
 
-    // Local UI state of "what does the user have actively selected"
-    private Team selectedTeam = Team.None;
+    // Local UI state of "what does the user have actively selected".
+    // Defaults to Rebels (matches the server's auto-assign tie-breaker); the actual
+    // team is overwritten from the SyncList in RefreshUI as soon as it arrives.
+    private Team selectedTeam = Team.Rebels;
     private GameMode selectedMode = GameMode.FreeForAll;
+
+    // Late-join: latched once we've fired CmdLateJoin so a stuttery click doesn't spam the server.
+    private bool lateJoinSent;
 
     /// <summary>
     /// Called by LobbyLayoutBuilder to wire all UI references at runtime.
@@ -116,13 +142,15 @@ public class LobbyUI : MonoBehaviour
             lobbyContentRoot = null;
         }
 
-        // Hide optional content root while we wait for the lobby to be ready
-        if (lobbyContentRoot != null)
-            lobbyContentRoot.SetActive(false);
+        // Hide optional content root (and any tracked BG siblings) while we wait for the lobby.
+        SetCanvasVisible(false);
 
         rebelsButton.onClick.AddListener(() => { Debug.Log("[LobbyUI] Rebels clicked"); SelectTeam(Team.Rebels); });
         aiButton.onClick.AddListener(() => { Debug.Log("[LobbyUI] AI clicked"); SelectTeam(Team.AI); });
-        noTeamButton.onClick.AddListener(() => { Debug.Log("[LobbyUI] NoTeam clicked"); SelectTeam(Team.None); });
+        // The No Team button has been removed from the UI; the field may be null on
+        // newer scenes. Keep it null-safe so older scenes that still expose it work too.
+        if (noTeamButton != null)
+            noTeamButton.onClick.AddListener(() => { Debug.Log("[LobbyUI] NoTeam clicked"); SelectTeam(Team.None); });
 
         ffaButton.onClick.AddListener(() => { Debug.Log("[LobbyUI] FFA clicked"); SelectGameMode(GameMode.FreeForAll); });
         tdmButton.onClick.AddListener(() => { Debug.Log("[LobbyUI] TDM clicked"); SelectGameMode(GameMode.TeamDeathmatch); });
@@ -137,7 +165,7 @@ public class LobbyUI : MonoBehaviour
         // attaches a UIButtonHoverEffect to every CreateLobbyButton output).
         rebelsHover = rebelsButton.GetComponent<UIButtonHoverEffect>();
         aiHover = aiButton.GetComponent<UIButtonHoverEffect>();
-        noTeamHover = noTeamButton.GetComponent<UIButtonHoverEffect>();
+        noTeamHover = noTeamButton != null ? noTeamButton.GetComponent<UIButtonHoverEffect>() : null;
         ffaHover = ffaButton.GetComponent<UIButtonHoverEffect>();
         tdmHover = tdmButton.GetComponent<UIButtonHoverEffect>();
         readyHover = readyButton.GetComponent<UIButtonHoverEffect>();
@@ -145,6 +173,14 @@ public class LobbyUI : MonoBehaviour
         HighlightTeamButton(selectedTeam);
         HighlightModeButton(selectedMode);
         UpdateReadyButton();
+
+        // Late-join mode: hide every game-mode-related element the user wired up.
+        if (isLateJoinMode && hideInLateJoinMode != null)
+        {
+            for (int i = 0; i < hideInLateJoinMode.Length; i++)
+                if (hideInLateJoinMode[i] != null)
+                    hideInLateJoinMode[i].SetActive(false);
+        }
     }
 
     private void OnDestroy()
@@ -178,8 +214,7 @@ public class LobbyUI : MonoBehaviour
                 if (managerWaitElapsed >= managerWaitTimeoutSeconds)
                 {
                     // If content was hidden during connect, reveal it so users can see status text.
-                    if (lobbyContentRoot != null)
-                        lobbyContentRoot.SetActive(true);
+                    SetCanvasVisible(true);
 
 #if UNITY_WEBGL && !UNITY_EDITOR
                     string errorText = "<color=red>Could not connect.</color> Check that the server is running and the WebSocket port is accessible.";
@@ -208,14 +243,21 @@ public class LobbyUI : MonoBehaviour
             Debug.Log("[LobbyUI] Found LobbyManager!");
         }
 
+        // Late-join flow runs in a separate state machine: we're in the gameplay scene
+        // and only want to show this canvas to pending late joiners.
+        if (isLateJoinMode)
+        {
+            UpdateLateJoinMode();
+            return;
+        }
+
         // If the game is already starting / in progress (reconnect scenario), keep lobby
         // hidden and show a status message. FishNet will transition us to the game scene.
         if (lobbyManager.IsGameStarting.Value)
         {
             LoadingManager.Instance.Show();
 
-            if (lobbyContentRoot != null)
-                lobbyContentRoot.SetActive(false);
+            SetCanvasVisible(false);
             if (statusText != null)
                 statusText.text = "<color=yellow>Joining game in progress...</color>";
             return;
@@ -271,6 +313,87 @@ public class LobbyUI : MonoBehaviour
         }
     }
 
+    // ─── Late-join state machine ──────────────────────────────────────
+
+    private void UpdateLateJoinMode()
+    {
+        // The LobbyManager NetworkObject must be spawned before any ServerRpcs work.
+        if (!lobbyManager.IsSpawned)
+        {
+            SetCanvasVisible(false);
+            return;
+        }
+
+        int localId = InstanceFinder.ClientManager?.Connection?.ClientId ?? -1;
+        if (localId < 0)
+        {
+            SetCanvasVisible(false);
+            return;
+        }
+
+        // Find this client's row in the SyncList (server adds it on connect).
+        bool foundLocal = false;
+        LobbyManager.LobbyPlayerData localRow = default;
+        for (int i = 0; i < lobbyManager.Players.Count; i++)
+        {
+            if (lobbyManager.Players[i].ClientId == localId)
+            {
+                localRow = lobbyManager.Players[i];
+                foundLocal = true;
+                break;
+            }
+        }
+
+        // Pending = in the lobby list but not yet ready/joined. Once the player presses
+        // Join Game, the server flips IsReady=true and we hide ourselves so the late
+        // joiner can see the gameplay.
+        bool isPending = foundLocal && !localRow.IsReady;
+
+        SetCanvasVisible(isPending);
+
+        if (!isPending)
+            return;
+
+        // Hide the FishNet scene-load loading screen now that our overlay is on top.
+        if (LoadingManager.Instance != null)
+            LoadingManager.Instance.Hide();
+
+        // First-frame-as-pending: announce username and push the default character so
+        // the spawner has the right prefab when the player eventually clicks Join Game.
+        if (!hasJoined)
+        {
+            string username = string.IsNullOrEmpty(ConnectionInfo.username) ? "Player" : ConnectionInfo.username;
+            lobbyManager.CmdJoinLobby(username);
+            hasJoined = true;
+
+            if (characterPreview != null && characterPreview.CurrentCharacter != null)
+                lobbyManager.CmdSetCharacter(characterPreview.CurrentCharacter);
+        }
+
+        // Mirror the server-assigned team into the local UI so the right button is highlighted.
+        if (localRow.Team != Team.None && selectedTeam != localRow.Team)
+        {
+            selectedTeam = localRow.Team;
+            HighlightTeamButton(selectedTeam);
+        }
+
+        // Show the resolved game mode (it's not selectable — the game is already in progress).
+        if (resolvedModeLabel != null)
+        {
+            resolvedModeLabel.text = lobbyManager.ResolvedMode.Value == GameMode.TeamDeathmatch
+                ? "TEAM DEATHMATCH"
+                : "FREE FOR ALL";
+        }
+
+        // Refresh the player list when anything changes.
+        int currentHash = ComputePlayersHash();
+        if (currentHash != lastPlayerHash)
+        {
+            RefreshUI();
+            lastPlayerHash = currentHash;
+        }
+    }
+
     // ─── Helpers ──────────────────────────────────────────────────────
 
     private int ComputePlayersHash()
@@ -296,6 +419,7 @@ public class LobbyUI : MonoBehaviour
         int totalCount = lobbyManager.Players.Count;
         int ffaVotes = 0;
         int tdmVotes = 0;
+        int localId = InstanceFinder.ClientManager?.Connection?.ClientId ?? -1;
 
         for (int i = 0; i < lobbyManager.Players.Count; i++)
         {
@@ -310,6 +434,14 @@ public class LobbyUI : MonoBehaviour
             if (player.IsReady) readyCount++;
             if (player.PreferredMode == GameMode.FreeForAll) ffaVotes++;
             else tdmVotes++;
+
+            // Mirror the server's team for the local player — covers the auto-assign-on-join
+            // case where the server picks the team before the client ever clicks anything.
+            if (player.ClientId == localId && player.Team != Team.None && player.Team != selectedTeam)
+            {
+                selectedTeam = player.Team;
+                HighlightTeamButton(selectedTeam);
+            }
         }
 
         statusText.text = $"Players: {totalCount}  |  Ready: {readyCount}/{totalCount}";
@@ -355,6 +487,23 @@ public class LobbyUI : MonoBehaviour
 
     private void ToggleReady()
     {
+        if (isLateJoinMode)
+        {
+            // Late join: one-shot Join Game button. Send CmdLateJoin once and let the
+            // server flip our IsReady bit, which will trigger PlayerSpawnerCustom and
+            // hide this canvas via UpdateLateJoinMode.
+            if (lobbyManager == null || !lobbyManager.IsSpawned || lateJoinSent) return;
+
+            string username = string.IsNullOrEmpty(ConnectionInfo.username) ? "Player" : ConnectionInfo.username;
+            lobbyManager.CmdLateJoin(username, selectedTeam);
+            lateJoinSent = true;
+
+            // Lock the button visually so the player can see the request was accepted.
+            if (readyButtonText != null) readyButtonText.text = "JOINING...";
+            SetSelected(readyHover, true);
+            return;
+        }
+
         isReady = !isReady;
         lobbyManager?.CmdSetReady(isReady);
         UpdateReadyButton();
@@ -363,10 +512,15 @@ public class LobbyUI : MonoBehaviour
     private void UpdateReadyButton()
     {
         if (readyButtonText != null)
-            readyButtonText.text = isReady ? "READY!" : "READY UP";
+        {
+            if (isLateJoinMode)
+                readyButtonText.text = lateJoinSent ? "JOINING..." : "JOIN GAME";
+            else
+                readyButtonText.text = isReady ? "READY!" : "READY UP";
+        }
         // The button image is the rounded sliced sprite; we don't recolor it directly anymore.
         // Instead, the hover effect drives the outline + glow alpha for a clean selected state.
-        SetSelected(readyHover, isReady);
+        SetSelected(readyHover, isLateJoinMode ? lateJoinSent : isReady);
     }
 
     // ─── Helpers ──────────────────────────────────────────────────────
@@ -374,6 +528,27 @@ public class LobbyUI : MonoBehaviour
     private static void SetSelected(UIButtonHoverEffect hover, bool selected)
     {
         if (hover != null) hover.SetSelected(selected);
+    }
+
+    /// <summary>
+    /// Toggle the lobby panels and any BG / vignette siblings together. Use this
+    /// instead of writing to lobbyContentRoot directly — otherwise the BG_* layers
+    /// the procedural builder creates as siblings of LobbyContent stay visible.
+    /// </summary>
+    private void SetCanvasVisible(bool visible)
+    {
+        if (lobbyContentRoot != null && lobbyContentRoot.activeSelf != visible)
+            lobbyContentRoot.SetActive(visible);
+
+        if (hideAlongLobbyContent != null)
+        {
+            for (int i = 0; i < hideAlongLobbyContent.Length; i++)
+            {
+                var go = hideAlongLobbyContent[i];
+                if (go != null && go.activeSelf != visible)
+                    go.SetActive(visible);
+            }
+        }
     }
 
     private bool IsLobbyReady()
@@ -394,8 +569,7 @@ public class LobbyUI : MonoBehaviour
         yield return null;
         yield return null;
 
-        if (lobbyContentRoot != null)
-            lobbyContentRoot.SetActive(true);
+        SetCanvasVisible(true);
 
         LoadingManager.Instance.Hide();
     }
