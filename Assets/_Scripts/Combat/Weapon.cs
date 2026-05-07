@@ -124,16 +124,25 @@ public abstract class Weapon : MonoBehaviour
 
     protected virtual void Update()
     {
-        if (playerNet != null && !playerNet.IsOwner)
+        if (playerNet == null || !playerNet.IsOwner)
             return;
 
         if (ammoText == null)
         {
-            ammoText = GameObject.Find("PlayerHUD").transform.Find("Player Ammo (1)").transform.Find("Ammo Text").GetComponent<TMP_Text>();
+            // Use the player's own HUD reference instead of scene-global Find.
+            // GameObject.Find returns the first ACTIVE match in the entire scene, so
+            // in a multi-player game it silently resolves to another player's HUD if
+            // that player's SetActive(false) hasn't fired yet — causing the ammo text
+            // to target a disabled canvas element that is never visible.
+            var hud = playerNet.PlayerHUD;
+            if (hud == null) return; // HUD not assigned in prefab, retry next frame
+            ammoText = hud.transform
+                .Find("Player Ammo (1)")?.transform
+                .Find("Ammo Text")?.GetComponent<TMP_Text>();
         }
 
-        //ammoText.text = $"{currentAmmo}/{maxAmmo}";
-        ammoText.text = $"{currentAmmo}";
+        if (ammoText != null)
+            ammoText.text = $"{currentAmmo}";
     }
 
     protected abstract void Shoot();
@@ -170,9 +179,13 @@ public abstract class Weapon : MonoBehaviour
     public void InitializeWeapon()
     {
         isOnSwapCooldown = true;
-        
-        if (ammoText == null)
-            ammoText = GameObject.Find("PlayerHUD").transform.Find("Player Ammo (1)").transform.Find("Ammo Text").GetComponent<TMP_Text>();
+
+        // Reset ammoText so Update() always re-fetches it with the correct ownership
+        // context. InitializeWeapon is called from OnEnable(), which fires before
+        // Start() and before OnStartClient() — at that point playerNet is null and
+        // other players' PlayerHUDs are still active, so Find("PlayerHUD") would
+        // silently return the wrong player's HUD and cache a stale reference.
+        ammoText = null;
 
         nextShootTime = 0f;
         canPlayShootSound = shootAudioSource && shootAudioClip;

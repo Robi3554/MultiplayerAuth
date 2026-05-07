@@ -9766,8 +9766,8 @@ MonoBehaviour:
   _floatingDamage: {fileID: 2695494221600626890, guid: 4c65f9397eda42548a64f7c9bc2ab836, type: 3}
   _killText: {fileID: 2142432668241313824}
   _deathText: {fileID: 4919666312025143593}
-  _healthText: {fileID: 6437446347497816002}
-  _healthSlider: {fileID: 4828944335509882183}
+  _healthText: {fileID: 2480457526775156529}
+  _healthSlider: {fileID: 2323910509958746956}
 --- !u!114 &6159724918014281138
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15741,7 +15741,7 @@ MonoBehaviour:
   reloadAudioSource: {fileID: 8514162070634585081}
   muzzleFlash: {fileID: 8750995002316587524}
   wallCheckCollider: {fileID: 6531471859414547900}
-  weaponHUD: {fileID: 0}
+  weaponHUD: {fileID: 123990004299603700}
   playerLayer:
     serializedVersion: 2
     m_Bits: 64
