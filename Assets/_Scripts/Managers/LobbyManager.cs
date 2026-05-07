@@ -29,8 +29,14 @@ public class LobbyManager : NetworkBehaviour
     public readonly SyncVar<GameMode> ResolvedMode = new(GameMode.FreeForAll);
 
     [SerializeField] private string gameSceneName = "SampleScene";
+    [SerializeField] private string lobbySceneName = "LobbyScene";
+
+    [Header("Idle Timeout")]
+    [Tooltip("Seconds with zero connected clients while a game is in progress before the server returns to the lobby automatically.")]
+    [SerializeField] private float emptyServerTimeoutSeconds = 90f;
 
     private readonly HashSet<int> _pendingLateJoiners = new();
+    private Coroutine _emptyServerCoroutine;
 
     private void Awake()
     {
@@ -67,6 +73,14 @@ public class LobbyManager : NetworkBehaviour
     {
         if (args.ConnectionState == RemoteConnectionState.Started)
         {
+            // Cancel any in-progress idle timeout — a player has arrived.
+            if (_emptyServerCoroutine != null)
+            {
+                StopCoroutine(_emptyServerCoroutine);
+                _emptyServerCoroutine = null;
+                Debug.Log("[Lobby] Idle timeout cancelled — a player connected.");
+            }
+
             // Auto-balance on join: drop the new player into the team with fewer
             // members (Rebels on tie / empty lobby). The lobby UI no longer offers
             // a "No Team" option, so every player has a team from the moment they
@@ -100,6 +114,13 @@ public class LobbyManager : NetworkBehaviour
             }
             _pendingLateJoiners.Remove(conn.ClientId);
             Debug.Log($"[Lobby] Player disconnected: ClientId={conn.ClientId}");
+
+            // If the game is in progress and the lobby is now empty, start the idle timeout.
+            if (IsGameStarting.Value && Players.Count == 0)
+            {
+                Debug.Log($"[Lobby] Server is empty during an active game. Starting idle timeout ({emptyServerTimeoutSeconds}s).");
+                _emptyServerCoroutine = StartCoroutine(EmptyServerCountdown());
+            }
         }
     }
 
@@ -217,6 +238,83 @@ public class LobbyManager : NetworkBehaviour
 
         // All players are ready
         StartGame();
+    }
+
+    // ─── Return to Lobby ──────────────────────────────────────────────
+
+    /// <summary>
+    /// Resets all lobby state back to its pre-game defaults and loads the lobby
+    /// scene for all connected clients. Called by <see cref="GameModeManager"/>
+    /// after a win countdown and by the idle timeout coroutine.
+    /// </summary>
+    [Server]
+    public void ReturnToLobby()
+    {
+        // Stop any running idle countdown so it can't fire a second time.
+        if (_emptyServerCoroutine != null)
+        {
+            StopCoroutine(_emptyServerCoroutine);
+            _emptyServerCoroutine = null;
+        }
+
+        ResetForNewGame();
+
+        Debug.Log($"[Lobby] Returning to lobby scene: {lobbySceneName}");
+        SceneLoadData sld = new SceneLoadData(lobbySceneName);
+        sld.ReplaceScenes = ReplaceOption.All;
+        NetworkManager.SceneManager.LoadGlobalScenes(sld);
+    }
+
+    /// <summary>
+    /// Resets all persistent lobby state to lobby-fresh defaults without loading
+    /// a new scene. Clears LobbyData, marks every player as not-ready, and
+    /// resets <see cref="IsGameStarting"/> so the lobby UI shows correctly again.
+    /// </summary>
+    [Server]
+    public void ResetForNewGame()
+    {
+        IsGameStarting.Value = false;
+        ResolvedMode.Value = GameMode.FreeForAll;
+        _pendingLateJoiners.Clear();
+        LobbyData.Clear();
+
+        // Preserve player usernames but reset every other selection so players
+        // go through the full lobby flow again (team, character, mode, ready).
+        // Alternate Rebels / AI to guarantee a balanced starting assignment.
+        for (int i = 0; i < Players.Count; i++)
+        {
+            Players[i] = new LobbyPlayerData
+            {
+                ClientId      = Players[i].ClientId,
+                Username      = Players[i].Username,
+                Team          = (i % 2 == 0) ? Team.Rebels : Team.AI,
+                PreferredMode = GameMode.FreeForAll,
+                Character     = null,
+                IsReady       = false
+            };
+        }
+
+        Debug.Log($"[Lobby] ResetForNewGame: {Players.Count} player(s) reset to lobby defaults.");
+    }
+
+    /// <summary>
+    /// Waits <see cref="emptyServerTimeoutSeconds"/> then returns to the lobby
+    /// if no clients have reconnected. Only started when the game is in progress
+    /// and the last player disconnects.
+    /// </summary>
+    private IEnumerator EmptyServerCountdown()
+    {
+        yield return new WaitForSeconds(emptyServerTimeoutSeconds);
+
+        // Double-check: still no players? (Someone might have joined in the meantime
+        // and cancelled the coroutine — but if they didn't, fire the transition.)
+        if (Players.Count == 0)
+        {
+            Debug.Log("[Lobby] Idle timeout elapsed with no players. Returning to lobby.");
+            ReturnToLobby();
+        }
+
+        _emptyServerCoroutine = null;
     }
 
     [Server]

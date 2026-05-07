@@ -154,26 +154,22 @@ public class GameModeManager : NetworkBehaviour
     {
         if (winnerText != null)
         {
-            winnerText.text = $"{winnerName.Value} WINS!\n\nRestarting in {seconds}...";
+            winnerText.text = $"{winnerName.Value} WINS!\n\nReturning to lobby in {seconds}...";
         }
     }
 
     [Server]
     private void RestartGame()
     {
-
-        // Use PlayerManager to reset all players
-        if (PlayerManager.Instance != null)
+        if (LobbyManager.Instance != null)
         {
-            PlayerManager.Instance.ResetAllPlayers();
+            LobbyManager.Instance.ReturnToLobby();
         }
-
-        // Reactivate game
-        isGameActive.Value = true;
-        winnerName.Value = "";
-
-        // Hide game over panel for all clients
-        RpcHideGameOverPanel();
+        else
+        {
+            Debug.LogError("[GameModeManager] LobbyManager.Instance is null — cannot return to lobby. " +
+                           "Ensure LobbyManager is spawned as a Global NetworkObject before the game starts.");
+        }
     }
 
     [ObserversRpc]
