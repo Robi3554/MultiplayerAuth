@@ -124,16 +124,23 @@ public abstract class Weapon : MonoBehaviour
 
     protected virtual void Update()
     {
-        if (playerNet != null && !playerNet.IsOwner)
+        if (playerNet == null || !playerNet.IsOwner)
             return;
 
         if (ammoText == null)
         {
-            ammoText = GameObject.Find("PlayerHUD").transform.Find("Player Ammo (1)").transform.Find("Ammo Text").GetComponent<TMP_Text>();
+            // Look up lazily here (not in OnEnable/InitializeWeapon) because by the
+            // time Update runs, Start has set playerNet and OnStartClient has set all
+            // non-owned PlayerHUDs inactive — so Find reliably returns our own HUD.
+            var hud = GameObject.Find("PlayerHUD");
+            if (hud == null) return; // HUD not in scene yet, retry next frame
+            ammoText = hud.transform
+                .Find("Player Ammo (1)")?.transform
+                .Find("Ammo Text")?.GetComponent<TMP_Text>();
         }
 
-        //ammoText.text = $"{currentAmmo}/{maxAmmo}";
-        ammoText.text = $"{currentAmmo}";
+        if (ammoText != null)
+            ammoText.text = $"{currentAmmo}";
     }
 
     protected abstract void Shoot();
@@ -170,9 +177,13 @@ public abstract class Weapon : MonoBehaviour
     public void InitializeWeapon()
     {
         isOnSwapCooldown = true;
-        
-        if (ammoText == null)
-            ammoText = GameObject.Find("PlayerHUD").transform.Find("Player Ammo (1)").transform.Find("Ammo Text").GetComponent<TMP_Text>();
+
+        // Reset ammoText so Update() always re-fetches it with the correct ownership
+        // context. InitializeWeapon is called from OnEnable(), which fires before
+        // Start() and before OnStartClient() — at that point playerNet is null and
+        // other players' PlayerHUDs are still active, so Find("PlayerHUD") would
+        // silently return the wrong player's HUD and cache a stale reference.
+        ammoText = null;
 
         nextShootTime = 0f;
         canPlayShootSound = shootAudioSource && shootAudioClip;
