@@ -455,7 +455,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7285600015545818277}
   m_Layer: 0
-  m_Name: Shotgun_lowpoly
+  m_Name: LOWPOLY_Shotgun
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
