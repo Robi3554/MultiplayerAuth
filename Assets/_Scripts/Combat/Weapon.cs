@@ -129,11 +129,13 @@ public abstract class Weapon : MonoBehaviour
 
         if (ammoText == null)
         {
-            // Look up lazily here (not in OnEnable/InitializeWeapon) because by the
-            // time Update runs, Start has set playerNet and OnStartClient has set all
-            // non-owned PlayerHUDs inactive — so Find reliably returns our own HUD.
-            var hud = GameObject.Find("PlayerHUD");
-            if (hud == null) return; // HUD not in scene yet, retry next frame
+            // Use the player's own HUD reference instead of scene-global Find.
+            // GameObject.Find returns the first ACTIVE match in the entire scene, so
+            // in a multi-player game it silently resolves to another player's HUD if
+            // that player's SetActive(false) hasn't fired yet — causing the ammo text
+            // to target a disabled canvas element that is never visible.
+            var hud = playerNet.PlayerHUD;
+            if (hud == null) return; // HUD not assigned in prefab, retry next frame
             ammoText = hud.transform
                 .Find("Player Ammo (1)")?.transform
                 .Find("Ammo Text")?.GetComponent<TMP_Text>();

@@ -6,6 +6,12 @@ public class PlayerNetworkInitializer : NetworkBehaviour
 {
     [SerializeField] private GameObject playerHUD;
 
+    /// <summary>
+    /// Exposes the player's own HUD so Weapon can resolve its ammo text from
+    /// the correct hierarchy rather than using scene-global GameObject.Find.
+    /// </summary>
+    public GameObject PlayerHUD => playerHUD;
+
     public override void OnStartServer()
     {
         base.OnStartServer();
