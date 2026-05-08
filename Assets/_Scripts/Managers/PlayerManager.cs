@@ -174,7 +174,7 @@ public class PlayerManager : NetworkBehaviour
                     .Any(p =>
                     {
                         var distance = Vector3.Distance(p.playerObject.transform.position, spawnPoint.position);
-                        return distance < 1f;
+                        return distance < 5f;
                     });
 
                 if (!occupied)
