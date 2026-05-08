@@ -1,3 +1,6 @@
+using System.Linq;
+using _Scripts.Managers;
+using FishNet.Connection;
 using FishNet.Object;
 using FishNet.Object.Prediction;
 using FishNet.Transporting;
@@ -5,6 +8,8 @@ using UnityEngine;
 
 public class PickUpObject : NetworkBehaviour
 {
+    [SerializeField] private AudioSource pickupSound;
+    
     protected bool itemPickedUp = false;
     private void OnTriggerEnter(Collider other)
     {
@@ -41,12 +46,19 @@ public class PickUpObject : NetworkBehaviour
         Collider playerCollider = player.GetComponent<Collider>();
         if (playerCollider != null)
         {
+            RpcPlayPickupSound(playerStats.Owner);
             ItemPickUp(playerCollider);
         }
     }
     protected virtual void ItemPickUp(Collider other)
     {
 
+    }
+    
+    [TargetRpc]
+    private void RpcPlayPickupSound(NetworkConnection target)
+    {
+        PersistentAudioSourceManager.GetInstance().PlaySoundBasedOnRefencedSource(pickupSound);
     }
     
     protected void ResetPickupState()

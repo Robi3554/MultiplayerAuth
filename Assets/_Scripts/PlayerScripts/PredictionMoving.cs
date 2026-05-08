@@ -96,8 +96,6 @@ public class PredictionMoving : NetworkBehaviour
 
         _moveInput = context.ReadValue<Vector2>();
         _isAnalogMovement = context.control.device is not Keyboard;
-        
-        _playerNet.ControlFootstepSoundsServer(this, _moveInput.magnitude);
     }
 
     //Why do we have the OnMouseLook and OnJoystickLook if we don't use them?
@@ -158,6 +156,7 @@ public class PredictionMoving : NetworkBehaviour
             _rb.linearVelocity = Vector3.zero;
             animator.SetFloat("Z Velocity", 0f);
             animator.SetFloat("X Velocity", 0f);
+            _playerNet.ControlFootstepSoundsServer(this, 0f);
             return;
         }
         
@@ -173,6 +172,7 @@ public class PredictionMoving : NetworkBehaviour
         Vector3 velocity = direction * speed;
         velocity.y = _rb.linearVelocity.y;
         animator.SetFloat("Speed", direction.magnitude);
+        _playerNet.ControlFootstepSoundsServer(this, direction.magnitude);
         //calculate world velocity
         Vector3 worldVelocity = new Vector3(_moveInput.x, 0f, _moveInput.y);
         //convert world velocity to local space
