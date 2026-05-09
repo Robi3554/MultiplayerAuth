@@ -19,8 +19,8 @@ public class GameModeManager : NetworkBehaviour
     [SerializeField] private GameObject gameOverPanel;
     [SerializeField] private TMP_Text winnerText;
     public readonly SyncVar<GameMode> gameMode = new SyncVar<GameMode>();
-    internal readonly SyncVar<int> myTeamKills = new SyncVar<int>();
-    internal readonly SyncVar<int> oppositeTeamKills = new SyncVar<int>();
+    internal readonly SyncVar<int> rebelKills = new SyncVar<int>();
+    internal readonly SyncVar<int> aiKills = new SyncVar<int>();
 
     // SyncVar to track if game is active
     internal readonly SyncVar<bool> isGameActive = new SyncVar<bool>(true);
@@ -65,11 +65,15 @@ public class GameModeManager : NetworkBehaviour
         if (LobbyData.ResolvedGameMode == GameMode.TeamDeathmatch)
         {
             // TDM: check if the player's team total kills reached the limit
-            myTeamKills.Value = GetTeamKills(player.team.Value);
-            oppositeTeamKills.Value = GetOppositeTeamKills(player.team.Value);
-            if (myTeamKills.Value >= teamKillsToWin)
+            rebelKills.Value = GetTeamKills(Team.Rebels);
+            aiKills.Value = GetTeamKills(Team.AI);
+            if (rebelKills.Value >= teamKillsToWin)
             {
-                TeamWon(player.team.Value);
+                TeamWon(Team.Rebels);
+            }
+            else if(aiKills.Value >= teamKillsToWin)
+            {
+                TeamWon(Team.AI);
             }
         }
         else

@@ -9324,6 +9324,7 @@ MonoBehaviour:
   gameModeText: {fileID: 153059144038352117}
   myTeamKills: {fileID: 2142432668241313824}
   oppositeTeamKills: {fileID: 4919666312025143593}
+  playerStats: {fileID: 1793075080085927608}
 --- !u!1 &3658419368040831803
 GameObject:
   m_ObjectHideFlags: 0
@@ -30785,7 +30786,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 0.38039216, b: 0.48235294, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
