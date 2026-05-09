@@ -73,7 +73,7 @@ public class ProjectileScript : NetworkBehaviour
             PlayerManager.Instance.DamagePlayer(targetId, finalDamage, attackerId);
             DespawnProjectile();
         }
-        else if (col.TryGetComponent(out Turret turret))
+        else if (col.GetComponentInParent<Turret>() is Turret turret)
         {
             turret.TakeDamage(finalDamage);
             DespawnProjectile();

@@ -17,14 +17,14 @@ public class ShotgunShoot : PistolShoot
         for (int i = 0; i < pelletCount; i++)
         {
             Vector3 dir = GetSpreadDirection(-firePoint.up, spreadAngle);
-            
+
             Vector3 hitPosition = origin + dir * maxDistance;
 
             if (Physics.Raycast(origin, dir, out RaycastHit hit, maxDistance, combinedLayer))
             {
                 hitPosition = hit.point;
 
-                var hitNetObj = hit.transform.GetComponent<NetworkObject>();
+                var hitNetObj = hit.transform.GetComponentInParent<NetworkObject>();
                 if (hitNetObj != null)
                     playerNet?.NotifyHitServer(hitNetObj, damage);
             }

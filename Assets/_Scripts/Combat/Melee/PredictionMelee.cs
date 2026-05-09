@@ -178,7 +178,7 @@ public class PredictionMelee : NetworkBehaviour
 					DespawnRobotServerRpc(robot.NetworkObject);
 				}
 			}
-			else if (enemyCollider.TryGetComponent(out Turret turret))
+			else if (enemyCollider.GetComponentInParent<Turret>() is Turret turret)
 			{
 				Debug.Log("Melee: Hit turret!");
 				DamageTurretServerRpc(turret.NetworkObject, Damage);
