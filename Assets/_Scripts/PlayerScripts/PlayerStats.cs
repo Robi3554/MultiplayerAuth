@@ -174,7 +174,19 @@ public class PlayerStats : NetworkBehaviour
         }
 
         if (deathText != null)
-            deathText.text = deaths.Value.ToString();
+        {
+            if (GameModeManager.Instance != null && GameModeManager.Instance.gameMode.Value == GameMode.TeamDeathmatch)
+            {
+                int teamDeaths = team.Value == Team.Rebels
+                    ? GameModeManager.Instance.rebelDeaths.Value
+                    : GameModeManager.Instance.aiDeaths.Value;
+                deathText.text = teamDeaths.ToString();
+            }
+            else
+            {
+                deathText.text = deaths.Value.ToString();
+            }
+        }
     }
 
     public void TakeDamage(int damage)
