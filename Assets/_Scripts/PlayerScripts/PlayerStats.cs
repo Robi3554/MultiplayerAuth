@@ -334,11 +334,11 @@ public class PlayerStats : NetworkBehaviour
         while (gm.gameMode == null)
             yield return null;
 
-        if (gm.gameMode.Value == GameMode.FreeForAll)
-        {
-            killText = _killText;
-            deathText = _deathText;
-        }
+        //if (gm.gameMode.Value == GameMode.FreeForAll)
+        //{
+        //    killText = _killText;
+        //    deathText = _deathText;
+        //}
     }
 
     private void OnHealthChanged(int previous, int current, bool asServer)
