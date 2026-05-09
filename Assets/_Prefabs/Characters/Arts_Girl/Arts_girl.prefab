@@ -6168,6 +6168,7 @@ MonoBehaviour:
   gameModeText: {fileID: 962567394975769429}
   myTeamKills: {fileID: 6776711864559865173}
   oppositeTeamKills: {fileID: 9071106847452502718}
+  playerStats: {fileID: 0}
 --- !u!1 &8568071739771766363
 GameObject:
   m_ObjectHideFlags: 0
@@ -7174,6 +7175,18 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1693794561756290191, guid: d5fbe6d1ba744e441bcc2dbe30e99ae8, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 1693794561756290191, guid: d5fbe6d1ba744e441bcc2dbe30e99ae8, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 1693794561756290191, guid: d5fbe6d1ba744e441bcc2dbe30e99ae8, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 1693794561756290191, guid: d5fbe6d1ba744e441bcc2dbe30e99ae8, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0.054
       objectReference: {fileID: 0}
@@ -8102,15 +8115,15 @@ PrefabInstance:
       objectReference: {fileID: 4266266248103153385}
     - target: {fileID: 3963929329994855241, guid: a615e5387b3d46042810f8d472623229, type: 3}
       propertyPath: m_LocalScale.x
-      value: 100
+      value: 160
       objectReference: {fileID: 0}
     - target: {fileID: 3963929329994855241, guid: a615e5387b3d46042810f8d472623229, type: 3}
       propertyPath: m_LocalScale.y
-      value: 100
+      value: 160
       objectReference: {fileID: 0}
     - target: {fileID: 3963929329994855241, guid: a615e5387b3d46042810f8d472623229, type: 3}
       propertyPath: m_LocalScale.z
-      value: 100
+      value: 160
       objectReference: {fileID: 0}
     - target: {fileID: 3963929329994855241, guid: a615e5387b3d46042810f8d472623229, type: 3}
       propertyPath: m_LocalPosition.x
@@ -8122,7 +8135,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3963929329994855241, guid: a615e5387b3d46042810f8d472623229, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0.64
+      value: 0.914
       objectReference: {fileID: 0}
     - target: {fileID: 3963929329994855241, guid: a615e5387b3d46042810f8d472623229, type: 3}
       propertyPath: m_LocalRotation.w
@@ -8796,6 +8809,14 @@ PrefabInstance:
       value: 177.581
       objectReference: {fileID: 0}
     - target: {fileID: 1305148260922259572, guid: d50dc5a3dd2728e419a45401c51ea688, type: 3}
+      propertyPath: ammoObj
+      value: 
+      objectReference: {fileID: 3073359530644738564}
+    - target: {fileID: 1305148260922259572, guid: d50dc5a3dd2728e419a45401c51ea688, type: 3}
+      propertyPath: ammoText
+      value: 
+      objectReference: {fileID: 5332672954837311864}
+    - target: {fileID: 1305148260922259572, guid: d50dc5a3dd2728e419a45401c51ea688, type: 3}
       propertyPath: animator
       value: 
       objectReference: {fileID: 6172843232084524608}
@@ -8807,6 +8828,10 @@ PrefabInstance:
       propertyPath: slashPoint
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 1305148260922259572, guid: d50dc5a3dd2728e419a45401c51ea688, type: 3}
+      propertyPath: ammoTextObj
+      value: 
+      objectReference: {fileID: 7478504997857788904}
     - target: {fileID: 1305148260922259572, guid: d50dc5a3dd2728e419a45401c51ea688, type: 3}
       propertyPath: netAnimator
       value: 
@@ -9243,6 +9268,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 7822170347462346014}
     m_Modifications:
+    - target: {fileID: 795150107290732567, guid: cdcf0eae94ed1dd438685bad63846dbf, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1280794750252728180, guid: cdcf0eae94ed1dd438685bad63846dbf, type: 3}
       propertyPath: weaponHUD
       value: 
@@ -9370,6 +9399,18 @@ PrefabInstance:
     - target: {fileID: 4798214918135629857, guid: cdcf0eae94ed1dd438685bad63846dbf, type: 3}
       propertyPath: m_TagString
       value: Weapon
+      objectReference: {fileID: 0}
+    - target: {fileID: 5322550691431191195, guid: cdcf0eae94ed1dd438685bad63846dbf, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 5322550691431191195, guid: cdcf0eae94ed1dd438685bad63846dbf, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 5322550691431191195, guid: cdcf0eae94ed1dd438685bad63846dbf, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 5322550691431191195, guid: cdcf0eae94ed1dd438685bad63846dbf, type: 3}
       propertyPath: m_LocalPosition.x
