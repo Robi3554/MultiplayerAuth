@@ -1,4 +1,6 @@
 using FishNet.Object;
+using FishNet.Object.Synchronizing;
+using System.Collections;
 using UnityEngine;
 
 public class Turret : NetworkBehaviour
@@ -25,6 +27,17 @@ public class Turret : NetworkBehaviour
     [SerializeField] private AudioSource audioSource;
     [SerializeField] private AudioClip shootClip;
 
+    [Header("Health & Disable")]
+    [SerializeField] private int maxHealth = 100;
+    [SerializeField] private float disableDuration = 10f;
+    [SerializeField] private AudioClip disableSound;
+    [SerializeField] private AudioClip enableSound;
+    [SerializeField] private GameObject disableVfx;
+    [SerializeField] private GameObject enableVfx;
+
+    private readonly SyncVar<bool> _isDisabled = new SyncVar<bool>(false);
+    private int _currentHealth;
+
     private Transform currentTarget;
     private float nextFireTime;
     private readonly Collider[] detectedColliders = new Collider[10];
@@ -32,9 +45,42 @@ public class Turret : NetworkBehaviour
     // Turret uses -1 as attacker ID (non-player source)
     private const int TURRET_ATTACKER_ID = -1;
 
+    public override void OnStartServer()
+    {
+        base.OnStartServer();
+        _currentHealth = maxHealth;
+    }
+
+    public override void OnStartClient()
+    {
+        base.OnStartClient();
+        _isDisabled.OnChange += OnDisabledChanged;
+        ApplyDisabledVisuals(_isDisabled.Value);
+    }
+
+    private void OnDisabledChanged(bool previous, bool current, bool asServer)
+    {
+        if (!asServer)
+            ApplyDisabledVisuals(current);
+    }
+
+    private void ApplyDisabledVisuals(bool disabled)
+    {
+        if (rotatingPart != null)
+        {
+            foreach (var renderer in rotatingPart.GetComponentsInChildren<Renderer>())
+            {
+                renderer.enabled = !disabled;
+            }
+        }
+    }
+
     private void Update()
     {
         if (!IsServerInitialized)
+            return;
+
+        if (_isDisabled.Value)
             return;
 
         FindTarget();
@@ -161,6 +207,63 @@ public class Turret : NetworkBehaviour
         if (audioSource != null && shootClip != null)
         {
             audioSource.PlayOneShot(shootClip);
+        }
+    }
+
+    /// <summary>
+    /// Called by players to damage the turret. Server-authoritative.
+    /// </summary>
+    [Server]
+    public void TakeDamage(int incomingDamage)
+    {
+        if (_isDisabled.Value) return;
+
+        _currentHealth -= incomingDamage;
+
+        if (_currentHealth <= 0)
+        {
+            _currentHealth = 0;
+            StartCoroutine(DisableCoroutine());
+        }
+    }
+
+    [Server]
+    private IEnumerator DisableCoroutine()
+    {
+        _isDisabled.Value = true;
+        currentTarget = null;
+        PlayDisableEffectsRpc();
+
+        yield return new WaitForSeconds(disableDuration);
+
+        _currentHealth = maxHealth;
+        _isDisabled.Value = false;
+        PlayEnableEffectsRpc();
+    }
+
+    [ObserversRpc]
+    private void PlayDisableEffectsRpc()
+    {
+        if (audioSource != null && disableSound != null)
+            audioSource.PlayOneShot(disableSound);
+
+        if (disableVfx != null)
+        {
+            GameObject vfx = Instantiate(disableVfx, transform.position, Quaternion.identity);
+            Destroy(vfx, 3f);
+        }
+    }
+
+    [ObserversRpc]
+    private void PlayEnableEffectsRpc()
+    {
+        if (audioSource != null && enableSound != null)
+            audioSource.PlayOneShot(enableSound);
+
+        if (enableVfx != null)
+        {
+            GameObject vfx = Instantiate(enableVfx, transform.position, Quaternion.identity);
+            Destroy(vfx, 3f);
         }
     }
 
