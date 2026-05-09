@@ -3,6 +3,7 @@ using FishNet.Component.Animating;
 using FishNet.Object;
 using FishNet.Object.Synchronizing;
 using NUnit.Framework.Constraints;
+using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.VFX;
@@ -40,16 +41,27 @@ public class PredictionMelee : NetworkBehaviour
 	private bool _isAnimating = false;
 	private bool Slash;
 
-	
+	[SerializeField]
+	private GameObject ammoTextObj;
 
-	public override void OnStartNetwork()
+    public override void OnStartNetwork()
 	{
 		base.OnStartNetwork();
 		playerCollider = GetComponentInParent<CapsuleCollider>();
 		playerStats = GetComponentInParent<PlayerStats>();
 	}
 
-	public void OnDamage(InputAction.CallbackContext context)
+    private void OnEnable()
+    {
+        ammoTextObj.SetActive(false);
+    }
+
+    private void OnDisable()
+    {
+        ammoTextObj.SetActive(true);
+    }
+
+    public void OnDamage(InputAction.CallbackContext context)
 	{
 		if (!this.isActiveAndEnabled) return;
 

@@ -10384,15 +10384,15 @@ PrefabInstance:
       objectReference: {fileID: 1651934804612620351}
     - target: {fileID: 3963929329994855241, guid: a615e5387b3d46042810f8d472623229, type: 3}
       propertyPath: m_LocalScale.x
-      value: 100
+      value: 160
       objectReference: {fileID: 0}
     - target: {fileID: 3963929329994855241, guid: a615e5387b3d46042810f8d472623229, type: 3}
       propertyPath: m_LocalScale.y
-      value: 100
+      value: 160
       objectReference: {fileID: 0}
     - target: {fileID: 3963929329994855241, guid: a615e5387b3d46042810f8d472623229, type: 3}
       propertyPath: m_LocalScale.z
-      value: 100
+      value: 160
       objectReference: {fileID: 0}
     - target: {fileID: 3963929329994855241, guid: a615e5387b3d46042810f8d472623229, type: 3}
       propertyPath: m_LocalPosition.x
@@ -10404,7 +10404,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3963929329994855241, guid: a615e5387b3d46042810f8d472623229, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0.64
+      value: 0.88
       objectReference: {fileID: 0}
     - target: {fileID: 3963929329994855241, guid: a615e5387b3d46042810f8d472623229, type: 3}
       propertyPath: m_LocalRotation.w
@@ -11243,6 +11243,14 @@ PrefabInstance:
       value: 177.581
       objectReference: {fileID: 0}
     - target: {fileID: 1305148260922259572, guid: d50dc5a3dd2728e419a45401c51ea688, type: 3}
+      propertyPath: ammoObj
+      value: 
+      objectReference: {fileID: 4569533319000089703}
+    - target: {fileID: 1305148260922259572, guid: d50dc5a3dd2728e419a45401c51ea688, type: 3}
+      propertyPath: ammoText
+      value: 
+      objectReference: {fileID: 8937398728482500972}
+    - target: {fileID: 1305148260922259572, guid: d50dc5a3dd2728e419a45401c51ea688, type: 3}
       propertyPath: animator
       value: 
       objectReference: {fileID: 1112710266342022526}
@@ -11255,6 +11263,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 0}
     - target: {fileID: 1305148260922259572, guid: d50dc5a3dd2728e419a45401c51ea688, type: 3}
+      propertyPath: ammoTextObj
+      value: 
+      objectReference: {fileID: 120710131942061576}
+    - target: {fileID: 1305148260922259572, guid: d50dc5a3dd2728e419a45401c51ea688, type: 3}
       propertyPath: netAnimator
       value: 
       objectReference: {fileID: 6766728125162970839}
@@ -11262,6 +11274,10 @@ PrefabInstance:
       propertyPath: meshCollider
       value: 
       objectReference: {fileID: 4604570711975469021}
+    - target: {fileID: 1305148260922259572, guid: d50dc5a3dd2728e419a45401c51ea688, type: 3}
+      propertyPath: damage._value
+      value: 13
+      objectReference: {fileID: 0}
     - target: {fileID: 1305148260922259572, guid: d50dc5a3dd2728e419a45401c51ea688, type: 3}
       propertyPath: swingAudioClip
       value: 
@@ -12372,6 +12388,18 @@ PrefabInstance:
     - target: {fileID: 1162888931658450792, guid: d5fbe6d1ba744e441bcc2dbe30e99ae8, type: 3}
       propertyPath: m_IsActive
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1693794561756290191, guid: d5fbe6d1ba744e441bcc2dbe30e99ae8, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 1693794561756290191, guid: d5fbe6d1ba744e441bcc2dbe30e99ae8, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 1693794561756290191, guid: d5fbe6d1ba744e441bcc2dbe30e99ae8, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 15
       objectReference: {fileID: 0}
     - target: {fileID: 1693794561756290191, guid: d5fbe6d1ba744e441bcc2dbe30e99ae8, type: 3}
       propertyPath: m_LocalPosition.x
