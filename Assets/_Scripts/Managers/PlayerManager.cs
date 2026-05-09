@@ -6,27 +6,52 @@ using FishNet.Component.Animating;
 using FishNet.Connection;
 using FishNet.Object;
 using UnityEngine;
+using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
 
 public class PlayerManager : NetworkBehaviour
 {
     public static PlayerManager Instance;
 
-    private void Awake()
-    {
-        Instance = this;
-    }
-
     public Dictionary<int, Player> players = new Dictionary<int, Player>();
 
-    [SerializeField] List<Transform> ffaSpawnPoints = new List<Transform>();
-    [SerializeField] List<Transform> tdHumanSpawnPoints = new List<Transform>();
-    [SerializeField] List<Transform> tdAiSpawnPoints = new List<Transform>();
+    [SerializeField]
+    private Transform ffaSpawnParent;
+    private readonly List<Transform> _ffaSpawnPoints = new();
+    
+    [SerializeField]
+    private Transform tdmRebelsParent;
+    private readonly List<Transform> _tdmRebelSpawnPoints = new();
+    
+    [SerializeField]
+    private Transform tdmAiParent;
+    private readonly List<Transform> _tdmAiSpawnPoints = new();
 
     private int 
         deadLayer,
         aliveLayer;
 
+    
+    private void Awake()
+    {
+        Instance = this;
+        
+        foreach (Transform child in ffaSpawnParent)
+        {
+            _ffaSpawnPoints.Add(child);
+        }
+        
+        foreach (Transform child in tdmRebelsParent)
+        {
+            _tdmRebelSpawnPoints.Add(child);
+        }
+        
+        foreach (Transform child in tdmAiParent)
+        {
+            _tdmAiSpawnPoints.Add(child);
+        }
+    }
+    
     private void Start()
     {
         deadLayer = LayerMask.NameToLayer("Dead");
@@ -145,19 +170,19 @@ public class PlayerManager : NetworkBehaviour
         switch (LobbyData.ResolvedGameMode)
         {
             case GameMode.FreeForAll:
-                availableSpawnPoints = ffaSpawnPoints;
+                availableSpawnPoints = _ffaSpawnPoints;
                 break;
             case GameMode.TeamDeathmatch:
                 var team = stats.team.Value;
                 if (team == Team.Rebels)
-                    availableSpawnPoints = tdHumanSpawnPoints;
+                    availableSpawnPoints = _tdmRebelSpawnPoints;
                 else if (team == Team.AI)
-                    availableSpawnPoints = tdAiSpawnPoints;
+                    availableSpawnPoints = _tdmAiSpawnPoints;
                 else
-                    availableSpawnPoints = ffaSpawnPoints; // Fallback
+                    availableSpawnPoints = _ffaSpawnPoints; // Fallback
                 break;
             default:
-                availableSpawnPoints = ffaSpawnPoints;
+                availableSpawnPoints = _ffaSpawnPoints;
                 break;
         }
 
@@ -174,7 +199,7 @@ public class PlayerManager : NetworkBehaviour
                     .Any(p =>
                     {
                         var distance = Vector3.Distance(p.playerObject.transform.position, spawnPoint.position);
-                        return distance < 5f;
+                        return distance < 2f;
                     });
 
                 if (!occupied)
@@ -192,8 +217,7 @@ public class PlayerManager : NetworkBehaviour
 
         if (!spawnPoint) return;
         
-        player.transform.position = spawnPoint.position;
-        player.transform.rotation = spawnPoint.rotation;
+        player.transform.SetPositionAndRotation(spawnPoint.position, spawnPoint.rotation);
     }
 
     [TargetRpc]

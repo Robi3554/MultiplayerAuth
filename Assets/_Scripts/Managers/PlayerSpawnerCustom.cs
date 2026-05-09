@@ -1,10 +1,13 @@
+using System;
 using System.Collections;
-using System.Collections.Generic; // Required for using Lists
+using System.Collections.Generic;
+using System.Linq; // Required for using Lists
 using FishNet.Connection;
 using FishNet.Managing.Scened;
 using FishNet.Object;
 using UnityEngine;
 using UnityEngine.Serialization;
+using Random = UnityEngine.Random;
 
 public class PlayerSpawnerCustom : NetworkBehaviour
 {
@@ -18,13 +21,16 @@ public class PlayerSpawnerCustom : NetworkBehaviour
     [Header("Spawning - FFA / Default")]
     [Tooltip("Points where players may spawn in FFA mode.")]
     [SerializeField]
-    private List<Transform> _spawnPoints = new List<Transform>();
+    private Transform ffaSpawnParent;
+    private readonly List<Transform> _ffaSpawnPoints = new();
 
     [Header("Spawning - Team Deathmatch")]
     [SerializeField]
-    private List<Transform> _rebelsSpawnPoints = new List<Transform>();
+    private Transform tdmRebelsParent;
+    private readonly List<Transform> _rebelsSpawnPoints = new();
     [SerializeField]
-    private List<Transform> _aiSpawnPoints = new List<Transform>();
+    private Transform tdmAiParent;
+    private readonly List<Transform> _tdmAiSpawnPoints = new();
 
     [Tooltip("True to add the player to the default scene upon spawning.")]
     [SerializeField]
@@ -33,6 +39,21 @@ public class PlayerSpawnerCustom : NetworkBehaviour
     private void Awake()
     {
         Instance = this;
+
+        foreach (Transform child in ffaSpawnParent)
+        {
+            _ffaSpawnPoints.Add(child);
+        }
+        
+        foreach (Transform child in tdmRebelsParent)
+        {
+            _rebelsSpawnPoints.Add(child);
+        }
+        
+        foreach (Transform child in tdmAiParent)
+        {
+            _tdmAiSpawnPoints.Add(child);
+        }
     }
 
     public override void OnStartServer()
@@ -193,28 +214,57 @@ public class PlayerSpawnerCustom : NetworkBehaviour
 
     private Transform GetSpawnPoint(Team team)
     {
-        List<Transform> points;
+        List<Transform> availableSpawnPoints;
 
         if (LobbyData.ResolvedGameMode == GameMode.TeamDeathmatch)
         {
             if (team == Team.Rebels && _rebelsSpawnPoints.Count > 0)
-                points = _rebelsSpawnPoints;
-            else if (team == Team.AI && _aiSpawnPoints.Count > 0)
-                points = _aiSpawnPoints;
+                availableSpawnPoints = _rebelsSpawnPoints;
+            else if (team == Team.AI && _tdmAiSpawnPoints.Count > 0)
+                availableSpawnPoints = _tdmAiSpawnPoints;
             else
-                points = _spawnPoints; // Fallback
+                availableSpawnPoints = _ffaSpawnPoints; // Fallback
         }
         else
         {
-            points = _spawnPoints;
+            availableSpawnPoints = _ffaSpawnPoints;
         }
 
-        if (points == null || points.Count == 0)
+        if (availableSpawnPoints == null || availableSpawnPoints.Count == 0)
         {
             return transform;
         }
+        
+        Transform spawnPoint = null;
+        var players = PlayerManager.Instance != null ? PlayerManager.Instance.players : new Dictionary<int, PlayerManager.Player>();
+        while (availableSpawnPoints.Count > 0)
+        {
+            var randomIndex = Random.Range(0, availableSpawnPoints.Count);
+            spawnPoint = availableSpawnPoints[randomIndex];
+            try
+            {
+                var occupied = players.Values.ToList()
+                    .Where(p => !p.stats.isRespawning.Value)
+                    .Any(p =>
+                    {
+                        var distance = Vector3.Distance(p.playerObject.transform.position, spawnPoint.position);
+                        return distance < 2f;
+                    });
 
-        return points[Random.Range(0, points.Count)];
+                if (!occupied)
+                {
+                    break; // Found an unoccupied spawn point
+                }
+
+                availableSpawnPoints.RemoveAt(randomIndex); // Remove occupied spawn point and try again
+            }
+            catch (Exception e)
+            {
+                break; // If there's an error checking occupancy, just use this spawn point
+            }
+        }
+
+        return spawnPoint;
     }
 
     [ObserversRpc]
