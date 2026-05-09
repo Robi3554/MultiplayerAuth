@@ -19,7 +19,7 @@ public class PlayerStats : NetworkBehaviour
 
     public readonly SyncVar<Team> team = new SyncVar<Team>(Team.None);
     public int damageMult = 1;
-    
+
     [SerializeField] private Animator animator;
     [SerializeField] private TMP_Text _usernameTextOnBillboard;
     [SerializeField] private AudioSource _hitAudioSource;
@@ -34,7 +34,7 @@ public class PlayerStats : NetworkBehaviour
     private Coroutine damageRoutine;
 
     [Header("UI stats")]
-    [SerializeField] private TMP_Text _killText; 
+    [SerializeField] private TMP_Text _killText;
     [SerializeField] private TMP_Text _deathText;
     [SerializeField] private TMP_Text _healthText;
     [SerializeField] private Slider _healthSlider;
@@ -77,14 +77,14 @@ public class PlayerStats : NetworkBehaviour
                 healthText.text = health.Value.ToString();
             health.OnChange += OnHealthChanged;
             _canPlayHitSound = _hitAudioSource && _hitAudioClip;
-        
+
             if (!string.IsNullOrEmpty(ConnectionInfo.username))
             {
                 CmdSetUsername(ConnectionInfo.username);
             }
             else
             {
-                CmdSetUsername("Player " + OwnerId); 
+                CmdSetUsername("Player " + OwnerId);
             }
             animator = gameObject.GetComponentInChildren<Animator>();
         }
@@ -105,7 +105,7 @@ public class PlayerStats : NetworkBehaviour
         if (IsOwner)
             health.OnChange -= OnHealthChanged;
     }
-    
+
     [ServerRpc]
     private void CmdSetUsername(string username)
     {
@@ -133,7 +133,7 @@ public class PlayerStats : NetworkBehaviour
 
         return sanitized;
     }
-    
+
     [ObserversRpc(BufferLast = true)]
     private void RpcSetUsername(string username)
     {
@@ -159,7 +159,19 @@ public class PlayerStats : NetworkBehaviour
             return;
 
         if (killText != null)
-            killText.text = kills.Value.ToString();
+        {
+            if (GameModeManager.Instance != null && GameModeManager.Instance.gameMode.Value == GameMode.TeamDeathmatch)
+            {
+                int teamTotal = team.Value == Team.Rebels
+                    ? GameModeManager.Instance.rebelKills.Value
+                    : GameModeManager.Instance.aiKills.Value;
+                killText.text = teamTotal.ToString();
+            }
+            else
+            {
+                killText.text = kills.Value.ToString();
+            }
+        }
 
         if (deathText != null)
             deathText.text = deaths.Value.ToString();
@@ -168,9 +180,9 @@ public class PlayerStats : NetworkBehaviour
     public void TakeDamage(int damage)
     {
         if (isRespawning.Value) return;
-        
+
         SetHealth(damage);
-        
+
         TargetHitSound();
         TargetShakeCamera(Owner, 0.5f, 0.1f);
         TargetDamagedVFX();
@@ -194,7 +206,7 @@ public class PlayerStats : NetworkBehaviour
     public void AddKill()
     {
         kills.Value++;
-        
+
         // Notify game mode manager
         if (GameModeManager.Instance != null)
         {
@@ -217,7 +229,7 @@ public class PlayerStats : NetworkBehaviour
     {
         health.Value = Mathf.Clamp(health.Value - value, 0, 100);
     }
-    
+
     [ObserversRpc]
     private void TargetHitSound()
     {
@@ -226,7 +238,7 @@ public class PlayerStats : NetworkBehaviour
             _hitAudioSource.PlayOneShot(_hitAudioClip);
         }
     }
-    
+
     [ObserversRpc]
     private void DeathSound()
     {
@@ -297,7 +309,7 @@ public class PlayerStats : NetworkBehaviour
     private void AccumulateDamage(int damage)
     {
         accumulatedDamage += damage;
-        if(damageRoutine != null) 
+        if(damageRoutine != null)
             StopCoroutine(damageRoutine);
 
         damageRoutine = StartCoroutine(ShowAccumulatedDamage());
@@ -334,11 +346,8 @@ public class PlayerStats : NetworkBehaviour
         while (gm.gameMode == null)
             yield return null;
 
-        //if (gm.gameMode.Value == GameMode.FreeForAll)
-        //{
-        //    killText = _killText;
-        //    deathText = _deathText;
-        //}
+        killText = _killText;
+        deathText = _deathText;
     }
 
     private void OnHealthChanged(int previous, int current, bool asServer)
@@ -386,7 +395,7 @@ public class PlayerStats : NetworkBehaviour
             var originalScale = head.localScale;
 
             head.localScale *= multiplier;
-            
+
             isHeadBig = true;
 
             yield return new WaitForSeconds(10f);
@@ -417,11 +426,11 @@ public class PlayerStats : NetworkBehaviour
         {
             int oldMultiplier = damageMult;
             damageMult = multiplier;
-            
+
             isDamageAmp = true;
 
             yield return new WaitForSeconds(10f);
-            
+
             isDamageAmp = false;
 
             damageMult = oldMultiplier;

@@ -23,7 +23,7 @@ public class PlayerManager : NetworkBehaviour
     [SerializeField] List<Transform> tdHumanSpawnPoints = new List<Transform>();
     [SerializeField] List<Transform> tdAiSpawnPoints = new List<Transform>();
 
-    private int 
+    private int
         deadLayer,
         aliveLayer;
 
@@ -99,12 +99,13 @@ public class PlayerManager : NetworkBehaviour
         victim.playerObject.layer = deadLayer;
         SetPlayersLayer(victim.playerObject, deadLayer);
 
-        victimStats.AddDeath();
         victimStats.isRespawning.Value = true;
 
         // ADD KILL TO ATTACKER AND CHECK WIN CONDITION
-        if (players.ContainsKey(attackerClientId))
+        // Deaths only count when killed by another player, not by environment (turrets/robots).
+        if (attackerClientId >= 0 && players.ContainsKey(attackerClientId))
         {
+            victimStats.AddDeath();
             var attackerStats = players[attackerClientId].stats;
             if (attackerStats != null)
             {
@@ -140,7 +141,7 @@ public class PlayerManager : NetworkBehaviour
         Rigidbody rb = player.GetComponent<Rigidbody>();
         if (rb)
             rb.linearVelocity = Vector3.zero;
-        
+
         List<Transform> availableSpawnPoints;
         switch (LobbyData.ResolvedGameMode)
         {
@@ -191,7 +192,7 @@ public class PlayerManager : NetworkBehaviour
         }
 
         if (!spawnPoint) return;
-        
+
         player.transform.position = spawnPoint.position;
         player.transform.rotation = spawnPoint.rotation;
     }
