@@ -72,6 +72,7 @@ public class PredictionMoving : NetworkBehaviour
     private void Start()
     {
         _playerNet = GetComponentInParent<PlayerNetworkInitializer>();
+        InitializePool();
     }
 
     public override void OnStartClient()
@@ -81,7 +82,6 @@ public class PredictionMoving : NetworkBehaviour
             _camera = Camera.main; // May be null during scene transition; Update will retry
 
         characterMeshes = GetComponentsInChildren<SkinnedMeshRenderer>();
-        InitializePool();
     }
     
     // new input system
@@ -304,6 +304,8 @@ public class PredictionMoving : NetworkBehaviour
         if (afterImagePool.Count == 0)
             return;
 
+        EnsurePoolIsSpawned();
+
         AfterImageInstance instance = afterImagePool.Dequeue();
 
         instance.root.transform.position = transform.position;
@@ -324,6 +326,17 @@ public class PredictionMoving : NetworkBehaviour
         }
 
         instance.root.SetActive(true);
+    }
+
+    private void EnsurePoolIsSpawned()
+    {
+        if (afterImagePool.Count > 0) return;
+
+        characterMeshes = GetComponentsInChildren<SkinnedMeshRenderer>();
+
+        if (characterMeshes == null || characterMeshes.Length == 0) return;
+
+        InitializePool();
     }
 
     private void InitializePool()
