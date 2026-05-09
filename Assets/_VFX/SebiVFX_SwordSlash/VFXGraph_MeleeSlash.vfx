@@ -73,7 +73,7 @@ MonoBehaviour:
     x: -34
     y: -698
     width: 1192
-    height: 1776
+    height: 1772
 --- !u!114 &114350483966674976
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1992,7 +1992,7 @@ MonoBehaviour:
   - link:
     - context: {fileID: 114023846229194376}
       slotIndex: 0
-  eventName: OnSlash
+  eventName: OnPlay
 --- !u!114 &8926484042661614655
 MonoBehaviour:
   m_ObjectHideFlags: 0
