@@ -5,6 +5,9 @@
   <Project Path="Unity.FishNet.Codegen.csproj" />
   <Project Path="FishNet.Codegen.Cecil.csproj" />
   <Project Path="GameKit.Dependencies.csproj" />
+  <Project Path="Bayou.csproj" />
   <Project Path="ParrelSync.csproj" />
   <Project Path="Assembly-CSharp-firstpass.csproj" />
+  <Project Path="SimpleWebTransport.csproj" />
+  <Project Path="Assembly-CSharp-Editor.csproj" />
 </Solution>
