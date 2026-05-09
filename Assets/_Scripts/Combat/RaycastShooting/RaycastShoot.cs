@@ -5,17 +5,17 @@ using UnityEngine.InputSystem;
 
 public class RaycastShoot : Weapon
 {
-    [SerializeField] 
+    [SerializeField]
     protected LayerMask playerLayer;
-    [SerializeField] 
+    [SerializeField]
     protected LayerMask wallLayer;
-    [SerializeField] 
+    [SerializeField]
     protected GameObject shotLinePrefab;
 
     protected override void Start()
     {
         base.Start();
-        combinedLayer = playerLayer | wallLayer;       
+        combinedLayer = playerLayer | wallLayer;
     }
 
     private void OnDisable()
@@ -33,7 +33,7 @@ public class RaycastShoot : Weapon
         {
             hitPosition = hit.point;
 
-            var hitNetObj = hit.transform.GetComponent<FishNet.Object.NetworkObject>();
+            var hitNetObj = hit.transform.GetComponentInParent<FishNet.Object.NetworkObject>();
             if (hitNetObj != null)
                 playerNet?.NotifyHitServer(hitNetObj, Damage);
         }

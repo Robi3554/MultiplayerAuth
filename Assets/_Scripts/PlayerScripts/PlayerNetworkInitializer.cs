@@ -57,12 +57,19 @@ public class PlayerNetworkInitializer : NetworkBehaviour
 
     // Called by RaycastShoot when a hit happens
     [ServerRpc]
-    public void NotifyHitServer(NetworkObject targetPlayer, int damage)
+    public void NotifyHitServer(NetworkObject target, int damage)
     {
-        if (targetPlayer == null)
+        if (target == null)
             return;
 
-        int targetId = (int)targetPlayer.Owner.ClientId;
+        // Turret hit
+        if (target.TryGetComponent(out Turret turret))
+        {
+            turret.TakeDamage(damage);
+            return;
+        }
+
+        int targetId = (int)target.Owner.ClientId;
         int attackerId = (int)Owner.ClientId;
 
         PlayerManager.Instance.DamagePlayer(targetId, damage, attackerId);
@@ -145,7 +152,7 @@ public class PlayerNetworkInitializer : NetworkBehaviour
     {
         playerMovement.PlayDashSound();
     }
-    
+
     [ServerRpc]
     public void PlayJumpSoundServer(PredictionMoving playerMovement)
     {

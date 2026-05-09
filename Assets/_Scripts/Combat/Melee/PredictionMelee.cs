@@ -25,7 +25,7 @@ public class PredictionMelee : NetworkBehaviour
 	[SerializeField] private ParticleSystem VFX_SLASH;
     [SerializeField] private AudioSource swingAudioSource;
     [SerializeField] private AudioClip swingAudioClip;
-    
+
 	[Header("Animation")]
 	[SerializeField] private Animator animator;
 	[SerializeField] private NetworkAnimator netAnimator;
@@ -116,7 +116,7 @@ public class PredictionMelee : NetworkBehaviour
 			Slash = true;
 			PerformSlashRequestServerRpc();
 			netAnimator.SetTrigger(SlashTriggerHash);
-			_isAnimating = true; 
+			_isAnimating = true;
 			_meleePressed = false;
 		}
 	}
@@ -131,7 +131,7 @@ public class PredictionMelee : NetworkBehaviour
 	[ServerRpc(RequireOwnership = false)]
 	private void PerformSlashRequestServerRpc()
 	{
-		Slash = true;	
+		Slash = true;
 	}
 
 	// [ServerRpc(RequireOwnership = false)]
@@ -150,7 +150,7 @@ public class PredictionMelee : NetworkBehaviour
 			VFX_SLASH.Play();
 		}
 	}
-	
+
 	[ObserversRpc]
 	public void PlayObserverWeaponSfx()
 	{
@@ -172,7 +172,7 @@ public class PredictionMelee : NetworkBehaviour
 				int attackerId = transform.GetComponent<NetworkObject>().Owner.ClientId;
 				Debug.Log($"DAVEEEEEEE: target: {targetId} aaaand attacker: {attackerId}");
 				DamagePlayerServerRpc(targetId, Damage, attackerId);
-				
+
 			}
 			else if (enemyCollider.CompareTag("Robot"))
 			{
@@ -189,7 +189,12 @@ public class PredictionMelee : NetworkBehaviour
 					robot.DestroyRobot(playerCollider.GetComponent<NetworkObject>());
 					DespawnRobotServerRpc(robot.NetworkObject);
 				}
-			} 
+			}
+			else if (enemyCollider.GetComponentInParent<Turret>() is Turret turret)
+			{
+				Debug.Log("Melee: Hit turret!");
+				DamageTurretServerRpc(turret.NetworkObject, Damage);
+			}
 			else if (enemyCollider.gameObject.layer == LayerMask.NameToLayer("Projectile"))
 			{
 				Debug.Log("Melee: Hit a bullet!");
@@ -199,7 +204,7 @@ public class PredictionMelee : NetworkBehaviour
 				Vector3 hitPoint = enemyCollider.ClosestPoint(transform.position);
 				ReportProjectileHitServerRpc(hitPoint);
 			}
-            
+
 			_meleePressed = false;
 		}
 	}
@@ -241,7 +246,7 @@ public class PredictionMelee : NetworkBehaviour
 			}
 		}
 	}
-	
+
 	[ServerRpc(RequireOwnership = false)]
 	private void DespawnRobotServerRpc(NetworkObject robot)
 	{
@@ -254,6 +259,13 @@ public class PredictionMelee : NetworkBehaviour
 	private void DamagePlayerServerRpc(int targetId, int damageAmount, int attackerId)
 	{
 		PlayerManager.Instance.DamagePlayer(targetId, damageAmount, attackerId);
+	}
+
+	[ServerRpc(RequireOwnership = false)]
+	private void DamageTurretServerRpc(NetworkObject turretObj, int damageAmount)
+	{
+		if (turretObj != null && turretObj.TryGetComponent(out Turret turret))
+			turret.TakeDamage(damageAmount);
 	}
 
 
