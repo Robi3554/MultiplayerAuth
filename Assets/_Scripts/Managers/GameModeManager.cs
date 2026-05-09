@@ -21,11 +21,13 @@ public class GameModeManager : NetworkBehaviour
     public readonly SyncVar<GameMode> gameMode = new SyncVar<GameMode>();
     internal readonly SyncVar<int> rebelKills = new SyncVar<int>();
     internal readonly SyncVar<int> aiKills = new SyncVar<int>();
+    internal readonly SyncVar<int> rebelDeaths = new SyncVar<int>();
+    internal readonly SyncVar<int> aiDeaths = new SyncVar<int>();
 
     // SyncVar to track if game is active
     internal readonly SyncVar<bool> isGameActive = new SyncVar<bool>(true);
     private readonly SyncVar<string> winnerName = new SyncVar<string>("");
-     
+
     private void Awake()
     {
         if (Instance == null)
@@ -44,7 +46,7 @@ public class GameModeManager : NetworkBehaviour
     public override void OnStartClient()
     {
         base.OnStartClient();
-        
+
         if (gameOverPanel != null)
             gameOverPanel.SetActive(false);
     }
@@ -64,9 +66,11 @@ public class GameModeManager : NetworkBehaviour
 
         if (LobbyData.ResolvedGameMode == GameMode.TeamDeathmatch)
         {
-            // TDM: check if the player's team total kills reached the limit
+            // TDM: update team totals for kills and deaths
             rebelKills.Value = GetTeamKills(Team.Rebels);
             aiKills.Value = GetTeamKills(Team.AI);
+            rebelDeaths.Value = GetTeamDeaths(Team.Rebels);
+            aiDeaths.Value = GetTeamDeaths(Team.AI);
             if (rebelKills.Value >= teamKillsToWin)
             {
                 TeamWon(Team.Rebels);
@@ -94,6 +98,18 @@ public class GameModeManager : NetworkBehaviour
         {
             if (kvp.Value.stats != null && kvp.Value.stats.team.Value == team)
                 total += kvp.Value.stats.kills.Value;
+        }
+        return total;
+    }
+
+    [Server]
+    private int GetTeamDeaths(Team team)
+    {
+        int total = 0;
+        foreach (var kvp in PlayerManager.Instance.players)
+        {
+            if (kvp.Value.stats != null && kvp.Value.stats.team.Value == team)
+                total += kvp.Value.stats.deaths.Value;
         }
         return total;
     }
@@ -132,7 +148,7 @@ public class GameModeManager : NetworkBehaviour
     [ObserversRpc]
     private void RpcAnnounceWinner(string playerName)
     {
-        
+
         if (gameOverPanel != null)
         {
             gameOverPanel.SetActive(true);
@@ -149,7 +165,7 @@ public class GameModeManager : NetworkBehaviour
             RpcUpdateCountdown(i);
             yield return new WaitForSeconds(1f);
         }
-        
+
         RestartGame();
     }
 
