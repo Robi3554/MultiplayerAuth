@@ -8130,7 +8130,7 @@ GameObject:
   - component: {fileID: 268938332}
   - component: {fileID: 268938331}
   - component: {fileID: 268938330}
-  m_Layer: 7
+  m_Layer: 3
   m_Name: laboratory door
   m_TagString: Wall
   m_Icon: {fileID: 0}
@@ -20439,7 +20439,7 @@ GameObject:
   - component: {fileID: 620910307}
   - component: {fileID: 620910306}
   - component: {fileID: 620910305}
-  m_Layer: 7
+  m_Layer: 3
   m_Name: cafeteria door
   m_TagString: Wall
   m_Icon: {fileID: 0}
@@ -27043,6 +27043,10 @@ PrefabInstance:
     - target: {fileID: 1449411819928282, guid: 91dc1ab115d03f04b930f9e619fb953f, type: 3}
       propertyPath: m_Name
       value: table2 (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 1449411819928282, guid: 91dc1ab115d03f04b930f9e619fb953f, type: 3}
+      propertyPath: m_Layer
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 4653498214664590, guid: 91dc1ab115d03f04b930f9e619fb953f, type: 3}
       propertyPath: m_RootOrder
@@ -34882,7 +34886,7 @@ GameObject:
   - component: {fileID: 1071851217}
   - component: {fileID: 1071851216}
   - component: {fileID: 1071851215}
-  m_Layer: 7
+  m_Layer: 3
   m_Name: love door1
   m_TagString: Wall
   m_Icon: {fileID: 0}
@@ -36069,6 +36073,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1892433297}
     m_Modifications:
+    - target: {fileID: 1537529156563862, guid: 685803a48200879419cbf0f982932eb1, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 4293850495013322, guid: 685803a48200879419cbf0f982932eb1, type: 3}
       propertyPath: m_RootOrder
       value: 28
@@ -38407,7 +38415,7 @@ GameObject:
   - component: {fileID: 1163781600}
   - component: {fileID: 1163781599}
   - component: {fileID: 1163781598}
-  m_Layer: 7
+  m_Layer: 3
   m_Name: library door
   m_TagString: Wall
   m_Icon: {fileID: 0}
@@ -45444,7 +45452,7 @@ GameObject:
   - component: {fileID: 1396783578}
   - component: {fileID: 1396783577}
   - component: {fileID: 1396783576}
-  m_Layer: 7
+  m_Layer: 3
   m_Name: classroom door
   m_TagString: Wall
   m_Icon: {fileID: 0}
@@ -53436,7 +53444,7 @@ GameObject:
   - component: {fileID: 1654699027}
   - component: {fileID: 1654699026}
   - component: {fileID: 1654699025}
-  m_Layer: 7
+  m_Layer: 3
   m_Name: love door2
   m_TagString: Wall
   m_Icon: {fileID: 0}
