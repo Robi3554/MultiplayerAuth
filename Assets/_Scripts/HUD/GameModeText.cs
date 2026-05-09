@@ -10,6 +10,8 @@ public class GameModeText : NetworkBehaviour
     [SerializeField] private TMP_Text myTeamKills;
     [SerializeField] private TMP_Text oppositeTeamKills;
 
+    [SerializeField] private PlayerStats playerStats;
+
     public override void OnStartClient()
     {
         base.OnStartClient();
@@ -36,8 +38,18 @@ public class GameModeText : NetworkBehaviour
         if (gm.gameMode.Value == GameMode.FreeForAll)
             return;
 
-        myTeamKills.text = gm.myTeamKills.Value.ToString();
-        oppositeTeamKills.text = gm.oppositeTeamKills.Value.ToString();
+        Team myTeam = playerStats.team.Value;
+
+        if (myTeam == Team.Rebels)
+        {
+            myTeamKills.text = gm.rebelKills.Value.ToString();
+            oppositeTeamKills.text = gm.aiKills.Value.ToString();
+        }
+        else
+        {
+            myTeamKills.text = gm.aiKills.Value.ToString();
+            oppositeTeamKills.text = gm.rebelKills.Value.ToString();
+        }
     }
 
     private IEnumerator InitWhenReady()
@@ -51,8 +63,8 @@ public class GameModeText : NetworkBehaviour
             yield return null;
 
         gm.gameMode.OnChange += OnGameModeChanged;
-        gm.myTeamKills.OnChange += OnKillsTeamChanged;
-        gm.oppositeTeamKills.OnChange += OnKillsTeamChanged;
+        gm.rebelKills.OnChange += OnKillsTeamChanged;
+        gm.aiKills.OnChange += OnKillsTeamChanged;
 
         OnGameModeChanged(default, gm.gameMode.Value, false);
         UpdateKillsUI();
