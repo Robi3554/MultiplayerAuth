@@ -117,6 +117,7 @@ MonoBehaviour:
   reloadAudioSource: {fileID: 8489327140528636694}
   muzzleFlash: {fileID: 4657322133507796683}
   wallCheckCollider: {fileID: 5112807856704386602}
+  weaponHUD: {fileID: 0}
   playerLayer:
     serializedVersion: 2
     m_Bits: 64
