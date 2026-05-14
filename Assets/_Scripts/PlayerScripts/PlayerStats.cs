@@ -304,6 +304,11 @@ public class PlayerStats : NetworkBehaviour
 
     private Color GetTeamColor(Team t)
     {
+        // In FFA, all names are white since there are no teams.
+        if (GameModeManager.Instance == null ||
+            GameModeManager.Instance.gameMode.Value == GameMode.FreeForAll)
+            return Color.white;
+
         return t switch
         {
             Team.Rebels => RebelsColor,
