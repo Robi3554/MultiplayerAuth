@@ -23,9 +23,9 @@ public class KamikazeRobot : NetworkBehaviour
 
     [Header("Patroling")]
     public Transform[] patrolPoints;
-    
+
     [SerializeField] private AudioSource audioSource;
-    
+
     private Vector3 currentPoint;
     private int currIndex;
     private int prevIndex;
@@ -200,7 +200,7 @@ public class KamikazeRobot : NetworkBehaviour
     }
 
     public void DestroyRobot(NetworkObject player)
-    {       
+    {
         OnRobotKilled?.Invoke(this);
 
         // powerup.TriggerEffect(player);
@@ -218,21 +218,27 @@ public class KamikazeRobot : NetworkBehaviour
         {
             Debug.Log($"[Robot Log] LittleRobot {gameObject.name} took damage from {col.gameObject.name} via Trigger.");
         }
-        
+
         if(col.CompareTag("Player"))
         {
+            if (!IsServerInitialized) return;
+
             int targetId = col.GetComponent<NetworkObject>().Owner.ClientId;
             int attackerId = transform.GetComponent<NetworkObject>().Owner.ClientId;
             Debug.Log($"Kamikaze robot exploded: target: {targetId}");
             PlayerManager.Instance.DamagePlayer(targetId, Damage, attackerId);
             ParticlesManager.Instance.PlayEffect(transform.position, EffectType.Explosion);
-            var manager = PersistentAudioSourceManager.GetInstance();
-            if (manager != null)
-            {
-                manager.PlaySoundBasedOnRefencedSource(audioSource);
-            }
+            RpcPlayExplosionSound();
             Despawn(this.NetworkObject);
         }
+    }
+
+    [ObserversRpc]
+    private void RpcPlayExplosionSound()
+    {
+        var manager = PersistentAudioSourceManager.GetInstance();
+        if (manager != null && audioSource != null)
+            manager.PlaySoundBasedOnRefencedSource(audioSource);
     }
 
     private void OnDrawGizmosSelected()
