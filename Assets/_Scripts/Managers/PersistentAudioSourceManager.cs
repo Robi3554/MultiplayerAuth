@@ -9,31 +9,32 @@ namespace _Scripts.Managers
     public class PersistentAudioSourceManager : MonoBehaviour
     {
         [SerializeField] private float objectLifetimeSeconds = 60f;
-        
+
         private static PersistentAudioSourceManager _persistentAudioSourceManager;
-        
+
         private Dictionary<AudioSource, Coroutine> _audioCoroutines = new();
 
         private void Awake()
         {
-            if (_persistentAudioSourceManager)
+            if (_persistentAudioSourceManager != null && _persistentAudioSourceManager != this)
             {
-                Destroy(this);
+                Destroy(gameObject);
+                return;
             }
-            
+
             _persistentAudioSourceManager = this;
             DontDestroyOnLoad(gameObject);
         }
-        
+
         public static PersistentAudioSourceManager GetInstance()
         {
             return _persistentAudioSourceManager;
         }
-        
+
         public void PlaySoundBasedOnRefencedSource(AudioSource referencedAudioSource)
         {
             var freeSource = _audioCoroutines.Keys.FirstOrDefault(item => !item.isPlaying);
-            
+
             if  (!freeSource)
             {
                 freeSource = Instantiate(referencedAudioSource, transform);
@@ -46,13 +47,13 @@ namespace _Scripts.Managers
                 {
                     StopCoroutine(coroutine);
                 }
-                
+
                 freeSource.transform.position = referencedAudioSource.transform.position;
                 ConfigureAudioSource(freeSource, referencedAudioSource);
             }
-            
+
             freeSource.Play();
-            
+
             var newCoroutine = StartCoroutine(ReleaseAudioSourceAfterPlayAndExpiration(freeSource));
             _audioCoroutines[freeSource] = newCoroutine;
         }
@@ -74,7 +75,7 @@ namespace _Scripts.Managers
         {
             yield return new WaitForSeconds(source.clip.length);
             yield return new WaitForSeconds(objectLifetimeSeconds);
-            
+
             _audioCoroutines.Remove(source);
             Destroy(source.gameObject);
         }

@@ -11,7 +11,7 @@ public class PickUpRespawn : NetworkBehaviour
     [SerializeField] private float respawnTime = 10f;
 
     private readonly List<RespawnData> _respawnList = new List<RespawnData>();
-    
+
     [System.Serializable]
     private struct RespawnData
     {
@@ -39,6 +39,12 @@ public class PickUpRespawn : NetworkBehaviour
     public void StartRespawnTimer(NetworkObject pickedNetworkObj, Vector3 initPosition, Quaternion initRotation)
     {
         if (pickedNetworkObj == null || !IsServerStarted) return;
+
+        // Hide the pickup instead of despawning it so the scene NetworkObject
+        // stays properly tracked by FishNet across scene reloads.
+        pickedNetworkObj.gameObject.SetActive(false);
+        RpcSetPickupActive(pickedNetworkObj.gameObject, false);
+
         RespawnData newRespawn = new RespawnData
         {
             pickedNetObj = pickedNetworkObj,
@@ -46,7 +52,6 @@ public class PickUpRespawn : NetworkBehaviour
             position = initPosition,
             rotation = initRotation
         };
-        ServerManager.Despawn(pickedNetworkObj.gameObject);
         _respawnList.Add(newRespawn);
     }
 
@@ -74,14 +79,19 @@ public class PickUpRespawn : NetworkBehaviour
     }
     private void RespawnChildServer(RespawnData data)
     {
-        if (spawnableObjPrefab == null)
-        {
-            Debug.LogError("PickUpRespawn: spawnableObjPrefab is null; cannot respawn.");
-            return;
-        }
-        
-        GameObject spawnedObj = Instantiate(spawnableObjPrefab, data.position, data.rotation);
-        spawnedObj.transform.SetParent(this.transform, true);
-        ServerManager.Spawn(spawnedObj);
+        // If the object was destroyed (e.g. scene transition), skip it.
+        if (data.pickedNetObj == null) return;
+
+        // Restore position and re-show the original pickup.
+        data.pickedNetObj.transform.SetPositionAndRotation(data.position, data.rotation);
+        data.pickedNetObj.gameObject.SetActive(true);
+        RpcSetPickupActive(data.pickedNetObj.gameObject, true);
+    }
+
+    [ObserversRpc]
+    private void RpcSetPickupActive(GameObject obj, bool active)
+    {
+        if (obj != null)
+            obj.SetActive(active);
     }
 }
