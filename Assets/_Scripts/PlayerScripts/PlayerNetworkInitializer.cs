@@ -142,9 +142,9 @@ public class PlayerNetworkInitializer : NetworkBehaviour
     }
 
     [ServerRpc]
-    public void ControlFootstepSoundsServer(PredictionMoving playerMovement, float speed)
+    public void ControlFootstepSoundsServer(PredictionMoving playerMovement, float speed, bool isGrounded)
     {
-        playerMovement.ControlFootstepSounds(speed);
+        playerMovement.ControlFootstepSounds(speed, isGrounded);
     }
 
     [ServerRpc]
