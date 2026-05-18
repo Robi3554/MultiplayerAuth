@@ -60,15 +60,15 @@ namespace _Scripts.Managers
 
         private void ConfigureAudioSource(AudioSource target, AudioSource reference)
         {
-            // target.clip = reference.clip;
-            // target.playOnAwake = reference.playOnAwake;
-            // target.loop = reference.loop;
-            // target.volume = reference.volume;
-            // target.pitch = reference.pitch;
-            // target.spatialBlend = reference.spatialBlend;
-            // target.maxDistance = reference.maxDistance;
-            // target.minDistance = reference.minDistance;
-            // target.SetCustomCurve(AudioSourceCurveType.CustomRolloff, reference.GetCustomCurve(AudioSourceCurveType.CustomRolloff));
+            target.clip = reference.clip;
+            target.playOnAwake = reference.playOnAwake;
+            target.loop = reference.loop;
+            target.volume = reference.volume;
+            target.pitch = reference.pitch;
+            target.spatialBlend = reference.spatialBlend;
+            target.maxDistance = reference.maxDistance;
+            target.minDistance = reference.minDistance;
+            target.SetCustomCurve(AudioSourceCurveType.CustomRolloff, reference.GetCustomCurve(AudioSourceCurveType.CustomRolloff));
         }
 
         private IEnumerator ReleaseAudioSourceAfterPlayAndExpiration(AudioSource source)
