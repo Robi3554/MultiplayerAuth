@@ -156,7 +156,7 @@ public class PredictionMoving : NetworkBehaviour
             _rb.linearVelocity = Vector3.zero;
             animator.SetFloat("Z Velocity", 0f);
             animator.SetFloat("X Velocity", 0f);
-            _playerNet.ControlFootstepSoundsServer(this, 0f);
+            _playerNet.ControlFootstepSoundsServer(this, 0f, _isGrounded);
             return;
         }
         
@@ -172,7 +172,7 @@ public class PredictionMoving : NetworkBehaviour
         Vector3 velocity = direction * speed;
         velocity.y = _rb.linearVelocity.y;
         animator.SetFloat("Speed", direction.magnitude);
-        _playerNet.ControlFootstepSoundsServer(this, direction.magnitude);
+        _playerNet.ControlFootstepSoundsServer(this, direction.magnitude, _isGrounded);
         //calculate world velocity
         Vector3 worldVelocity = new Vector3(_moveInput.x, 0f, _moveInput.y);
         //convert world velocity to local space
@@ -417,21 +417,19 @@ public class PredictionMoving : NetworkBehaviour
     }
     
     [ObserversRpc]
-    public void ControlFootstepSounds(float speed)
+    public void ControlFootstepSounds(float speed, bool isGrounded)
     {
-        if (footstepAudioSource)
+        if (!footstepAudioSource) return;
+        
+        if (speed > 0.05f && isGrounded)
         {
-            if (speed > 0.05f)
-            {
-                if (footstepAudioSource.isPlaying) return;
+            if (footstepAudioSource.isPlaying) return;
                 
-                footstepAudioSource.Play();
-                
-                return;
-            }
-
-            footstepAudioSource.Stop();
+            footstepAudioSource.Play();
+            return;
         }
+
+        footstepAudioSource.Stop();
     }
 
     [ObserversRpc]
