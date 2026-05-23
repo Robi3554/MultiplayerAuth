@@ -11,6 +11,7 @@ TagManager:
   - Projectile
   - PlayerAttack
   - CharacterPreview
+  - Ceiling
   layers:
   - Default
   - TransparentFX
@@ -25,8 +26,8 @@ TagManager:
   - Pickup
   - Dead
   - Projectile
-  - 
-  - 
+  - Ceiling
+  - Inside
   - 
   - 
   - 
