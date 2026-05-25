@@ -94,8 +94,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Respawning in 5
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 490a56c37575b374db114d04fe56fdf0, type: 2}
+  m_sharedMaterial: {fileID: 7376519152817904667, guid: 490a56c37575b374db114d04fe56fdf0, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -119,8 +119,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 52
-  m_fontSizeBase: 52
+  m_fontSize: 40
+  m_fontSizeBase: 40
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -130,6 +130,7 @@ MonoBehaviour:
   m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -230,8 +231,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: YOU DIED
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 490a56c37575b374db114d04fe56fdf0, type: 2}
+  m_sharedMaterial: {fileID: 7376519152817904667, guid: 490a56c37575b374db114d04fe56fdf0, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -255,8 +256,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 36
-  m_fontSizeBase: 36
+  m_fontSize: 18
+  m_fontSizeBase: 18
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -266,6 +267,7 @@ MonoBehaviour:
   m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -652,19 +654,19 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2218803893279819740, guid: 38de95428c33a074db37fc3bd410ad19, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2218803893279819740, guid: 38de95428c33a074db37fc3bd410ad19, type: 3}
       propertyPath: m_AnchorMin.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2218803893279819740, guid: 38de95428c33a074db37fc3bd410ad19, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0
+      value: 506.72766
       objectReference: {fileID: 0}
     - target: {fileID: 2218803893279819740, guid: 38de95428c33a074db37fc3bd410ad19, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0
+      value: -25
       objectReference: {fileID: 0}
     - target: {fileID: 4174910677350575691, guid: 38de95428c33a074db37fc3bd410ad19, type: 3}
       propertyPath: m_Pivot.x
@@ -748,23 +750,27 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6247704518512045544, guid: 38de95428c33a074db37fc3bd410ad19, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6247704518512045544, guid: 38de95428c33a074db37fc3bd410ad19, type: 3}
       propertyPath: m_AnchorMin.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6247704518512045544, guid: 38de95428c33a074db37fc3bd410ad19, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0
+      value: 506.72766
       objectReference: {fileID: 0}
     - target: {fileID: 6247704518512045544, guid: 38de95428c33a074db37fc3bd410ad19, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0
+      value: -138.51454
       objectReference: {fileID: 0}
     - target: {fileID: 7948417265630992255, guid: 38de95428c33a074db37fc3bd410ad19, type: 3}
       propertyPath: m_Name
       value: DeathScreen
+      objectReference: {fileID: 0}
+    - target: {fileID: 7948417265630992255, guid: 38de95428c33a074db37fc3bd410ad19, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
