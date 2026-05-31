@@ -3,6 +3,7 @@ using _Scripts.Managers;
 using FishNet.Object;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.Serialization;
 
 public class KamikazeRobot : NetworkBehaviour
 {
@@ -24,7 +25,8 @@ public class KamikazeRobot : NetworkBehaviour
     [Header("Patroling")]
     public Transform[] patrolPoints;
 
-    [SerializeField] private AudioSource audioSource;
+    [SerializeField] private AudioSource kamikazeAudioSource;
+    [SerializeField] private AudioSource deathAudioSource;
 
     private Vector3 currentPoint;
     private int currIndex;
@@ -201,6 +203,9 @@ public class KamikazeRobot : NetworkBehaviour
 
     public void DestroyRobot(NetworkObject player)
     {
+        ParticlesManager.Instance.PlayEffect(transform.position, EffectType.SmallExplosion);
+        RpcPlayDeathSound();
+        
         OnRobotKilled?.Invoke(this);
 
         // powerup.TriggerEffect(player);
@@ -237,8 +242,16 @@ public class KamikazeRobot : NetworkBehaviour
     private void RpcPlayExplosionSound()
     {
         var manager = PersistentAudioSourceManager.GetInstance();
-        if (manager != null && audioSource != null)
-            manager.PlaySoundBasedOnRefencedSource(audioSource);
+        if (manager != null && kamikazeAudioSource != null)
+            manager.PlaySoundBasedOnRefencedSource(kamikazeAudioSource);
+    }
+    
+    [ObserversRpc]
+    private void RpcPlayDeathSound()
+    {
+        var manager = PersistentAudioSourceManager.GetInstance();
+        if (manager != null && deathAudioSource != null)
+            manager.PlaySoundBasedOnRefencedSource(deathAudioSource);
     }
 
     private void OnDrawGizmosSelected()

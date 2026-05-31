@@ -1,4 +1,5 @@
 using System;
+using _Scripts.Managers;
 using FishNet.Object;
 using UnityEngine;
 using UnityEngine.AI;
@@ -25,6 +26,8 @@ public class LittleRobot : NetworkBehaviour
     private int currIndex;
     private int prevIndex;
     private bool dirClockwise = true;
+    
+    [SerializeField] private AudioSource deathAudioSource;
 
     [Header("PowerupEffects")]
     public PowerupEffect powerup;
@@ -213,6 +216,8 @@ public class LittleRobot : NetworkBehaviour
     public void DestroyRobot(NetworkObject player)
     {
         Debug.Log($"[Robot Log] LittleRobot {gameObject.name} was destroyed. Killer: {(player != null ? player.name : "Unknown")}");
+        ParticlesManager.Instance.PlayEffect(transform.position, EffectType.SmallExplosion);
+        RpcPlayDeathSound();
         
         OnRobotKilled?.Invoke(this);
 
@@ -231,6 +236,14 @@ public class LittleRobot : NetworkBehaviour
         {
             Debug.Log($"[Robot Log] LittleRobot {gameObject.name} took damage from {col.gameObject.name} via Trigger.");
         }
+    }
+    
+    [ObserversRpc]
+    private void RpcPlayDeathSound()
+    {
+        var manager = PersistentAudioSourceManager.GetInstance();
+        if (manager != null && deathAudioSource != null)
+            manager.PlaySoundBasedOnRefencedSource(deathAudioSource);
     }
 
     private void OnDrawGizmosSelected()

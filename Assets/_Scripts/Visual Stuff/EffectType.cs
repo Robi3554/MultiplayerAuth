@@ -2,5 +2,6 @@ using UnityEngine;
 
 public enum EffectType 
 {
-    Explosion
+    Explosion,
+    SmallExplosion,
 }
