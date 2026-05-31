@@ -119,6 +119,21 @@ public class PlayerManager : NetworkBehaviour
         if (victimStats.isRespawning.Value)
             return;
 
+        string victimName = victim.stats.username.Value;
+        Team victimTeam = victim.stats.team.Value;
+
+        string killerName = "Player";
+        Team killerTeam = Team.None;
+
+        if (attackerClientId >= 0 && players.ContainsKey(attackerClientId))
+        {
+            var killerStats = players[attackerClientId].stats;
+            killerName = killerStats.username.Value;
+            killerTeam = killerStats.team.Value;
+        }
+
+        RpcSendKillFeed(killerName, victimName, killerTeam, victimTeam);
+
         SetPlayerAnimation(victim.playerObject, "Death");
 
         victim.playerObject.layer = deadLayer;
@@ -238,6 +253,19 @@ public class PlayerManager : NetworkBehaviour
     void SetPlayerAnimation(GameObject player, string trigger)
     {
         player.GetComponentInChildren<NetworkAnimator>().SetTrigger(trigger);
+    }
+
+    [ObserversRpc]
+    private void RpcSendKillFeed(string killerName, string victimName,
+    Team killerTeam, Team victimTeam)
+    {
+        KillFeedUI ui = FindFirstObjectByType<KillFeedUI>();
+        if (ui == null) return;
+
+        string killerColored = PlayerStats.GetColoredName(killerName, killerTeam);
+        string victimColored = PlayerStats.GetColoredName(victimName, victimTeam);
+
+        ui.AddFeedItem(killerColored, victimColored);
     }
 
     // NEW METHOD: Called by GameModeManager to reset all players
