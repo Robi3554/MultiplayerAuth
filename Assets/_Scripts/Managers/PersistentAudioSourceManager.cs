@@ -49,9 +49,9 @@ namespace _Scripts.Managers
                 }
 
                 freeSource.transform.position = referencedAudioSource.transform.position;
-                ConfigureAudioSource(freeSource, referencedAudioSource);
             }
 
+            ConfigureAudioSource(freeSource, referencedAudioSource);
             freeSource.Play();
 
             var newCoroutine = StartCoroutine(ReleaseAudioSourceAfterPlayAndExpiration(freeSource));

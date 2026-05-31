@@ -7,6 +7,7 @@ public class ParticlesManager : NetworkBehaviour
 
 
     [SerializeField] private GameObject explosion;
+    [SerializeField] private GameObject smallExplosion;
 
     private void Awake()
     {
@@ -28,6 +29,9 @@ public class ParticlesManager : NetworkBehaviour
         {
             case EffectType.Explosion:
                 prefab = explosion;
+                break;
+            case EffectType.SmallExplosion:
+                prefab = smallExplosion;
                 break;
         }
 
