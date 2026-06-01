@@ -223,6 +223,11 @@ public class LittleRobot : NetworkBehaviour
 
         powerup.TriggerEffect(player);
 
+        Invoke(nameof(DespawnRobot), 0.1f);
+    }
+
+    private void DespawnRobot()
+    {
         NetworkObject.Despawn();
     }
 
