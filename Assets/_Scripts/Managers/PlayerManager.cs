@@ -137,9 +137,9 @@ public class PlayerManager : NetworkBehaviour
 
             var weaponChanger = attacker.playerObject.GetComponent<ChangeWeapons>();
 
-            if (weaponChanger != null && weaponChanger.CurrentWeaponInfo != null)
+            if (weaponChanger != null)
             {
-                weaponId = weaponChanger.CurrentWeaponInfo.WeaponId;
+                weaponId = weaponChanger.GetCurrentWeaponId();
             }
         }
 

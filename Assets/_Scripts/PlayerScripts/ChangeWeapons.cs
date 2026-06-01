@@ -17,6 +17,9 @@ public class ChangeWeapons : NetworkBehaviour
     public static event Action<Sprite> OnLocalWeaponChanged;
 
     private readonly SyncVar<int> _currentWeaponIndex = new SyncVar<int>(1);
+
+    public int CurrentWeaponIndex => _currentWeaponIndex.Value;
+
     private int _newWeaponIndex;
 
     internal bool canChange = true;
@@ -116,12 +119,6 @@ public class ChangeWeapons : NetworkBehaviour
 
         CurrentWeaponInfo = weapons[newActiveIndex].GetComponent<IWeaponInfo>();
 
-        Debug.Log(
-    $"SWITCHED weapon object: {weapons[newActiveIndex].name}, " +
-    $"index: {newActiveIndex}, " +
-    $"weaponId: {(CurrentWeaponInfo != null ? CurrentWeaponInfo.WeaponId.ToString() : "NULL")}"
-);
-
         if (IsOwner)
         {
             if (weapons[newActiveIndex].TryGetComponent<WeaponInfo>(out var info))
@@ -155,5 +152,15 @@ public class ChangeWeapons : NetworkBehaviour
         }
 
         modelRigBuilder.Build();
+    }
+
+    public int GetCurrentWeaponId()
+    {
+        if (_currentWeaponIndex.Value < 0 || _currentWeaponIndex.Value >= weapons.Count)
+            return -1;
+
+        var weaponInfo = weapons[_currentWeaponIndex.Value].GetComponentInChildren<IWeaponInfo>(true);
+
+        return weaponInfo != null ? weaponInfo.WeaponId : -1;
     }
 }
