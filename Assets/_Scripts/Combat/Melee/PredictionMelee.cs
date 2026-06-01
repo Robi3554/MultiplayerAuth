@@ -185,13 +185,13 @@ public class PredictionMelee : NetworkBehaviour, IWeaponInfo
 				{
 					var robot = enemyCollider.GetComponent<KamikazeRobot>();
 					robot.DestroyRobot(playerCollider.GetComponent<NetworkObject>());
-					DespawnRobotServerRpc(robot.NetworkObject);
+					// DespawnRobotServerRpc(robot.NetworkObject);
 				}
 				else if(enemyCollider.GetComponent<LittleRobot>() != null)
 				{
 					var robot = enemyCollider.GetComponent<LittleRobot>();
 					robot.DestroyRobot(playerCollider.GetComponent<NetworkObject>());
-					DespawnRobotServerRpc(robot.NetworkObject);
+					// DespawnRobotServerRpc(robot.NetworkObject);
 				}
 			}
 			else if (enemyCollider.GetComponentInParent<Turret>() is Turret turret)

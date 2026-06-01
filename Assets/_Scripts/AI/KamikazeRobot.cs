@@ -209,6 +209,7 @@ public class KamikazeRobot : NetworkBehaviour
         OnRobotKilled?.Invoke(this);
 
         // powerup.TriggerEffect(player);
+        NetworkObject.Despawn();
     }
 
     private void OnTriggerEnter(Collider col)
