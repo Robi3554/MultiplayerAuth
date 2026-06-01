@@ -326,7 +326,7 @@ public class PlayerStats : NetworkBehaviour
     private void AccumulateDamage(int damage)
     {
         accumulatedDamage += damage;
-        if(damageRoutine != null)
+        if (damageRoutine != null)
             StopCoroutine(damageRoutine);
 
         damageRoutine = StartCoroutine(ShowAccumulatedDamage());
@@ -374,6 +374,22 @@ public class PlayerStats : NetworkBehaviour
             healthText.text = current.ToString();
             healthSlider.value = health.Value;
         }
+    }
+
+    public static string GetColoredName(string name, Team team)
+    {
+        if (GameModeManager.Instance == null ||
+            GameModeManager.Instance.gameMode.Value == GameMode.FreeForAll)
+        {
+            return $"<color=white>{name}</color>";
+        }
+
+        return team switch
+        {
+            Team.Rebels => $"<color=#E53935>{name}</color>",
+            Team.AI => $"<color=#1E88E5>{name}</color>",
+            _ => $"<color=white>{name}</color>"
+        };
     }
 
     //Player head size code

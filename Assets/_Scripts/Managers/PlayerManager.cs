@@ -5,6 +5,7 @@ using System.Linq;
 using FishNet.Component.Animating;
 using FishNet.Connection;
 using FishNet.Object;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
@@ -118,6 +119,31 @@ public class PlayerManager : NetworkBehaviour
         // Prevent multiple respawns for the same player
         if (victimStats.isRespawning.Value)
             return;
+
+        string victimName = victim.stats.username.Value;
+        Team victimTeam = victim.stats.team.Value;
+
+        string killerName = "Player";
+        Team killerTeam = Team.None;
+
+        int weaponId = -1;
+
+        if (attackerClientId >= 0 && players.ContainsKey(attackerClientId))
+        {
+            var attacker = players[attackerClientId];
+
+            killerName = attacker.stats.username.Value;
+            killerTeam = attacker.stats.team.Value;
+
+            var weaponChanger = attacker.playerObject.GetComponent<ChangeWeapons>();
+
+            if (weaponChanger != null && weaponChanger.CurrentWeaponInfo != null)
+            {
+                weaponId = weaponChanger.CurrentWeaponInfo.WeaponId;
+            }
+        }
+
+        RpcSendKillFeed(killerName, victimName, killerTeam, victimTeam, weaponId);
 
         SetPlayerAnimation(victim.playerObject, "Death");
 
@@ -238,6 +264,18 @@ public class PlayerManager : NetworkBehaviour
     void SetPlayerAnimation(GameObject player, string trigger)
     {
         player.GetComponentInChildren<NetworkAnimator>().SetTrigger(trigger);
+    }
+
+    [ObserversRpc]
+    private void RpcSendKillFeed(string killerName, string victimName, Team killerTeam, Team victimTeam, int weaponId)
+    {
+        KillFeedUI ui = FindFirstObjectByType<KillFeedUI>();
+        if (ui == null) return;
+
+        string killerColored = PlayerStats.GetColoredName(killerName, killerTeam);
+        string victimColored = PlayerStats.GetColoredName(victimName, victimTeam);
+
+        ui.AddFeedItem(killerColored, victimColored, weaponId);
     }
 
     // NEW METHOD: Called by GameModeManager to reset all players

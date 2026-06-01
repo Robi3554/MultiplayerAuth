@@ -324,6 +324,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!1 &191208635672700611
 GameObject:
@@ -1428,6 +1429,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!114 &1820990083903404978
 MonoBehaviour:
@@ -1441,6 +1443,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a8fb82406c81a964fb9858d3b1e1d57d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ProjectileShooting
+  weaponId: 0
   firePoint: {fileID: 8994600822919904227}
   speed: 25
   maxDistance: 35
@@ -6454,7 +6457,7 @@ ParticleSystem:
     vectorLabel1_3: W
 --- !u!199 &797748049230344806
 ParticleSystemRenderer:
-  serializedVersion: 6
+  serializedVersion: 7
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -6500,6 +6503,7 @@ ParticleSystemRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_RenderMode: 0
   m_MeshDistribution: 0
   m_SortMode: 0
@@ -6531,7 +6535,6 @@ ParticleSystemRenderer:
   m_MeshWeighting1: 1
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
-  m_MaskInteraction: 0
 --- !u!1 &1463759961882487687
 GameObject:
   m_ObjectHideFlags: 0
@@ -6985,6 +6988,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!1 &1666354771000772651
 GameObject:
@@ -7337,6 +7341,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -7720,6 +7725,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!33 &280825642127456649
 MeshFilter:
@@ -7868,14 +7874,14 @@ Light:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2571236898848728182}
   m_Enabled: 1
-  serializedVersion: 11
+  serializedVersion: 12
   m_Type: 2
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_Intensity: 1
   m_Range: 10
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
-  m_CookieSize: 10
+  m_CookieSize2D: {x: 10, y: 10}
   m_Shadows:
     m_Type: 0
     m_Resolution: -1
@@ -8788,14 +8794,14 @@ Light:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3446398339481638758}
   m_Enabled: 1
-  serializedVersion: 11
+  serializedVersion: 12
   m_Type: 2
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_Intensity: 1
   m_Range: 10
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
-  m_CookieSize: 10
+  m_CookieSize2D: {x: 10, y: 10}
   m_Shadows:
     m_Type: 0
     m_Resolution: -1
@@ -8915,14 +8921,14 @@ Light:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3537745021042188511}
   m_Enabled: 1
-  serializedVersion: 11
+  serializedVersion: 12
   m_Type: 2
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_Intensity: 1
   m_Range: 10
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
-  m_CookieSize: 10
+  m_CookieSize2D: {x: 10, y: 10}
   m_Shadows:
     m_Type: 0
     m_Resolution: -1
@@ -9136,6 +9142,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -9273,6 +9280,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -15007,7 +15015,7 @@ ParticleSystem:
     vectorLabel1_3: W
 --- !u!199 &3672614817858425910
 ParticleSystemRenderer:
-  serializedVersion: 6
+  serializedVersion: 7
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -15053,6 +15061,7 @@ ParticleSystemRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_RenderMode: 0
   m_MeshDistribution: 0
   m_SortMode: 0
@@ -15084,7 +15093,6 @@ ParticleSystemRenderer:
   m_MeshWeighting1: 1
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
-  m_MaskInteraction: 0
 --- !u!1 &3903801055416921600
 GameObject:
   m_ObjectHideFlags: 0
@@ -15173,6 +15181,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!1 &3961239477661539932
 GameObject:
@@ -15278,6 +15287,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -15414,6 +15424,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -15613,6 +15624,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -15686,7 +15698,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2448490849574182949}
-  - component: {fileID: 8840096365261928825}
   - component: {fileID: 6372158692853616497}
   - component: {fileID: 7202732332476543123}
   m_Layer: 0
@@ -15717,41 +15728,6 @@ Transform:
   - {fileID: 4507043409730089121}
   m_Father: {fileID: 895558864066202444}
   m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
---- !u!114 &8840096365261928825
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4240027741746735571}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cf40e658b9ac8ef489b5333048eb7d42, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  firePoint: {fileID: 6648115602248465498}
-  speed: 20
-  maxDistance: 20
-  fireRate: 1.2
-  damage: 20
-  maxAmmo: 30
-  reloadTime: 0.75
-  afterChangeDelay: 0.5
-  shootAudioSource: {fileID: 3303945834265419568}
-  shootAudioClip: {fileID: 8300000, guid: b18bab8db6b4fa74f88f40f9e947d55f, type: 3}
-  reloadAudioSource: {fileID: 8514162070634585081}
-  muzzleFlash: {fileID: 8750995002316587524}
-  wallCheckCollider: {fileID: 6531471859414547900}
-  weaponHUD: {fileID: 123990004299603700}
-  playerLayer:
-    serializedVersion: 2
-    m_Bits: 64
-  wallLayer:
-    serializedVersion: 2
-    m_Bits: 128
-  shotLinePrefab: {fileID: 7133602437278059814, guid: 0e3e214fbff67c642a1f4f61c1361237, type: 3}
-  timeBetweenShots: 0.1
-  burstCount: 3
 --- !u!114 &6372158692853616497
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15764,6 +15740,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: df438a810f8e6e641a9dea0142893387, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ProjectileBurst
+  weaponId: 2
   firePoint: {fileID: 6648115602248465498}
   speed: 20
   maxDistance: 20
@@ -15958,6 +15935,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!1 &4313553965475188315
 GameObject:
@@ -16285,6 +16263,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!1 &4616761275387955534
 GameObject:
@@ -16732,6 +16711,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!1 &5111510717480310359
 GameObject:
@@ -17009,6 +16989,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!1 &5256939004696033806
 GameObject:
@@ -17312,6 +17293,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -22103,7 +22085,7 @@ ParticleSystem:
     vectorLabel1_3: W
 --- !u!199 &9110628847693857921
 ParticleSystemRenderer:
-  serializedVersion: 6
+  serializedVersion: 7
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -22150,6 +22132,7 @@ ParticleSystemRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_RenderMode: 1
   m_MeshDistribution: 0
   m_SortMode: 0
@@ -22181,7 +22164,6 @@ ParticleSystemRenderer:
   m_MeshWeighting1: 1
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
-  m_MaskInteraction: 0
 --- !u!1 &5378516934637604176
 GameObject:
   m_ObjectHideFlags: 0
@@ -22626,6 +22608,7 @@ SkinnedMeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   serializedVersion: 2
   m_Quality: 0
   m_UpdateWhenOffscreen: 0
@@ -28081,7 +28064,7 @@ ParticleSystem:
     vectorLabel1_3: W
 --- !u!199 &779638587892928440
 ParticleSystemRenderer:
-  serializedVersion: 6
+  serializedVersion: 7
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -28127,6 +28110,7 @@ ParticleSystemRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_RenderMode: 0
   m_MeshDistribution: 0
   m_SortMode: 0
@@ -28158,7 +28142,6 @@ ParticleSystemRenderer:
   m_MeshWeighting1: 1
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
-  m_MaskInteraction: 0
 --- !u!1 &5982242293463918712
 GameObject:
   m_ObjectHideFlags: 0
@@ -28247,6 +28230,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!1 &6013935420931505712
 GameObject:
@@ -28459,6 +28443,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -28835,6 +28820,7 @@ MonoBehaviour:
   _componentIndexCache: 0
   _addedNetworkObject: {fileID: 4299809306022886243}
   _networkObjectCache: {fileID: 4299809306022886243}
+  weaponId: 4
   cooldownTime:
     NetworkManager: {fileID: 0}
     NetworkBehaviour: {fileID: 0}
@@ -28995,7 +28981,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1916278616229195591}
-  - component: {fileID: 7074918492901970764}
   - component: {fileID: 2673159599495841037}
   - component: {fileID: 4040663086172367894}
   m_Layer: 0
@@ -29026,41 +29011,6 @@ Transform:
   - {fileID: 3178600601408102639}
   m_Father: {fileID: 895558864066202444}
   m_LocalEulerAnglesHint: {x: -90, y: 0, z: 540}
---- !u!114 &7074918492901970764
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6459034037272230210}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1113581c51f50784d980d067be0537ff, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  firePoint: {fileID: 6897738673801548018}
-  speed: 30
-  maxDistance: 7
-  fireRate: 1
-  damage: 5
-  maxAmmo: 12
-  reloadTime: 0.8
-  afterChangeDelay: 0.5
-  shootAudioSource: {fileID: 8588115746283938313}
-  shootAudioClip: {fileID: 8300000, guid: acce5e47e57cd2f4fbede04e73a12e5b, type: 3}
-  reloadAudioSource: {fileID: 894783836705840829}
-  muzzleFlash: {fileID: 5598446701651210132}
-  wallCheckCollider: {fileID: 894966038560980881}
-  weaponHUD: {fileID: 0}
-  playerLayer:
-    serializedVersion: 2
-    m_Bits: 64
-  wallLayer:
-    serializedVersion: 2
-    m_Bits: 128
-  shotLinePrefab: {fileID: 7133602437278059814, guid: 0e3e214fbff67c642a1f4f61c1361237, type: 3}
-  pelletCount: 8
-  spreadAngle: 10
 --- !u!114 &2673159599495841037
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -29073,6 +29023,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ffc93d56e90d790449f357428181b956, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ProjectileShotgun
+  weaponId: 1
   firePoint: {fileID: 6897738673801548018}
   speed: 25
   maxDistance: 10
@@ -29215,14 +29166,14 @@ Light:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6529855152259357820}
   m_Enabled: 1
-  serializedVersion: 11
+  serializedVersion: 12
   m_Type: 2
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_Intensity: 1
   m_Range: 10
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
-  m_CookieSize: 10
+  m_CookieSize2D: {x: 10, y: 10}
   m_Shadows:
     m_Type: 0
     m_Resolution: -1
@@ -29653,6 +29604,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de95aeb0530a04e449c0545a29b9b5b4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  weaponId: 3
   firePoint: {fileID: 6886763285244784737}
   speed: 150
   maxDistance: 100
@@ -29795,6 +29747,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -29948,6 +29901,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!1 &6930730048439371558
 GameObject:
@@ -31035,6 +30989,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -31385,6 +31340,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!1 &7776738408078581384
 GameObject:
@@ -31475,6 +31431,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!1773428102 &4762259875808982849
 ParentConstraint:
@@ -36542,7 +36499,7 @@ ParticleSystem:
     vectorLabel1_3: W
 --- !u!199 &1027608842891150640
 ParticleSystemRenderer:
-  serializedVersion: 6
+  serializedVersion: 7
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -36588,6 +36545,7 @@ ParticleSystemRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_RenderMode: 0
   m_MeshDistribution: 0
   m_SortMode: 0
@@ -36619,7 +36577,6 @@ ParticleSystemRenderer:
   m_MeshWeighting1: 1
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
-  m_MaskInteraction: 0
 --- !u!1 &8159304950283940260
 GameObject:
   m_ObjectHideFlags: 0
@@ -36798,6 +36755,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -37429,6 +37387,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -37579,6 +37538,7 @@ VFXRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
 --- !u!1 &8584510467676005138
 GameObject:
   m_ObjectHideFlags: 0

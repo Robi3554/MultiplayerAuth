@@ -4,9 +4,13 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public abstract class Weapon : MonoBehaviour
+public abstract class Weapon : MonoBehaviour, IWeaponInfo
 {
     protected TMP_Text ammoText;
+
+    [SerializeField] private int weaponId;
+
+    public int WeaponId => weaponId;
 
     protected int CurrentAmmo
     {
