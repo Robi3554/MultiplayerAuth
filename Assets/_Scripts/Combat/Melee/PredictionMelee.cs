@@ -181,18 +181,20 @@ public class PredictionMelee : NetworkBehaviour, IWeaponInfo
 			else if (enemyCollider.CompareTag("Robot"))
 			{
 				Debug.Log("Melee: Hit robot!");
-				if(enemyCollider.GetComponent<KamikazeRobot>() != null)
-				{
-					var robot = enemyCollider.GetComponent<KamikazeRobot>();
-					robot.DestroyRobot(playerCollider.GetComponent<NetworkObject>());
-					// DespawnRobotServerRpc(robot.NetworkObject);
-				}
-				else if(enemyCollider.GetComponent<LittleRobot>() != null)
-				{
-					var robot = enemyCollider.GetComponent<LittleRobot>();
-					robot.DestroyRobot(playerCollider.GetComponent<NetworkObject>());
-					// DespawnRobotServerRpc(robot.NetworkObject);
-				}
+			if(enemyCollider.GetComponent<KamikazeRobot>() != null)
+			{
+				var robot = enemyCollider.GetComponent<KamikazeRobot>();
+				// DestroyRobot() uses [ObserversRpc] internally — it must be called
+				// from the server to broadcast VFX/SFX to all clients. Calling it here
+				// (client-side) only plays effects locally on the hitting client.
+				// The ServerRpc below calls DestroyRobot() with proper server authority.
+				DespawnRobotServerRpc(robot.NetworkObject, playerCollider.GetComponent<NetworkObject>());
+			}
+			else if(enemyCollider.GetComponent<LittleRobot>() != null)
+			{
+				var robot = enemyCollider.GetComponent<LittleRobot>();
+				DespawnRobotServerRpc(robot.NetworkObject, playerCollider.GetComponent<NetworkObject>());
+			}
 			}
 			else if (enemyCollider.GetComponentInParent<Turret>() is Turret turret)
 			{
@@ -252,12 +254,34 @@ public class PredictionMelee : NetworkBehaviour, IWeaponInfo
 	}
 
 	[ServerRpc(RequireOwnership = false)]
-	private void DespawnRobotServerRpc(NetworkObject robot)
+	private void DespawnRobotServerRpc(NetworkObject robot, NetworkObject attacker)
 	{
-		// Debug.Log("DAVIDDDDDDDDDDDDDDDDDDDD: Despawned robot");
+		// Guard: another melee hit or trigger-contact explosion may have already
+		// despawned this robot in the same tick.
+		if (robot == null || !robot.IsSpawned)
+			return;
+
+		// Call DestroyRobot() from the server so its [ObserversRpc] calls (VFX, SFX)
+		// actually broadcast to all connected clients. DestroyRobot() handles despawn
+		// internally via NetworkObject.Despawn() and notifies RobotSpawnManager via
+		// the OnRobotKilled event, so we do not need a separate DespawnRobot() call.
+		var kamikaze = robot.GetComponent<KamikazeRobot>();
+		if (kamikaze != null)
+		{
+			kamikaze.DestroyRobot(attacker);
+			return;
+		}
+
+		var little = robot.GetComponent<LittleRobot>();
+		if (little != null)
+		{
+			little.DestroyRobot(attacker);
+			return;
+		}
+
+		// Fallback for any robot type without a DestroyRobot() method.
 		RobotSpawnManager.Instance.DespawnRobot(robot);
-		// Debug.Log("DAVIDDDDDDDDDDDDDDDDDDDD: OUT");
-    }
+	}
 
 	[ServerRpc(RequireOwnership = false)]
 	private void DamagePlayerServerRpc(int targetId, int damageAmount, int attackerId)
