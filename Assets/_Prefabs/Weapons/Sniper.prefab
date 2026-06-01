@@ -104,6 +104,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de95aeb0530a04e449c0545a29b9b5b4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  weaponId: 3
   firePoint: {fileID: 920481059500354567}
   speed: 150
   maxDistance: 100

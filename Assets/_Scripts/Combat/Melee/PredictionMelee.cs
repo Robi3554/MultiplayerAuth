@@ -8,9 +8,13 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.VFX;
 
-public class PredictionMelee : NetworkBehaviour
+public class PredictionMelee : NetworkBehaviour, IWeaponInfo
 {
-	[Header("Weapon Settings")]
+    [SerializeField] private int weaponId;
+
+    public int WeaponId => weaponId;
+
+    [Header("Weapon Settings")]
 
 	[AllowMutableSyncType]
 	[SerializeField] private SyncVar<float> cooldownTime = new SyncVar<float>(1.25f);

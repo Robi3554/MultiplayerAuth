@@ -5,6 +5,7 @@ using System.Linq;
 using FishNet.Component.Animating;
 using FishNet.Connection;
 using FishNet.Object;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
@@ -125,14 +126,24 @@ public class PlayerManager : NetworkBehaviour
         string killerName = "Player";
         Team killerTeam = Team.None;
 
+        int weaponId = -1;
+
         if (attackerClientId >= 0 && players.ContainsKey(attackerClientId))
         {
-            var killerStats = players[attackerClientId].stats;
-            killerName = killerStats.username.Value;
-            killerTeam = killerStats.team.Value;
+            var attacker = players[attackerClientId];
+
+            killerName = attacker.stats.username.Value;
+            killerTeam = attacker.stats.team.Value;
+
+            var weaponChanger = attacker.playerObject.GetComponent<ChangeWeapons>();
+
+            if (weaponChanger != null && weaponChanger.CurrentWeaponInfo != null)
+            {
+                weaponId = weaponChanger.CurrentWeaponInfo.WeaponId;
+            }
         }
 
-        RpcSendKillFeed(killerName, victimName, killerTeam, victimTeam);
+        RpcSendKillFeed(killerName, victimName, killerTeam, victimTeam, weaponId);
 
         SetPlayerAnimation(victim.playerObject, "Death");
 
@@ -256,8 +267,7 @@ public class PlayerManager : NetworkBehaviour
     }
 
     [ObserversRpc]
-    private void RpcSendKillFeed(string killerName, string victimName,
-    Team killerTeam, Team victimTeam)
+    private void RpcSendKillFeed(string killerName, string victimName, Team killerTeam, Team victimTeam, int weaponId)
     {
         KillFeedUI ui = FindFirstObjectByType<KillFeedUI>();
         if (ui == null) return;
@@ -265,7 +275,7 @@ public class PlayerManager : NetworkBehaviour
         string killerColored = PlayerStats.GetColoredName(killerName, killerTeam);
         string victimColored = PlayerStats.GetColoredName(victimName, victimTeam);
 
-        ui.AddFeedItem(killerColored, victimColored);
+        ui.AddFeedItem(killerColored, victimColored, weaponId);
     }
 
     // NEW METHOD: Called by GameModeManager to reset all players

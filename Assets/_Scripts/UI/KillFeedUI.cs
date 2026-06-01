@@ -7,13 +7,17 @@ public class KillFeedUI : MonoBehaviour
     public GameObject feedItemPrefab;
     public float itemLifetime = 5f;
 
-    public void AddFeedItem(string killer, string victim)
+    public void AddFeedItem(string killer, string victim, int weaponId)
     {
         GameObject obj = Instantiate(feedItemPrefab, feedParent);
-        TMP_Text text = obj.GetComponent<TMP_Text>();
+        obj.SetActive(true);
 
-        text.text = $"{killer} killed {victim}";
+        KillFeedItem item = obj.GetComponent<KillFeedItem>();
 
-        Destroy(obj, itemLifetime);
+        Sprite weaponIcon = WeaponData.Instance.GetIcon(weaponId);
+
+        item.Set(killer, victim, weaponIcon);
+
+        Destroy(obj, 5f);
     }
 }

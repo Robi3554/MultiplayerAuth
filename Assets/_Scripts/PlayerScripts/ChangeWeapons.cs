@@ -12,6 +12,8 @@ public class ChangeWeapons : NetworkBehaviour
     [SerializeField] private List<GameObject> weapons = new List<GameObject>();
     [SerializeField] private RigBuilder modelRigBuilder;
 
+    public IWeaponInfo CurrentWeaponInfo { get; private set; }
+
     public static event Action<Sprite> OnLocalWeaponChanged;
 
     private readonly SyncVar<int> _currentWeaponIndex = new SyncVar<int>(1);
@@ -111,6 +113,14 @@ public class ChangeWeapons : NetworkBehaviour
 
         SwitchActiveWeaponPrefab(newActiveIndex);
         UpdateRigLayers(newActiveIndex);
+
+        CurrentWeaponInfo = weapons[newActiveIndex].GetComponent<IWeaponInfo>();
+
+        Debug.Log(
+    $"SWITCHED weapon object: {weapons[newActiveIndex].name}, " +
+    $"index: {newActiveIndex}, " +
+    $"weaponId: {(CurrentWeaponInfo != null ? CurrentWeaponInfo.WeaponId.ToString() : "NULL")}"
+);
 
         if (IsOwner)
         {
