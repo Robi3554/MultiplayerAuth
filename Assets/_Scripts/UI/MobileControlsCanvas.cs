@@ -1,15 +1,41 @@
+using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem.OnScreen;
 using UnityEngine.UI;
 
 /// <summary>
-/// Builds a modern mobile controls overlay at runtime.
-/// All action buttons use OnScreenButton to simulate gamepad inputs,
-/// which flow through the existing PlayerInput/InputSystem bindings.
+/// Builds the mobile controls overlay in the same "Fortnite-ish" visual language
+/// as the lobby (see <see cref="LobbyLayoutBuilder"/>): chunky rounded-rect buttons,
+/// thick yellow accents, bold uppercase typography, drop shadows, sheen + inner glow.
+///
+/// Unlike a pure runtime builder, this one is designed to be <b>baked once in edit
+/// mode</b> so every control becomes a real, hand-editable GameObject you can move,
+/// resize and restyle directly in the scene:
+///   - "Rebuild Mobile Controls" — clears previously generated children and rebuilds
+///     from the current inspector values (works in edit mode, recommended).
+///   - "Clear" — removes only the children this component generated.
+///
+/// Recommended workflow: assign the TMP font, run "Rebuild Mobile Controls" once,
+/// reposition/resize to taste, then leave <see cref="rebuildOnAwake"/> OFF so Play
+/// mode never overwrites your manual edits. The visuals persist in the editor via
+/// <see cref="LobbyProceduralSprite"/>.
+///
+/// Input is unchanged: every button keeps an <see cref="OnScreenButton"/> and the
+/// joystick keeps an <see cref="OnScreenStick"/> with the same gamepad control paths,
+/// so touches still flow through the existing InputSystem bindings.
 /// </summary>
 public class MobileControlsCanvas : MonoBehaviour
 {
+    [Header("Build Behavior")]
+    [Tooltip("If true, the overlay is (re)built in Awake at runtime. Leave OFF once you have baked + hand-edited the hierarchy so Play mode does not clobber your tweaks.")]
+    [SerializeField] private bool rebuildOnAwake = false;
+
+    [Header("Font")]
+    [Tooltip("TMP font for the button labels. Assign the same font used by LobbyLayoutBuilder for a consistent look. Falls back to the TMP default if empty.")]
+    [SerializeField] private TMP_FontAsset font;
+
     [Header("Joystick")]
     [SerializeField] private float joystickRadius = 150f;
 
@@ -17,152 +43,289 @@ public class MobileControlsCanvas : MonoBehaviour
     [SerializeField] private float primaryBtnSize = 130f;   // Attack
     [SerializeField] private float secondaryBtnSize = 90f;  // Jump, Reload, Dash
     [SerializeField] private float weaponArrowSize = 65f;
-    [SerializeField] private float topBarBtnSize = 55f;     // Pause, Scoreboard
+    [SerializeField] private float topBarBtnSize = 65f;     // Pause, Scoreboard
 
-    [Header("Appearance")]
-    [SerializeField] private Color primaryColor   = new Color(0.90f, 0.25f, 0.20f, 0.70f);  // red-ish attack
-    [SerializeField] private Color secondaryColor = new Color(0.20f, 0.55f, 0.85f, 0.55f);  // blue action buttons
-    [SerializeField] private Color weaponColor    = new Color(0.95f, 0.75f, 0.15f, 0.55f);  // gold weapon arrows
-    [SerializeField] private Color topBarColor    = new Color(0.15f, 0.15f, 0.15f, 0.60f);  // dark top-bar buttons
-    [SerializeField] private Color joystickBg     = new Color(1f, 1f, 1f, 0.10f);
-    [SerializeField] private Color joystickKnob   = new Color(1f, 1f, 1f, 0.50f);
-    [SerializeField] private Color labelColor     = Color.white;
+    [Header("Palette — Lobby")]
+    [SerializeField] private Color accentYellow = new(1.00f, 0.82f, 0.18f, 1f);
+    [SerializeField] private Color outlineDark = new(0.02f, 0.05f, 0.14f, 1f);
+    [SerializeField] private Color labelColor = Color.white;
+
+    [Header("Palette — Action Tints")]
+    [SerializeField] private Color attackTint = new(0.95f, 0.30f, 0.34f, 0.88f);   // red — primary attack
+    [SerializeField] private Color actionTint = new(0.30f, 0.55f, 1.00f, 0.85f);   // blue — jump / reload / dash
+    [SerializeField] private Color weaponTint = new(1.00f, 0.65f, 0.18f, 0.85f);   // gold — weapon arrows
+    [SerializeField] private Color topBarTint = new(0.13f, 0.21f, 0.52f, 0.80f);   // deep blue — pause / scoreboard
+    [SerializeField] private Color joystickBgColor = new(0.10f, 0.16f, 0.40f, 0.55f);
+    [SerializeField] private Color joystickKnobColor = new(0.30f, 0.55f, 1.00f, 0.85f);
+
+    // Children this builder created (so Clear() never touches manually-added siblings).
+    private readonly List<GameObject> _generatedChildren = new();
+
+    // Top-level objects we generate — used as a fallback for Clear() after a domain
+    // reload wipes _generatedChildren in the editor.
+    private static readonly HashSet<string> GeneratedNames = new()
+    {
+        "JoystickBG", "AttackBtn", "JumpBtn", "ReloadBtn", "DashBtn",
+        "WpnPrev", "WpnNext", "PauseBtn", "ScoreBtn"
+    };
 
     private void Awake()
     {
+        // Runtime-only: make sure touch input can reach the OnScreen* components.
+        EnsureInputSystemEventSystem();
+
+        if (rebuildOnAwake)
+            Rebuild();
+    }
+
+    // ─── Editor-friendly entry points (right-click on this component) ──
+    [ContextMenu("Rebuild Mobile Controls")]
+    public void Rebuild()
+    {
+        Clear();
+        EnsureCanvas();
         Build();
     }
 
-    // ───────────────────────────────────────────────────────────
-    private void Build()
+    [ContextMenu("Clear")]
+    public void Clear()
     {
-        // Canvas
-        var canvas  = gameObject.AddComponent<Canvas>();
+        for (int i = _generatedChildren.Count - 1; i >= 0; i--)
+        {
+            var go = _generatedChildren[i];
+            if (go == null) continue;
+            if (Application.isPlaying) Destroy(go);
+            else DestroyImmediate(go);
+        }
+        _generatedChildren.Clear();
+
+        // Belt + braces: remove any loose top-level children whose names match the
+        // objects we generate (handles _generatedChildren being cleared by a reload).
+        var toDelete = new List<GameObject>();
+        foreach (Transform child in transform)
+            if (GeneratedNames.Contains(child.name))
+                toDelete.Add(child.gameObject);
+        foreach (var go in toDelete)
+        {
+            if (Application.isPlaying) Destroy(go);
+            else DestroyImmediate(go);
+        }
+    }
+
+    // ─── Canvas setup ─────────────────────────────────────────────────
+    private void EnsureCanvas()
+    {
+        var canvas = GetComponent<Canvas>();
+        if (canvas == null) canvas = gameObject.AddComponent<Canvas>();
         canvas.renderMode = RenderMode.ScreenSpaceOverlay;
         canvas.sortingOrder = 100;
 
-        var scaler = gameObject.AddComponent<CanvasScaler>();
+        var scaler = GetComponent<CanvasScaler>();
+        if (scaler == null) scaler = gameObject.AddComponent<CanvasScaler>();
         scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
         scaler.referenceResolution = new Vector2(1920, 1080);
         scaler.matchWidthOrHeight = 0.5f;
 
-        gameObject.AddComponent<GraphicRaycaster>();
-        EnsureInputSystemEventSystem();
+        if (GetComponent<GraphicRaycaster>() == null)
+            gameObject.AddComponent<GraphicRaycaster>();
+    }
 
+    // ─── Layout ───────────────────────────────────────────────────────
+    private void Build()
+    {
         // ── Left : Joystick ──
         BuildJoystick();
 
         // ── Right : Action cluster (center-right, raised toward middle) ──
-        BuildOnScreenButton("AttackBtn",  "\u2022",  primaryBtnSize,
-            new Vector2(-180, 340), "<Gamepad>/rightShoulder",
-            primaryColor, TextAnchor.LowerRight);
+        BuildButton("AttackBtn", "FIRE", primaryBtnSize,
+            new Vector2(-180, 340), "<Gamepad>/rightShoulder", attackTint, TextAnchor.LowerRight, isPrimary: true);
 
-        BuildOnScreenButton("JumpBtn",   "JMP",  secondaryBtnSize,
-            new Vector2(-320, 260),  "<Gamepad>/buttonSouth",
-            secondaryColor, TextAnchor.LowerRight);
+        BuildButton("JumpBtn", "JUMP", secondaryBtnSize,
+            new Vector2(-320, 260), "<Gamepad>/buttonSouth", actionTint, TextAnchor.LowerRight);
 
-        BuildOnScreenButton("ReloadBtn", "RLD",  secondaryBtnSize,
-            new Vector2(-320, 410), "<Gamepad>/buttonNorth",
-            secondaryColor, TextAnchor.LowerRight);
+        BuildButton("ReloadBtn", "RLD", secondaryBtnSize,
+            new Vector2(-320, 410), "<Gamepad>/buttonNorth", actionTint, TextAnchor.LowerRight);
 
-        BuildOnScreenButton("DashBtn",   "DSH",  secondaryBtnSize,
-            new Vector2(-80, 220),   "<Gamepad>/rightStickPress",
-            secondaryColor, TextAnchor.LowerRight);
+        BuildButton("DashBtn", "DASH", secondaryBtnSize,
+            new Vector2(-80, 220), "<Gamepad>/rightStickPress", actionTint, TextAnchor.LowerRight);
 
         // ── Weapon prev / next (next to action cluster) ──
-        BuildOnScreenButton("WpnPrev", "\u25C0", weaponArrowSize,
-            new Vector2(-420, 310), "<Gamepad>/dpad/left",
-            weaponColor, TextAnchor.LowerRight);
+        BuildButton("WpnPrev", "<", weaponArrowSize,
+            new Vector2(-420, 310), "<Gamepad>/dpad/left", weaponTint, TextAnchor.LowerRight);
 
-        BuildOnScreenButton("WpnNext", "\u25B6", weaponArrowSize,
-            new Vector2(-420, 390),  "<Gamepad>/dpad/right",
-            weaponColor, TextAnchor.LowerRight);
+        BuildButton("WpnNext", ">", weaponArrowSize,
+            new Vector2(-420, 390), "<Gamepad>/dpad/right", weaponTint, TextAnchor.LowerRight);
 
-        // ── Pause + Scoreboard (upper-right, lowered and shifted left) ──
-        BuildOnScreenButton("PauseBtn", "\u2759\u2759", topBarBtnSize,
-            new Vector2(-80, -80), "<Gamepad>/start",
-            topBarColor, TextAnchor.UpperRight);
+        // ── Pause + Scoreboard (upper-right) ──
+        BuildButton("PauseBtn", "II", topBarBtnSize,
+            new Vector2(-80, -80), "<Gamepad>/start", topBarTint, TextAnchor.UpperRight);
 
-        BuildOnScreenButton("ScoreBtn", "SCR", topBarBtnSize,
-            new Vector2(-150, -80), "<Gamepad>/select",
-            topBarColor, TextAnchor.UpperRight);
+        BuildButton("ScoreBtn", "SCR", topBarBtnSize,
+            new Vector2(-160, -80), "<Gamepad>/select", topBarTint, TextAnchor.UpperRight);
     }
 
-    // ─────────────────── Joystick ────────────────────────────
+    // ─── Joystick ─────────────────────────────────────────────────────
     private void BuildJoystick()
     {
         float diameter = joystickRadius * 2f;
 
-        // Outer ring (background)
+        // Outer ring (deep blue fill + thick yellow accent ring, near-circular).
         var bg = MakeRect("JoystickBG", transform, diameter, diameter);
+        Track(bg.gameObject);
         Anchor(bg, TextAnchor.LowerLeft);
         bg.anchoredPosition = new Vector2(220, 340);
-        var bgImg = bg.gameObject.AddComponent<Image>();
-        bgImg.color = joystickBg;
-        bgImg.raycastTarget = true;
-        MakeCircle(bgImg);
 
-        // Inner knob
+        var bgImg = bg.gameObject.AddComponent<Image>();
+        bgImg.color = Color.white;
+        bgImg.raycastTarget = true;
+        AttachRoundedRect(bgImg, CircleRadius(diameter), 6, joystickBgColor, accentYellow);
+        bgImg.pixelsPerUnitMultiplier = 1f;
+
+        var bgShadow = bg.gameObject.AddComponent<Shadow>();
+        bgShadow.effectColor = new Color(0f, 0f, 0f, 0.55f);
+        bgShadow.effectDistance = new Vector2(0f, -4f);
+
+        // Inner knob (lighter blue, dark border).
         float knobSize = joystickRadius * 0.75f;
         var knob = MakeRect("JoystickKnob", bg, knobSize, knobSize);
+        SetCenter(knob);
         knob.anchoredPosition = Vector2.zero;
-        var knobImg = knob.gameObject.AddComponent<Image>();
-        knobImg.color = joystickKnob;
-        knobImg.raycastTarget = true;
-        MakeCircle(knobImg);
 
-        // OnScreenStick on the knob
+        var knobImg = knob.gameObject.AddComponent<Image>();
+        knobImg.color = Color.white;
+        knobImg.raycastTarget = true;
+        AttachRoundedRect(knobImg, CircleRadius(knobSize), 3, joystickKnobColor, outlineDark);
+        knobImg.pixelsPerUnitMultiplier = 1f;
+
+        // Soft top sheen on the knob.
+        var sheen = MakeRect("Sheen", knob, knobSize * 0.8f, knobSize * 0.45f);
+        sheen.anchorMin = new Vector2(0.5f, 1f);
+        sheen.anchorMax = new Vector2(0.5f, 1f);
+        sheen.pivot = new Vector2(0.5f, 1f);
+        sheen.anchoredPosition = new Vector2(0f, -knobSize * 0.12f);
+        var sheenImg = sheen.gameObject.AddComponent<Image>();
+        AttachVerticalGradient(sheenImg, new Color(1f, 1f, 1f, 0.22f), new Color(1f, 1f, 1f, 0f));
+        sheenImg.color = Color.white;
+        sheenImg.raycastTarget = false;
+
+        // OnScreenStick drives the virtual gamepad left stick.
         var stick = knob.gameObject.AddComponent<OnScreenStick>();
         stick.controlPath = "<Gamepad>/leftStick";
         stick.movementRange = joystickRadius;
     }
 
-    // ─────────────────── Generic OnScreen Button ──────────────
-    private void BuildOnScreenButton(string name, string label, float size,
-        Vector2 offset, string controlPath, Color color, TextAnchor anchor)
+    // ─── Generic chunky button ────────────────────────────────────────
+    private void BuildButton(string name, string label, float size, Vector2 offset,
+        string controlPath, Color tint, TextAnchor anchor, bool isPrimary = false)
     {
         var rt = MakeRect(name, transform, size, size);
+        Track(rt.gameObject);
         Anchor(rt, anchor);
         rt.anchoredPosition = offset;
 
+        // Rounded-rect fill (near-circular) with dark chunky border.
         var img = rt.gameObject.AddComponent<Image>();
-        img.color = color;
+        img.color = Color.white;
         img.raycastTarget = true;
-        MakeCircle(img);
+        AttachRoundedRect(img, CircleRadius(size), isPrimary ? 4 : 3, tint, outlineDark);
+        img.pixelsPerUnitMultiplier = 1f;
 
-        // Outline for depth
+        var shadow = rt.gameObject.AddComponent<Shadow>();
+        shadow.effectColor = new Color(0f, 0f, 0f, 0.70f);
+        shadow.effectDistance = new Vector2(0f, isPrimary ? -4f : -3f);
+
+        // Hover outline (yellow), invisible at rest — animated by UIButtonHoverEffect.
         var outline = rt.gameObject.AddComponent<Outline>();
-        outline.effectColor = new Color(0f, 0f, 0f, 0.35f);
-        outline.effectDistance = new Vector2(2, -2);
+        Color outlineCol = accentYellow; outlineCol.a = 0f;
+        outline.effectColor = outlineCol;
+        outline.effectDistance = new Vector2(isPrimary ? 2.5f : 2f, isPrimary ? -2.5f : -2f);
 
-        // Label
-        var textGO = new GameObject("Label");
-        textGO.transform.SetParent(rt, false);
-        var textRT = textGO.AddComponent<RectTransform>();
-        textRT.anchorMin = Vector2.zero;
-        textRT.anchorMax = Vector2.one;
-        textRT.offsetMin = Vector2.zero;
-        textRT.offsetMax = Vector2.zero;
-        var txt = textGO.AddComponent<Text>();
-        txt.text = label;
-        txt.alignment = TextAnchor.MiddleCenter;
-        txt.fontSize = Mathf.Max(16, (int)(size * 0.28f));
-        txt.fontStyle = FontStyle.Bold;
-        txt.color = labelColor;
-        txt.raycastTarget = false;
-        txt.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+        // Inner radial glow (behind the label), invisible at rest.
+        var glow = MakeRect("InnerGlow", rt, size * 1.3f, size * 1.3f);
+        SetCenter(glow);
+        glow.anchoredPosition = Vector2.zero;
+        var glowImg = glow.gameObject.AddComponent<Image>();
+        AttachRadialGlow(glowImg, accentYellow);
+        glowImg.color = new Color(1f, 1f, 1f, 0f);
+        glowImg.raycastTarget = false;
+        glow.SetSiblingIndex(0);
 
-        // Shadow on text
-        var shadow = textGO.AddComponent<Shadow>();
-        shadow.effectColor = new Color(0, 0, 0, 0.5f);
-        shadow.effectDistance = new Vector2(1, -1);
+        // Top sheen highlight.
+        var sheen = MakeRect("Sheen", rt, size * 0.78f, size * 0.42f);
+        sheen.anchorMin = new Vector2(0.5f, 1f);
+        sheen.anchorMax = new Vector2(0.5f, 1f);
+        sheen.pivot = new Vector2(0.5f, 1f);
+        sheen.anchoredPosition = new Vector2(0f, -size * 0.10f);
+        var sheenImg = sheen.gameObject.AddComponent<Image>();
+        AttachVerticalGradient(sheenImg, new Color(1f, 1f, 1f, 0.18f), new Color(1f, 1f, 1f, 0f));
+        sheenImg.color = Color.white;
+        sheenImg.raycastTarget = false;
 
-        // OnScreenButton simulates the gamepad path
+        // Bold uppercase TMP label.
+        float fontSize = label.Length <= 2 ? size * 0.46f : size * 0.26f;
+        CreateLabel(name + "_Label", rt, label, fontSize);
+
+        // Hover/press polish (coexists with OnScreenButton on the same object).
+        var hover = rt.gameObject.AddComponent<UIButtonHoverEffect>();
+        hover.Bind(outline, glowImg);
+
+        // OnScreenButton simulates the gamepad path — preserves existing input.
         var btn = rt.gameObject.AddComponent<OnScreenButton>();
         btn.controlPath = controlPath;
     }
 
-    // ─────────────────── Helpers ─────────────────────────────
+    // ─── Procedural-sprite helpers (persist in editor via LobbyProceduralSprite) ─
+    private static void AttachRoundedRect(Image img, int corner, int border, Color fill, Color borderColor)
+    {
+        var sp = img.gameObject.GetComponent<LobbyProceduralSprite>();
+        if (sp == null) sp = img.gameObject.AddComponent<LobbyProceduralSprite>();
+        sp.SetRoundedRect(corner, border, fill, borderColor);
+    }
+
+    private static void AttachRadialGlow(Image img, Color center, int size = 256)
+    {
+        var sp = img.gameObject.GetComponent<LobbyProceduralSprite>();
+        if (sp == null) sp = img.gameObject.AddComponent<LobbyProceduralSprite>();
+        sp.SetRadialGlow(center, size);
+    }
+
+    private static void AttachVerticalGradient(Image img, Color top, Color bottom, int height = 256)
+    {
+        var sp = img.gameObject.GetComponent<LobbyProceduralSprite>();
+        if (sp == null) sp = img.gameObject.AddComponent<LobbyProceduralSprite>();
+        sp.SetVerticalGradient(top, bottom, height);
+    }
+
+    // ─── UI factory helpers ───────────────────────────────────────────
+    private TMP_Text CreateLabel(string name, Transform parent, string text, float fontSize)
+    {
+        var go = new GameObject(name, typeof(RectTransform));
+        go.transform.SetParent(parent, false);
+        var rt = (RectTransform)go.transform;
+        rt.anchorMin = Vector2.zero;
+        rt.anchorMax = Vector2.one;
+        rt.offsetMin = Vector2.zero;
+        rt.offsetMax = Vector2.zero;
+
+        var tmp = go.AddComponent<TextMeshProUGUI>();
+        tmp.text = text;
+        tmp.color = labelColor;
+        tmp.alignment = TextAlignmentOptions.Center;
+        tmp.fontStyle = FontStyles.Bold | FontStyles.UpperCase;
+        tmp.overflowMode = TextOverflowModes.Overflow;
+        tmp.enableAutoSizing = true;
+        tmp.fontSizeMin = 10f;
+        tmp.fontSizeMax = fontSize;
+        tmp.raycastTarget = false;
+        if (font != null) tmp.font = font;
+
+        var ol = go.AddComponent<Outline>();
+        ol.effectColor = new Color(0f, 0f, 0f, 0.85f);
+        ol.effectDistance = new Vector2(1.5f, -1.5f);
+
+        return tmp;
+    }
+
     private static RectTransform MakeRect(string name, Transform parent, float w, float h)
     {
         var go = new GameObject(name);
@@ -176,9 +339,9 @@ public class MobileControlsCanvas : MonoBehaviour
     {
         Vector2 v = corner switch
         {
-            TextAnchor.LowerLeft  => new Vector2(0, 0),
+            TextAnchor.LowerLeft => new Vector2(0, 0),
             TextAnchor.LowerRight => new Vector2(1, 0),
-            TextAnchor.UpperLeft  => new Vector2(0, 1),
+            TextAnchor.UpperLeft => new Vector2(0, 1),
             TextAnchor.UpperRight => new Vector2(1, 1),
             _ => new Vector2(0.5f, 0.5f)
         };
@@ -187,15 +350,24 @@ public class MobileControlsCanvas : MonoBehaviour
         rt.pivot = new Vector2(0.5f, 0.5f);
     }
 
-    /// <summary>
-    /// Makes an Image appear circular by enabling a procedural sprite mask.
-    /// Uses Unity's built-in Knob sprite which is a filled circle.
-    /// </summary>
-    private static void MakeCircle(Image img)
+    private static void SetCenter(RectTransform rt)
     {
-        img.sprite = Resources.Load<Sprite>("UI/Skin/Knob");
-        if (img.sprite != null)
-            img.type = Image.Type.Simple;
+        rt.anchorMin = new Vector2(0.5f, 0.5f);
+        rt.anchorMax = new Vector2(0.5f, 0.5f);
+        rt.pivot = new Vector2(0.5f, 0.5f);
+    }
+
+    /// <summary>
+    /// Corner radius that makes a square rounded-rect render as a near-circle when
+    /// drawn Sliced: the corner regions span the full half-size so they meet in the
+    /// middle, leaving no flat edge.
+    /// </summary>
+    private static int CircleRadius(float size) => Mathf.Max(2, Mathf.RoundToInt(size * 0.5f));
+
+    private void Track(GameObject go)
+    {
+        if (go == null) return;
+        _generatedChildren.Add(go);
     }
 
     /// <summary>
@@ -214,7 +386,7 @@ public class MobileControlsCanvas : MonoBehaviour
         }
 
         // Remove legacy module that blocks touch input
-        var legacy = eventSystem.GetComponent<UnityEngine.EventSystems.StandaloneInputModule>();
+        var legacy = eventSystem.GetComponent<StandaloneInputModule>();
         if (legacy != null)
             Destroy(legacy);
 
