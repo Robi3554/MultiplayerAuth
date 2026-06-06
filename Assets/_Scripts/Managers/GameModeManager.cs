@@ -41,6 +41,7 @@ public class GameModeManager : NetworkBehaviour
         base.OnStartServer();
         isGameActive.Value = true;
         gameMode.Value = LobbyData.ResolvedGameMode;
+        AnalyticsManager.EnsureInstance().StartMatch(gameMode.Value.ToString());
     }
 
     public override void OnStartClient()
@@ -127,6 +128,8 @@ public class GameModeManager : NetworkBehaviour
         isGameActive.Value = false;
         string teamName = winningTeam == Team.Rebels ? "Rebels" : "AI";
         winnerName.Value = $"Team {teamName}";
+        FlushWeaponAnalytics();
+        AnalyticsManager.EnsureInstance().EndMatch("TeamWon", winnerName.Value);
 
         RpcAnnounceWinner($"Team {teamName}");
         StartCoroutine(RestartCountdown());
@@ -137,6 +140,8 @@ public class GameModeManager : NetworkBehaviour
     {
         isGameActive.Value = false;
         winnerName.Value = winner.username.Value;
+        FlushWeaponAnalytics();
+        AnalyticsManager.EnsureInstance().EndMatch("PlayerWon", winnerName.Value);
 
         // Announce winner to all clients
         RpcAnnounceWinner(winner.username.Value);
@@ -201,4 +206,22 @@ public class GameModeManager : NetworkBehaviour
 
     // Public getter for game state
     public bool IsGameActive() => isGameActive.Value;
+
+    [Server]
+    private void FlushWeaponAnalytics()
+    {
+        if (PlayerManager.Instance == null)
+            return;
+
+        foreach (var kvp in PlayerManager.Instance.players)
+        {
+            var player = kvp.Value;
+            if (player?.playerObject == null)
+                continue;
+
+            var changeWeapons = player.playerObject.GetComponent<ChangeWeapons>();
+            if (changeWeapons != null)
+                changeWeapons.FlushServerWeaponAnalyticsNow();
+        }
+    }
 }

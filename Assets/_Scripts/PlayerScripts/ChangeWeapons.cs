@@ -24,9 +24,13 @@ public class ChangeWeapons : NetworkBehaviour
 
     internal bool canChange = true;
 
+    private int serverAnalyticsActiveWeaponId = -1;
+    private string serverAnalyticsActiveWeaponName;
+    private float serverAnalyticsActiveWeaponStartTime;
+
     void Start()
     {
-        GetWeapons(gameObject);
+        GetWeapons(gameObject, true);
 
         if (IsClientStarted)
         {
@@ -44,18 +48,35 @@ public class ChangeWeapons : NetworkBehaviour
         }
     }
 
-    private void GetWeapons(GameObject parent)
+    public override void OnStartServer()
     {
-        foreach(Transform weapon in parent.transform)
+        base.OnStartServer();
+        GetWeapons(gameObject, false);
+        BeginServerWeaponAnalytics(_currentWeaponIndex.Value);
+    }
+
+    public override void OnStopServer()
+    {
+        FlushServerWeaponAnalyticsNow();
+        base.OnStopServer();
+    }
+
+    private void GetWeapons(GameObject parent, bool applyActiveWeapon)
+    {
+        if (weapons.Count == 0)
         {
-            if (weapon.CompareTag("Weapon"))
-                weapons.Add(weapon.gameObject);
+            foreach(Transform weapon in parent.transform)
+            {
+                if (weapon.CompareTag("Weapon"))
+                    weapons.Add(weapon.gameObject);
+            }
         }
 
+        if (!applyActiveWeapon)
+            return;
+
         foreach(GameObject w in weapons)
-        {
             w.SetActive(false);
-        }
 
         if(weapons.Count > 0 && _currentWeaponIndex.Value < weapons.Count)
              weapons[_currentWeaponIndex.Value].SetActive(true);
@@ -103,7 +124,9 @@ public class ChangeWeapons : NetworkBehaviour
     [ServerRpc]
     private void OnWeaponChangeServer(int index)
     {
+        FlushServerWeaponAnalyticsNow();
         _currentWeaponIndex.Value = index;
+        BeginServerWeaponAnalytics(index);
     }
 
     private void SwitchWeapon(int prev, int newActiveIndex, bool asServer)
@@ -162,5 +185,54 @@ public class ChangeWeapons : NetworkBehaviour
         var weaponInfo = weapons[_currentWeaponIndex.Value].GetComponentInChildren<IWeaponInfo>(true);
 
         return weaponInfo != null ? weaponInfo.WeaponId : -1;
+    }
+
+    [Server]
+    public void FlushServerWeaponAnalyticsNow()
+    {
+        if (weapons.Count == 0)
+            GetWeapons(gameObject, false);
+
+        if (serverAnalyticsActiveWeaponId < 0)
+            return;
+
+        float secondsUsed = Time.realtimeSinceStartup - serverAnalyticsActiveWeaponStartTime;
+        if (secondsUsed > 0f)
+            AnalyticsManager.EnsureInstance().RecordWeaponUsage(Owner.ClientId, serverAnalyticsActiveWeaponId, serverAnalyticsActiveWeaponName, secondsUsed);
+
+        serverAnalyticsActiveWeaponId = -1;
+        serverAnalyticsActiveWeaponName = null;
+    }
+
+    [Server]
+    private void BeginServerWeaponAnalytics(int weaponIndex)
+    {
+        if (weapons.Count == 0)
+            GetWeapons(gameObject, false);
+
+        serverAnalyticsActiveWeaponId = GetWeaponIdAtIndex(weaponIndex);
+        serverAnalyticsActiveWeaponName = GetWeaponNameAtIndex(weaponIndex);
+        serverAnalyticsActiveWeaponStartTime = Time.realtimeSinceStartup;
+    }
+
+    private int GetWeaponIdAtIndex(int weaponIndex)
+    {
+        if (weaponIndex < 0 || weaponIndex >= weapons.Count)
+            return -1;
+
+        var weaponInfo = weapons[weaponIndex].GetComponentInChildren<IWeaponInfo>(true);
+        return weaponInfo != null ? weaponInfo.WeaponId : -1;
+    }
+
+    private string GetWeaponNameAtIndex(int weaponIndex)
+    {
+        if (weaponIndex < 0 || weaponIndex >= weapons.Count)
+            return null;
+
+        GameObject weapon = weapons[weaponIndex];
+        if (weapon == null)
+            return null;
+
+        return weapon.name;
     }
 }

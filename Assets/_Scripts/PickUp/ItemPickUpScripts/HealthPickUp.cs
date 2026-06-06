@@ -4,11 +4,13 @@ using FishNet.Object.Synchronizing;
 using FishNet.CodeGenerating;
 using System;
 using System.Collections;
+using System.Globalization;
 
 public class HealthPickUp : PickUpObject
 {
     [SerializeField] private int healAmount = 50;
     [SerializeField] private float pickupDelay = 2f;
+    [SerializeField] private string analyticsPickupId;
     
     [AllowMutableSyncType]
     private SyncVar<Vector3> initPosition = new SyncVar<Vector3>();
@@ -49,6 +51,7 @@ public class HealthPickUp : PickUpObject
         PlayerStats playerStats = other.GetComponentInParent<PlayerStats>();
         if (playerStats != null)
         {
+            AnalyticsManager.EnsureInstance().RecordHealthPickup(GetAnalyticsPickupId(), playerStats.Owner.ClientId);
             playerStats.HealPlayer(healAmount); // call the server-side HealPlayer method
         }
         // get the PickUpRespawn component from the parent
@@ -57,5 +60,22 @@ public class HealthPickUp : PickUpObject
         {
             parentRespawn.StartRespawnTimer(this.NetworkObject,initPosition.Value,initRotation.Value); // call the StartRespawnTimer method on the parent
         }
+    }
+
+    private string GetAnalyticsPickupId()
+    {
+        if (!string.IsNullOrWhiteSpace(analyticsPickupId))
+            return analyticsPickupId;
+
+        Vector3 position = transform.position;
+        string sceneName = gameObject.scene.IsValid() ? gameObject.scene.name : "UnknownScene";
+        return string.Format(
+            CultureInfo.InvariantCulture,
+            "{0}/{1} @ x:{2:0.#} y:{3:0.#} z:{4:0.#}",
+            sceneName,
+            name,
+            position.x,
+            position.y,
+            position.z);
     }
 }

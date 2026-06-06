@@ -112,6 +112,7 @@ public class PlayerStats : NetworkBehaviour
         // Server-side validation - never trust client input
         string sanitized = SanitizeUsername(username);
         this.username.Value = sanitized;
+        AnalyticsManager.EnsureInstance().RegisterPlayer(Owner, this);
         RpcSetUsername(sanitized);
     }
 
