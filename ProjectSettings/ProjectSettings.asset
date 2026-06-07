@@ -167,7 +167,7 @@ PlayerSettings:
   androidMaxAspectRatio: 2.1
   androidMinAspectRatio: 1
   applicationIdentifier:
-    Android: com.UPT.RebelCampus
+    Android: com.UPTxUVT.RebelCampus
   buildNumber:
     Standalone: 0
     VisionOS: 0
@@ -936,7 +936,7 @@ PlayerSettings:
   qnxGraphicConfPath: 
   apiCompatibilityLevel: 6
   captureStartupLogs: {}
-  activeInputHandler: 2
+  activeInputHandler: 1
   windowsGamepadBackendHint: 0
   cloudProjectId: 644409ad-129e-4c93-b51e-02d12cd5f6d6
   framebufferDepthMemorylessMode: 0
