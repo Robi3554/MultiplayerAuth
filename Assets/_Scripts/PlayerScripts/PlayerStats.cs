@@ -50,6 +50,10 @@ public class PlayerStats : NetworkBehaviour
     private bool isHeadBig;
     private bool isDamageAmp;
 
+    // The GameModeManager whose gameMode change we're subscribed to, so the billboard
+    // name color can refresh once the mode replicates (it may arrive after we spawn).
+    private GameModeManager _gameModeSubscribed;
+
     private static readonly Color RebelsColor = new Color(0.9f, 0.3f, 0.3f);
     private static readonly Color AIColor = new Color(0.3f, 0.5f, 0.9f);
 
@@ -60,6 +64,10 @@ public class PlayerStats : NetworkBehaviour
         // Subscribe to team changes on all clients so billboard color stays in sync
         team.OnChange += OnTeamChanged;
         ApplyBillboardTeamColor(team.Value);
+
+        // The game mode SyncVar may not have replicated yet; re-apply the name color
+        // once it's available and whenever it changes (white in FFA, team color in TDM).
+        StartCoroutine(RefreshNameColorWhenModeReady());
 
         // Notify scoreboard that this player spawned
         Debug.Log("PlayerStats OnStartClient: Registering player with ScoreboardManager: " + username.Value);
@@ -97,6 +105,10 @@ public class PlayerStats : NetworkBehaviour
         base.OnStopClient();
 
         team.OnChange -= OnTeamChanged;
+
+        if (_gameModeSubscribed != null && _gameModeSubscribed.gameMode != null)
+            _gameModeSubscribed.gameMode.OnChange -= OnGameModeChanged;
+        _gameModeSubscribed = null;
 
         // Notify scoreboard that this player despawned
         if (ScoreboardManager.Instance != null)
@@ -154,6 +166,27 @@ public class PlayerStats : NetworkBehaviour
         if (_usernameTextOnBillboard == null) return;
 
         _usernameTextOnBillboard.color = GetTeamColor(t);
+    }
+
+    private IEnumerator RefreshNameColorWhenModeReady()
+    {
+        while (GameModeManager.Instance == null)
+            yield return null;
+
+        var gm = GameModeManager.Instance;
+        while (gm.gameMode == null)
+            yield return null;
+
+        gm.gameMode.OnChange += OnGameModeChanged;
+        _gameModeSubscribed = gm;
+
+        // Re-apply now that the real mode is known (it may have synced after spawn).
+        ApplyBillboardTeamColor(team.Value);
+    }
+
+    private void OnGameModeChanged(GameMode previous, GameMode current, bool asServer)
+    {
+        ApplyBillboardTeamColor(team.Value);
     }
 
     void Update()
