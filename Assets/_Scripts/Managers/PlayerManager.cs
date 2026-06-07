@@ -122,7 +122,7 @@ public class PlayerManager : NetworkBehaviour
         string victimName = victim.stats.username.Value;
         Team victimTeam = victim.stats.team.Value;
 
-        string killerName = "Player";
+        string killerName = "Robot";
         Team killerTeam = Team.None;
 
         int weaponId = -1;

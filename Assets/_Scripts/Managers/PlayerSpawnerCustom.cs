@@ -6,6 +6,7 @@ using FishNet.Connection;
 using FishNet.Managing.Scened;
 using FishNet.Object;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
 
@@ -35,6 +36,7 @@ public class PlayerSpawnerCustom : NetworkBehaviour
     [Tooltip("True to add the player to the default scene upon spawning.")]
     [SerializeField]
     private bool _addToDefaultScene = true;
+    [SerializeField] private string gameSceneName = "SampleScene";
 
     private void Awake()
     {
@@ -64,7 +66,8 @@ public class PlayerSpawnerCustom : NetworkBehaviour
 
         // If players are already connected (lobby → game transition),
         // spawn them now since OnLoadEnd/OnClientLoadedStartScenes won't fire again.
-        SpawnAllConnectedPlayers();
+        if (IsGameSceneActive())
+            SpawnAllConnectedPlayers();
     }
 
     public override void OnStopServer()
@@ -84,6 +87,9 @@ public class PlayerSpawnerCustom : NetworkBehaviour
     private void SceneManager_OnLoadEnd(SceneLoadEndEventArgs args)
     {
         if (!args.QueueData.AsServer)
+            return;
+
+        if (!DidLoadGameScene(args))
             return;
 
         SpawnAllConnectedPlayers();
@@ -124,6 +130,9 @@ public class PlayerSpawnerCustom : NetworkBehaviour
     {
         // Only run spawning logic on the server side of the callback.
         if (!asServer)
+            return;
+
+        if (!IsGameSceneActive())
             return;
 
         if (HasSpawnedPlayer(conn))
@@ -204,6 +213,7 @@ public class PlayerSpawnerCustom : NetworkBehaviour
         if (stats != null)
         {
             stats.team.Value = playerTeam;
+            AnalyticsManager.EnsureInstance().RegisterPlayer(conn, stats);
         }
 
         if (_addToDefaultScene)
@@ -284,8 +294,34 @@ public class PlayerSpawnerCustom : NetworkBehaviour
     [Server]
     public void SpawnSinglePlayer(NetworkConnection conn)
     {
+        if (!IsGameSceneActive())
+            return;
+
         if (HasSpawnedPlayer(conn))
             return;
         SpawnPlayer(conn);
+    }
+
+    private bool DidLoadGameScene(SceneLoadEndEventArgs args)
+    {
+        foreach (Scene scene in args.LoadedScenes)
+        {
+            if (scene.name == gameSceneName)
+                return true;
+        }
+
+        foreach (string sceneName in args.SkippedSceneNames)
+        {
+            if (sceneName == gameSceneName)
+                return true;
+        }
+
+        return false;
+    }
+
+    private bool IsGameSceneActive()
+    {
+        Scene activeScene = UnityEngine.SceneManagement.SceneManager.GetActiveScene();
+        return activeScene.name == gameSceneName;
     }
 }

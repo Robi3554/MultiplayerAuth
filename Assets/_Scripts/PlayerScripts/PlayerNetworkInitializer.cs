@@ -1,3 +1,4 @@
+using FishNet;
 using FishNet.Object;
 using GameKit.Dependencies.Utilities.ObjectPooling.Examples;
 using UnityEngine;
@@ -6,11 +7,22 @@ public class PlayerNetworkInitializer : NetworkBehaviour
 {
     [SerializeField] private GameObject playerHUD;
 
+    [Header("Analytics")]
+    [SerializeField] private float analyticsReportInterval = 10f;
+    [SerializeField] private float latencySampleInterval = 1f;
+
     /// <summary>
     /// Exposes the player's own HUD so Weapon can resolve its ammo text from
     /// the correct hierarchy rather than using scene-global GameObject.Find.
     /// </summary>
     public GameObject PlayerHUD => playerHUD;
+
+    private float analyticsReportTimer;
+    private float latencySampleTimer;
+    private float fpsSampleSum;
+    private int fpsSampleCount;
+    private long latencySampleSum;
+    private int latencySampleCount;
 
     public override void OnStartServer()
     {
@@ -30,6 +42,8 @@ public class PlayerNetworkInitializer : NetworkBehaviour
             connection = Owner,
             stats = stats
         };
+
+        AnalyticsManager.EnsureInstance().RegisterPlayer(Owner, stats);
     }
 
     public override void OnStartClient()
@@ -53,6 +67,77 @@ public class PlayerNetworkInitializer : NetworkBehaviour
             // Fallback: MobileInputManager not in scene, set joystick mode directly
             movement.SetInputMode(true);
         }
+    }
+
+    private void Update()
+    {
+        if (!IsOwner || !IsClientStarted)
+            return;
+
+        SampleAnalytics();
+    }
+
+    public override void OnStopClient()
+    {
+        FlushPerformanceAnalytics();
+        base.OnStopClient();
+    }
+
+    private void OnApplicationQuit()
+    {
+        FlushPerformanceAnalytics();
+    }
+
+    private void SampleAnalytics()
+    {
+        float deltaTime = Time.unscaledDeltaTime;
+        if (deltaTime > 0f)
+        {
+            fpsSampleSum += 1f / deltaTime;
+            fpsSampleCount++;
+        }
+
+        latencySampleTimer += deltaTime;
+        if (latencySampleTimer >= latencySampleInterval)
+        {
+            latencySampleTimer = 0f;
+            if (InstanceFinder.TimeManager != null)
+            {
+                latencySampleSum += InstanceFinder.TimeManager.RoundTripTime;
+                latencySampleCount++;
+            }
+        }
+
+        analyticsReportTimer += deltaTime;
+        if (analyticsReportTimer >= analyticsReportInterval)
+        {
+            analyticsReportTimer = 0f;
+            FlushPerformanceAnalytics();
+        }
+    }
+
+    private void FlushPerformanceAnalytics()
+    {
+        if (!IsOwner || !IsClientStarted || (fpsSampleCount <= 0 && latencySampleCount <= 0))
+            return;
+
+        float averageFps = fpsSampleCount > 0 ? fpsSampleSum / fpsSampleCount : 0f;
+        long averageLatency = latencySampleCount > 0 ? latencySampleSum / latencySampleCount : 0L;
+
+        ReportPerformanceServerRpc(averageFps, fpsSampleCount, averageLatency, latencySampleCount);
+
+        fpsSampleSum = 0f;
+        fpsSampleCount = 0;
+        latencySampleSum = 0L;
+        latencySampleCount = 0;
+    }
+
+    [ServerRpc]
+    private void ReportPerformanceServerRpc(float averageFps, int fpsSamples, long averageLatencyMs, int latencySamples)
+    {
+        var stats = GetComponent<PlayerStats>();
+        AnalyticsManager.EnsureInstance().RegisterPlayer(Owner, stats);
+        AnalyticsManager.Instance.RecordClientPerformance(Owner.ClientId, averageFps, fpsSamples, averageLatencyMs, latencySamples);
     }
 
     // Called by RaycastShoot when a hit happens
