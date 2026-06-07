@@ -173,10 +173,11 @@ public class PredictionMoving : NetworkBehaviour
         velocity.y = _rb.linearVelocity.y;
         animator.SetFloat("Speed", direction.magnitude);
         _playerNet.ControlFootstepSoundsServer(this, direction.magnitude, _isGrounded);
-        //calculate world velocity
-        Vector3 worldVelocity = new Vector3(_moveInput.x, 0f, _moveInput.y);
-        //convert world velocity to local space
-        Vector3 localVelocity = transform.InverseTransformDirection(worldVelocity);
+        // Drive the locomotion blend with the NORMALIZED direction (not the raw analog
+        // joystick magnitude) so it always plays at full speed regardless of how far the
+        // stick is pushed — matching digital WASD. This also keeps root-motion characters
+        // (e.g. Arts_Girl) moving at a constant speed instead of scaling with the tilt.
+        Vector3 localVelocity = transform.InverseTransformDirection(direction);
         
         animator.SetFloat("X Velocity", localVelocity.x);
         animator.SetFloat("Z Velocity", localVelocity.z);
