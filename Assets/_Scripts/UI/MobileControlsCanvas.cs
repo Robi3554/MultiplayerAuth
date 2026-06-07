@@ -209,9 +209,14 @@ public class MobileControlsCanvas : MonoBehaviour
         sheenImg.raycastTarget = false;
 
         // OnScreenStick drives the virtual gamepad left stick.
+        // ExactPositionWithDynamicOrigin = "floating/follow" joystick: a press anywhere
+        // within dynamicOriginRange (centered on the knob) spawns the stick under the
+        // finger and tracks from there, instead of requiring you to grab the small knob.
         var stick = knob.gameObject.AddComponent<OnScreenStick>();
         stick.controlPath = "<Gamepad>/leftStick";
         stick.movementRange = joystickRadius;
+        stick.behaviour = OnScreenStick.Behaviour.ExactPositionWithDynamicOrigin;
+        stick.dynamicOriginRange = joystickRadius;
     }
 
     // ─── Generic chunky button ────────────────────────────────────────
