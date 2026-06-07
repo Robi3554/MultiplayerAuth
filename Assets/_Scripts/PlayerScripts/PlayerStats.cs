@@ -106,7 +106,7 @@ public class PlayerStats : NetworkBehaviour
 
         team.OnChange -= OnTeamChanged;
 
-        if (_gameModeSubscribed != null && _gameModeSubscribed.gameMode != null)
+        if (_gameModeSubscribed != null)
             _gameModeSubscribed.gameMode.OnChange -= OnGameModeChanged;
         _gameModeSubscribed = null;
 
