@@ -190,19 +190,38 @@ public class AnalyticsManager : MonoBehaviour
 
     private void WriteSummaryFile(string summary)
     {
+        string path = null;
         try
         {
-            string directory = Path.Combine(Application.persistentDataPath, "Analytics");
+            string directory = GetAnalyticsDirectory();
             Directory.CreateDirectory(directory);
 
-            string path = Path.Combine(directory, $"match_{matchId}.txt");
+            path = Path.Combine(directory, $"match_{matchId}.txt");
             File.WriteAllText(path, summary);
             Debug.Log($"[Analytics] Match summary written to {path}");
         }
         catch (Exception ex)
         {
-            Debug.LogWarning($"[Analytics] Failed to write match summary: {ex.Message}");
+            // Log the full exception and the resolved path so failures are visible in
+            // the dedicated server log instead of being silently swallowed.
+            Debug.LogError($"[Analytics] Failed to write match summary to '{path ?? "<unresolved>"}': {ex}");
         }
+    }
+
+    /// <summary>
+    /// Resolves the directory analytics files are written to: an "Analytics" folder
+    /// placed next to the server/standalone executable. In a build, Application.dataPath
+    /// is the "*_Data" folder, so its parent is where the executable lives; in the
+    /// editor this resolves to the project root.
+    ///
+    /// This is used instead of Application.persistentDataPath because a headless Linux
+    /// dedicated server frequently has no writable $HOME/$XDG_CONFIG_HOME, which makes
+    /// persistentDataPath either fail outright or land in a hidden/ephemeral location.
+    /// </summary>
+    private static string GetAnalyticsDirectory()
+    {
+        string baseDir = Directory.GetParent(Application.dataPath)?.FullName ?? Application.dataPath;
+        return Path.Combine(baseDir, "Analytics");
     }
 
     private float GetAverageGameDuration()
