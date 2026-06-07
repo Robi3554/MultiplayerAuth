@@ -23,7 +23,7 @@ public class PredictionMelee : NetworkBehaviour, IWeaponInfo
 
     protected PlayerStats playerStats;
 
-    protected int Damage => damage.Value * playerStats.damageMult;
+    protected int Damage => damage.Value * playerStats.damageMult.Value;
 
     [Header("References")]
 	[SerializeField] private ParticleSystem VFX_SLASH;

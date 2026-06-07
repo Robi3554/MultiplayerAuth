@@ -18,7 +18,9 @@ public class PlayerStats : NetworkBehaviour
     public readonly SyncVar<bool> isRespawning = new SyncVar<bool>(false);
 
     public readonly SyncVar<Team> team = new SyncVar<Team>(Team.None);
-    public int damageMult = 1;
+    // SyncVar so a server-applied damage buff replicates to the owner client, which is
+    // where outgoing damage is actually computed (Weapon.Damage / PredictionMelee.Damage).
+    public readonly SyncVar<int> damageMult = new SyncVar<int>(1);
 
     [SerializeField] private Animator animator;
     [SerializeField] private TMP_Text _usernameTextOnBillboard;
@@ -458,8 +460,8 @@ public class PlayerStats : NetworkBehaviour
     {
         if (!isDamageAmp)
         {
-            int oldMultiplier = damageMult;
-            damageMult = multiplier;
+            int oldMultiplier = damageMult.Value;
+            damageMult.Value = multiplier;
 
             isDamageAmp = true;
 
@@ -467,7 +469,7 @@ public class PlayerStats : NetworkBehaviour
 
             isDamageAmp = false;
 
-            damageMult = oldMultiplier;
+            damageMult.Value = oldMultiplier;
         }
     }
     #endregion

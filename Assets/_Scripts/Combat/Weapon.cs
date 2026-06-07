@@ -209,7 +209,7 @@ public abstract class Weapon : MonoBehaviour, IWeaponInfo
 
     protected abstract void HandleShootInput(InputAction.CallbackContext context);
 
-    protected int Damage => damage * playerStats.damageMult;
+    protected int Damage => damage * playerStats.damageMult.Value;
     
     public void PlayMuzzleFlash()
     {
