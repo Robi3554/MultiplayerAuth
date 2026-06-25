@@ -1,0 +1,172 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="980" viewBox="0 0 1400 980">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#334155"/>
+    </marker>
+    <style>
+      .title { font: 700 30px Arial, sans-serif; fill: #111827; }
+      .subtitle { font: 400 16px Arial, sans-serif; fill: #4b5563; }
+      .groupTitle { font: 700 17px Arial, sans-serif; fill: #1f2937; }
+      .label { font: 700 16px Arial, sans-serif; fill: #111827; }
+      .small { font: 400 14px Arial, sans-serif; fill: #374151; }
+      .tiny { font: 400 12px Arial, sans-serif; fill: #475569; }
+      .group { fill: #f8fafc; stroke: #cbd5e1; stroke-width: 2; rx: 18; }
+      .box { fill: #ffffff; stroke: #334155; stroke-width: 1.8; rx: 12; }
+      .client { fill: #eff6ff; stroke: #2563eb; }
+      .lobby { fill: #fff7ed; stroke: #ea580c; }
+      .game { fill: #f0fdf4; stroke: #16a34a; }
+      .server { fill: #f5f3ff; stroke: #7c3aed; }
+      .bridge { fill: #f8fafc; stroke: #475569; stroke-dasharray: 6 5; }
+      .arrow { stroke: #334155; stroke-width: 2.2; fill: none; marker-end: url(#arrow); }
+      .dashed { stroke-dasharray: 7 6; }
+      .note { fill: #fffbeb; stroke: #d97706; stroke-width: 1.4; rx: 12; }
+    </style>
+  </defs>
+
+  <rect x="0" y="0" width="1400" height="980" fill="#ffffff"/>
+
+  <text x="50" y="54" class="title">Rebel Campus - Compact High-Level Architecture</text>
+  <text x="50" y="82" class="subtitle">Server-authoritative Unity/FishNet flow from client entry, through lobby, into gameplay, and back to lobby.</text>
+
+  <!-- Top entry flow -->
+  <rect x="60" y="120" width="210" height="88" class="box client"/>
+  <text x="82" y="150" class="label">Player / Client</text>
+  <text x="82" y="174" class="small">Desktop or Android</text>
+  <text x="82" y="196" class="small">Starts from menu</text>
+
+  <rect x="320" y="120" width="230" height="88" class="box client"/>
+  <text x="342" y="150" class="label">WelcomeScreen</text>
+  <text x="342" y="174" class="small">MainMenuController</text>
+  <text x="342" y="196" class="small">IP + username</text>
+
+  <rect x="600" y="120" width="230" height="88" class="box bridge"/>
+  <text x="622" y="150" class="label">ConnectionInfo</text>
+  <text x="622" y="174" class="small">Persistent session data</text>
+  <text x="622" y="196" class="small">Static IP + username</text>
+
+  <!-- Lobby group -->
+  <rect x="60" y="255" width="610" height="315" class="group"/>
+  <text x="84" y="286" class="groupTitle">LobbyScene - Networked Pre-Match State</text>
+
+  <rect x="90" y="315" width="235" height="86" class="box lobby"/>
+  <text x="112" y="345" class="label">LobbyBootstrap</text>
+  <text x="112" y="369" class="small">Starts FishNet</text>
+  <text x="112" y="391" class="small">Host, client, server</text>
+
+  <rect x="385" y="315" width="235" height="86" class="box lobby"/>
+  <text x="407" y="345" class="label">NetworkManager</text>
+  <text x="407" y="369" class="small">Tugboat transport</text>
+  <text x="407" y="391" class="small">RPC + scene loading</text>
+
+  <rect x="90" y="445" width="235" height="92" class="box server"/>
+  <text x="112" y="475" class="label">LobbyManager</text>
+  <text x="112" y="499" class="small">Global NetworkObject</text>
+  <text x="112" y="521" class="small">SyncList + SyncVars</text>
+
+  <rect x="385" y="445" width="235" height="92" class="box lobby"/>
+  <text x="407" y="475" class="label">Lobby UI</text>
+  <text x="407" y="499" class="small">Team, mode, ready</text>
+  <text x="407" y="521" class="small">Player list + choices</text>
+
+  <rect x="680" y="375" width="225" height="92" class="box lobby"/>
+  <text x="702" y="405" class="label">Character Preview</text>
+  <text x="702" y="429" class="small">CharacterDefinition</text>
+  <text x="702" y="451" class="small">Selected prefab</text>
+
+  <!-- Bridge -->
+  <rect x="735" y="560" width="250" height="88" class="box bridge"/>
+  <text x="758" y="590" class="label">LobbyData</text>
+  <text x="758" y="614" class="small">Scene bridge</text>
+  <text x="758" y="636" class="small">Mode, teams, characters</text>
+
+  <!-- Gameplay group -->
+  <rect x="755" y="255" width="585" height="315" class="group"/>
+  <text x="779" y="286" class="groupTitle">SampleScene - Active Gameplay</text>
+
+  <rect x="790" y="315" width="225" height="86" class="box game"/>
+  <text x="812" y="345" class="label">GameBootstrap</text>
+  <text x="812" y="369" class="small">Skip reconnect</text>
+  <text x="812" y="391" class="small">Connection persists</text>
+
+  <rect x="1070" y="315" width="225" height="86" class="box game"/>
+  <text x="1092" y="345" class="label">PlayerSpawnerCustom</text>
+  <text x="1092" y="369" class="small">Server-side spawn</text>
+  <text x="1092" y="391" class="small">Uses LobbyData</text>
+
+  <rect x="790" y="445" width="225" height="92" class="box game"/>
+  <text x="812" y="475" class="label">Player Systems</text>
+  <text x="812" y="499" class="small">Movement, stats, HUD</text>
+  <text x="812" y="521" class="small">Network initializer</text>
+
+  <rect x="1070" y="445" width="225" height="92" class="box game"/>
+  <text x="1092" y="475" class="label">Combat + World</text>
+  <text x="1092" y="499" class="small">Weapons, projectiles</text>
+  <text x="1092" y="521" class="small">Turret, pickups, AI</text>
+
+  <rect x="1070" y="595" width="225" height="82" class="box game"/>
+  <text x="1092" y="625" class="label">Late Join UI</text>
+  <text x="1092" y="649" class="small">LobbyUI isLateJoinMode</text>
+  <text x="1092" y="671" class="small">Join active match</text>
+
+  <!-- Server group -->
+  <rect x="170" y="705" width="1060" height="160" class="group"/>
+  <text x="194" y="736" class="groupTitle">Server Authority and Deployment</text>
+
+  <rect x="210" y="770" width="255" height="72" class="box server"/>
+  <text x="232" y="799" class="label">Dedicated / Host Server</text>
+  <text x="232" y="823" class="small">UPT server or local host</text>
+
+  <rect x="555" y="770" width="255" height="72" class="box server"/>
+  <text x="577" y="799" class="label">PlayerManager</text>
+  <text x="577" y="823" class="small">Damage, deaths, respawn</text>
+
+  <rect x="900" y="770" width="255" height="72" class="box server"/>
+  <text x="922" y="799" class="label">GameModeManager</text>
+  <text x="922" y="823" class="small">Win condition + return</text>
+
+  <rect x="100" y="900" width="1200" height="52" class="note"/>
+  <text x="125" y="923" class="small">Authority boundary: the server owns lobby state, player spawning, health, kills, deaths, turret behavior, win conditions, late join admission, and return-to-lobby flow.</text>
+  <text x="125" y="944" class="tiny">Clients provide menu input, lobby choices, movement input, camera control, local UI, and gameplay feedback.</text>
+
+  <!-- Arrows top -->
+  <path d="M270 164 L320 164" class="arrow"/>
+  <path d="M550 164 L600 164" class="arrow"/>
+  <path d="M715 208 L220 315" class="arrow"/>
+
+  <!-- Lobby arrows -->
+  <path d="M325 358 L385 358" class="arrow"/>
+  <path d="M502 401 L502 445" class="arrow"/>
+  <path d="M385 491 L325 491" class="arrow"/>
+  <path d="M620 491 L670 491 L670 421 L680 421" class="arrow"/>
+  <path d="M325 520 L735 604" class="arrow"/>
+
+  <!-- Bridge/game arrows -->
+  <path d="M985 604 L1182 401" class="arrow"/>
+  <path d="M985 604 L1182 595" class="arrow dashed"/>
+  <path d="M1015 358 L1070 358" class="arrow"/>
+  <path d="M1182 401 L1182 445" class="arrow"/>
+  <path d="M1015 491 L1070 491" class="arrow"/>
+
+  <!-- Server arrows -->
+  <path d="M337 770 L210 537" class="arrow dashed"/>
+  <path d="M682 770 L902 537" class="arrow"/>
+  <path d="M1192 537 L1027 770" class="arrow"/>
+  <path d="M810 806 L900 806" class="arrow"/>
+  <path d="M1028 770 C 900 675 460 660 235 537" class="arrow dashed"/>
+  <path d="M1070 636 L810 806" class="arrow dashed"/>
+
+  <!-- Labels -->
+  <text x="286" y="150" class="tiny">loads menu</text>
+  <text x="565" y="150" class="tiny">stores</text>
+  <text x="505" y="252" class="tiny">loads lobby</text>
+  <text x="335" y="344" class="tiny">connection</text>
+  <text x="515" y="430" class="tiny">spawns manager</text>
+  <text x="335" y="477" class="tiny">RPC choices</text>
+  <text x="622" y="474" class="tiny">character</text>
+  <text x="517" y="585" class="tiny">all ready</text>
+  <text x="1030" y="555" class="tiny">spawn data</text>
+  <text x="1025" y="344" class="tiny">scene active</text>
+  <text x="1195" y="430" class="tiny">spawn owner</text>
+  <text x="1030" y="475" class="tiny">actions / damage</text>
+  <text x="705" y="756" class="tiny">server authority</text>
+</svg>
